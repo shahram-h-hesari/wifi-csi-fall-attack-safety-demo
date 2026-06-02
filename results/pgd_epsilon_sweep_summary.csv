@@ -1,0 +1,6 @@
+attack_type,epsilon,alpha,pgd_steps,total_windows,fall_windows,nonfall_windows,tp_detected_falls,fn_missed_falls,fp_false_fall_alarms,tn_correct_nonfalls,seven_class_accuracy,binary_accuracy,recall_sensitivity,missed_fall_rate,specificity,false_positive_rate,precision,f1_score,balanced_accuracy,prediction_change_rate
+PGD,0.0,0.0,10,996,89,907,57,32,32,875,0.659639,0.935743,0.640449,0.359551,0.964719,0.035281,0.640449,0.640449,0.802584,0.0
+PGD,0.005,0.000833,10,996,89,907,19,70,43,864,0.389558,0.886546,0.213483,0.786517,0.952591,0.047409,0.306452,0.251656,0.583037,0.310241
+PGD,0.01,0.001667,10,996,89,907,0,89,70,837,0.172691,0.840361,0.0,1.0,0.922822,0.077178,0.0,0.0,0.461411,0.561245
+PGD,0.02,0.003333,10,996,89,907,0,89,111,796,0.013052,0.799197,0.0,1.0,0.877619,0.122381,0.0,0.0,0.438809,0.745984
+PGD,0.03,0.005,10,996,89,907,0,89,115,792,0.0,0.795181,0.0,1.0,0.873208,0.126792,0.0,0.0,0.436604,0.778112

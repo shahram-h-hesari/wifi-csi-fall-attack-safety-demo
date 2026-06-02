@@ -1,0 +1,36 @@
+# Local third-party benchmark clones
+third_party/
+third_party/WiFi-CSI-Sensing-Benchmark/
+third_party/WiFi_Activity_Recognition/
+
+# Local datasets and downloaded files
+data/
+Data/
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Python environments
+.venv/
+venv/
+sensefi_env/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Model checkpoints and large experiment files
+*.pt
+*.pth
+*.ckpt
+*.pkl
+*.npy
+*.npz
+
+# Local logs
+*.log
+
+# Original UT-HAR raw source clone
+third_party/Wifi_Activity_Recognition/

@@ -1,0 +1,2 @@
+attack_type,epsilon,alpha,pgd_steps,total_windows,fall_windows,nonfall_windows,tp_detected_falls,fn_missed_falls,fp_false_fall_alarms,tn_correct_nonfalls,detected_fall_count,missed_fall_count,false_alarm_count,correct_nonfall_count,seven_class_accuracy,binary_accuracy,recall_sensitivity,missed_fall_rate,specificity,false_positive_rate,precision,f1_score,balanced_accuracy
+PGD,0.03,0.005,10,996,89,907,0,89,115,792,0,89,115,792,0.0,0.795181,0.0,1.0,0.873208,0.126792,0.0,0.0,0.436604

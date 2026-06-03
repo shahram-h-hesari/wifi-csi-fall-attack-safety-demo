@@ -1301,4 +1301,55 @@ Interpretation: Table 7 prevents overclaiming by clearly identifying what the cu
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Table 8: High-Risk Multiclass Error Taxonomy
+
+This thesis-ready table identifies fall-relevant seven-class error patterns from the existing prediction CSV files.
+
+The table separates two high-risk window-level error families:
+
+```text
+missed-fall multiclass errors:
+true class = fall
+predicted class = non-fall activity
+
+false-fall-alarm multiclass errors:
+true class = non-fall activity
+predicted class = fall
+```
+
+Files:
+
+- `scripts/create_thesis_table_8_high_risk_multiclass_error_taxonomy.py`
+- `results/thesis_table_8_high_risk_multiclass_error_taxonomy.csv`
+- `notes/thesis_table_8_high_risk_multiclass_error_taxonomy.md`
+
+Table 8 summary:
+
+```text
+Undefended clean baseline: 64 total high-risk multiclass errors
+Undefended FGSM, epsilon 0.030: 208 total high-risk multiclass errors
+Undefended PGD, epsilon 0.030: 204 total high-risk multiclass errors
+Defended clean baseline: 75 total high-risk multiclass errors
+Defended FGSM, epsilon 0.030: 161 total high-risk multiclass errors
+Defended PGD, epsilon 0.030: 145 total high-risk multiclass errors
+```
+
+Missed-fall multiclass errors:
+
+```text
+A true fall window is predicted as a non-fall activity such as lie down, walk, pickup, run, sit down, or stand up.
+```
+
+False-fall-alarm multiclass errors:
+
+```text
+A true non-fall window is predicted as fall.
+```
+
+Interpretation: Table 8 provides the multiclass explanation behind the binary fall-vs-non-fall safety-proxy metrics. It shows whether attacks and defenses change the pathway of failure, such as converting fall windows into walk or run, or converting non-fall activities into false fall alarms.
+
+Claim boundary: this is a window-level multiclass error-taxonomy analysis using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+
 

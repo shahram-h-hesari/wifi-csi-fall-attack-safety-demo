@@ -1,0 +1,6 @@
+epsilon,fgsm_missed_fall_rate,pgd_missed_fall_rate,fgsm_recall_sensitivity,pgd_recall_sensitivity,fgsm_f1_score,pgd_f1_score,fgsm_false_alarm_count,pgd_false_alarm_count,fgsm_prediction_change_rate,pgd_prediction_change_rate
+0.000,0.3596,0.3596,0.6404,0.6404,0.6404,0.6404,32,32,0.0000,0.0000
+0.005,0.7416,0.7865,0.2584,0.2135,0.3026,0.2517,40,43,0.2871,0.3102
+0.010,0.9888,1.0000,0.0112,0.0000,0.0148,0.0000,45,70,0.4839,0.5612
+0.020,1.0000,1.0000,0.0000,0.0000,0.0000,0.0000,100,111,0.6827,0.7460
+0.030,1.0000,1.0000,0.0000,0.0000,0.0000,0.0000,119,115,0.7440,0.7781

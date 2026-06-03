@@ -1035,4 +1035,28 @@ Interpretation: the first short 5-epoch FGSM adversarial-training defense reduce
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+### Thesis Table 4: Epsilon Sweep Summary Table
+
+This thesis-ready table summarizes the FGSM and PGD epsilon sweep results side by side.
+
+It uses window-level fall-vs-non-fall safety-proxy metrics to show the dose-response relationship between perturbation strength and fall-safety degradation.
+
+Files:
+
+- Script: [`scripts/create_thesis_table_4_epsilon_sweep_summary.py`](scripts/create_thesis_table_4_epsilon_sweep_summary.py)
+- CSV table: [`results/thesis_table_4_epsilon_sweep_summary.csv`](results/thesis_table_4_epsilon_sweep_summary.csv)
+- Markdown note: [`notes/thesis_table_4_epsilon_sweep_summary.md`](notes/thesis_table_4_epsilon_sweep_summary.md)
+
+Main result:
+
+- At epsilon `0.000`, FGSM and PGD match the clean baseline with missed fall rate `0.3596`, recall/sensitivity `0.6404`, and F1-score `0.6404`.
+- At epsilon `0.005`, missed fall rate increases to `0.7416` for FGSM and `0.7865` for PGD.
+- At epsilon `0.010`, PGD reaches missed fall rate `1.0000`, while FGSM reaches `0.9888`.
+- At epsilon `0.020` and `0.030`, both FGSM and PGD reach missed fall rate `1.0000` and recall/sensitivity `0.0000`.
+- At epsilon `0.030`, FGSM produces `119` false fall alarms and PGD produces `115` false fall alarms.
+
+Interpretation: Table 4 shows a clear perturbation-strength dose-response pattern. As epsilon increases, missed fall rate increases, recall/sensitivity decreases, F1-score decreases, and false fall alarm burden increases.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
 

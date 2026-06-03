@@ -1226,5 +1226,15 @@ Figure 5 - Binary fall-vs-non-fall confusion matrices
 Table 5  - Reproducibility configuration table
 
 
+### UT-HAR Dataset Metadata Audit
 
+This note audits the local SenseFi / UT-HAR files used in this demo to check whether the dataset supports event-level clinical-safety metrics.
+
+Result: the local UT-HAR copy contains processed window-level CSI arrays and labels, but no timestamp, duration, subject ID, trial ID, event ID, recording ID, fall start/end, window start/end, annotation, or metadata files were found.
+
+Files:
+
+- `notes/ut_har_dataset_metadata_audit.md`
+
+Interpretation: the current dataset supports window-level fall-vs-non-fall safety-proxy metrics, but it does not support event-level metrics such as detection latency, time-to-detection, delayed detection rate, long-lie proxy, or false alarms per hour/day without additional metadata or a future dataset/collaboration.
 

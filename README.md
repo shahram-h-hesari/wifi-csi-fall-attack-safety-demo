@@ -1059,4 +1059,31 @@ Interpretation: Table 4 shows a clear perturbation-strength dose-response patter
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+### Thesis Figure 3: Defense Effect Summary
+
+This thesis-ready figure summarizes the effect of the first short 5-epoch FGSM adversarial-training defense under FGSM and PGD attack.
+
+The figure compares:
+
+- False fall alarm count under attack before and after defense
+- Missed fall rate under attack before and after defense
+
+Files:
+
+- Script: [`scripts/create_thesis_figure_3_defense_effect_summary.py`](scripts/create_thesis_figure_3_defense_effect_summary.py)
+- Figure: [`figures/thesis_figure_3_defense_effect_summary.png`](figures/thesis_figure_3_defense_effect_summary.png)
+- Markdown note: [`notes/thesis_figure_3_defense_effect_summary.md`](notes/thesis_figure_3_defense_effect_summary.md)
+
+Main result:
+
+- FGSM false fall alarms decreased from `119` to `72`, a reduction of `47`.
+- PGD false fall alarms decreased from `115` to `56`, a reduction of `59`.
+- FGSM missed fall rate remained `1.0000` after defense at epsilon `0.030`.
+- PGD missed fall rate remained `1.0000` after defense at epsilon `0.030`.
+- FGSM and PGD recall/sensitivity both remained `0.0000` after defense at epsilon `0.030`.
+
+Interpretation: the first short 5-epoch FGSM adversarial-training defense reduced false fall alarm burden under attack, but it did not recover missed-fall performance. This shows that the defense improved one safety-proxy failure mode while leaving the most critical attacked condition unresolved.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
 

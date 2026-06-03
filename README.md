@@ -965,3 +965,24 @@ The defended model reduced false fall alarms under FGSM and PGD attack, but it d
 ```
 
 This figure is a window-level software comparison on processed CSI tensors. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, event-level fall validation, physical-layer validation, packet-level validation, preamble-level validation, SDR validation, or over-the-air validation.
+
+
+### Thesis Table 2: Attack Impact Delta Table
+
+This thesis-ready table summarizes the clean-to-attacked degradation for the software-level FGSM and PGD attacks at epsilon 0.030.
+
+It reports changes in missed fall rate, recall/sensitivity, F1-score, false fall alarm count, balanced accuracy, and prediction change rate.
+
+Files:
+
+- Script: [`scripts/create_thesis_table_2_attack_impact_delta.py`](scripts/create_thesis_table_2_attack_impact_delta.py)
+- CSV table: [`results/thesis_table_2_attack_impact_delta.csv`](results/thesis_table_2_attack_impact_delta.csv)
+- Markdown note: [`notes/thesis_table_2_attack_impact_delta.md`](notes/thesis_table_2_attack_impact_delta.md)
+
+Main result:
+
+- FGSM increased missed fall rate by `+0.6404`, reduced recall/sensitivity by `-0.6404`, reduced F1-score by `-0.6404`, and increased false fall alarms by `+87`.
+- PGD increased missed fall rate by `+0.6404`, reduced recall/sensitivity by `-0.6404`, reduced F1-score by `-0.6404`, and increased false fall alarms by `+83`.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+

@@ -1199,4 +1199,32 @@ Interpretation: Table 5 records the experimental scope and parameter values behi
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+### Thesis Table 6: Thesis Output Index / Evidence Contribution Table
+
+This thesis-ready table indexes the tables and figures generated for the WiFi CSI Fall Attack-Safety Demo.
+
+The purpose is to make the repository easier to navigate, explain what each output contributes to the thesis, and separate quantitative results, visual summaries, defense analysis, epsilon-sweep analysis, confusion-matrix analysis, and reproducibility documentation.
+
+Files:
+
+- `scripts/create_thesis_table_6_output_index.py`
+- `results/thesis_table_6_output_index.csv`
+- `notes/thesis_table_6_output_index.md`
+
+Table 6 currently indexes:
+
+```text
+Table 1  - Clean, attacked, and defended fall safety-proxy metrics
+Figure 1 - Defended vs undefended safety tradeoff
+Table 2  - Attack impact delta table
+Figure 2 - FGSM vs PGD epsilon sweep curves
+Table 3  - Defense tradeoff table
+Table 4  - Epsilon sweep summary table
+Figure 3 - Defense effect summary
+Figure 4 - Clean vs defended clean tradeoff
+Figure 5 - Binary fall-vs-non-fall confusion matrices
+Table 5  - Reproducibility configuration table
+
+
+
 

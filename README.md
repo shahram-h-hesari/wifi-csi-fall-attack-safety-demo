@@ -986,3 +986,29 @@ Main result:
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+
+### Thesis Figure 2: FGSM vs PGD Epsilon Sweep Curves
+
+This thesis-ready figure compares FGSM and PGD epsilon-sweep behavior using window-level fall-vs-non-fall safety-proxy metrics.
+
+The figure shows how perturbation strength affects:
+
+- Missed fall rate
+- Recall/sensitivity
+- F1-score
+- False fall alarm count
+
+Files:
+
+- Script: [`scripts/create_thesis_figure_2_fgsm_pgd_epsilon_sweep.py`](scripts/create_thesis_figure_2_fgsm_pgd_epsilon_sweep.py)
+- Figure: [`figures/thesis_figure_2_fgsm_pgd_epsilon_sweep.png`](figures/thesis_figure_2_fgsm_pgd_epsilon_sweep.png)
+- Markdown note: [`notes/thesis_figure_2_fgsm_pgd_epsilon_sweep.md`](notes/thesis_figure_2_fgsm_pgd_epsilon_sweep.md)
+
+Main result:
+
+- At epsilon `0.000`, both FGSM and PGD match the clean baseline with missed fall rate `0.3596`, recall/sensitivity `0.6404`, and F1-score `0.6404`.
+- As epsilon increases, missed fall rate increases and recall/sensitivity decreases.
+- At epsilon `0.030`, both FGSM and PGD reach missed fall rate `1.0000` and recall/sensitivity `0.0000`.
+- False fall alarms also increase under attack, reaching `119` for FGSM and `115` for PGD at epsilon `0.030`.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

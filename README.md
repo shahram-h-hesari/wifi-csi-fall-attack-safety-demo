@@ -1387,5 +1387,69 @@ Interpretation: Figure 6 complements Table 8 by showing the full seven-class con
 
 Claim boundary: this is a window-level seven-class confusion-matrix visualization using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+### Thesis Table 9: Robustness Failure Threshold Table
+
+This thesis-ready table converts the FGSM and PGD epsilon sweeps into robustness-threshold evidence.
+
+Instead of only reporting metrics at each epsilon, Table 9 identifies the first observed epsilon where each attack crosses predefined window-level failure thresholds.
+
+Files:
+
+- `scripts/create_thesis_table_9_robustness_failure_thresholds.py`
+- `results/thesis_table_9_robustness_failure_thresholds.csv`
+- `notes/thesis_table_9_robustness_failure_thresholds.md`
+
+Input file:
+
+- `results/fgsm_vs_pgd_epsilon_comparison.csv`
+
+Table 9 key results:
+
+```text
+FGSM severe missed-fall threshold, missed_fall_rate >= 0.75:
+first reached at epsilon = 0.0100
+
+FGSM near-complete missed-fall threshold, missed_fall_rate >= 0.95:
+first reached at epsilon = 0.0100
+
+FGSM complete fall-detection collapse, missed_fall_rate >= 1.00:
+first reached at epsilon = 0.0200
+
+PGD severe missed-fall threshold, missed_fall_rate >= 0.75:
+first reached at epsilon = 0.0050
+
+PGD near-complete missed-fall threshold, missed_fall_rate >= 0.95:
+first reached at epsilon = 0.0100
+
+PGD complete fall-detection collapse, missed_fall_rate >= 1.00:
+first reached at epsilon = 0.0100
+```
+
+Additional robustness thresholds:
+
+```text
+FGSM recall collapse, recall_sensitivity <= 0.05:
+first reached at epsilon = 0.0100
+
+PGD recall collapse, recall_sensitivity <= 0.05:
+first reached at epsilon = 0.0100
+
+FGSM prediction instability, prediction_change_rate >= 0.50:
+first reached at epsilon = 0.0200
+
+PGD prediction instability, prediction_change_rate >= 0.50:
+first reached at epsilon = 0.0100
+
+FGSM high false-fall alarm burden, false_alarm_count >= 100:
+first reached at epsilon = 0.0200
+
+PGD high false-fall alarm burden, false_alarm_count >= 100:
+first reached at epsilon = 0.0200
+```
+
+Interpretation: Table 9 shows that robustness failure appears at low perturbation strengths in this window-level experiment. PGD reaches the severe missed-fall threshold earlier than FGSM, while both FGSM and PGD reach near-complete missed-fall behavior by epsilon `0.010`. This supports the thesis argument that attack impact should be translated into safety-proxy failure thresholds, not only reported as aggregate accuracy degradation.
+
+Claim boundary: this is a window-level robustness-threshold analysis using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation. False-alarm thresholds are reported as window counts only and are not converted into false alarms per hour/day because recording-duration metadata is unavailable.
+
 
 

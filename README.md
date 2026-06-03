@@ -1351,5 +1351,41 @@ Interpretation: Table 8 provides the multiclass explanation behind the binary fa
 Claim boundary: this is a window-level multiclass error-taxonomy analysis using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Figure 6: Seven-Class Confusion Matrix Figure
+
+This thesis-ready figure visualizes seven-class confusion matrices for the clean, attacked, and defended conditions in the WiFi CSI Fall Attack-Safety Demo.
+
+Files:
+
+- `scripts/create_thesis_figure_6_seven_class_confusion_matrices.py`
+- `figures/thesis_figure_6_seven_class_confusion_matrices.png`
+- `notes/thesis_figure_6_seven_class_confusion_matrices.md`
+
+Figure 6 includes six conditions:
+
+```text
+Undefended clean baseline
+Undefended FGSM, epsilon = 0.030
+Undefended PGD, epsilon = 0.030
+Defended clean baseline
+Defended FGSM, epsilon = 0.030
+Defended PGD, epsilon = 0.030
+```
+
+Figure 6 summary:
+
+```text
+Undefended clean: accuracy = 0.6596, missed fall windows = 32, false fall alarms = 32
+Undefended FGSM: accuracy = 0.0100, missed fall windows = 89, false fall alarms = 119
+Undefended PGD: accuracy = 0.0000, missed fall windows = 89, false fall alarms = 115
+Defended clean: accuracy = 0.6074, missed fall windows = 53, false fall alarms = 22
+Defended FGSM: accuracy = 0.1526, missed fall windows = 89, false fall alarms = 72
+Defended PGD: accuracy = 0.0773, missed fall windows = 89, false fall alarms = 56
+```
+
+Interpretation: Figure 6 complements Table 8 by showing the full seven-class confusion-matrix structure behind the binary fall-vs-non-fall safety-proxy metrics. It helps identify whether attacks and defenses mainly convert fall windows into specific non-fall classes, or convert non-fall activities into false fall alarms.
+
+Claim boundary: this is a window-level seven-class confusion-matrix visualization using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
 
 

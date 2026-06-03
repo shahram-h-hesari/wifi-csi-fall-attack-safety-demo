@@ -1087,3 +1087,38 @@ Interpretation: the first short 5-epoch FGSM adversarial-training defense reduce
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Figure 4: Clean vs Defended Clean Tradeoff
+
+This thesis-ready figure compares the undefended clean baseline against the defended clean model.
+
+The purpose is to show the clean-performance cost of the first short 5-epoch FGSM adversarial-training defense.
+
+The figure compares:
+
+- Recall/sensitivity
+- Missed fall rate
+- Precision
+- F1-score
+- Balanced accuracy
+- False fall alarm count
+
+Files:
+
+- Script: [`scripts/create_thesis_figure_4_clean_defense_tradeoff.py`](scripts/create_thesis_figure_4_clean_defense_tradeoff.py)
+- Figure: [`figures/thesis_figure_4_clean_defense_tradeoff.png`](figures/thesis_figure_4_clean_defense_tradeoff.png)
+- Markdown note: [`notes/thesis_figure_4_clean_defense_tradeoff.md`](notes/thesis_figure_4_clean_defense_tradeoff.md)
+
+Main result:
+
+- Recall/sensitivity decreased from `0.6404` to `0.4045`.
+- Missed fall rate increased from `0.3596` to `0.5955`.
+- Precision decreased slightly from `0.6404` to `0.6207`.
+- F1-score decreased from `0.6404` to `0.4898`.
+- Balanced accuracy decreased from `0.8026` to `0.6901`.
+- False fall alarms decreased from `32` to `22`.
+
+Interpretation: the defended clean model reduced false fall alarms, but this came with lower fall recall/sensitivity, higher missed fall rate, lower F1-score, and lower balanced accuracy. This clean-condition tradeoff is important because a defense that reduces false alarms may still be undesirable if it increases missed falls.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+

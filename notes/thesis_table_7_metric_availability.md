@@ -1,0 +1,50 @@
+# Thesis Table 7: Safety Metric Availability and Data Requirement Table
+
+This table separates metrics that are computable from the current SenseFi / UT-HAR window-level outputs from metrics that require additional event-level, timing, subject, trial, or recording metadata.
+
+## Claim Boundary
+
+Research implementation only; window-level safety-proxy evaluation; software-level processed-tensor perturbations only; not clinical validation, not medical-device validation, not diagnostic evidence, not real patient deployment, not regulatory evaluation, not event-level fall validation, not long-lie validation, not time-to-alarm validation, and not physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+## Key Finding
+
+The current local UT-HAR dataset supports window-level fall-vs-non-fall safety-proxy metrics, but it does not support event-level clinical-safety metrics such as detection latency, time-to-detection, delayed detection rate, long-lie proxy, or false alarms per hour/day without additional metadata.
+
+## Table
+
+| Rank | Metric Group | Metric | Computable Now? | Support Level | Available Data | Missing Data | Why It Matters | Thesis Use | Reporting Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Current window-level metric | Seven-class accuracy | yes | Directly computable | true activity labels; predicted activity labels | none for window-level classification | Measures overall seven-class activity recognition performance before binary fall translation. | Use as a standard ML baseline metric, but do not treat it as sufficient for clinical-safety interpretation. | Report now |
+| 2 | Current window-level metric | Binary fall-vs-non-fall accuracy | yes | Directly computable | true labels; predicted labels; fall-vs-non-fall label mapping | none for window-level binary classification | Shows how well the model separates fall windows from non-fall windows. | Use as a bridge from activity recognition to safety-proxy evaluation. | Report now |
+| 3 | Current window-level metric | TP, FN, FP, TN | yes | Directly computable | binary true labels; binary predicted labels | none for window-level confusion matrix | Identifies detected falls, missed falls, false fall alarms, and correctly rejected non-falls. | Use as the foundation for all current safety-proxy metrics. | Report now |
+| 4 | Current window-level metric | Recall / sensitivity | yes | Directly computable | TP and FN | none for window-level fall windows | Measures the fraction of fall windows detected as fall. | Use to quantify fall-detection degradation under FGSM and PGD. | Report now |
+| 5 | Current window-level metric | Missed fall rate | yes | Directly computable as a window-level proxy | FN and total fall windows | event IDs would be needed for event-level missed fall rate | Represents the fraction of fall windows misclassified as non-fall. | Use as the main safety-proxy metric for fall-miss risk under attack. | Report now as window-level proxy |
+| 6 | Current window-level metric | Specificity | yes | Directly computable | TN and FP | none for window-level non-fall windows | Measures how well non-fall windows are correctly rejected. | Use to interpret non-fall stability under clean, attacked, and defended conditions. | Report now |
+| 7 | Current window-level metric | False positive rate | yes | Directly computable | FP and TN | recording duration would be needed for false alarms per hour/day | Measures the rate at which non-fall windows are incorrectly flagged as fall. | Use as a window-level false-alert burden proxy. | Report now as window-level proxy |
+| 8 | Current window-level metric | Precision / positive predictive value | yes | Directly computable | TP and FP | none for window-level predicted fall alerts | Shows how trustworthy predicted fall alerts are at the window level. | Use to explain false-alert burden and alert trustworthiness. | Report now |
+| 9 | Current window-level metric | F1-score | yes | Directly computable | precision and recall | none for window-level binary classification | Balances fall-window detection and predicted-alert reliability. | Use as a compact safety-proxy summary metric. | Report now |
+| 10 | Current window-level metric | Balanced accuracy | yes | Directly computable | sensitivity and specificity | none for window-level binary classification | Useful when fall and non-fall windows are imbalanced. | Use alongside accuracy to avoid hiding poor fall recall behind many non-fall windows. | Report now |
+| 11 | Current window-level metric | False fall alarm count | yes | Directly computable as FP count | FP false fall alarm windows | recording duration would be needed for false alarms per hour/day | Shows the number of non-fall windows incorrectly flagged as fall. | Use as a simple window-level false alarm burden indicator. | Report now as count, not rate per time |
+| 12 | Current attack/robustness metric | Prediction change rate under attack | yes | Directly computable | clean predictions; attacked predictions | none for window-level prediction-change analysis | Measures how often adversarial perturbation changes model decisions. | Use to quantify attack instability alongside safety-proxy metrics. | Report now |
+| 13 | Current multiclass diagnostic metric | High-risk multiclass confusion pattern | partial | Computable if seven-class predictions are exported for each condition | true seven-class labels; predicted seven-class labels | event timing and clinical severity labels are not available | Shows whether fall is confused with clinically risky non-fall classes such as lie down or sit down. | Use for Table 8 / Figure 6 as an error-taxonomy analysis, not clinical validation. | Report as window-level error taxonomy |
+| 14 | Future event-level metric | Event-level fall detection rate | no | Requires additional metadata | fall-window labels only | fall event IDs or trial/event grouping | Measures whether each real fall event was detected at least once. | Use in future event-level dataset or collaboration. | Do not report yet |
+| 15 | Future event-level metric | Event-level missed fall count | no | Requires additional metadata | fall-window labels only | event-level ground truth and event grouping | Measures missed fall events rather than missed fall windows. | Use in future event-level dataset or collaboration. | Do not report yet |
+| 16 | Future timing metric | Detection latency / time-to-detection | no | Requires additional metadata | window-level labels and predictions | timestamps; fall onset time; fall impact time; model detection time | Measures how quickly the system detects a fall after it begins or occurs. | Use in future event-level safety analysis if timing metadata becomes available. | Do not report yet |
+| 17 | Future timing metric | Delayed detection rate | no | Requires additional metadata and threshold | window-level labels and predictions | timestamps; detection time; delay threshold such as 1, 5, 10, or 30 minutes | Measures how often falls are detected too late to meet a defined alert-time threshold. | Use in future clinical-safety translation work with a justified delay threshold. | Do not report yet |
+| 18 | Future clinical-safety proxy | Long-lie risk proxy | no | Requires additional metadata and threshold | window-level labels and predictions | fall time; alert time; time-on-floor threshold; event-level grouping | Connects missed or delayed fall detection to delayed-rescue risk. | Use only with event-level timing data and carefully defined proxy assumptions. | Do not report yet |
+| 19 | Future alarm-burden metric | False alarms per hour/day | no | Requires additional metadata | window-level FP count | recording duration or monitoring time | Converts false alarm count into caregiver-facing alarm burden over time. | Use in future dataset with monitoring duration. | Do not report yet; report FP count only for now |
+| 20 | Future generalization metric | Subject-level robustness | no | Requires additional metadata | window-level labels and predictions | subject IDs | Checks whether attack impact differs by participant. | Use in future subject-annotated dataset. | Do not report yet |
+| 21 | Future generalization metric | Trial-level robustness | no | Requires additional metadata | window-level labels and predictions | trial IDs | Checks whether attack impact differs by trial or recording. | Use in future trial-annotated dataset. | Do not report yet |
+| 22 | Future generalization metric | Cross-subject generalization | no | Requires additional metadata | window-level labels and predictions | subject split metadata | Checks whether results generalize across people rather than only across windows. | Use in future dataset with subject-aware train/test split. | Do not report yet |
+| 23 | Future context metric | Room/session-level robustness | no | Requires additional metadata | window-level labels and predictions | room IDs; session IDs; recording IDs | Checks whether attack and defense behavior changes across rooms or sessions. | Use in future dataset with room/session annotations. | Do not report yet |
+
+## Interpretation
+
+Table 7 helps prevent overclaiming by making the metric boundary explicit. The current experiment can defensibly report window-level safety-proxy metrics, including missed fall rate, false fall alarm count, recall, precision, F1-score, specificity, false positive rate, balanced accuracy, and prediction change rate under attack.
+
+Metrics that require event timing, fall onset, alert time, subject IDs, trial IDs, or recording duration should be treated as future work until a richer dataset or collaboration provides those fields.
+
+## Output Files
+
+- `results/thesis_table_7_metric_availability.csv`
+- `notes/thesis_table_7_metric_availability.md`

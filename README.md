@@ -1238,3 +1238,67 @@ Files:
 
 Interpretation: the current dataset supports window-level fall-vs-non-fall safety-proxy metrics, but it does not support event-level metrics such as detection latency, time-to-detection, delayed detection rate, long-lie proxy, or false alarms per hour/day without additional metadata or a future dataset/collaboration.
 
+### Thesis Table 7: Safety Metric Availability and Data Requirement Table
+
+This thesis-ready table separates safety metrics that are computable from the current SenseFi / UT-HAR window-level outputs from metrics that require additional event-level, timing, subject, trial, room/session, or recording-duration metadata.
+
+Files:
+
+- `scripts/create_thesis_table_7_metric_availability.py`
+- `results/thesis_table_7_metric_availability.csv`
+- `notes/thesis_table_7_metric_availability.md`
+
+Table 7 summarizes:
+
+```text
+12 metrics are computable now from the current window-level outputs.
+1 metric is partially computable as a window-level multiclass error-taxonomy analysis.
+10 metrics require additional event-level, timing, subject, trial, room/session, or recording-duration metadata.
+```
+
+Computable now:
+
+```text
+seven-class accuracy
+binary fall-vs-non-fall accuracy
+TP, FN, FP, TN
+recall / sensitivity
+missed fall rate
+specificity
+false positive rate
+precision / positive predictive value
+F1-score
+balanced accuracy
+false fall alarm count
+prediction change rate under attack
+```
+
+Partially computable now:
+
+```text
+high-risk multiclass confusion pattern
+```
+
+This metric is partially computable because the current workflow has seven-class labels and model predictions, but it does not include event timing or clinical severity labels. It should be reported as a window-level multiclass error-taxonomy analysis, not as event-level clinical validation.
+
+Not computable yet without richer metadata:
+
+```text
+event-level fall detection rate
+event-level missed fall count
+detection latency / time-to-detection
+delayed detection rate
+long-lie risk proxy
+false alarms per hour/day
+subject-level robustness
+trial-level robustness
+cross-subject generalization
+room/session-level robustness
+```
+
+Interpretation: Table 7 prevents overclaiming by clearly identifying what the current dataset supports and what requires future dataset access or collaboration. The current workflow supports window-level safety-proxy reporting, while event-level clinical-safety metrics require timestamps, event IDs, trial IDs, subject IDs, recording duration, room/session identifiers, or related metadata.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+

@@ -1515,3 +1515,71 @@ Claim boundary: this is a window-level robustness-collapse visualization using s
 
 
 
+### Thesis Figure 8: Safety Translation Pipeline Diagram
+
+This thesis-ready conceptual figure summarizes the safety-translation pipeline used in the WiFi CSI Fall Attack-Safety Demo.
+
+The figure separates three layers:
+
+```text
+Layer 1: current computable workflow
+Layer 2: current thesis evidence generated from window-level outputs
+Layer 3: metadata gap and future event-level extension
+```
+
+Files:
+
+- `scripts/create_thesis_figure_8_safety_translation_pipeline.py`
+- `figures/thesis_figure_8_safety_translation_pipeline.png`
+- `notes/thesis_figure_8_safety_translation_pipeline.md`
+
+Figure 8 shows the current pipeline:
+
+```text
+processed WiFi CSI windows
+-> clean model prediction
+-> software-level FGSM / PGD perturbation
+-> attacked prediction
+-> binary fall-vs-non-fall mapping
+-> window-level safety-proxy metrics
+```
+
+Current thesis evidence generated from this workflow includes:
+
+```text
+robustness threshold translation
+multiclass error taxonomy
+safety-proxy summary metrics
+reproducible GitHub artifacts
+```
+
+The figure also identifies the metadata gap that prevents event-level clinical-safety analysis in the current UT-HAR workflow:
+
+```text
+no timestamp
+no event ID
+no subject/trial ID
+no recording duration
+no fall onset time
+no alert time
+```
+
+Future datasets or collaborations with richer metadata could support:
+
+```text
+event-level fall detection rate
+time-to-detection
+delayed detection
+long-lie proxy
+false alarms per hour/day
+subject-level robustness
+trial-level robustness
+```
+
+Interpretation: Figure 8 clearly separates the current research contribution from future clinical-safety extensions. The current contribution is a reproducible workflow for translating adversarial degradation into window-level fall safety-proxy metrics.
+
+Claim boundary: this is a conceptual safety-translation pipeline for a window-level research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+
+

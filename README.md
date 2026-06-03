@@ -1163,3 +1163,40 @@ Main result:
 Interpretation: under FGSM and PGD attack, true detected falls drop to zero and missed falls rise to all `89` fall windows. The defended model reduces false fall alarms under attack, but it does not recover detected falls at epsilon `0.030`. The clean defended model also reduces false alarms but increases missed falls from `32` to `53`.
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 5: Reproducibility Configuration Table
+
+This thesis-ready table documents the key configuration choices used in the WiFi CSI Fall Attack-Safety Demo.
+
+The purpose is to make the first clean-to-attack-to-defense workflow easier to reproduce, audit, and extend to another dataset.
+
+Files:
+
+- Script: [`scripts/create_thesis_table_5_reproducibility_configuration.py`](scripts/create_thesis_table_5_reproducibility_configuration.py)
+- CSV table: [`results/thesis_table_5_reproducibility_configuration.csv`](results/thesis_table_5_reproducibility_configuration.csv)
+- Markdown note: [`notes/thesis_table_5_reproducibility_configuration.md`](notes/thesis_table_5_reproducibility_configuration.md)
+
+Main configuration:
+
+- Baseline library: SenseFi / WiFi-CSI-Sensing-Benchmark.
+- Dataset: `UT_HAR_data` / UT-HAR.
+- Model: LeNet / `UT_HAR_LeNet`.
+- Evaluation unit: window-level processed CSI tensor.
+- Evaluated windows: `996` total windows, including `89` fall windows and `907` non-fall windows.
+- Clean baseline epochs: `5`.
+- Defense method: FGSM adversarial training.
+- Defense epochs: `5`.
+- FGSM evaluation epsilon: `0.030`.
+- FGSM epsilon sweep values: `0.000`, `0.005`, `0.010`, `0.020`, `0.030`.
+- PGD evaluation epsilon: `0.030`.
+- PGD evaluation alpha: `0.005`.
+- PGD evaluation steps: `10`.
+- PGD epsilon sweep values: `0.000`, `0.005`, `0.010`, `0.020`, `0.030`.
+- FGSM training epsilon for defense: `0.005`.
+- Adversarial loss weight: `0.5`.
+
+Interpretation: Table 5 records the experimental scope and parameter values behind the thesis-ready tables and figures. It is useful for repeating the workflow with another WiFi CSI dataset because it separates dataset choice, model choice, attack settings, defense settings, evaluation metrics, and claim boundaries.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+

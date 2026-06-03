@@ -1,0 +1,54 @@
+# Thesis Table 5: Reproducibility Configuration Table
+
+This table documents the key configuration choices used in the WiFi CSI Fall Attack-Safety Demo.
+
+The purpose is to make the first clean-to-attack-to-defense workflow easier to reproduce, audit, and extend to another dataset.
+
+## Claim Boundary
+
+This is a research implementation using window-level safety-proxy metrics and software-level processed-tensor adversarial perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+## Table
+
+| Category | Parameter | Value | Notes |
+|---|---|---|---|
+| Experiment identity | Experiment name | WiFi CSI Fall Attack-Safety Demo | Reproducible research implementation for adversarial WiFi CSI fall-safety proxy evaluation. |
+| Experiment identity | Repository location | experiments/fall_detection_attack_safety_demo | Primary implementation folder inside secure-wifi-csi-healthcare-sensing; also mirrored to standalone repo wifi-csi-fall-attack-safety-demo. |
+| Baseline resource | Baseline library | SenseFi / WiFi-CSI-Sensing-Benchmark | Used as the reproducible WiFi CSI activity-recognition baseline. |
+| Dataset | Dataset | UT_HAR_data / UT-HAR | Processed WiFi CSI human-activity-recognition dataset used through the SenseFi loader. |
+| Dataset | Evaluation unit | Window-level processed CSI tensor | The experiment evaluates windows, not event-level falls, clinical alarms, long-lie events, or real patient episodes. |
+| Dataset | Evaluated windows | 996 total windows | 89 fall windows and 907 non-fall windows. |
+| Label mapping | Original task | Seven-class UT-HAR activity recognition | Model predicts the original UT-HAR activity classes before binary safety-proxy conversion. |
+| Label mapping | Binary safety-proxy mapping | fall = class 1; non-fall = classes 0, 2, 3, 4, 5, 6 | Used to compute fall-vs-non-fall TP, FN, FP, TN and derived safety-proxy metrics. |
+| Model | Model architecture | LeNet / UT_HAR_LeNet | SenseFi UT-HAR LeNet model used as the first reproducible baseline. |
+| Clean baseline | Clean baseline epochs | 5 | Shortened clean baseline training used for the first reproducible thesis demo. |
+| Clean baseline | Clean baseline device | Local CPU environment | Run inside the local sensefi_env environment; this table records the reproducible local research setting. |
+| FGSM attack | Attack type | FGSM | Software-level untargeted adversarial perturbation applied to processed UT-HAR CSI tensors. |
+| FGSM attack | FGSM evaluation epsilon | 0.030 | Used for the main FGSM attacked prediction export and defended-vs-undefended comparison. |
+| FGSM attack | FGSM epsilon sweep values | 0.000, 0.005, 0.010, 0.020, 0.030 | Used to characterize dose-response behavior across perturbation strength. |
+| PGD attack | Attack type | PGD | Software-level untargeted projected-gradient perturbation applied to processed UT-HAR CSI tensors. |
+| PGD attack | PGD evaluation epsilon | 0.030 | Used for the main PGD attacked prediction export and defended-vs-undefended comparison. |
+| PGD attack | PGD evaluation alpha | 0.005 | Step size used for the main PGD evaluation at epsilon 0.030. |
+| PGD attack | PGD evaluation steps | 10 | Number of projected-gradient steps used for the main PGD evaluation. |
+| PGD attack | PGD epsilon sweep values | 0.000, 0.005, 0.010, 0.020, 0.030 | Used to characterize PGD dose-response behavior across perturbation strength. |
+| PGD attack | PGD epsilon sweep alpha rule | alpha = epsilon / 6; alpha = 0.000 when epsilon = 0.000 | Used in the PGD epsilon sweep script. |
+| Defense | Defense method | FGSM adversarial training | First short defended baseline using clean loss plus FGSM adversarial loss. |
+| Defense | Defense epochs | 5 | Shortened defended training used for the first defense comparison. |
+| Defense | FGSM training epsilon | 0.005 | Perturbation strength used during FGSM adversarial training. |
+| Defense | Adversarial loss weight | 0.5 | Weight applied to the adversarial loss term during defended training. |
+| Evaluation | Primary comparison file | results/defended_vs_undefended_safety_comparison.csv | Main source file for thesis-ready safety-proxy tables and figures. |
+| Evaluation | Primary evaluated conditions | undefended clean; undefended FGSM; undefended PGD; defended clean; defended FGSM; defended PGD | All attacked conditions use epsilon 0.030 for the main defended-vs-undefended comparison. |
+| Evaluation | Safety-proxy metrics | TP, FN, FP, TN, recall/sensitivity, missed fall rate, specificity, false positive rate, precision, F1-score, balanced accuracy, false alarm count, prediction change rate | Metrics translate model degradation into fall-vs-non-fall safety-proxy terms. |
+| Claim boundary | Clinical claim boundary | Not clinical validation | The experiment does not provide clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, or long-lie validation. |
+| Claim boundary | Wireless attack claim boundary | Not physical-layer / packet-level / preamble-level / SDR / over-the-air validation | FGSM and PGD are software-level perturbations applied to processed CSI tensors. |
+
+## Interpretation
+
+This configuration table records the experimental scope and parameter values behind the thesis-ready tables and figures. It is especially useful for repeating the workflow with another WiFi CSI dataset because it separates dataset choice, model choice, attack settings, defense settings, evaluation metrics, and claim boundaries.
+
+The most important reproducibility settings are: SenseFi UT-HAR data, LeNet model, 5 clean training epochs, 5 defended training epochs, FGSM evaluation epsilon 0.030, PGD evaluation epsilon 0.030, PGD alpha 0.005, 10 PGD steps, FGSM adversarial-training epsilon 0.005, and adversarial loss weight 0.5.
+
+## Output Files
+
+- `results/thesis_table_5_reproducibility_configuration.csv`
+- `notes/thesis_table_5_reproducibility_configuration.md`

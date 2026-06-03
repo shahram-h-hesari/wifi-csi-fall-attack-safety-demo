@@ -925,3 +925,43 @@ preamble-level validation
 SDR validation
 over-the-air validation
 ```
+
+---
+
+### Thesis Figure 1: Defended vs Undefended Safety Tradeoff
+
+Figure 1 summarizes the first thesis-ready visual comparison of missed fall rate and false fall alarm count across clean, attacked, and defended conditions.
+
+The figure compares:
+
+```text
+undefended clean model
+undefended FGSM-attacked model at epsilon 0.03
+undefended PGD-attacked model at epsilon 0.03
+FGSM-adversarial-trained defended clean model
+FGSM-adversarial-trained defended model under FGSM attack at epsilon 0.03
+FGSM-adversarial-trained defended model under PGD attack at epsilon 0.03
+```
+
+Generated files:
+
+```text
+scripts/create_thesis_figure_1_safety_tradeoff.py
+figures/thesis_figure_1_safety_tradeoff.png
+notes/thesis_figure_1_safety_tradeoff.md
+```
+
+The figure shows two fall-focused safety-proxy outcomes:
+
+```text
+missed fall rate
+false fall alarm count
+```
+
+Main thesis-ready interpretation:
+
+```text
+The defended model reduced false fall alarms under FGSM and PGD attack, but it did not recover fall recall at epsilon 0.03. Therefore, missed fall rate remained 1.0 under defended FGSM and defended PGD attack.
+```
+
+This figure is a window-level software comparison on processed CSI tensors. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, event-level fall validation, physical-layer validation, packet-level validation, preamble-level validation, SDR validation, or over-the-air validation.

@@ -1,0 +1,4 @@
+condition,model_type,attack_type,epsilon,total_windows,fall_windows,non_fall_windows,TP_detected_falls,FN_missed_falls,FP_false_fall_alarms,TN_correct_non_falls,seven_class_accuracy,binary_accuracy,recall_sensitivity,missed_fall_rate,specificity,false_positive_rate,precision,f1_score,balanced_accuracy,prediction_change_rate
+defended_clean,FGSM_adversarial_training_defended,none,0.000000,996,89,907,36,53,22,885,0.607430,0.924699,0.404494,0.595506,0.975744,0.024256,0.620690,0.489796,0.690119,0.000000
+defended_fgsm_epsilon_0_03,FGSM_adversarial_training_defended,FGSM,0.030000,996,89,907,0,89,72,835,0.152610,0.838353,0.000000,1.000000,0.920617,0.079383,0.000000,0.000000,0.460309,0.116466
+defended_pgd_epsilon_0_03,FGSM_adversarial_training_defended,PGD,0.030000,996,89,907,0,89,56,851,0.077309,0.854418,0.000000,1.000000,0.938258,0.061742,0.000000,0.000000,0.469129,0.108434

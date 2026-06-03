@@ -1121,4 +1121,45 @@ Interpretation: the defended clean model reduced false fall alarms, but this cam
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
+### Thesis Figure 5: Binary Fall-vs-Non-Fall Confusion Matrices
 
+This thesis-ready figure shows binary fall-vs-non-fall confusion matrices for clean, FGSM-attacked, and PGD-attacked conditions before and after defense.
+
+The figure compares:
+
+- Undefended clean
+- Undefended FGSM at epsilon `0.030`
+- Undefended PGD at epsilon `0.030`
+- Defended clean
+- Defended FGSM at epsilon `0.030`
+- Defended PGD at epsilon `0.030`
+
+Matrix layout:
+
+```text
+Rows = true class
+Columns = predicted class
+
+                 Predicted Fall    Predicted Non-Fall
+True Fall              TP                  FN
+True Non-Fall          FP                  TN
+```
+
+Files:
+
+- Script: [`scripts/create_thesis_figure_5_confusion_matrices.py`](scripts/create_thesis_figure_5_confusion_matrices.py)
+- Figure: [`figures/thesis_figure_5_confusion_matrices.png`](figures/thesis_figure_5_confusion_matrices.png)
+- Markdown note: [`notes/thesis_figure_5_confusion_matrices.md`](notes/thesis_figure_5_confusion_matrices.md)
+
+Main result:
+
+- Undefended clean: TP `57`, FN `32`, FP `32`, TN `875`.
+- Undefended FGSM: TP `0`, FN `89`, FP `119`, TN `788`.
+- Undefended PGD: TP `0`, FN `89`, FP `115`, TN `792`.
+- Defended clean: TP `36`, FN `53`, FP `22`, TN `885`.
+- Defended FGSM: TP `0`, FN `89`, FP `72`, TN `835`.
+- Defended PGD: TP `0`, FN `89`, FP `56`, TN `851`.
+
+Interpretation: under FGSM and PGD attack, true detected falls drop to zero and missed falls rise to all `89` fall windows. The defended model reduces false fall alarms under attack, but it does not recover detected falls at epsilon `0.030`. The clean defended model also reduces false alarms but increases missed falls from `32` to `53`.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

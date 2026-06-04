@@ -1699,6 +1699,95 @@ Interpretation: Figure 9 complements the binary confusion matrices by showing th
 Claim boundary: this is a window-level safety-error burden visualization using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation. Counts are window counts only and are not false alarms per hour/day because recording-duration metadata is unavailable.
 
 
+### Thesis Table 11: Attack-Induced Safety Risk Amplification Ratios
+
+This thesis-ready table translates clean-to-attacked and clean-to-defended changes into window-level safety-risk amplification and performance-retention ratios.
+
+Files:
+
+- `scripts/create_thesis_table_11_attack_induced_safety_risk_amplification.py`
+- `results/thesis_table_11_attack_induced_safety_risk_amplification.csv`
+- `notes/thesis_table_11_attack_induced_safety_risk_amplification.md`
+
+Input file:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+
+Reference condition:
+
+```text
+reference condition = undefended clean
+reference missed fall rate = 0.359551
+reference false fall alarm count = 32
+reference recall/sensitivity = 0.640449
+reference F1-score = 0.640449
+reference balanced accuracy = 0.802584
+```
+
+Table 11 includes these ratio definitions:
+
+```text
+missed fall rate ratio = condition missed fall rate / clean missed fall rate
+false alarm count ratio = condition false alarm count / clean false alarm count
+recall retention = condition recall / clean recall
+F1 retention = condition F1-score / clean F1-score
+balanced accuracy retention = condition balanced accuracy / clean balanced accuracy
+```
+
+Key ratio summary:
+
+```text
+Undefended clean reference:
+missed fall ratio = 1.000000
+false alarm ratio = 1.000000
+recall retention = 1.000000
+F1 retention = 1.000000
+balanced accuracy retention = 1.000000
+
+Undefended FGSM epsilon 0.03:
+missed fall ratio = 2.781247
+false alarm ratio = 3.718750
+recall retention = 0.000000
+F1 retention = 0.000000
+balanced accuracy retention = 0.541251
+
+Undefended PGD epsilon 0.03:
+missed fall ratio = 2.781247
+false alarm ratio = 3.593750
+recall retention = 0.000000
+F1 retention = 0.000000
+balanced accuracy retention = 0.543998
+
+Defended clean:
+missed fall ratio = 1.656249
+false alarm ratio = 0.687500
+recall retention = 0.631579
+F1 retention = 0.764770
+balanced accuracy retention = 0.859871
+
+Defended FGSM epsilon 0.03:
+missed fall ratio = 2.781247
+false alarm ratio = 2.250000
+recall retention = 0.000000
+F1 retention = 0.000000
+balanced accuracy retention = 0.573534
+
+Defended PGD epsilon 0.03:
+missed fall ratio = 2.781247
+false alarm ratio = 1.750000
+recall retention = 0.000000
+F1 retention = 0.000000
+balanced accuracy retention = 0.584523
+```
+
+Interpretation: Table 11 provides a compact way to describe how much window-level safety-relevant risk increases, and how much useful model performance is retained, relative to the undefended clean baseline. A missed fall rate ratio above `1.0` means the condition has more missed fall behavior than the clean baseline. A recall, F1, or balanced accuracy retention below `1.0` means the condition retains less of the clean baseline performance.
+
+The attacked conditions show severe missed-fall amplification because the missed fall rate increases from `0.359551` in the clean baseline to `1.000000` under FGSM and PGD at epsilon `0.030`. The defended attacked conditions reduce false fall alarm burden relative to the undefended attacked conditions, but still do not recover fall recall or F1-score at epsilon `0.030`.
+
+Claim boundary: these are window-level safety-proxy amplification and retention ratios. They are not clinical risk ratios, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+
 
 
 

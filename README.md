@@ -1581,5 +1581,75 @@ Interpretation: Figure 8 clearly separates the current research contribution fro
 Claim boundary: this is a conceptual safety-translation pipeline for a window-level research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Table 10: Extended Window-Level Diagnostic Safety Metrics
+
+This thesis-ready table reports additional diagnostic-style safety-proxy metrics computed from the binary fall-vs-non-fall confusion matrix for clean, attacked, and defended conditions.
+
+Files:
+
+- `scripts/create_thesis_table_10_extended_diagnostic_safety_metrics.py`
+- `results/thesis_table_10_extended_diagnostic_safety_metrics.csv`
+- `notes/thesis_table_10_extended_diagnostic_safety_metrics.md`
+
+Input file:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+
+Table 10 includes:
+
+```text
+negative predictive value
+false omission rate
+false discovery rate
+positive likelihood ratio
+negative likelihood ratio
+diagnostic odds ratio
+Matthews correlation coefficient
+Cohen's kappa
+fall-window prevalence
+false-alarm-to-detected-fall ratio
+missed-fall-to-detected-fall ratio
+```
+
+Key interpretation:
+
+```text
+Undefended clean:
+NPV = 0.964719
+MCC = 0.605168
+Cohen's kappa = 0.605168
+
+Undefended FGSM epsilon 0.03:
+NPV = 0.898518
+MCC = -0.115389
+Cohen's kappa = -0.113890
+
+Undefended PGD epsilon 0.03:
+NPV = 0.898978
+MCC = -0.113175
+Cohen's kappa = -0.112033
+
+Defended clean:
+NPV = 0.943497
+MCC = 0.463169
+Cohen's kappa = 0.451090
+
+Defended FGSM epsilon 0.03:
+NPV = 0.903680
+MCC = -0.087442
+Cohen's kappa = -0.086865
+
+Defended PGD epsilon 0.03:
+NPV = 0.905319
+MCC = -0.076458
+Cohen's kappa = -0.074138
+```
+Interpretation: Table 10 extends the safety-proxy analysis beyond recall, precision, F1-score, and balanced accuracy. The clean undefended model has stronger agreement-style metrics than the attacked and defended-attacked conditions. Under FGSM and PGD attack at epsilon `0.030`, TP becomes zero, which causes the false-alarm-to-detected-fall and missed-fall-to-detected-fall ratios to be undefined. This is reported as `NA` rather than fabricated.
+
+Claim boundary: these are window-level diagnostic-style safety-proxy metrics. They are not clinical diagnostic validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+
+
 
 

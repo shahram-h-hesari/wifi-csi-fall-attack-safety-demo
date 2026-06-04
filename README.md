@@ -2352,6 +2352,74 @@ Claim boundary: this is a window-level descriptive ranking visualization only. T
 
 
 
+### Thesis Table 14: Matched Attack Defense Effect Summary
+
+This thesis-ready table directly compares matched undefended and defended attack conditions to summarize the observed defense effect.
+
+Files:
+
+- `scripts/create_thesis_table_14_matched_attack_defense_effect_summary.py`
+- `results/thesis_table_14_matched_attack_defense_effect_summary.csv`
+- `notes/thesis_table_14_matched_attack_defense_effect_summary.md`
+
+Input files:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+- `results/thesis_table_12_model_confidence_error_summary.csv`
+- `results/thesis_table_13_confidence_safety_failure_ranking.csv`
+
+Matched comparisons:
+
+```text
+Undefended FGSM epsilon 0.03 vs Defended FGSM epsilon 0.03
+Undefended PGD epsilon 0.03 vs Defended PGD epsilon 0.03
+```
+
+Summary result:
+
+```text
+FGSM epsilon 0.03:
+missed fall rate: 1.000000 -> 1.000000
+high-confidence missed-fall rate: 0.606742 -> 0.123596
+confidence-safety failure score: 0.606742 -> 0.123596
+false fall alarms: 119 -> 72
+high-confidence missed-fall rate reduction = 0.483146
+high-confidence missed-fall rate percent reduction = 79.63%
+confidence-safety failure score reduction = 0.483146
+confidence-safety failure score percent reduction = 79.63%
+mean missed-fall confidence reduction = 0.335759
+median missed-fall confidence reduction = 0.475773
+false fall alarm count reduction = 47
+recall change = 0.000000
+F1-score change = 0.000000
+balanced accuracy change = 0.025910
+
+PGD epsilon 0.03:
+missed fall rate: 1.000000 -> 1.000000
+high-confidence missed-fall rate: 0.820225 -> 0.134831
+confidence-safety failure score: 0.820225 -> 0.134831
+false fall alarms: 115 -> 56
+high-confidence missed-fall rate reduction = 0.685394
+high-confidence missed-fall rate percent reduction = 83.56%
+confidence-safety failure score reduction = 0.685394
+confidence-safety failure score percent reduction = 83.56%
+mean missed-fall confidence reduction = 0.417114
+median missed-fall confidence reduction = 0.576709
+false fall alarm count reduction = 59
+recall change = 0.000000
+F1-score change = 0.000000
+balanced accuracy change = 0.032525
+```
+
+Interpretation: Table 14 directly compares matched attack conditions. In both FGSM and PGD cases, the defended model does not restore fall recall because missed fall rate remains `1.000000`. However, the defended attacked conditions have much lower high-confidence missed-fall rates and lower confidence-safety failure scores than the corresponding undefended attacked conditions.
+
+For FGSM, the high-confidence missed-fall rate drops from `0.606742` to `0.123596`, a `79.63%` reduction. For PGD, the high-confidence missed-fall rate drops from `0.820225` to `0.134831`, an `83.56%` reduction.
+
+This supports a careful thesis statement: the short defended model reduced overconfident missed-fall behavior, but it did not restore window-level fall-detection safety performance.
+
+Claim boundary: this is a matched window-level attack-defense effect summary only. These values are not clinical defense-effectiveness claims, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall-risk reduction, long-lie risk reduction, time-to-alarm improvement, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
 
 
 

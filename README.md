@@ -2292,6 +2292,66 @@ Claim boundary: this is a window-level descriptive ranking only. It is not a cli
 
 
 
+### Thesis Figure 13: Confidence-Safety Failure Ranking
+
+This thesis-ready figure visualizes the Table 13 confidence-safety failure ranking as a horizontal bar chart.
+
+Files:
+
+- `scripts/create_thesis_figure_13_confidence_safety_failure_ranking.py`
+- `figures/thesis_figure_13_confidence_safety_failure_ranking.png`
+- `notes/thesis_figure_13_confidence_safety_failure_ranking.md`
+
+Input file:
+
+- `results/thesis_table_13_confidence_safety_failure_ranking.csv`
+
+Descriptive score definition:
+
+```text
+confidence-safety failure score = missed fall rate * high-confidence missed-fall rate
+```
+
+The x-axis reports the confidence-safety failure score. Higher values indicate worse window-level confidence-safety failure.
+
+Ranked visual result:
+
+```text
+Rank 1:
+condition = Undefended PGD epsilon 0.03
+confidence-safety failure score = 0.820225
+
+Rank 2:
+condition = Undefended FGSM epsilon 0.03
+confidence-safety failure score = 0.606742
+
+Rank 3:
+condition = Defended PGD epsilon 0.03
+confidence-safety failure score = 0.134831
+
+Rank 4:
+condition = Defended FGSM epsilon 0.03
+confidence-safety failure score = 0.123596
+
+Rank 5:
+condition = Undefended clean
+confidence-safety failure score = 0.101124
+
+Rank 6:
+condition = Defended clean
+confidence-safety failure score = 0.000000
+```
+
+Interpretation: Figure 13 is the visual companion to Table 13. It makes the confidence-safety failure ranking easier to interpret.
+
+The undefended PGD condition ranks highest because it combines missed fall rate `1.000000` with high-confidence missed-fall rate `0.820225`. The undefended FGSM condition ranks second because it also misses all fall windows but has a lower high-confidence missed-fall rate.
+
+The defended attacked conditions still miss all 89 fall windows, but their confidence-safety failure scores are much lower than the undefended attacked conditions because their high-confidence missed-fall rates are lower. This supports the same careful interpretation as Figure 12 and Table 13: the short defended model reduced overconfident missed-fall behavior, but it did not restore fall-detection safety performance.
+
+Claim boundary: this is a window-level descriptive ranking visualization only. The score is not a clinical risk score, diagnostic score, regulatory score, calibrated confidence score, event-level fall-risk estimate, long-lie risk estimate, time-to-alarm risk estimate, or medical-device safety score.
+
+
+
 
 
 

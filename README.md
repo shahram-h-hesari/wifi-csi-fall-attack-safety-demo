@@ -2041,6 +2041,74 @@ Claim boundary: these values are window-level model-reported predicted-class con
 
 
 
+### Thesis Figure 11: High-Confidence Missed-Fall Error Comparison
+
+This thesis-ready figure visualizes whether missed fall windows are associated with high model-reported prediction confidence across clean, attacked, and defended conditions.
+
+Files:
+
+- `scripts/create_thesis_figure_11_high_confidence_missed_fall_comparison.py`
+- `figures/thesis_figure_11_high_confidence_missed_fall_comparison.png`
+- `notes/thesis_figure_11_high_confidence_missed_fall_comparison.md`
+
+Input file:
+
+- `results/thesis_table_12_model_confidence_error_summary.csv`
+
+Figure 11 visualizes:
+
+```text
+mean missed-fall confidence
+median missed-fall confidence
+high-confidence missed-fall rate
+```
+
+Missed-fall confidence summary:
+
+```text
+Undefended clean:
+missed fall windows = 32
+mean confidence = 0.663120
+median confidence = 0.688591
+high-confidence missed-fall rate = 0.281250
+
+Undefended FGSM epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.775721
+median confidence = 0.833032
+high-confidence missed-fall rate = 0.606742
+
+Undefended PGD epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.872827
+median confidence = 0.953281
+high-confidence missed-fall rate = 0.820225
+
+Defended clean:
+missed fall windows = 53
+mean confidence = 0.462122
+median confidence = 0.415679
+high-confidence missed-fall rate = 0.000000
+
+Defended FGSM epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.439962
+median confidence = 0.357259
+high-confidence missed-fall rate = 0.123596
+
+Defended PGD epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.455713
+median confidence = 0.376572
+high-confidence missed-fall rate = 0.134831
+```
+
+Interpretation: Figure 11 shows that adversarial attacks can convert missed-fall errors into high-confidence missed-fall errors. Under FGSM and PGD at epsilon `0.030`, all 89 fall windows are missed in the undefended model. PGD produces the strongest overconfident failure mode, with median missed-fall confidence `0.953281` and high-confidence missed-fall rate `0.820225`.
+
+The defended attacked conditions still miss all 89 fall windows at epsilon `0.030`, so the short defended model does not recover fall recall. However, the defended model substantially lowers the confidence of missed-fall errors compared with the undefended attacked model. This supports a careful interpretation: the defense reduced overconfident missed-fall behavior, but did not restore fall-detection safety performance.
+
+Claim boundary: these values are window-level model-reported predicted-class confidence summaries. They are not calibrated clinical confidence, diagnostic certainty, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
 
 
 

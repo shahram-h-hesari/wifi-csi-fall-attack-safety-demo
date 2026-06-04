@@ -1649,6 +1649,56 @@ Interpretation: Table 10 extends the safety-proxy analysis beyond recall, precis
 Claim boundary: these are window-level diagnostic-style safety-proxy metrics. They are not clinical diagnostic validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Figure 9: Safety Error Burden Composition Across Conditions
+
+This thesis-ready figure visualizes how the window-level safety-error burden changes across clean, attacked, and defended conditions.
+
+Files:
+
+- `scripts/create_thesis_figure_9_safety_error_burden_composition.py`
+- `figures/thesis_figure_9_safety_error_burden_composition.png`
+- `notes/thesis_figure_9_safety_error_burden_composition.md`
+
+Input file:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+
+Figure 9 visualizes four binary fall-vs-non-fall confusion-matrix components:
+
+```text
+detected fall windows = TP
+missed fall windows = FN
+false fall alarm windows = FP
+correct non-fall windows = TN
+```
+
+Window-count summary:
+
+```text
+Undefended clean:
+TP = 57, FN = 32, FP = 32, TN = 875
+
+Undefended FGSM epsilon 0.03:
+TP = 0, FN = 89, FP = 119, TN = 788
+
+Undefended PGD epsilon 0.03:
+TP = 0, FN = 89, FP = 115, TN = 792
+
+Defended clean:
+TP = 36, FN = 53, FP = 22, TN = 885
+
+Defended FGSM epsilon 0.03:
+TP = 0, FN = 89, FP = 72, TN = 835
+
+Defended PGD epsilon 0.03:
+TP = 0, FN = 89, FP = 56, TN = 851
+```
+
+Interpretation: Figure 9 complements the binary confusion matrices by showing the safety burden as a stacked composition of detected fall windows, missed fall windows, false fall alarm windows, and correct non-fall windows. Under FGSM and PGD attack at epsilon `0.030`, detected fall windows collapse to zero while missed fall windows reach all 89 true fall windows. The defended attacked conditions reduce false fall alarm windows compared with the undefended attacked conditions, but still do not recover detected fall windows at epsilon `0.030`.
+
+Claim boundary: this is a window-level safety-error burden visualization using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation. Counts are window counts only and are not false alarms per hour/day because recording-duration metadata is unavailable.
+
+
 
 
 

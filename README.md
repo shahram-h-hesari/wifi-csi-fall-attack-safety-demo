@@ -2111,5 +2111,97 @@ Claim boundary: these values are window-level model-reported predicted-class con
 
 
 
+### Thesis Figure 12: Confidence-Safety Failure Map
+
+This thesis-ready figure combines window-level missed-fall safety failure with model-reported confidence behavior.
+
+Files:
+
+- `scripts/create_thesis_figure_12_confidence_safety_failure_map.py`
+- `figures/thesis_figure_12_confidence_safety_failure_map.png`
+- `notes/thesis_figure_12_confidence_safety_failure_map.md`
+
+Input files:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+- `results/thesis_table_12_model_confidence_error_summary.csv`
+
+Figure 12 includes two panels:
+
+```text
+Panel A = overall confidence-safety map
+Panel B = zoomed view of defended attacked conditions
+```
+
+Axes:
+
+```text
+x-axis = missed fall rate
+y-axis = high-confidence missed-fall rate
+circle = clean
+triangle = FGSM
+square = PGD
+point labels report high-confidence missed-fall rate
+no clinical threshold lines are shown
+```
+
+Figure data:
+
+```text
+Undefended clean:
+missed fall rate = 0.359551
+missed fall windows = 32
+mean missed-fall confidence = 0.663120
+median missed-fall confidence = 0.688591
+high-confidence missed-fall rate = 0.281250
+
+Undefended FGSM epsilon 0.03:
+missed fall rate = 1.000000
+missed fall windows = 89
+mean missed-fall confidence = 0.775721
+median missed-fall confidence = 0.833032
+high-confidence missed-fall rate = 0.606742
+
+Undefended PGD epsilon 0.03:
+missed fall rate = 1.000000
+missed fall windows = 89
+mean missed-fall confidence = 0.872827
+median missed-fall confidence = 0.953281
+high-confidence missed-fall rate = 0.820225
+
+Defended clean:
+missed fall rate = 0.595506
+missed fall windows = 53
+mean missed-fall confidence = 0.462122
+median missed-fall confidence = 0.415679
+high-confidence missed-fall rate = 0.000000
+
+Defended FGSM epsilon 0.03:
+missed fall rate = 1.000000
+missed fall windows = 89
+mean missed-fall confidence = 0.439962
+median missed-fall confidence = 0.357259
+high-confidence missed-fall rate = 0.123596
+
+Defended PGD epsilon 0.03:
+missed fall rate = 1.000000
+missed fall windows = 89
+mean missed-fall confidence = 0.455713
+median missed-fall confidence = 0.376572
+high-confidence missed-fall rate = 0.134831
+```
+
+Interpretation: Figure 12 combines safety failure and confidence failure into one map. Moving right means the condition misses more fall windows. Moving upward means missed fall windows are more often high-confidence errors.
+
+The upper-right area of Panel A represents the highest-concern region because both missed fall rate and high-confidence missed-fall rate are high. In this experiment, the undefended PGD condition is the strongest confidence-safety failure case: it misses all 89 fall windows and has a high-confidence missed-fall rate of `0.820225`.
+
+The defended attacked conditions remain far to the right because they still miss all 89 fall windows at epsilon `0.030`. However, they are much lower on the y-axis because their high-confidence missed-fall rates are much lower than the undefended attacked conditions. Panel B separates defended FGSM and defended PGD so their small difference is visible.
+
+Claim boundary: these values are window-level model-reported confidence and safety-proxy metrics only. They are not clinical risk estimates, calibrated clinical confidence, diagnostic certainty, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
+
+
+
 
 

@@ -1,30 +1,12 @@
-"""
-Create Thesis Table 6: Thesis Output Index / Evidence Contribution Table.
-
-This script indexes the thesis-ready tables, figures, notes, and audit outputs
-generated for the WiFi CSI Fall Attack-Safety Demo.
-
-It is intentionally descriptive: Table 6 is the navigation and evidence map
-for the experiment outputs.
-
-Outputs:
-    results/thesis_table_6_output_index.csv
-    notes/thesis_table_6_output_index.md
-
-Claim boundary:
-    Research implementation only; window-level safety-proxy evaluation;
-    software-level processed-tensor perturbations only.
-"""
-
 from pathlib import Path
 import csv
 
 
-ROOT = Path(__file__).resolve().parents[1]
-RESULTS_DIR = ROOT / "results"
-FIGURES_DIR = ROOT / "figures"
-NOTES_DIR = ROOT / "notes"
-SCRIPTS_DIR = ROOT / "scripts"
+BASE_DIR = Path(__file__).resolve().parents[1]
+RESULTS_DIR = BASE_DIR / "results"
+FIGURES_DIR = BASE_DIR / "figures"
+NOTES_DIR = BASE_DIR / "notes"
+SCRIPTS_DIR = BASE_DIR / "scripts"
 
 OUTPUT_CSV = RESULTS_DIR / "thesis_table_6_output_index.csv"
 OUTPUT_NOTE = NOTES_DIR / "thesis_table_6_output_index.md"
@@ -32,17 +14,17 @@ OUTPUT_NOTE = NOTES_DIR / "thesis_table_6_output_index.md"
 CLAIM_BOUNDARY = (
     "Research implementation only; window-level safety-proxy evaluation; "
     "software-level processed-tensor perturbations only; not clinical validation, "
-    "not medical-device validation, not diagnostic evidence, not real patient "
-    "deployment, not regulatory evaluation, not event-level fall validation, "
-    "not long-lie validation, not time-to-alarm validation, and not physical-layer / "
-    "packet-level / preamble-level / SDR / over-the-air validation."
+    "not medical-device validation, not diagnostic evidence, not real patient deployment, "
+    "not regulatory evaluation, not event-level fall validation, not long-lie validation, "
+    "not time-to-alarm validation, and not physical-layer / packet-level / preamble-level / "
+    "SDR / over-the-air validation."
 )
 
 
-ROWS = [
+ARTIFACTS = [
     {
-        "output_id": "Table 1",
-        "output_type": "Table",
+        "output": "Table 1",
+        "type": "Table",
         "title": "Clean, Attacked, and Defended Fall Safety-Proxy Metrics",
         "primary_file": "results/thesis_table_1_safety_metrics.csv",
         "companion_note": "notes/thesis_table_1_safety_metrics.md",
@@ -52,8 +34,8 @@ ROWS = [
         "use_in_thesis": "Use as the main quantitative result table for the first reproduced SenseFi UT-HAR LeNet attack-safety workflow.",
     },
     {
-        "output_id": "Figure 1",
-        "output_type": "Figure",
+        "output": "Figure 1",
+        "type": "Figure",
         "title": "Defended vs Undefended Safety Tradeoff",
         "primary_file": "figures/thesis_figure_1_safety_tradeoff.png",
         "companion_note": "notes/thesis_figure_1_safety_tradeoff.md",
@@ -63,8 +45,8 @@ ROWS = [
         "use_in_thesis": "Use as the first high-level visual summary of the clean-to-attack-to-defense safety-proxy result.",
     },
     {
-        "output_id": "Table 2",
-        "output_type": "Table",
+        "output": "Table 2",
+        "type": "Table",
         "title": "Attack Impact Delta Table",
         "primary_file": "results/thesis_table_2_attack_impact_delta.csv",
         "companion_note": "notes/thesis_table_2_attack_impact_delta.md",
@@ -74,8 +56,8 @@ ROWS = [
         "use_in_thesis": "Use to support the argument that aggregate accuracy alone is insufficient for healthcare-relevant WiFi sensing security evaluation.",
     },
     {
-        "output_id": "Figure 2",
-        "output_type": "Figure",
+        "output": "Figure 2",
+        "type": "Figure",
         "title": "FGSM vs PGD Epsilon Sweep Curves",
         "primary_file": "figures/thesis_figure_2_fgsm_pgd_epsilon_sweep.png",
         "companion_note": "notes/thesis_figure_2_fgsm_pgd_epsilon_sweep.md",
@@ -85,19 +67,19 @@ ROWS = [
         "use_in_thesis": "Use to show that safety-proxy degradation can be analyzed across attack strength rather than only at one epsilon.",
     },
     {
-        "output_id": "Table 3",
-        "output_type": "Table",
+        "output": "Table 3",
+        "type": "Table",
         "title": "Defense Tradeoff Table",
         "primary_file": "results/thesis_table_3_defense_tradeoff.csv",
         "companion_note": "notes/thesis_table_3_defense_tradeoff.md",
         "generation_script": "scripts/create_thesis_table_3_defense_tradeoff.py",
         "thesis_contribution": "Compares undefended and defended conditions to evaluate whether the first short FGSM adversarial-training defense improves or worsens safety-proxy outcomes.",
-        "clinical_safety_relevance": "Separates false alarm reduction from missed fall recovery, showing that a defense may improve one safety-proxy outcome while worsening or failing to recover another.",
+        "clinical_safety_relevance": "Separates false alarm reduction from missed fall recovery, showing that a defense may improve one safety-proxy outcome while failing another.",
         "use_in_thesis": "Use as the main defense-evaluation table for the first defended baseline.",
     },
     {
-        "output_id": "Table 4",
-        "output_type": "Table",
+        "output": "Table 4",
+        "type": "Table",
         "title": "Epsilon Sweep Summary Table",
         "primary_file": "results/thesis_table_4_epsilon_sweep_summary.csv",
         "companion_note": "notes/thesis_table_4_epsilon_sweep_summary.md",
@@ -107,8 +89,8 @@ ROWS = [
         "use_in_thesis": "Use as the table counterpart to Figure 2 and as a bridge to robustness failure-threshold analysis.",
     },
     {
-        "output_id": "Figure 3",
-        "output_type": "Figure",
+        "output": "Figure 3",
+        "type": "Figure",
         "title": "Defense Effect Summary",
         "primary_file": "figures/thesis_figure_3_defense_effect_summary.png",
         "companion_note": "notes/thesis_figure_3_defense_effect_summary.md",
@@ -118,8 +100,8 @@ ROWS = [
         "use_in_thesis": "Use as a concise visual defense-result figure in the robustness/defense chapter.",
     },
     {
-        "output_id": "Figure 4",
-        "output_type": "Figure",
+        "output": "Figure 4",
+        "type": "Figure",
         "title": "Clean vs Defended Clean Tradeoff",
         "primary_file": "figures/thesis_figure_4_clean_defense_tradeoff.png",
         "companion_note": "notes/thesis_figure_4_clean_defense_tradeoff.md",
@@ -129,8 +111,8 @@ ROWS = [
         "use_in_thesis": "Use to discuss the clean-performance tradeoff that must be considered before interpreting a defense as beneficial.",
     },
     {
-        "output_id": "Figure 5",
-        "output_type": "Figure",
+        "output": "Figure 5",
+        "type": "Figure",
         "title": "Binary Fall-vs-Non-Fall Confusion Matrices",
         "primary_file": "figures/thesis_figure_5_confusion_matrices.png",
         "companion_note": "notes/thesis_figure_5_confusion_matrices.md",
@@ -140,8 +122,8 @@ ROWS = [
         "use_in_thesis": "Use to explain how adversarial attacks and defense change the binary confusion-matrix structure behind the summary metrics.",
     },
     {
-        "output_id": "Table 5",
-        "output_type": "Table",
+        "output": "Table 5",
+        "type": "Table",
         "title": "Reproducibility Configuration Table",
         "primary_file": "results/thesis_table_5_reproducibility_configuration.csv",
         "companion_note": "notes/thesis_table_5_reproducibility_configuration.md",
@@ -151,8 +133,8 @@ ROWS = [
         "use_in_thesis": "Use as the reproducibility and scope table for repeating the workflow with another dataset.",
     },
     {
-        "output_id": "Table 6",
-        "output_type": "Index Table",
+        "output": "Table 6",
+        "type": "Index Table",
         "title": "Thesis Output Index / Evidence Contribution Table",
         "primary_file": "results/thesis_table_6_output_index.csv",
         "companion_note": "notes/thesis_table_6_output_index.md",
@@ -162,30 +144,30 @@ ROWS = [
         "use_in_thesis": "Use as the output navigation table and appendix-style artifact index for the experiment.",
     },
     {
-        "output_id": "Audit 1",
-        "output_type": "Dataset Audit Note",
+        "output": "Audit 1",
+        "type": "Dataset Audit Note",
         "title": "UT-HAR Dataset Metadata Audit",
         "primary_file": "notes/ut_har_dataset_metadata_audit.md",
-        "companion_note": "not applicable",
-        "generation_script": "manual note",
+        "companion_note": "NA",
+        "generation_script": "NA",
         "thesis_contribution": "Audits whether the local UT-HAR files support event-level timing, subject, trial, or recording metadata.",
         "clinical_safety_relevance": "Explains why the current demo can compute window-level safety-proxy metrics but cannot compute event-level metrics such as time-to-detection, delayed detection, long-lie proxy, or false alarms per hour/day.",
         "use_in_thesis": "Use as the dataset limitation and future collaboration justification note.",
     },
     {
-        "output_id": "Table 7",
-        "output_type": "Table",
+        "output": "Table 7",
+        "type": "Table",
         "title": "Safety Metric Availability and Data Requirement Table",
         "primary_file": "results/thesis_table_7_metric_availability.csv",
         "companion_note": "notes/thesis_table_7_metric_availability.md",
         "generation_script": "scripts/create_thesis_table_7_metric_availability.py",
-        "thesis_contribution": "Separates metrics computable from current UT-HAR window-level outputs from metrics requiring richer event-level, timing, subject, trial, room/session, or recording-duration metadata.",
+        "thesis_contribution": "Separates metrics computable from current UT-HAR window-level outputs from metrics requiring richer event-level metadata.",
         "clinical_safety_relevance": "Prevents overclaiming by identifying which clinical-safety metrics are not computable with the current dataset.",
         "use_in_thesis": "Use as the metric feasibility and data-requirement table for future dataset selection and collaboration planning.",
     },
     {
-        "output_id": "Table 8",
-        "output_type": "Table",
+        "output": "Table 8",
+        "type": "Table",
         "title": "High-Risk Multiclass Error Taxonomy",
         "primary_file": "results/thesis_table_8_high_risk_multiclass_error_taxonomy.csv",
         "companion_note": "notes/thesis_table_8_high_risk_multiclass_error_taxonomy.md",
@@ -195,8 +177,8 @@ ROWS = [
         "use_in_thesis": "Use as the multiclass explanation behind the binary fall-vs-non-fall safety-proxy results.",
     },
     {
-        "output_id": "Figure 6",
-        "output_type": "Figure",
+        "output": "Figure 6",
+        "type": "Figure",
         "title": "Seven-Class Confusion Matrix Figure",
         "primary_file": "figures/thesis_figure_6_seven_class_confusion_matrices.png",
         "companion_note": "notes/thesis_figure_6_seven_class_confusion_matrices.md",
@@ -206,8 +188,8 @@ ROWS = [
         "use_in_thesis": "Use as the visual multiclass error-analysis figure.",
     },
     {
-        "output_id": "Table 9",
-        "output_type": "Table",
+        "output": "Table 9",
+        "type": "Table",
         "title": "Robustness Failure Threshold Table",
         "primary_file": "results/thesis_table_9_robustness_failure_thresholds.csv",
         "companion_note": "notes/thesis_table_9_robustness_failure_thresholds.md",
@@ -217,8 +199,8 @@ ROWS = [
         "use_in_thesis": "Use to argue that adversarial impact should be reported as safety-proxy failure thresholds, not only aggregate accuracy loss.",
     },
     {
-        "output_id": "Figure 7",
-        "output_type": "Figure",
+        "output": "Figure 7",
+        "type": "Figure",
         "title": "Failure Threshold / Robustness Collapse Plot",
         "primary_file": "figures/thesis_figure_7_failure_threshold_plot.png",
         "companion_note": "notes/thesis_figure_7_failure_threshold_plot.md",
@@ -228,8 +210,8 @@ ROWS = [
         "use_in_thesis": "Use as the visual counterpart to Table 9.",
     },
     {
-        "output_id": "Figure 8",
-        "output_type": "Conceptual Figure",
+        "output": "Figure 8",
+        "type": "Conceptual Figure",
         "title": "Safety Translation Pipeline Diagram",
         "primary_file": "figures/thesis_figure_8_safety_translation_pipeline.png",
         "companion_note": "notes/thesis_figure_8_safety_translation_pipeline.md",
@@ -238,79 +220,177 @@ ROWS = [
         "clinical_safety_relevance": "Clearly separates the current window-level contribution from future clinical-safety extensions that require richer metadata.",
         "use_in_thesis": "Use as the conceptual workflow diagram in the methods or thesis contribution section.",
     },
+    {
+        "output": "Table 10",
+        "type": "Table",
+        "title": "Extended Window-Level Diagnostic Safety Metrics",
+        "primary_file": "results/thesis_table_10_extended_diagnostic_safety_metrics.csv",
+        "companion_note": "notes/thesis_table_10_extended_diagnostic_safety_metrics.md",
+        "generation_script": "scripts/create_thesis_table_10_extended_diagnostic_safety_metrics.py",
+        "thesis_contribution": "Extends the safety-proxy analysis beyond recall, precision, F1-score, and balanced accuracy.",
+        "clinical_safety_relevance": "Reports additional diagnostic-style safety-proxy metrics and uses NA for undefined ratios when TP is zero.",
+        "use_in_thesis": "Use to strengthen the quantitative safety-proxy metric set while avoiding fabricated undefined values.",
+    },
+    {
+        "output": "Figure 9",
+        "type": "Figure",
+        "title": "Safety Error Burden Composition Across Conditions",
+        "primary_file": "figures/thesis_figure_9_safety_error_burden_composition.png",
+        "companion_note": "notes/thesis_figure_9_safety_error_burden_composition.md",
+        "generation_script": "scripts/create_thesis_figure_9_safety_error_burden_composition.py",
+        "thesis_contribution": "Shows the composition of detected falls, missed falls, false fall alarms, and correct non-falls across conditions.",
+        "clinical_safety_relevance": "Makes the clean-to-attack shift visible: attacked conditions lose detected fall windows and increase missed fall burden.",
+        "use_in_thesis": "Use as a visual explanation of safety-error burden behind the confusion matrices.",
+    },
+    {
+        "output": "Table 11",
+        "type": "Table",
+        "title": "Attack-Induced Safety Risk Amplification Ratios",
+        "primary_file": "results/thesis_table_11_attack_induced_safety_risk_amplification.csv",
+        "companion_note": "notes/thesis_table_11_attack_induced_safety_risk_amplification.md",
+        "generation_script": "scripts/create_thesis_table_11_attack_induced_safety_risk_amplification.py",
+        "thesis_contribution": "Quantifies how attacked and defended-attacked conditions amplify safety-relevant error ratios relative to clean baselines.",
+        "clinical_safety_relevance": "Highlights attack-induced amplification of missed-fall and false-alarm burden while preserving claim boundaries.",
+        "use_in_thesis": "Use as a risk-amplification style summary that connects ML degradation to safety-proxy language.",
+    },
+    {
+        "output": "Figure 10",
+        "type": "Figure",
+        "title": "High-Risk Multiclass Fall Error Pathways",
+        "primary_file": "figures/thesis_figure_10_high_risk_multiclass_fall_error_pathways.png",
+        "companion_note": "notes/thesis_figure_10_high_risk_multiclass_fall_error_pathways.md",
+        "generation_script": "scripts/create_thesis_figure_10_high_risk_multiclass_fall_error_pathways.py",
+        "thesis_contribution": "Simplifies seven-class confusion matrices into fall-relevant error pathways.",
+        "clinical_safety_relevance": "Shows where true fall windows go when missed and which non-fall activities become false fall alarms.",
+        "use_in_thesis": "Use to connect binary fall-vs-non-fall degradation to original multiclass activity-recognition errors.",
+    },
+    {
+        "output": "Table 12",
+        "type": "Table",
+        "title": "Model Confidence and Error Confidence Summary",
+        "primary_file": "results/thesis_table_12_model_confidence_error_summary.csv",
+        "companion_note": "notes/thesis_table_12_model_confidence_error_summary.md",
+        "generation_script": "scripts/create_thesis_table_12_model_confidence_error_summary.py",
+        "thesis_contribution": "Summarizes model-reported confidence for correct predictions, incorrect predictions, missed falls, and false fall alarms.",
+        "clinical_safety_relevance": "Shows whether missed-fall errors are low-confidence or high-confidence errors under attack and defense.",
+        "use_in_thesis": "Use as the main confidence/error-confidence table for the attacked fall-safety workflow.",
+    },
+    {
+        "output": "Figure 11",
+        "type": "Figure",
+        "title": "High-Confidence Missed-Fall Error Comparison",
+        "primary_file": "figures/thesis_figure_11_high_confidence_missed_fall_comparison.png",
+        "companion_note": "notes/thesis_figure_11_high_confidence_missed_fall_comparison.md",
+        "generation_script": "scripts/create_thesis_figure_11_high_confidence_missed_fall_comparison.py",
+        "thesis_contribution": "Visualizes missed-fall confidence behavior across clean, attacked, and defended conditions.",
+        "clinical_safety_relevance": "Highlights that undefended PGD produces a high-confidence missed-fall failure pattern.",
+        "use_in_thesis": "Use as the visual companion to Table 12.",
+    },
+    {
+        "output": "Figure 12",
+        "type": "Figure",
+        "title": "Confidence-Safety Failure Map",
+        "primary_file": "figures/thesis_figure_12_confidence_safety_failure_map.png",
+        "companion_note": "notes/thesis_figure_12_confidence_safety_failure_map.md",
+        "generation_script": "scripts/create_thesis_figure_12_confidence_safety_failure_map.py",
+        "thesis_contribution": "Combines missed fall rate and high-confidence missed-fall rate into a confidence-safety failure map.",
+        "clinical_safety_relevance": "Shows that undefended PGD is the strongest confidence-safety failure case, while defended attacked conditions still miss all falls but with lower high-confidence missed-fall rates.",
+        "use_in_thesis": "Use to explain the two-dimensional relationship between missed-fall safety failure and model-reported confidence.",
+    },
+    {
+        "output": "Table 13",
+        "type": "Table",
+        "title": "Confidence-Safety Failure Ranking",
+        "primary_file": "results/thesis_table_13_confidence_safety_failure_ranking.csv",
+        "companion_note": "notes/thesis_table_13_confidence_safety_failure_ranking.md",
+        "generation_script": "scripts/create_thesis_table_13_confidence_safety_failure_ranking.py",
+        "thesis_contribution": "Ranks clean, attacked, and defended conditions using a descriptive confidence-safety failure score.",
+        "clinical_safety_relevance": "Identifies which conditions combine missed-fall safety failure with high model-reported confidence in the wrong prediction.",
+        "use_in_thesis": "Use as the ranked numeric companion to Figure 12.",
+    },
+    {
+        "output": "Figure 13",
+        "type": "Figure",
+        "title": "Confidence-Safety Failure Ranking Bar Chart",
+        "primary_file": "figures/thesis_figure_13_confidence_safety_failure_ranking.png",
+        "companion_note": "notes/thesis_figure_13_confidence_safety_failure_ranking.md",
+        "generation_script": "scripts/create_thesis_figure_13_confidence_safety_failure_ranking.py",
+        "thesis_contribution": "Visualizes the Table 13 confidence-safety failure ranking as a horizontal bar chart.",
+        "clinical_safety_relevance": "Makes the ranking of overconfident missed-fall safety failures visually obvious.",
+        "use_in_thesis": "Use as the visual companion to Table 13.",
+    },
+    {
+        "output": "Table 14",
+        "type": "Table",
+        "title": "Matched Attack Defense Effect Summary",
+        "primary_file": "results/thesis_table_14_matched_attack_defense_effect_summary.csv",
+        "companion_note": "notes/thesis_table_14_matched_attack_defense_effect_summary.md",
+        "generation_script": "scripts/create_thesis_table_14_matched_attack_defense_effect_summary.py",
+        "thesis_contribution": "Directly compares matched attacked conditions: undefended FGSM vs defended FGSM and undefended PGD vs defended PGD.",
+        "clinical_safety_relevance": "Shows that the defended attacked models reduce overconfident missed-fall behavior and false alarms but do not restore fall recall.",
+        "use_in_thesis": "Use as the main matched attack-defense effect summary table.",
+    },
+    {
+        "output": "Figure 14",
+        "type": "Figure",
+        "title": "Matched Attack Defense Effect Comparison",
+        "primary_file": "figures/thesis_figure_14_matched_attack_defense_effect_comparison.png",
+        "companion_note": "notes/thesis_figure_14_matched_attack_defense_effect_comparison.md",
+        "generation_script": "scripts/create_thesis_figure_14_matched_attack_defense_effect_comparison.py",
+        "thesis_contribution": "Visually compares matched attack-defense effects for FGSM and PGD using three panels.",
+        "clinical_safety_relevance": "Shows reductions in high-confidence missed-fall rate, median missed-fall confidence, and false fall alarm count, while noting that missed fall rate remains 1.000000.",
+        "use_in_thesis": "Use as the visual companion to Table 14.",
+    },
 ]
 
 
-FIELDNAMES = [
-    "output_id",
-    "output_type",
-    "title",
-    "primary_file",
-    "primary_file_exists",
-    "companion_note",
-    "companion_note_exists",
-    "generation_script",
-    "generation_script_exists",
-    "thesis_contribution",
-    "clinical_safety_relevance",
-    "use_in_thesis",
-    "claim_boundary",
-]
-
-
-def exists_status(path_text):
-    if path_text in {"not applicable", "manual note"}:
+def path_exists(relative_path):
+    if relative_path in ["NA", "", None]:
         return "not applicable"
-
-    path = ROOT / path_text
-    return "yes" if path.exists() else "no"
+    return "yes" if (BASE_DIR / relative_path).exists() else "no"
 
 
-def md_escape(value):
-    text = str(value)
-    text = text.replace("|", "\\|")
-    text = text.replace("\n", " ")
-    return text
+def write_csv():
+    fieldnames = [
+        "output",
+        "type",
+        "title",
+        "primary_file",
+        "companion_note",
+        "generation_script",
+        "primary_file_exists",
+        "companion_note_exists",
+        "generation_script_exists",
+        "thesis_contribution",
+        "clinical_safety_relevance",
+        "use_in_thesis",
+        "claim_boundary",
+    ]
 
-
-def enrich_rows(rows):
-    enriched = []
-    for row in rows:
-        output_row = dict(row)
-        output_row["primary_file_exists"] = exists_status(row["primary_file"])
-        output_row["companion_note_exists"] = exists_status(row["companion_note"])
-        output_row["generation_script_exists"] = exists_status(row["generation_script"])
-        output_row["claim_boundary"] = CLAIM_BOUNDARY
-        enriched.append(output_row)
-    return enriched
-
-
-def write_csv(rows):
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-
-    with OUTPUT_CSV.open("w", newline="", encoding="utf-8") as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=FIELDNAMES)
+    with OUTPUT_CSV.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        for row in rows:
+
+        for artifact in ARTIFACTS:
+            row = dict(artifact)
+            row["primary_file_exists"] = path_exists(row["primary_file"])
+            row["companion_note_exists"] = path_exists(row["companion_note"])
+            row["generation_script_exists"] = path_exists(row["generation_script"])
+            row["claim_boundary"] = CLAIM_BOUNDARY
             writer.writerow(row)
 
 
-def write_markdown(rows):
-    NOTES_DIR.mkdir(parents=True, exist_ok=True)
-
+def write_note():
     lines = []
+
     lines.append("# Thesis Table 6: Thesis Output Index / Evidence Contribution Table")
     lines.append("")
     lines.append(
-        "This table indexes the thesis-ready tables, figures, notes, scripts, "
-        "and evidence contributions generated for the WiFi CSI Fall Attack-Safety Demo."
+        "This table indexes the thesis-ready tables, figures, notes, scripts, and evidence contributions generated for the WiFi CSI Fall Attack-Safety Demo."
     )
     lines.append("")
     lines.append(
-        "The purpose is to make the repository easier to navigate, explain what each "
-        "output contributes to the thesis, and separate quantitative results, visual "
-        "summaries, defense analysis, epsilon-sweep analysis, confusion-matrix analysis, "
-        "metadata limitations, robustness-threshold analysis, and safety-translation documentation."
+        "The purpose is to make the repository easier to navigate, explain what each output contributes to the thesis, and separate quantitative results, visual summaries, defense analysis, epsilon-sweep analysis, confusion-matrix analysis, metadata limitations, robustness-threshold analysis, confidence/error-confidence analysis, matched attack-defense analysis, and safety-translation documentation."
     )
     lines.append("")
     lines.append("## Claim Boundary")
@@ -319,27 +399,18 @@ def write_markdown(rows):
     lines.append("")
     lines.append("## Table")
     lines.append("")
-    lines.append(
-        "| Output | Type | Title | Primary File | Thesis Contribution | "
-        "Clinical-Safety Relevance | Use in Thesis |"
-    )
+    lines.append("| Output | Type | Title | Primary File | Thesis Contribution | Clinical-Safety Relevance | Use in Thesis |")
     lines.append("|---|---|---|---|---|---|---|")
 
-    for row in rows:
+    for artifact in ARTIFACTS:
         lines.append(
-            "| "
-            + " | ".join(
-                [
-                    md_escape(row["output_id"]),
-                    md_escape(row["output_type"]),
-                    md_escape(row["title"]),
-                    md_escape(row["primary_file"]),
-                    md_escape(row["thesis_contribution"]),
-                    md_escape(row["clinical_safety_relevance"]),
-                    md_escape(row["use_in_thesis"]),
-                ]
-            )
-            + " |"
+            f"| {artifact['output']} "
+            f"| {artifact['type']} "
+            f"| {artifact['title']} "
+            f"| {artifact['primary_file']} "
+            f"| {artifact['thesis_contribution']} "
+            f"| {artifact['clinical_safety_relevance']} "
+            f"| {artifact['use_in_thesis']} |"
         )
 
     lines.append("")
@@ -348,20 +419,25 @@ def write_markdown(rows):
     lines.append("| Output | Primary File Exists | Companion Note Exists | Generation Script Exists |")
     lines.append("|---|---:|---:|---:|")
 
-    for row in rows:
+    for artifact in ARTIFACTS:
         lines.append(
-            f"| {md_escape(row['output_id'])} | "
-            f"{md_escape(row['primary_file_exists'])} | "
-            f"{md_escape(row['companion_note_exists'])} | "
-            f"{md_escape(row['generation_script_exists'])} |"
+            f"| {artifact['output']} "
+            f"| {path_exists(artifact['primary_file'])} "
+            f"| {path_exists(artifact['companion_note'])} "
+            f"| {path_exists(artifact['generation_script'])} |"
         )
 
     lines.append("")
+    lines.append("## Current Indexed Output Set")
+    lines.append("")
+    lines.append("```text")
+    for artifact in ARTIFACTS:
+        lines.append(f"{artifact['output']} - {artifact['title']}")
+    lines.append("```")
+    lines.append("")
     lines.append("## Interpretation")
     lines.append("")
-    lines.append(
-        "Table 6 shows that the current thesis-ready output set covers eight major evidence roles:"
-    )
+    lines.append("Table 6 shows that the current thesis-ready output set covers ten major evidence roles:")
     lines.append("")
     lines.append("1. core clean, attacked, and defended safety-proxy metrics;")
     lines.append("2. attack-impact and epsilon-sweep degradation analysis;")
@@ -370,41 +446,31 @@ def write_markdown(rows):
     lines.append("5. reproducibility configuration for repeating the workflow with another dataset;")
     lines.append("6. dataset metadata auditing and metric-availability boundaries;")
     lines.append("7. robustness failure-threshold analysis;")
-    lines.append("8. safety-translation pipeline documentation.")
+    lines.append("8. safety-translation pipeline documentation;")
+    lines.append("9. confidence/error-confidence analysis for missed-fall failures;")
+    lines.append("10. matched attack-defense effect analysis.")
     lines.append("")
     lines.append(
-        "This index also makes the research boundary clear. The current outputs are strong "
-        "for window-level safety-proxy analysis. Event-level fall detection, time-to-detection, "
-        "delayed detection, long-lie proxy, false alarms per hour/day, subject-level robustness, "
-        "and trial-level robustness require richer metadata than the current local UT-HAR copy provides."
+        "This index also makes the research boundary clear. The current outputs are strong for window-level safety-proxy analysis. Event-level fall detection, time-to-detection, delayed detection, long-lie proxy, false alarms per hour/day, subject-level robustness, and trial-level robustness require richer metadata than the current local UT-HAR copy provides."
     )
     lines.append("")
     lines.append("## Output Files")
     lines.append("")
     lines.append("- `results/thesis_table_6_output_index.csv`")
     lines.append("- `notes/thesis_table_6_output_index.md`")
-    lines.append("")
 
-    OUTPUT_NOTE.write_text("\n".join(lines), encoding="utf-8")
+    OUTPUT_NOTE.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def main():
-    rows = enrich_rows(ROWS)
-    write_csv(rows)
-    write_markdown(rows)
+    write_csv()
+    write_note()
 
-    print("Created updated Thesis Table 6 outputs:")
+    print("Created updated Thesis Table 6 output index:")
     print(f"  {OUTPUT_CSV}")
     print(f"  {OUTPUT_NOTE}")
     print("")
-    print("Indexed outputs:")
-    for row in rows:
-        print(
-            f"  {row['output_id']}: "
-            f"primary={row['primary_file_exists']}, "
-            f"note={row['companion_note_exists']}, "
-            f"script={row['generation_script_exists']}"
-        )
+    print(f"Indexed outputs: {len(ARTIFACTS)}")
 
 
 if __name__ == "__main__":

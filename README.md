@@ -1201,9 +1201,9 @@ Claim boundary: this is a window-level safety-proxy research implementation usin
 
 ### Thesis Table 6: Thesis Output Index / Evidence Contribution Table
 
-This thesis-ready table indexes the tables and figures generated for the WiFi CSI Fall Attack-Safety Demo.
+This thesis-ready table indexes the tables, figures, notes, scripts, and evidence contributions generated for the WiFi CSI Fall Attack-Safety Demo.
 
-The purpose is to make the repository easier to navigate, explain what each output contributes to the thesis, and separate quantitative results, visual summaries, defense analysis, epsilon-sweep analysis, confusion-matrix analysis, and reproducibility documentation.
+The purpose is to make the repository easier to navigate, explain what each output contributes to the thesis, and separate quantitative results, visual summaries, defense analysis, epsilon-sweep analysis, confusion-matrix analysis, metadata limitations, robustness-threshold analysis, confidence/error-confidence analysis, matched attack-defense analysis, and safety-translation documentation.
 
 Files:
 
@@ -1224,7 +1224,45 @@ Figure 3 - Defense effect summary
 Figure 4 - Clean vs defended clean tradeoff
 Figure 5 - Binary fall-vs-non-fall confusion matrices
 Table 5  - Reproducibility configuration table
+Table 6  - Thesis output index / evidence contribution table
+Audit 1  - UT-HAR dataset metadata audit
+Table 7  - Safety metric availability and data requirement table
+Table 8  - High-risk multiclass error taxonomy
+Figure 6 - Seven-class confusion matrix figure
+Table 9  - Robustness failure threshold table
+Figure 7 - Failure threshold / robustness collapse plot
+Figure 8 - Safety translation pipeline diagram
+Table 10 - Extended window-level diagnostic safety metrics
+Figure 9 - Safety error burden composition across conditions
+Table 11 - Attack-induced safety risk amplification ratios
+Figure 10 - High-risk multiclass fall error pathways
+Table 12 - Model confidence and error confidence summary
+Figure 11 - High-confidence missed-fall error comparison
+Figure 12 - Confidence-safety failure map
+Table 13 - Confidence-safety failure ranking
+Figure 13 - Confidence-safety failure ranking bar chart
+Table 14 - Matched attack defense effect summary
+Figure 14 - Matched attack defense effect comparison
+```
 
+Table 6 shows that the current thesis-ready output set covers ten major evidence roles:
+
+```text
+1. core clean, attacked, and defended safety-proxy metrics
+2. attack-impact and epsilon-sweep degradation analysis
+3. defended-vs-undefended tradeoff analysis
+4. binary and seven-class confusion-matrix analysis
+5. reproducibility configuration for repeating the workflow with another dataset
+6. dataset metadata auditing and metric-availability boundaries
+7. robustness failure-threshold analysis
+8. safety-translation pipeline documentation
+9. confidence/error-confidence analysis for missed-fall failures
+10. matched attack-defense effect analysis
+```
+
+Interpretation: Table 6 functions as the navigation index for the thesis-ready evidence package. It also makes the research boundary clear: the current outputs are strong for window-level safety-proxy analysis, while event-level fall detection, time-to-detection, delayed detection, long-lie proxy, false alarms per hour/day, subject-level robustness, and trial-level robustness require richer metadata than the current local UT-HAR copy provides.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 ### UT-HAR Dataset Metadata Audit
 

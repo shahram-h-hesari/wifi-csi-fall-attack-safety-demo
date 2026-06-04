@@ -1914,6 +1914,132 @@ Under FGSM and PGD attack at epsilon `0.030`, all 89 true fall windows are misse
 Claim boundary: these are window-level multiclass error-pathway counts only. They are not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Table 12: Model Confidence and Error Confidence Summary
+
+This thesis-ready table summarizes model-reported prediction confidence for correct predictions, incorrect predictions, missed fall windows, false fall alarm windows, and other clinically motivated window groups.
+
+Files:
+
+- `scripts/create_thesis_table_12_model_confidence_error_summary.py`
+- `results/thesis_table_12_model_confidence_error_summary.csv`
+- `notes/thesis_table_12_model_confidence_error_summary.md`
+
+Input files:
+
+- `results/clean_predictions_short.csv`
+- `results/fgsm_predictions_short_epsilon_0_03.csv`
+- `results/pgd_predictions_short_epsilon_0_03.csv`
+- `results/defended_predictions_short.csv`
+
+Confidence meaning:
+
+```text
+The confidence values are model-reported predicted-class confidence values exported from the prediction files.
+They should be interpreted as model output confidence, not calibrated clinical certainty.
+```
+
+Confidence thresholds:
+
+```text
+high-confidence threshold = 0.80
+low-confidence threshold = 0.50
+```
+
+Main confidence summary:
+
+```text
+Undefended clean:
+all windows mean confidence = 0.660882
+correct predictions mean confidence = 0.721284
+incorrect predictions mean confidence = 0.543818
+missed fall windows mean confidence = 0.663120
+false fall alarm windows mean confidence = 0.403927
+
+Undefended FGSM epsilon 0.03:
+all windows mean confidence = 0.715659
+correct predictions mean confidence = 0.402359
+incorrect predictions mean confidence = 0.718836
+missed fall windows mean confidence = 0.775721
+false fall alarm windows mean confidence = 0.566919
+
+Undefended PGD epsilon 0.03:
+all windows mean confidence = 0.816495
+correct predictions mean confidence = NA
+incorrect predictions mean confidence = 0.816495
+missed fall windows mean confidence = 0.872827
+false fall alarm windows mean confidence = 0.669228
+
+Defended clean:
+all windows mean confidence = 0.504646
+correct predictions mean confidence = 0.564123
+incorrect predictions mean confidence = 0.412617
+missed fall windows mean confidence = 0.462122
+false fall alarm windows mean confidence = 0.287155
+
+Defended FGSM epsilon 0.03:
+all windows mean confidence = 0.478099
+correct predictions mean confidence = 0.416649
+incorrect predictions mean confidence = 0.489166
+missed fall windows mean confidence = 0.439962
+false fall alarm windows mean confidence = 0.389254
+
+Defended PGD epsilon 0.03:
+all windows mean confidence = 0.522286
+correct predictions mean confidence = 0.385887
+incorrect predictions mean confidence = 0.533714
+missed fall windows mean confidence = 0.455713
+false fall alarm windows mean confidence = 0.417461
+```
+
+Missed-fall confidence focus:
+
+```text
+Undefended clean:
+missed fall windows = 32
+mean confidence = 0.663120
+median confidence = 0.688591
+high-confidence missed-fall rate = 0.281250
+
+Undefended FGSM epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.775721
+median confidence = 0.833032
+high-confidence missed-fall rate = 0.606742
+
+Undefended PGD epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.872827
+median confidence = 0.953281
+high-confidence missed-fall rate = 0.820225
+
+Defended clean:
+missed fall windows = 53
+mean confidence = 0.462122
+median confidence = 0.415679
+high-confidence missed-fall rate = 0.000000
+
+Defended FGSM epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.439962
+median confidence = 0.357259
+high-confidence missed-fall rate = 0.123596
+
+Defended PGD epsilon 0.03:
+missed fall windows = 89
+mean confidence = 0.455713
+median confidence = 0.376572
+high-confidence missed-fall rate = 0.134831
+```
+
+Interpretation: Table 12 adds a confidence dimension to the safety-proxy analysis. It helps identify whether the model is merely wrong, or wrong with high model-reported confidence. This is important because high-confidence missed fall windows may be more concerning than low-confidence missed fall windows in a safety-monitoring context. Similarly, high-confidence false fall alarms may reduce trust in alerts.
+
+The undefended attacked conditions show the strongest confidence concern. Under FGSM at epsilon `0.030`, the high-confidence missed-fall rate increases to `0.606742`. Under PGD at epsilon `0.030`, the high-confidence missed-fall rate increases further to `0.820225`, with median missed-fall confidence `0.953281`. This suggests that under attack, missed fall predictions may be confidently wrong at the window level.
+
+The defended attacked conditions still miss all 89 fall windows at epsilon `0.030`, but their missed-fall confidence is lower than the undefended attacked conditions. This supports a careful interpretation: the short defended model did not recover fall recall, but it reduced the model-reported confidence of missed-fall errors.
+
+Claim boundary: these values are window-level model-reported predicted-class confidence summaries. They are not calibrated clinical confidence, diagnostic certainty, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
 
 
 

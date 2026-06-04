@@ -2529,3 +2529,29 @@ Claim boundary: this is a matched window-level attack-defense effect visualizati
 
 
 
+
+
+### Final Thesis Output Status Summary Through Figure 14
+
+This note summarizes the complete first thesis-ready output package for the WiFi CSI Fall Attack-Safety Demo through Table 14 and Figure 14.
+
+File:
+
+- `notes/thesis_output_status_summary_through_figure_14.md`
+
+The summary note covers:
+
+```text
+current thesis-ready output set
+main experimental finding
+defense finding
+confidence-safety finding
+multiclass error-pathway finding
+dataset and metric availability finding
+thesis contribution so far
+recommended next research steps
+```
+
+Key thesis message: software-level FGSM and PGD perturbations caused complete window-level fall-miss behavior at epsilon `0.030` in the tested undefended model. The short defended model reduced overconfident missed-fall behavior and false fall alarms, but it did not restore fall recall.
+
+Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

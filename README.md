@@ -2201,6 +2201,98 @@ Claim boundary: these values are window-level model-reported confidence and safe
 
 
 
+### Thesis Table 13: Confidence-Safety Failure Ranking
+
+This thesis-ready table ranks clean, attacked, and defended conditions by a descriptive window-level confidence-safety failure score.
+
+Files:
+
+- `scripts/create_thesis_table_13_confidence_safety_failure_ranking.py`
+- `results/thesis_table_13_confidence_safety_failure_ranking.csv`
+- `notes/thesis_table_13_confidence_safety_failure_ranking.md`
+
+Input files:
+
+- `results/defended_vs_undefended_safety_comparison.csv`
+- `results/thesis_table_12_model_confidence_error_summary.csv`
+
+Descriptive score definition:
+
+```text
+confidence-safety failure score = missed fall rate * high-confidence missed-fall rate
+```
+
+This score is a descriptive ranking score only. It is not a clinical risk score, diagnostic score, regulatory score, calibrated confidence score, or medical-device safety score.
+
+Ranked result:
+
+```text
+Rank 1:
+condition = Undefended PGD epsilon 0.03
+missed fall rate = 1.000000
+high-confidence missed-fall rate = 0.820225
+confidence-safety failure score = 0.820225
+recall = 0.000000
+F1-score = 0.000000
+balanced accuracy = 0.436604
+
+Rank 2:
+condition = Undefended FGSM epsilon 0.03
+missed fall rate = 1.000000
+high-confidence missed-fall rate = 0.606742
+confidence-safety failure score = 0.606742
+recall = 0.000000
+F1-score = 0.000000
+balanced accuracy = 0.434399
+
+Rank 3:
+condition = Defended PGD epsilon 0.03
+missed fall rate = 1.000000
+high-confidence missed-fall rate = 0.134831
+confidence-safety failure score = 0.134831
+recall = 0.000000
+F1-score = 0.000000
+balanced accuracy = 0.469129
+
+Rank 4:
+condition = Defended FGSM epsilon 0.03
+missed fall rate = 1.000000
+high-confidence missed-fall rate = 0.123596
+confidence-safety failure score = 0.123596
+recall = 0.000000
+F1-score = 0.000000
+balanced accuracy = 0.460309
+
+Rank 5:
+condition = Undefended clean
+missed fall rate = 0.359551
+high-confidence missed-fall rate = 0.281250
+confidence-safety failure score = 0.101124
+recall = 0.640449
+F1-score = 0.640449
+balanced accuracy = 0.802584
+
+Rank 6:
+condition = Defended clean
+missed fall rate = 0.595506
+high-confidence missed-fall rate = 0.000000
+confidence-safety failure score = 0.000000
+recall = 0.404494
+F1-score = 0.489796
+balanced accuracy = 0.690119
+```
+
+Interpretation: Table 13 provides a ranked numeric companion to Figure 12. It identifies conditions that combine missed-fall safety failure with high model-reported confidence in the wrong prediction.
+
+The undefended PGD condition ranks highest because it has missed fall rate `1.000000` and high-confidence missed-fall rate `0.820225`, producing the largest confidence-safety failure score. The undefended FGSM condition ranks second because it also misses all 89 fall windows but has a lower high-confidence missed-fall rate than PGD.
+
+The defended attacked conditions still miss all 89 fall windows, but they rank lower because their high-confidence missed-fall rates are much lower than the undefended attacked conditions. This supports the careful interpretation that the short defended model reduced overconfident missed-fall behavior but did not restore fall-detection safety performance.
+
+Claim boundary: this is a window-level descriptive ranking only. It is not a clinical risk score, diagnostic score, regulatory score, calibrated confidence score, event-level fall-risk estimate, long-lie risk estimate, time-to-alarm risk estimate, or medical-device safety score.
+
+
+
+
 
 
 

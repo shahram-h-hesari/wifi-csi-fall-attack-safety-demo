@@ -1787,6 +1787,133 @@ The attacked conditions show severe missed-fall amplification because the missed
 Claim boundary: these are window-level safety-proxy amplification and retention ratios. They are not clinical risk ratios, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
 
 
+### Thesis Figure 10: High-Risk Multiclass Fall Error Pathways
+
+This thesis-ready figure summarizes the most fall-relevant multiclass error pathways behind the binary fall-vs-non-fall safety-proxy results.
+
+Files:
+
+- `scripts/create_thesis_figure_10_high_risk_multiclass_fall_error_pathways.py`
+- `figures/thesis_figure_10_high_risk_multiclass_fall_error_pathways.png`
+- `notes/thesis_figure_10_high_risk_multiclass_fall_error_pathways.md`
+
+Input file:
+
+- `results/thesis_table_8_high_risk_multiclass_error_taxonomy.csv`
+
+Figure 10 includes two panels:
+
+```text
+Panel A: true fall -> predicted non-fall activity
+Panel B: true non-fall activity -> predicted fall
+```
+
+Missed-fall pathway summary:
+
+```text
+Undefended clean:
+fall -> walk = 12
+fall -> run = 20
+total missed-fall pathways = 32
+
+Undefended FGSM epsilon 0.03:
+fall -> lie down = 6
+fall -> walk = 60
+fall -> run = 17
+fall -> stand up = 6
+total missed-fall pathways = 89
+
+Undefended PGD epsilon 0.03:
+fall -> lie down = 9
+fall -> walk = 54
+fall -> run = 15
+fall -> sit down = 11
+total missed-fall pathways = 89
+
+Defended clean:
+fall -> walk = 39
+fall -> run = 14
+total missed-fall pathways = 53
+
+Defended FGSM epsilon 0.03:
+fall -> lie down = 14
+fall -> walk = 42
+fall -> pickup = 3
+fall -> run = 19
+fall -> sit down = 1
+fall -> stand up = 10
+total missed-fall pathways = 89
+
+Defended PGD epsilon 0.03:
+fall -> lie down = 25
+fall -> walk = 27
+fall -> pickup = 4
+fall -> run = 16
+fall -> sit down = 4
+fall -> stand up = 13
+total missed-fall pathways = 89
+```
+
+False-fall-alarm pathway summary:
+
+```text
+Undefended clean:
+pickup -> fall = 17
+run -> fall = 2
+sit down -> fall = 2
+stand up -> fall = 11
+total false-alarm pathways = 32
+
+Undefended FGSM epsilon 0.03:
+lie down -> fall = 11
+walk -> fall = 36
+pickup -> fall = 3
+run -> fall = 50
+sit down -> fall = 9
+stand up -> fall = 10
+total false-alarm pathways = 119
+
+Undefended PGD epsilon 0.03:
+lie down -> fall = 20
+walk -> fall = 35
+run -> fall = 34
+sit down -> fall = 10
+stand up -> fall = 16
+total false-alarm pathways = 115
+
+Defended clean:
+walk -> fall = 1
+pickup -> fall = 8
+run -> fall = 3
+stand up -> fall = 10
+total false-alarm pathways = 22
+
+Defended FGSM epsilon 0.03:
+lie down -> fall = 9
+walk -> fall = 5
+pickup -> fall = 1
+run -> fall = 37
+sit down -> fall = 4
+stand up -> fall = 16
+total false-alarm pathways = 72
+
+Defended PGD epsilon 0.03:
+lie down -> fall = 7
+walk -> fall = 1
+pickup -> fall = 1
+run -> fall = 31
+sit down -> fall = 5
+stand up -> fall = 11
+total false-alarm pathways = 56
+```
+
+Interpretation: Figure 10 simplifies the dense seven-class confusion matrices into fall-relevant error pathways. Panel A shows where true fall windows go when they are missed. Panel B shows which non-fall activities become false fall alarms. This helps connect binary safety-proxy degradation to the original multiclass activity-recognition task.
+
+Under FGSM and PGD attack at epsilon `0.030`, all 89 true fall windows are missed. The missed-fall pathways shift mainly toward non-fall activity classes such as `walk`, `run`, `lie down`, `sit down`, and `stand up`, depending on the condition. The false-alarm pathways also increase under attack, especially from activities such as `run`, `walk`, `lie down`, and `stand up`.
+
+Claim boundary: these are window-level multiclass error-pathway counts only. They are not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
 
 
 

@@ -2421,6 +2421,72 @@ Claim boundary: this is a matched window-level attack-defense effect summary onl
 
 
 
+### Thesis Figure 14: Matched Attack Defense Effect Comparison
+
+This thesis-ready figure visualizes the matched attack-defense effect summary from Table 14.
+
+Files:
+
+- `scripts/create_thesis_figure_14_matched_attack_defense_effect_comparison.py`
+- `figures/thesis_figure_14_matched_attack_defense_effect_comparison.png`
+- `notes/thesis_figure_14_matched_attack_defense_effect_comparison.md`
+
+Input file:
+
+- `results/thesis_table_14_matched_attack_defense_effect_summary.csv`
+
+Figure panels:
+
+```text
+Panel A: high-confidence missed-fall rate
+Panel B: median missed-fall confidence
+Panel C: false fall alarm count
+```
+
+Important context:
+
+```text
+Missed fall rate remained 1.000000 for all matched attacked conditions:
+
+Undefended FGSM epsilon 0.03
+Defended FGSM epsilon 0.03
+Undefended PGD epsilon 0.03
+Defended PGD epsilon 0.03
+```
+
+Because missed fall rate did not improve, Figure 14 focuses on defense effects that did improve.
+
+Summary result:
+
+```text
+FGSM epsilon 0.03:
+high-confidence missed-fall rate: 0.606742 -> 0.123596
+median missed-fall confidence: 0.833032 -> 0.357259
+false fall alarms: 119 -> 72
+missed fall rate change = 0.000000
+recall change = 0.000000
+
+PGD epsilon 0.03:
+high-confidence missed-fall rate: 0.820225 -> 0.134831
+median missed-fall confidence: 0.953281 -> 0.376572
+false fall alarms: 115 -> 56
+missed fall rate change = 0.000000
+recall change = 0.000000
+```
+
+Interpretation: Figure 14 shows that the defended attacked model reduced three error-burden metrics relative to the matched undefended attacked model: high-confidence missed-fall rate, median missed-fall confidence, and false fall alarm count.
+
+For FGSM, the defended model reduced high-confidence missed-fall rate from `0.606742` to `0.123596`, reduced median missed-fall confidence from `0.833032` to `0.357259`, and reduced false fall alarms from `119` to `72`.
+
+For PGD, the defended model reduced high-confidence missed-fall rate from `0.820225` to `0.134831`, reduced median missed-fall confidence from `0.953281` to `0.376572`, and reduced false fall alarms from `115` to `56`.
+
+However, the figure must be interpreted carefully: missed fall rate remained `1.000000` under all matched attacked conditions, so the defense did not restore window-level fall recall.
+
+This supports a careful thesis statement: the short defended model reduced overconfident error burden and false alarms, but it did not restore fall-detection safety performance.
+
+Claim boundary: this is a matched window-level attack-defense effect visualization only. These values are not clinical defense-effectiveness claims, clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall-risk reduction, long-lie risk reduction, time-to-alarm improvement, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+
 
 
 

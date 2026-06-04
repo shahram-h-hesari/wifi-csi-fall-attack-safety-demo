@@ -2555,3 +2555,39 @@ recommended next research steps
 Key thesis message: software-level FGSM and PGD perturbations caused complete window-level fall-miss behavior at epsilon `0.030` in the tested undefended model. The short defended model reduced overconfident missed-fall behavior and false fall alarms, but it did not restore fall recall.
 
 Claim boundary: this is a window-level safety-proxy research implementation using software-level processed-tensor perturbations. It is not clinical validation, medical-device validation, diagnostic evidence, regulatory evaluation, real patient deployment, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 15 and Figure 15: Paired Safety-State Transitions
+
+Table 15 and Figure 15 add a paired same-window transition analysis across clean, attacked, and defended conditions.
+
+Files:
+
+```text
+results/thesis_table_15_paired_safety_state_transition_table.csv
+figures/thesis_figure_15_paired_safety_state_transition_heatmap.png
+notes/thesis_table_15_figure_15_paired_safety_state_transitions.md
+```
+
+Purpose:
+
+```text
+clean safety state
+-> attacked safety state
+-> defended attacked safety state
+```
+
+This artifact tracks how each evaluated window changes between TP, FN, FP, and TN. It highlights transitions such as clean TP -> attacked FN, clean TN -> attacked FP, attacked FN -> defended FN, and attacked FP -> defended TN.
+
+How to read the figure:
+
+```text
+Y-axis = source safety state before transition
+X-axis = destination safety state after transition
+cell percentage = transition count / total windows in the source safety-state row
+```
+
+The cell percentage is not the percentage of all evaluated windows.
+
+The figure uses a shared color scale across all panels. Nonzero cells show the transition count and source-row percentage, while row labels show the source-state window total.
+
+Claim boundary: this is a descriptive window-level safety-proxy paired transition analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

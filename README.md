@@ -2591,3 +2591,48 @@ The cell percentage is not the percentage of all evaluated windows.
 The figure uses a shared color scale across all panels. Nonzero cells show the transition count and source-row percentage, while row labels show the source-state window total.
 
 Claim boundary: this is a descriptive window-level safety-proxy paired transition analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, time-to-alarm validation, false alarms per hour/day, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 16 and Figure 16: Alert Trustworthiness
+
+Table 16 and Figure 16 add an alert-trustworthiness view focused on predicted fall alerts.
+
+Files:
+
+```text
+results/thesis_table_16_alert_trustworthiness.csv
+figures/thesis_figure_16_fall_alert_composition.png
+notes/thesis_table_16_figure_16_alert_trustworthiness.md
+```
+
+Purpose:
+
+```text
+When the model raises a fall alert, how often is it actually a fall?
+```
+
+Core definitions:
+
+```text
+predicted fall alerts = TP + FP
+true fall alerts = TP
+false fall alerts = FP
+alert precision / PPV = TP / (TP + FP)
+false-alert share among alerts = FP / (TP + FP)
+missed fall count = FN
+```
+
+Figure 16 bars show predicted fall alerts only:
+
+```text
+bar height = TP + FP
+```
+
+FN is shown above each bar as missed-fall context and is not part of the bar height.
+
+Important interpretation: PPV = 0.00 with TP = 0 and nonzero false fall alerts means fall alerts were raised, but every predicted fall alert was false. It does not mean no alerts were raised.
+
+The defended FGSM and defended PGD conditions reduced false fall alarms compared with their matched undefended attack conditions, but PPV remained 0.00 because TP remained 0.
+
+This artifact helps separate fall-alert trustworthiness from aggregate accuracy. It shows whether fall alerts were true fall detections or false fall alarms, and it reports missed fall count alongside alert precision.
+
+Claim boundary: this is a descriptive window-level alert-trustworthiness analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

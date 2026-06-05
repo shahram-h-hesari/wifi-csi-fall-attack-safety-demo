@@ -2636,3 +2636,34 @@ The defended FGSM and defended PGD conditions reduced false fall alarms compared
 This artifact helps separate fall-alert trustworthiness from aggregate accuracy. It shows whether fall alerts were true fall detections or false fall alarms, and it reports missed fall count alongside alert precision.
 
 Claim boundary: this is a descriptive window-level alert-trustworthiness analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 17 and Figure 17: Class-Normalized False-Fall-Alarm Sources
+
+Table 17 and Figure 17 add a class-normalized false-fall-alarm source analysis.
+
+Files:
+
+```text
+results/thesis_table_17_class_normalized_false_fall_alarm_sources.csv
+figures/thesis_figure_17_class_normalized_false_fall_alarm_heatmap.png
+notes/thesis_table_17_figure_17_class_normalized_false_alarm_sources.md
+```
+
+Purpose:
+
+```text
+Which true non-fall activities are most likely to be falsely predicted as fall?
+```
+
+Metric definition:
+
+```text
+class-normalized false-fall-alarm rate =
+false fall alerts from that true class / total true windows of that class
+```
+
+The heatmap cells show percentages. Counts and denominators are reported in Table 17.
+
+This artifact avoids relying only on raw false-alert counts. It distinguishes whether a class is a false-alert source because it has many windows or because it has a high class-specific false-fall-alarm rate.
+
+Claim boundary: this is a descriptive window-level class-normalized false-alert source analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

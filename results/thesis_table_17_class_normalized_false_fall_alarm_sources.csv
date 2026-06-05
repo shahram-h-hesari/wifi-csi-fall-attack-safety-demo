@@ -1,0 +1,37 @@
+condition_id,condition_label,condition_type,true_nonfall_class_id,true_nonfall_class_name,total_true_windows_for_class,false_fall_alert_count_from_class,class_normalized_false_fall_alarm_rate,class_normalized_false_fall_alarm_rate_percent,total_false_fall_alerts_in_condition,share_of_condition_false_fall_alerts,share_of_condition_false_fall_alerts_percent,interpretation
+clean,Clean,undefended clean,0,lie down,132,0,0.000000,0.00,32,0.000000,0.00,This true non-fall class did not produce false fall alarms in this condition.
+clean,Clean,undefended clean,2,walk,293,0,0.000000,0.00,32,0.000000,0.00,This true non-fall class did not produce false fall alarms in this condition.
+clean,Clean,undefended clean,3,pickup,99,17,0.171717,17.17,32,0.531250,53.12,"This class contributed most of the false fall alarms in this condition, partly reflecting class count and/or class-specific error rate."
+clean,Clean,undefended clean,4,run,242,2,0.008264,0.83,32,0.062500,6.25,"This class contributed some false fall alarms, but not as the dominant normalized source."
+clean,Clean,undefended clean,5,sit down,80,2,0.025000,2.50,32,0.062500,6.25,"This class contributed some false fall alarms, but not as the dominant normalized source."
+clean,Clean,undefended clean,6,stand up,61,11,0.180328,18.03,32,0.343750,34.38,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,0,lie down,132,11,0.083333,8.33,119,0.092437,9.24,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,2,walk,293,36,0.122867,12.29,119,0.302521,30.25,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,3,pickup,99,3,0.030303,3.03,119,0.025210,2.52,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,4,run,242,50,0.206612,20.66,119,0.420168,42.02,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,5,sit down,80,9,0.112500,11.25,119,0.075630,7.56,"This class contributed some false fall alarms, but not as the dominant normalized source."
+fgsm_attack,FGSM Attack,undefended attacked,6,stand up,61,10,0.163934,16.39,119,0.084034,8.40,"This class contributed some false fall alarms, but not as the dominant normalized source."
+pgd_attack,PGD Attack,undefended attacked,0,lie down,132,20,0.151515,15.15,115,0.173913,17.39,"This class contributed some false fall alarms, but not as the dominant normalized source."
+pgd_attack,PGD Attack,undefended attacked,2,walk,293,35,0.119454,11.95,115,0.304348,30.43,"This class contributed some false fall alarms, but not as the dominant normalized source."
+pgd_attack,PGD Attack,undefended attacked,3,pickup,99,0,0.000000,0.00,115,0.000000,0.00,This true non-fall class did not produce false fall alarms in this condition.
+pgd_attack,PGD Attack,undefended attacked,4,run,242,34,0.140496,14.05,115,0.295652,29.57,"This class contributed some false fall alarms, but not as the dominant normalized source."
+pgd_attack,PGD Attack,undefended attacked,5,sit down,80,10,0.125000,12.50,115,0.086957,8.70,"This class contributed some false fall alarms, but not as the dominant normalized source."
+pgd_attack,PGD Attack,undefended attacked,6,stand up,61,16,0.262295,26.23,115,0.139130,13.91,This true non-fall class produced a high class-normalized false-fall-alarm rate.
+defended_clean,Defended Clean,defended clean,0,lie down,132,0,0.000000,0.00,22,0.000000,0.00,This true non-fall class did not produce false fall alarms in this condition.
+defended_clean,Defended Clean,defended clean,2,walk,293,1,0.003413,0.34,22,0.045455,4.55,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_clean,Defended Clean,defended clean,3,pickup,99,8,0.080808,8.08,22,0.363636,36.36,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_clean,Defended Clean,defended clean,4,run,242,3,0.012397,1.24,22,0.136364,13.64,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_clean,Defended Clean,defended clean,5,sit down,80,0,0.000000,0.00,22,0.000000,0.00,This true non-fall class did not produce false fall alarms in this condition.
+defended_clean,Defended Clean,defended clean,6,stand up,61,10,0.163934,16.39,22,0.454545,45.45,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_fgsm,Defended FGSM,defended attacked,0,lie down,132,9,0.068182,6.82,72,0.125000,12.50,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_fgsm,Defended FGSM,defended attacked,2,walk,293,5,0.017065,1.71,72,0.069444,6.94,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_fgsm,Defended FGSM,defended attacked,3,pickup,99,1,0.010101,1.01,72,0.013889,1.39,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_fgsm,Defended FGSM,defended attacked,4,run,242,37,0.152893,15.29,72,0.513889,51.39,"This class contributed most of the false fall alarms in this condition, partly reflecting class count and/or class-specific error rate."
+defended_fgsm,Defended FGSM,defended attacked,5,sit down,80,4,0.050000,5.00,72,0.055556,5.56,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_fgsm,Defended FGSM,defended attacked,6,stand up,61,16,0.262295,26.23,72,0.222222,22.22,This true non-fall class produced a high class-normalized false-fall-alarm rate.
+defended_pgd,Defended PGD,defended attacked,0,lie down,132,7,0.053030,5.30,56,0.125000,12.50,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_pgd,Defended PGD,defended attacked,2,walk,293,1,0.003413,0.34,56,0.017857,1.79,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_pgd,Defended PGD,defended attacked,3,pickup,99,1,0.010101,1.01,56,0.017857,1.79,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_pgd,Defended PGD,defended attacked,4,run,242,31,0.128099,12.81,56,0.553571,55.36,"This class contributed most of the false fall alarms in this condition, partly reflecting class count and/or class-specific error rate."
+defended_pgd,Defended PGD,defended attacked,5,sit down,80,5,0.062500,6.25,56,0.089286,8.93,"This class contributed some false fall alarms, but not as the dominant normalized source."
+defended_pgd,Defended PGD,defended attacked,6,stand up,61,11,0.180328,18.03,56,0.196429,19.64,"This class contributed some false fall alarms, but not as the dominant normalized source."

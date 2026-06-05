@@ -2777,3 +2777,72 @@ Attack FN -> Defended FN = attack-missed fall window still missed after defense
 This artifact complements Figure 19 by showing whether fall-window detection itself was recovered after attack. The figure shows the shared clean baseline once and tracks the same fall-window sample IDs within each matched attack/defense path.
 
 Claim boundary: this is a descriptive window-level paired recovery analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, false alarms per hour/day, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 21 and Figure 21: Claim Boundary and Evidence Strength Matrix
+
+Table 21 and Figure 21 add a claim-boundary and evidence-strength summary.
+
+Files:
+
+```text
+results/thesis_table_21_claim_boundary_evidence_matrix.csv
+figures/thesis_figure_21_claim_boundary_evidence_matrix.png
+notes/thesis_table_21_figure_21_claim_boundary_evidence_matrix.md
+```
+
+Purpose:
+
+```text
+What claims are supported by the current experiment, and what claims require future data, validation, or collaboration?
+```
+
+Evidence source:
+
+```text
+UT-HAR / SenseFi window-level research workflow.
+```
+
+This supports descriptive window-level proxy analysis and software-level adversarial stress testing. It does not support clinical validation, medical-device validation, event-level fall validation, deployment validation, or physical-layer / over-the-air validation.
+
+Figure 21 separates the evidence into three vertical columns:
+
+```text
+A. Directly supported now
+B. Window-level safety proxies
+C. Future validation required
+```
+
+Directly supported now:
+
+```text
+software-level FGSM/PGD adversarial stress testing
+defended-vs-undefended descriptive comparison
+paired same-window transition analysis
+reproducible table/figure workflow
+```
+
+Supported only as window-level proxies:
+
+```text
+window-level fall-vs-non-fall safety proxy
+missed-fall-rate / recall degradation proxy
+false-alert trustworthiness proxy
+class-normalized false-alert source analysis
+missed-fall destination analysis
+fall-window recovery and persistence analysis
+```
+
+Not supported yet:
+
+```text
+clinical / regulatory / medical-device validation
+event-level fall validation
+long-lie validation
+false alarms per hour/day
+time-to-alarm validation
+subject-level generalization
+room-level generalization
+physical-layer / packet-level / preamble-level / SDR / over-the-air validation
+```
+
+Claim boundary: this is a descriptive claim-boundary and evidence-strength summary based on the current window-level research workflow. It is not clinical validation, medical-device validation, event-level validation, long-lie validation, false alarms per hour/day, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

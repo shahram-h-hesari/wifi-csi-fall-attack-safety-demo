@@ -2667,3 +2667,47 @@ The heatmap cells show percentages. Counts and denominators are reported in Tabl
 This artifact avoids relying only on raw false-alert counts. It distinguishes whether a class is a false-alert source because it has many windows or because it has a high class-specific false-fall-alarm rate.
 
 Claim boundary: this is a descriptive window-level class-normalized false-alert source analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 18 and Figure 18: Class-Normalized Defense Effect
+
+Table 18 and Figure 18 add a matched class-normalized defense-effect analysis for false-fall-alarm sources.
+
+Files:
+
+```text
+results/thesis_table_18_class_normalized_defense_effect.csv
+figures/thesis_figure_18_class_normalized_defense_effect_heatmap.png
+notes/thesis_table_18_figure_18_class_normalized_defense_effect.md
+```
+
+Purpose:
+
+```text
+For each true non-fall activity, did the defended model reduce or increase false fall alarms compared with the matched attack?
+```
+
+Matched comparisons:
+
+```text
+FGSM Attack -> Defended FGSM
+PGD Attack -> Defended PGD
+```
+
+Metric definition:
+
+```text
+class-normalized defense effect =
+defended class-normalized false-alert rate - attacked class-normalized false-alert rate
+```
+
+Interpretation:
+
+```text
+negative value = defense reduced false-fall-alarm rate
+positive value = defense increased false-fall-alarm rate
+pp = percentage points
+```
+
+This artifact complements Table 16 and Figure 16 by showing that total false fall alerts decreased under defense, while Table 18 identifies which true non-fall classes drove those changes.
+
+Claim boundary: this is a descriptive window-level matched defense-effect analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

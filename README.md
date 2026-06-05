@@ -2711,3 +2711,37 @@ pp = percentage points
 This artifact complements Table 16 and Figure 16 by showing that total false fall alerts decreased under defense, while Table 18 identifies which true non-fall classes drove those changes.
 
 Claim boundary: this is a descriptive window-level matched defense-effect analysis. It is not clinical validation, medical-device validation, event-level fall validation, false alarms per hour/day, long-lie validation, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 19 and Figure 19: Missed-Fall Destination Classes
+
+Table 19 and Figure 19 add a missed-fall destination-class analysis.
+
+Files:
+
+```text
+results/thesis_table_19_missed_fall_destination_classes.csv
+figures/thesis_figure_19_missed_fall_destination_heatmap.png
+notes/thesis_table_19_figure_19_missed_fall_destination_classes.md
+```
+
+Purpose:
+
+```text
+When a true fall window is missed, what non-fall class does the model predict instead?
+```
+
+Metric definitions:
+
+```text
+destination rate among true fall windows =
+true fall windows missed as that destination class / total true fall windows
+
+share among missed fall windows =
+true fall windows missed as that destination class / total missed fall windows
+```
+
+Figure 19 uses two complementary percentages: the top cell value is the destination rate among true fall windows, while the parenthetical value is the share among missed fall windows in that row.
+
+This artifact complements missed-fall-rate analysis by showing the predicted non-fall destination class for false-negative fall windows.
+
+Claim boundary: this is a descriptive window-level missed-fall destination analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, false alarms per hour/day, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

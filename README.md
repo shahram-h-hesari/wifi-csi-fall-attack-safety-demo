@@ -2745,3 +2745,35 @@ Figure 19 uses two complementary percentages: the top cell value is the destinat
 This artifact complements missed-fall-rate analysis by showing the predicted non-fall destination class for false-negative fall windows.
 
 Claim boundary: this is a descriptive window-level missed-fall destination analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, false alarms per hour/day, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.
+
+### Thesis Table 20 and Figure 20: Fall-Window Recovery and Failure Persistence
+
+Table 20 and Figure 20 add a paired fall-window recovery and failure-persistence analysis.
+
+Files:
+
+```text
+results/thesis_table_20_fall_window_recovery_persistence.csv
+figures/thesis_figure_20_fall_window_recovery_persistence.png
+notes/thesis_table_20_figure_20_fall_window_recovery_persistence.md
+```
+
+Purpose:
+
+```text
+For true fall windows, how many were detected cleanly, lost under attack, recovered by defense, or still missed after defense?
+```
+
+Definitions:
+
+```text
+TP = true fall window predicted as fall
+FN = true fall window predicted as non-fall
+Clean TP -> Attack FN = clean-detected fall window lost under attack
+Attack FN -> Defended TP = attack-missed fall window recovered by defense
+Attack FN -> Defended FN = attack-missed fall window still missed after defense
+```
+
+This artifact complements Figure 19 by showing whether fall-window detection itself was recovered after attack. The figure shows the shared clean baseline once and tracks the same fall-window sample IDs within each matched attack/defense path.
+
+Claim boundary: this is a descriptive window-level paired recovery analysis. It is not clinical validation, medical-device validation, event-level fall validation, long-lie validation, false alarms per hour/day, time-to-alarm validation, or physical-layer / packet-level / preamble-level / SDR / over-the-air validation.

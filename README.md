@@ -3032,3 +3032,38 @@ This is not a new performance figure. It is a reproducibility guardrail that mak
 **Claim boundary**
 
 This is a prediction-column provenance and sanity-check audit for the current window-level workflow. It is not clinical validation, event-level fall validation, deployment validation, physical-layer validation, or over-the-air validation.
+
+### Thesis Table 27 and Figure 27: Attack-Severity Dose Response
+
+Table 27, Figure 27A, and Figure 27B add an expanded attack-severity dose-response analysis using the 18-epsilon FGSM/PGD prediction sweep.
+
+**Files**
+
+- `results/thesis_table_27_attack_severity_dose_response.csv`
+- `figures/thesis_figure_27a_attack_severity_dose_response.png`
+- `figures/thesis_figure_27b_attack_severity_dose_response_zoom.png`
+- `notes/thesis_table_27_figure_27_attack_severity_dose_response.md`
+
+**Input**
+
+- `results/epsilon_sweep_predictions/attack_prediction_sweep_18eps_summary.csv`
+
+**Question**
+
+```text
+Does fall-safety degradation increase systematically as adversarial attack strength increases?
+```
+
+**Main findings**
+
+- PGD reaches FNR = 1.000 at epsilon = 0.0100.
+- FGSM reaches FNR = 1.000 at epsilon = 0.0125.
+- The expanded sweep shows a systematic dose response: missed-fall rate and safety-priority score increase as epsilon increases, while attacked accuracy decreases.
+
+**Interpretation**
+
+This strengthens the thesis result beyond a single epsilon point. The fall-safety degradation is not only observed at epsilon = 0.03; it appears systematically across attack strength in the current processed-tensor stress test. The companion Figure 27B helps reveal the early-epsilon FGSM-vs-PGD differences more clearly.
+
+**Claim boundary**
+
+This is a window-level software adversarial stress test on processed UT-HAR / SenseFi CSI tensors. It is not clinical validation, event-level fall validation, physical-layer validation, packet-level validation, SDR validation, or over-the-air validation.

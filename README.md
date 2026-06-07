@@ -2880,3 +2880,50 @@ Current evidence supports window-level fall-safety analysis and software-level F
 **Claim boundary**
 
 The current package supports descriptive window-level proxy analysis and software-level stress testing. It does not by itself establish clinical, event-level, deployment, or physical-layer validation.
+
+### Thesis Table 23 and Figure 23: Safety-Priority Sensitivity Analysis
+
+Table 23 and Figure 23 add a missed-fall-priority sensitivity analysis.
+
+**Files**
+
+- `results/thesis_table_23_safety_priority_sensitivity.csv`
+- `figures/thesis_figure_23_safety_priority_sensitivity_heatmap.png`
+- `notes/thesis_table_23_figure_23_safety_priority_sensitivity.md`
+
+**Purpose**
+
+This artifact asks whether conclusions about clean, attacked, and defended conditions change when missed-fall windows are given increasing priority over false-alert windows.
+
+**Important column mapping**
+
+The FGSM CSV contains both clean and attacked prediction columns. This artifact uses `attacked_fall_pred_binary` for FGSM attack, not `clean_fall_pred_binary`.
+
+**Metric**
+
+```text
+normalized safety-priority score =
+FN weight × missed-fall rate + FP weight × false-positive rate
+```
+
+where:
+
+```text
+missed_fall_rate = FN / (TP + FN)
+false_positive_rate = FP / (FP + TN)
+```
+
+**Scenario interpretation**
+
+```text
+1:1  = missed-fall errors and false-alert errors are weighted equally
+2:1  = missed-fall errors are weighted 2× higher than false-alert errors
+5:1  = missed-fall errors are weighted 5× higher than false-alert errors
+10:1 = missed-fall errors are weighted 10× higher than false-alert errors
+```
+
+Lower score is better. Ranks compare the six model conditions within each scenario column.
+
+**Claim boundary**
+
+The weights are scenario assumptions, not clinical cost constants. This is a descriptive window-level sensitivity analysis using the current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.

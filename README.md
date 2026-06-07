@@ -2927,3 +2927,43 @@ Lower score is better. Ranks compare the six model conditions within each scenar
 **Claim boundary**
 
 The weights are scenario assumptions, not clinical cost constants. This is a descriptive window-level sensitivity analysis using the current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.
+
+### Thesis Table 24 and Figure 24: Defense Recovery Fraction and Residual Safety Gap
+
+Table 24 and Figure 24 add a defense-recovery and residual-gap analysis.
+
+**Files**
+
+- `results/thesis_table_24_defense_recovery_residual_gap.csv`
+- `figures/thesis_figure_24_defense_recovery_residual_gap.png`
+- `notes/thesis_table_24_figure_24_defense_recovery_residual_gap.md`
+
+**Purpose**
+
+This artifact asks how much of the attack-induced safety-priority degradation is recovered by the defended model, and how much gap remains relative to clean baseline.
+
+**Metric definitions**
+
+```text
+attack gap to clean =
+attack score − clean baseline score
+
+defended gap to clean =
+defended attack score − clean baseline score
+
+recovery fraction =
+(attack score − defended attack score) /
+(attack score − clean baseline score)
+
+residual gap fraction =
+(defended attack score − clean baseline score) /
+(attack score − clean baseline score)
+```
+
+**Main interpretation**
+
+The defended model recovers only a small fraction of the attack-induced safety-priority gap, especially as missed-fall errors receive stronger weighting. This indicates that reducing false-alert burden is not enough if missed-fall behavior remains unresolved.
+
+**Claim boundary**
+
+This is a descriptive window-level recovery and residual-gap analysis using current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.

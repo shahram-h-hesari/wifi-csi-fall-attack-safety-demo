@@ -3007,3 +3007,28 @@ The high scores under attack and defended attack are dominated by the missed-fal
 **Claim boundary**
 
 This is a descriptive window-level score-decomposition analysis using current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.
+
+### Thesis Table 26: Prediction-Column Provenance and Sanity-Check Audit
+
+Table 26 adds a reproducibility and quality-control audit for the prediction columns used in Tables/Figures 23-25.
+
+**Files**
+
+- `results/thesis_table_26_prediction_column_provenance_audit.csv`
+- `notes/thesis_table_26_prediction_column_provenance_audit.md`
+
+**Purpose**
+
+This artifact documents exactly which prediction file and prediction column generated each clean, attacked, and defended condition.
+
+**Why this matters**
+
+The FGSM CSV can contain both clean and attacked prediction columns. Table 26 explicitly verifies that the FGSM attack condition uses `attacked_fall_pred_binary`, not a clean prediction column.
+
+**Main interpretation**
+
+This is not a new performance figure. It is a reproducibility guardrail that makes the later safety-priority, defense-recovery, and score-decomposition artifacts more defensible.
+
+**Claim boundary**
+
+This is a prediction-column provenance and sanity-check audit for the current window-level workflow. It is not clinical validation, event-level fall validation, deployment validation, physical-layer validation, or over-the-air validation.

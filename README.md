@@ -10,22 +10,36 @@ Current status:
 Clean SenseFi UT-HAR LeNet baseline completed.
 Clean prediction export completed.
 Clean fall-vs-non-fall safety-proxy metrics completed.
+
 FGSM attacked prediction export completed.
 FGSM fall-vs-non-fall safety-proxy metrics completed.
 FGSM epsilon sweep completed.
 FGSM epsilon sweep figures completed.
+
 PGD attacked prediction export completed.
 PGD fall-vs-non-fall safety-proxy metrics completed.
 PGD epsilon sweep completed.
 PGD epsilon sweep figures completed.
+
 FGSM vs PGD comparison completed.
 Final FGSM/PGD attack-safety lab report completed.
 Window-level vs event-level limitation note completed.
+
 FGSM adversarial training defense baseline completed.
 Defended clean, FGSM, and PGD prediction export completed.
 Defended safety-proxy metrics completed.
 Defended vs undefended safety-proxy comparison completed.
 Defended vs undefended comparison figures completed.
+
+Thesis Tables/Figures 1–22 completed.
+Safety-priority sensitivity analysis completed as Table/Figure 23.
+Defense recovery and residual safety gap analysis completed as Table/Figure 24.
+Safety-score component decomposition completed as Table/Figure 25.
+Prediction-column provenance and sanity-check audit completed as Table 26.
+Expanded 18-epsilon FGSM/PGD attack prediction sweep completed.
+Attack-severity dose-response analysis completed as Table/Figure 27A/27B.
+
+Next planned artifact: Table/Figure 28 window-level bootstrap stability analysis.
 ```
 
 This is a research implementation demo. It is not clinical validation, medical-device validation, real patient deployment, diagnostic evidence, regulatory evaluation, physical-layer attack validation, SDR validation, packet-level validation, preamble-level validation, event-level fall validation, long-lie validation, or over-the-air validation.
@@ -54,7 +68,7 @@ WiFi CSI sensing output
 
 ## 2. Repository Roles
 
-This work uses two related repositories with different purposes.
+This work uses three related repositories with different purposes.
 
 | Repository | Role |
 |---|---|
@@ -72,48 +86,80 @@ The standalone repo makes the completed demo easier to review as a focused GitHu
 
 ## 3. Experiment Scope
 
-This first practical demo focuses on:
+This practical demo focuses on:
 
 ```text
 fall vs non-fall safety-proxy evaluation
+window-level adversarial robustness stress testing
+safety-risk translation for WiFi CSI fall-detection outputs
 ```
 
-The current clean-vs-attacked-vs-defended comparison uses:
+The current clean-vs-attacked-vs-defended workflow includes:
 
 ```text
 clean baseline
+clean prediction export
+clean fall-vs-non-fall safety-proxy metrics
+
 FGSM processed-tensor attack
 FGSM epsilon sweep
+FGSM attacked prediction export
+
 PGD processed-tensor attack
 PGD epsilon sweep
+PGD attacked prediction export
+
 FGSM vs PGD comparison
 short FGSM adversarial-training defense baseline
 defended clean/FGSM/PGD prediction export
 defended vs undefended safety-proxy comparison
+
+high-risk multiclass confusion taxonomy
+alert trustworthiness analysis
+false-alert source-class analysis
+missed-fall destination-class analysis
+fall-window recovery and persistence analysis
+attack-defense failure pattern analysis
+claim-boundary evidence mapping
+
+safety-priority weighting analysis
+defense recovery and residual safety gap analysis
+safety-score component decomposition
+prediction-column provenance and sanity-check audit
+expanded 18-epsilon FGSM/PGD attack-severity dose response
 ```
 
-The first safety-proxy metrics include:
+The current safety-proxy metrics include:
 
 ```text
-missed fall rate
+TP / FN / FP / TN
+missed fall rate / FNR
+false-positive rate / FPR
 false alarm count
-precision
+precision / alert trustworthiness
 recall / sensitivity
 specificity
 F1-score
 balanced accuracy
 prediction change rate
+safety-priority score
+defense recovery fraction
+residual safety gap
 ```
 
-Metrics that require timestamps, event IDs, fall impact times, or monitoring duration are not claimed yet:
+Metrics that require timestamps, event IDs, fall impact times, subject/session/room IDs, or monitoring duration are not claimed yet:
 
 ```text
 event-level recall
 event-level missed fall rate
+subject-level uncertainty
+room-level generalization
 false alarms per day or user-day
 detection latency
 delayed detection rate
 long-lie risk proxy
+clinical confidence
+deployment confidence
 ```
 
 ---
@@ -186,6 +232,27 @@ non-fall = classes 0, 2, 3, 4, 5, 6
 | Defended safety-proxy metrics | Complete | `scripts/compute_defended_safety_metrics.py`, `results/defended_safety_proxy_metrics.csv` |
 | Defended vs undefended comparison | Complete | `scripts/compare_defended_vs_undefended_safety_metrics.py`, `results/defended_vs_undefended_safety_comparison.csv`, `notes/defended_vs_undefended_safety_comparison_plan.md`, `notes/defended_vs_undefended_safety_comparison_log.md` |
 | Defended vs undefended figures | Complete | `scripts/plot_defended_vs_undefended_safety_comparison.py`, `figures/defended_vs_undefended_*.png` |
+| Thesis Tables/Figures 1-22 artifact package | Complete | `results/thesis_table_*`, `figures/thesis_figure_*`, `notes/thesis_*`, detailed README thesis sections |
+| Table/Figure 23: Safety-priority sensitivity analysis | Complete | `results/thesis_table_23_safety_priority_sensitivity.csv`, `figures/thesis_figure_23_safety_priority_sensitivity_heatmap.png`, `notes/thesis_table_23_figure_23_safety_priority_sensitivity.md` |
+| Table/Figure 24: Defense recovery and residual safety gap | Complete | `results/thesis_table_24_defense_recovery_residual_gap.csv`, `figures/thesis_figure_24_defense_recovery_residual_gap.png`, `notes/thesis_table_24_figure_24_defense_recovery_residual_gap.md` |
+| Table/Figure 25: Safety-score component decomposition | Complete | `results/thesis_table_25_safety_score_component_decomposition.csv`, `figures/thesis_figure_25_safety_score_component_decomposition.png`, `notes/thesis_table_25_figure_25_safety_score_component_decomposition.md` |
+| Table 26: Prediction-column provenance and sanity-check audit | Complete | `results/thesis_table_26_prediction_column_provenance_audit.csv`, `notes/thesis_table_26_prediction_column_provenance_audit.md` |
+| Expanded 18-epsilon attack prediction sweep | Complete | `scripts/export_attack_prediction_sweep_18eps.py`, `results/epsilon_sweep_predictions/attack_prediction_sweep_18eps_summary.csv`, `results/epsilon_sweep_predictions/fgsm_predictions_short_epsilon_*.csv`, `results/epsilon_sweep_predictions/pgd_predictions_short_epsilon_*.csv` |
+| Table/Figure 27A/27B: Attack-severity dose response | Complete | `scripts/create_thesis_table_27_figure_27_attack_severity_dose_response.py`, `results/thesis_table_27_attack_severity_dose_response.csv`, `figures/thesis_figure_27a_attack_severity_dose_response.png`, `figures/thesis_figure_27b_attack_severity_dose_response_zoom.png`, `notes/thesis_table_27_figure_27_attack_severity_dose_response.md` |
+
+---
+
+## 6A. Current Thesis Artifact Status
+
+Tables/Figures 1–27 are complete for the current window-level UT-HAR / SenseFi fall attack-safety workflow.
+
+The latest completed artifact is Table/Figure 27A/27B, which expands the FGSM/PGD attack-severity sweep to 18 epsilon values and shows systematic dose-response degradation rather than relying on one selected epsilon value.
+
+The current artifact package supports descriptive window-level safety-proxy analysis, software-level FGSM/PGD processed-tensor attack stress testing, short FGSM adversarial-training defense comparison, safety-priority weighting, residual-gap analysis, and prediction-column provenance auditing.
+
+The next planned artifact is Table/Figure 28: window-level bootstrap stability analysis of missed-fall rate, false-positive rate, attacked accuracy, and 10:1 safety-priority score.
+
+Claim boundary: these artifacts are window-level research/prototype outputs. They do not establish clinical validation, subject-level uncertainty, room-level uncertainty, deployment confidence, event-level fall validation, long-lie validation, physical-layer validation, SDR validation, packet-level validation, preamble-level validation, or over-the-air validation.
 
 ---
 

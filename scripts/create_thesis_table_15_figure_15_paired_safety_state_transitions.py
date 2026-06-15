@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import csv
 from collections import defaultdict
 
@@ -379,7 +379,7 @@ def create_heatmap_figure(matrices):
         colorbar.ax.tick_params(labelsize=11)
 
     fig.suptitle(
-        "Thesis Figure 15: Paired Window-Level Safety-State Transitions",
+        "Paired Window-Level Safety-State Transitions",
         fontsize=18,
         y=0.95,
     )

@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import csv
 
 import matplotlib.pyplot as plt
@@ -125,7 +125,7 @@ def create_figure(rows):
         )
 
     ax.set_title(
-        "Thesis Figure 9: Safety Error Burden Composition Across Conditions",
+        "Safety Error Burden Composition Across Conditions",
         pad=18,
     )
     ax.set_ylabel("Window count", labelpad=18)
@@ -166,7 +166,7 @@ def create_figure(rows):
 
 def create_note(rows):
     lines = []
-    lines.append("# Thesis Figure 9: Safety Error Burden Composition Across Conditions")
+    lines.append("# Safety Error Burden Composition Across Conditions")
     lines.append("")
     lines.append("This figure visualizes how the window-level safety-error burden changes across clean, attacked, and defended conditions.")
     lines.append("")

@@ -1,5 +1,5 @@
-"""
-Create Thesis Figure 7: Failure Threshold / Robustness Collapse Plot.
+﻿"""
+Create Failure Threshold / Robustness Collapse Plot.
 
 This script visualizes FGSM and PGD epsilon-sweep behavior against key
 window-level robustness failure thresholds.
@@ -124,7 +124,7 @@ def plot_figure(fgsm, pgd):
     ax.legend(fontsize=8)
 
     fig.suptitle(
-        "Thesis Figure 7: Failure Threshold / Robustness Collapse Plot\n"
+        "Failure Threshold / Robustness Collapse Plot\n"
         "Window-level safety-proxy degradation under FGSM and PGD",
         fontsize=14,
     )
@@ -166,7 +166,7 @@ def write_note(fgsm, pgd):
     pgd_false_alarm = first_crossing(pgd, "false_alarm_count", ">=", 100)
 
     lines = []
-    lines.append("# Thesis Figure 7: Failure Threshold / Robustness Collapse Plot")
+    lines.append("# Failure Threshold / Robustness Collapse Plot")
     lines.append("")
     lines.append(
         "This figure visualizes FGSM and PGD epsilon-sweep behavior against "

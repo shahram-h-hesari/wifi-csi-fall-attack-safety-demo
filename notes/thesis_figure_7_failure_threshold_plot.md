@@ -1,4 +1,4 @@
-# Thesis Figure 7: Failure Threshold / Robustness Collapse Plot
+# Failure Threshold / Robustness Collapse Plot
 
 This figure visualizes FGSM and PGD epsilon-sweep behavior against window-level robustness failure thresholds.
 

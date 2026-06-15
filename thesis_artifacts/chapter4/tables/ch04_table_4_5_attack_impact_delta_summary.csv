@@ -1,0 +1,3 @@
+comparison,attack,epsilon,clean_missed_fall_rate,attacked_missed_fall_rate,missed_fall_rate_change,clean_recall_sensitivity,attacked_recall_sensitivity,recall_sensitivity_change,clean_f1_score,attacked_f1_score,f1_score_change,clean_false_alarm_count,attacked_false_alarm_count,false_alarm_count_change,clean_balanced_accuracy,attacked_balanced_accuracy,balanced_accuracy_change,prediction_change_rate
+Clean vs FGSM,FGSM,0.030,0.3596,1.0000,0.6404,0.6404,0.0000,-0.6404,0.6404,0.0000,-0.6404,32,119,87,0.8026,0.4344,-0.3682,0.7440
+Clean vs PGD,PGD,0.030,0.3596,1.0000,0.6404,0.6404,0.0000,-0.6404,0.6404,0.0000,-0.6404,32,115,83,0.8026,0.4366,-0.3660,0.7781

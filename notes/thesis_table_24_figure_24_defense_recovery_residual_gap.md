@@ -1,4 +1,4 @@
-# Thesis Table 24 and Figure 24: Defense Recovery Fraction and Residual Safety Gap
+# Thesis Table 24 and Defense Recovery Fraction and Residual Safety Gap
 
 ## Purpose
 

@@ -1,4 +1,4 @@
-# Thesis Table 25 and Figure 25: Safety-Score Component Decomposition
+# Thesis Table 25 and Safety-Score Component Decomposition
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Figure 25 focuses on the strongest missed-fall-priority scenario:
 FN:FP = 10:1
 ```
 
-This means missed-fall errors are weighted 10× higher than false-alert errors.
+This means missed-fall errors are weighted 10x higher than false-alert errors.
 
 ## Metric Definition
 
@@ -49,8 +49,8 @@ This means missed-fall errors are weighted 10× higher than false-alert errors.
 total safety-priority score =
 missed-fall component + false-alert component
 
-missed-fall component = 10 × FNR
-false-alert component = 1 × FPR
+missed-fall component = 10 x FNR
+false-alert component = 1 x FPR
 ```
 
 where:

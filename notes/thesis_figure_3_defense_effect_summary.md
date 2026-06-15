@@ -1,4 +1,4 @@
-# Thesis Figure 3: Defense Effect Summary
+# Defense Effect Summary
 
 This figure provides a compact visual summary of the first short 5-epoch FGSM adversarial-training defense.
 

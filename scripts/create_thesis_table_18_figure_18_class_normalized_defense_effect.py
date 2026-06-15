@@ -322,7 +322,7 @@ def create_figure(heatmap_matrix, comparison_labels):
     )
 
     ax.set_title(
-        "Thesis Figure 18: Matched Defense Effect on False-Fall-Alarm Rates",
+        "Matched Defense Effect on False-Fall-Alarm Rates",
         fontsize=15.5,
         pad=15,
     )

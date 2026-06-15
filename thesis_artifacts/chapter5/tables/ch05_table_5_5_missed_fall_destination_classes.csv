@@ -1,0 +1,37 @@
+condition_id,condition_label,condition_type,missed_fall_destination_class_id,missed_fall_destination_class_name,total_true_fall_windows,total_missed_fall_windows_fn,overall_missed_fall_rate,overall_missed_fall_rate_percent,missed_falls_to_destination_count,destination_rate_among_true_fall_windows,destination_rate_among_true_fall_windows_percent,share_among_missed_fall_windows,share_among_missed_fall_windows_percent,interpretation
+clean,Clean,undefended clean,0,lie down,89,32,0.359551,35.96,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+clean,Clean,undefended clean,2,walk,89,32,0.359551,35.96,12,0.134831,13.48,0.375000,37.50,This destination class accounts for some missed fall windows in this condition.
+clean,Clean,undefended clean,3,pickup,89,32,0.359551,35.96,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+clean,Clean,undefended clean,4,run,89,32,0.359551,35.96,20,0.224719,22.47,0.625000,62.50,This destination class accounts for at least half of missed fall windows in this condition.
+clean,Clean,undefended clean,5,sit down,89,32,0.359551,35.96,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+clean,Clean,undefended clean,6,stand up,89,32,0.359551,35.96,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+fgsm_attack,FGSM Attack,undefended attacked,0,lie down,89,89,1.000000,100.00,6,0.067416,6.74,0.067416,6.74,This destination class accounts for some missed fall windows in this condition.
+fgsm_attack,FGSM Attack,undefended attacked,2,walk,89,89,1.000000,100.00,60,0.674157,67.42,0.674157,67.42,This destination class accounts for at least half of missed fall windows in this condition.
+fgsm_attack,FGSM Attack,undefended attacked,3,pickup,89,89,1.000000,100.00,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+fgsm_attack,FGSM Attack,undefended attacked,4,run,89,89,1.000000,100.00,17,0.191011,19.10,0.191011,19.10,This destination class accounts for some missed fall windows in this condition.
+fgsm_attack,FGSM Attack,undefended attacked,5,sit down,89,89,1.000000,100.00,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+fgsm_attack,FGSM Attack,undefended attacked,6,stand up,89,89,1.000000,100.00,6,0.067416,6.74,0.067416,6.74,This destination class accounts for some missed fall windows in this condition.
+pgd_attack,PGD Attack,undefended attacked,0,lie down,89,89,1.000000,100.00,9,0.101124,10.11,0.101124,10.11,This destination class accounts for some missed fall windows in this condition.
+pgd_attack,PGD Attack,undefended attacked,2,walk,89,89,1.000000,100.00,54,0.606742,60.67,0.606742,60.67,This destination class accounts for at least half of missed fall windows in this condition.
+pgd_attack,PGD Attack,undefended attacked,3,pickup,89,89,1.000000,100.00,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+pgd_attack,PGD Attack,undefended attacked,4,run,89,89,1.000000,100.00,15,0.168539,16.85,0.168539,16.85,This destination class accounts for some missed fall windows in this condition.
+pgd_attack,PGD Attack,undefended attacked,5,sit down,89,89,1.000000,100.00,11,0.123596,12.36,0.123596,12.36,This destination class accounts for some missed fall windows in this condition.
+pgd_attack,PGD Attack,undefended attacked,6,stand up,89,89,1.000000,100.00,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+defended_clean,Defended Clean,defended clean,0,lie down,89,53,0.595506,59.55,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+defended_clean,Defended Clean,defended clean,2,walk,89,53,0.595506,59.55,39,0.438202,43.82,0.735849,73.58,This destination class accounts for at least half of missed fall windows in this condition.
+defended_clean,Defended Clean,defended clean,3,pickup,89,53,0.595506,59.55,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+defended_clean,Defended Clean,defended clean,4,run,89,53,0.595506,59.55,14,0.157303,15.73,0.264151,26.42,This destination class accounts for some missed fall windows in this condition.
+defended_clean,Defended Clean,defended clean,5,sit down,89,53,0.595506,59.55,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+defended_clean,Defended Clean,defended clean,6,stand up,89,53,0.595506,59.55,0,0.000000,0.00,0.000000,0.00,No missed fall windows were predicted as this destination class.
+defended_fgsm,Defended FGSM,defended attacked,0,lie down,89,89,1.000000,100.00,14,0.157303,15.73,0.157303,15.73,This destination class accounts for some missed fall windows in this condition.
+defended_fgsm,Defended FGSM,defended attacked,2,walk,89,89,1.000000,100.00,42,0.471910,47.19,0.471910,47.19,A high fraction of true fall windows were missed as this destination class.
+defended_fgsm,Defended FGSM,defended attacked,3,pickup,89,89,1.000000,100.00,3,0.033708,3.37,0.033708,3.37,This destination class accounts for some missed fall windows in this condition.
+defended_fgsm,Defended FGSM,defended attacked,4,run,89,89,1.000000,100.00,19,0.213483,21.35,0.213483,21.35,This destination class accounts for some missed fall windows in this condition.
+defended_fgsm,Defended FGSM,defended attacked,5,sit down,89,89,1.000000,100.00,1,0.011236,1.12,0.011236,1.12,This destination class accounts for some missed fall windows in this condition.
+defended_fgsm,Defended FGSM,defended attacked,6,stand up,89,89,1.000000,100.00,10,0.112360,11.24,0.112360,11.24,This destination class accounts for some missed fall windows in this condition.
+defended_pgd,Defended PGD,defended attacked,0,lie down,89,89,1.000000,100.00,25,0.280899,28.09,0.280899,28.09,A high fraction of true fall windows were missed as this destination class.
+defended_pgd,Defended PGD,defended attacked,2,walk,89,89,1.000000,100.00,27,0.303371,30.34,0.303371,30.34,A high fraction of true fall windows were missed as this destination class.
+defended_pgd,Defended PGD,defended attacked,3,pickup,89,89,1.000000,100.00,4,0.044944,4.49,0.044944,4.49,This destination class accounts for some missed fall windows in this condition.
+defended_pgd,Defended PGD,defended attacked,4,run,89,89,1.000000,100.00,16,0.179775,17.98,0.179775,17.98,This destination class accounts for some missed fall windows in this condition.
+defended_pgd,Defended PGD,defended attacked,5,sit down,89,89,1.000000,100.00,4,0.044944,4.49,0.044944,4.49,This destination class accounts for some missed fall windows in this condition.
+defended_pgd,Defended PGD,defended attacked,6,stand up,89,89,1.000000,100.00,13,0.146067,14.61,0.146067,14.61,This destination class accounts for some missed fall windows in this condition.

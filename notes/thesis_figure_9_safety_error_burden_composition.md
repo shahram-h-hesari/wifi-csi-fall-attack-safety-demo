@@ -1,4 +1,4 @@
-# Thesis Figure 9: Safety Error Burden Composition Across Conditions
+# Safety Error Burden Composition Across Conditions
 
 This figure visualizes how the window-level safety-error burden changes across clean, attacked, and defended conditions.
 

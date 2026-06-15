@@ -1,4 +1,4 @@
-# Thesis Figure 8: Safety Translation Pipeline Diagram
+# Safety Translation Pipeline Diagram
 
 This figure summarizes the safety-translation pipeline used in the WiFi CSI Fall Attack-Safety Demo.
 

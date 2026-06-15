@@ -1,5 +1,5 @@
-"""
-Create Thesis Figure 8: Safety Translation Pipeline Diagram.
+﻿"""
+Create Safety Translation Pipeline Diagram.
 
 This version improves spacing, increases box text size, separates the
 claim-boundary callout from the Layer 2 boxes, and keeps the design clean.
@@ -113,7 +113,7 @@ def create_figure():
     ax.axis("off")
 
     fig.suptitle(
-        "Thesis Figure 8: Safety Translation Pipeline Diagram\n"
+        "Safety Translation Pipeline Diagram\n"
         "Current window-level safety-proxy workflow and future event-level metadata requirements",
         fontsize=15.8,
         y=0.975,
@@ -262,7 +262,7 @@ def write_note():
     NOTES_DIR.mkdir(parents=True, exist_ok=True)
 
     lines = []
-    lines.append("# Thesis Figure 8: Safety Translation Pipeline Diagram")
+    lines.append("# Safety Translation Pipeline Diagram")
     lines.append("")
     lines.append(
         "This figure summarizes the safety-translation pipeline used in the "

@@ -1,0 +1,65 @@
+comparison_id,comparison_label,from_condition,to_condition,from_safety_state,to_safety_state,transition,count,from_state_total,percentage_within_from_state,total_paired_windows,interpretation
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TP,TP,TP -> TP,0,57,0.000000,996,Safety state unchanged.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TP,FN,TP -> FN,57,57,1.000000,996,Detected fall window became a missed-fall window.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TP,FP,TP -> FP,0,57,0.000000,996,Window changed safety state from TP to FP.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TP,TN,TP -> TN,0,57,0.000000,996,Window changed safety state from TP to TN.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FN,TP,FN -> TP,0,32,0.000000,996,Missed-fall window became detected fall window.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FN,FN,FN -> FN,32,32,1.000000,996,Missed-fall state persisted.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FN,FP,FN -> FP,0,32,0.000000,996,Window changed safety state from FN to FP.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FN,TN,FN -> TN,0,32,0.000000,996,Window changed safety state from FN to TN.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FP,TP,FP -> TP,0,32,0.000000,996,Window changed safety state from FP to TP.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FP,FN,FP -> FN,0,32,0.000000,996,Window changed safety state from FP to FN.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FP,FP,FP -> FP,15,32,0.468750,996,False fall alarm persisted.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,FP,TN,FP -> TN,17,32,0.531250,996,False fall alarm became correct non-fall window.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TN,TP,TN -> TP,0,875,0.000000,996,Window changed safety state from TN to TP.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TN,FN,TN -> FN,0,875,0.000000,996,Window changed safety state from TN to FN.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TN,FP,TN -> FP,104,875,0.118857,996,Correct non-fall window became false fall alarm.
+clean_to_fgsm,Clean -> FGSM attack,Clean,FGSM attack,TN,TN,TN -> TN,771,875,0.881143,996,Safety state unchanged.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TP,TP,TP -> TP,0,57,0.000000,996,Safety state unchanged.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TP,FN,TP -> FN,57,57,1.000000,996,Detected fall window became a missed-fall window.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TP,FP,TP -> FP,0,57,0.000000,996,Window changed safety state from TP to FP.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TP,TN,TP -> TN,0,57,0.000000,996,Window changed safety state from TP to TN.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FN,TP,FN -> TP,0,32,0.000000,996,Missed-fall window became detected fall window.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FN,FN,FN -> FN,32,32,1.000000,996,Missed-fall state persisted.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FN,FP,FN -> FP,0,32,0.000000,996,Window changed safety state from FN to FP.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FN,TN,FN -> TN,0,32,0.000000,996,Window changed safety state from FN to TN.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FP,TP,FP -> TP,0,32,0.000000,996,Window changed safety state from FP to TP.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FP,FN,FP -> FN,0,32,0.000000,996,Window changed safety state from FP to FN.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FP,FP,FP -> FP,11,32,0.343750,996,False fall alarm persisted.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,FP,TN,FP -> TN,21,32,0.656250,996,False fall alarm became correct non-fall window.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TN,TP,TN -> TP,0,875,0.000000,996,Window changed safety state from TN to TP.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TN,FN,TN -> FN,0,875,0.000000,996,Window changed safety state from TN to FN.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TN,FP,TN -> FP,104,875,0.118857,996,Correct non-fall window became false fall alarm.
+clean_to_pgd,Clean -> PGD attack,Clean,PGD attack,TN,TN,TN -> TN,771,875,0.881143,996,Safety state unchanged.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TP,TP,TP -> TP,0,0,0.000000,996,Safety state unchanged.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TP,FN,TP -> FN,0,0,0.000000,996,Detected fall window became a missed-fall window.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TP,FP,TP -> FP,0,0,0.000000,996,Window changed safety state from TP to FP.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TP,TN,TP -> TN,0,0,0.000000,996,Window changed safety state from TP to TN.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FN,TP,FN -> TP,0,89,0.000000,996,Missed-fall window became detected fall window.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FN,FN,FN -> FN,89,89,1.000000,996,Missed-fall state persisted.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FN,FP,FN -> FP,0,89,0.000000,996,Window changed safety state from FN to FP.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FN,TN,FN -> TN,0,89,0.000000,996,Window changed safety state from FN to TN.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FP,TP,FP -> TP,0,119,0.000000,996,Window changed safety state from FP to TP.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FP,FN,FP -> FN,0,119,0.000000,996,Window changed safety state from FP to FN.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FP,FP,FP -> FP,57,119,0.478992,996,False fall alarm persisted.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,FP,TN,FP -> TN,62,119,0.521008,996,False fall alarm became correct non-fall window.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TN,TP,TN -> TP,0,788,0.000000,996,Window changed safety state from TN to TP.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TN,FN,TN -> FN,0,788,0.000000,996,Window changed safety state from TN to FN.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TN,FP,TN -> FP,15,788,0.019036,996,Correct non-fall window became false fall alarm.
+fgsm_to_defended_fgsm,FGSM attack -> Defended FGSM,FGSM attack,Defended FGSM,TN,TN,TN -> TN,773,788,0.980964,996,Safety state unchanged.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TP,TP,TP -> TP,0,0,0.000000,996,Safety state unchanged.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TP,FN,TP -> FN,0,0,0.000000,996,Detected fall window became a missed-fall window.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TP,FP,TP -> FP,0,0,0.000000,996,Window changed safety state from TP to FP.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TP,TN,TP -> TN,0,0,0.000000,996,Window changed safety state from TP to TN.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FN,TP,FN -> TP,0,89,0.000000,996,Missed-fall window became detected fall window.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FN,FN,FN -> FN,89,89,1.000000,996,Missed-fall state persisted.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FN,FP,FN -> FP,0,89,0.000000,996,Window changed safety state from FN to FP.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FN,TN,FN -> TN,0,89,0.000000,996,Window changed safety state from FN to TN.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FP,TP,FP -> TP,0,115,0.000000,996,Window changed safety state from FP to TP.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FP,FN,FP -> FN,0,115,0.000000,996,Window changed safety state from FP to FN.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FP,FP,FP -> FP,46,115,0.400000,996,False fall alarm persisted.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,FP,TN,FP -> TN,69,115,0.600000,996,False fall alarm became correct non-fall window.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TN,TP,TN -> TP,0,792,0.000000,996,Window changed safety state from TN to TP.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TN,FN,TN -> FN,0,792,0.000000,996,Window changed safety state from TN to FN.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TN,FP,TN -> FP,10,792,0.012626,996,Correct non-fall window became false fall alarm.
+pgd_to_defended_pgd,PGD attack -> Defended PGD,PGD attack,Defended PGD,TN,TN,TN -> TN,782,792,0.987374,996,Safety state unchanged.

@@ -3102,7 +3102,7 @@ This is a prediction-column provenance and sanity-check audit for the current wi
 
 ### Thesis Table 27 and Figure 27: Attack-Severity Dose Response
 
-Table 27, Figure 27A, and Figure 27B add an expanded attack-severity dose-response analysis using the 18-epsilon FGSM/PGD prediction sweep.
+Table 27, Figure 4.2, and Figure 4.3 add an expanded attack-severity dose-response analysis using the 18-epsilon FGSM/PGD prediction sweep.
 
 **Files**
 
@@ -3129,7 +3129,7 @@ Does fall-safety degradation increase systematically as adversarial attack stren
 
 **Interpretation**
 
-This strengthens the thesis result beyond a single epsilon point. The fall-safety degradation is not only observed at epsilon = 0.03; it appears systematically across attack strength in the current processed-tensor stress test. The companion Figure 27B helps reveal the early-epsilon FGSM-vs-PGD differences more clearly.
+This strengthens the thesis result beyond a single epsilon point. The fall-safety degradation is not only observed at epsilon = 0.03; it appears systematically across attack strength in the current processed-tensor stress test. The companion Figure 4.3 helps reveal the early-epsilon FGSM-vs-PGD differences more clearly.
 
 **Claim boundary**
 

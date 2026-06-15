@@ -1,4 +1,4 @@
-# Thesis Figure 10: High-Risk Multiclass Fall Error Pathways
+# Figure 4.4: High-Risk Multiclass Fall Error Pathways
 
 This figure summarizes the most clinically motivated multiclass error pathways behind the binary fall-vs-non-fall safety-proxy results.
 

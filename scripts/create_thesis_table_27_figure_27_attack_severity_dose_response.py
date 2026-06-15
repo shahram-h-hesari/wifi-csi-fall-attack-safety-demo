@@ -1,4 +1,4 @@
-"""
+﻿"""
 Create Thesis Table 27 and Figure 27:
 Attack-Severity Dose Response of Fall-Safety Metrics.
 
@@ -323,7 +323,7 @@ def create_main_figure(rows: list[dict[str, Any]]) -> tuple[float | None, float 
     )
 
     fig.suptitle(
-        "Figure 27A: Attack-Severity Dose Response of Fall-Safety Metrics",
+        "Figure 4.2: Attack-Severity Dose Response of Fall-Safety Metrics",
         fontsize=18.5,
         fontweight="bold",
         y=0.955,
@@ -383,8 +383,8 @@ def create_main_figure(rows: list[dict[str, Any]]) -> tuple[float | None, float 
 
     collapse_text = (
         "Fall-window collapse threshold: "
-        f"PGD FNR = 1.000 at ε = {pgd_collapse:.4f}; "
-        f"FGSM FNR = 1.000 at ε = {fgsm_collapse:.4f}."
+        f"PGD FNR = 1.000 at epsilon = {pgd_collapse:.4f}; "
+        f"FGSM FNR = 1.000 at epsilon = {fgsm_collapse:.4f}."
         if fgsm_collapse is not None and pgd_collapse is not None
         else "Fall-window collapse threshold could not be determined."
     )
@@ -431,7 +431,7 @@ def create_main_figure(rows: list[dict[str, Any]]) -> tuple[float | None, float 
 
 def create_zoom_figure(rows: list[dict[str, Any]]) -> None:
     """
-    Companion Figure 27B to better separate FGSM and PGD curves where they are
+    Companion Figure 4.3 to better separate FGSM and PGD curves where they are
     visually close in the main figure.
     """
     fig, axes = plt.subplots(2, 2, figsize=(15.0, 10.0), dpi=150)
@@ -445,7 +445,7 @@ def create_zoom_figure(rows: list[dict[str, Any]]) -> None:
     )
 
     fig.suptitle(
-        "Figure 27B: Early-Epsilon FGSM vs PGD Comparison",
+        "Figure 4.3: Early-Epsilon FGSM vs PGD Comparison",
         fontsize=17.0,
         fontweight="bold",
         y=0.955,
@@ -587,7 +587,7 @@ def write_note(rows: list[dict[str, Any]], findings: dict[str, Any]) -> None:
 
 ## Purpose
 
-Table 27, Figure 27A, and Figure 27B ask:
+Table 27, Figure 4.2, and Figure 4.3 ask:
 
 ```text
 Does fall-safety degradation increase systematically as adversarial attack strength increases?
@@ -600,10 +600,10 @@ This directly addresses the concern that a single selected epsilon value could b
 **Table 27**  
 `{TABLE_PATH}`
 
-**Figure 27A**  
+**Figure 4.2**  
 `{FIGURE_PATH}`
 
-**Figure 27B**  
+**Figure 4.3**  
 `{ZOOM_FIGURE_PATH}`
 
 **Companion note**  
@@ -647,7 +647,7 @@ The sweep contains 18 epsilon values for FGSM and PGD, giving 36 attack-conditio
 
 ## Interpretation
 
-The expanded sweep shows a clear attack-severity dose response. As epsilon increases, missed-fall rate rises sharply, safety-priority score increases, and attacked accuracy decreases. The Figure 27A shows the overall dose-response pattern, while the Figure 27B focuses on the early-epsilon region where FGSM and PGD are visually close and easier to compare.
+The expanded sweep shows a clear attack-severity dose response. As epsilon increases, missed-fall rate rises sharply, safety-priority score increases, and attacked accuracy decreases. The Figure 4.2 shows the overall dose-response pattern, while the Figure 4.3 focuses on the early-epsilon region where FGSM and PGD are visually close and easier to compare.
 
 This makes the adversarial robustness result stronger than the earlier single-point epsilon = 0.03 analysis because it shows that the degradation is systematic across attack strength.
 
@@ -689,7 +689,7 @@ def update_readme(findings: dict[str, Any]) -> None:
     section = f"""
 {section_marker}
 
-Table 27, Figure 27A, and Figure 27B add an expanded attack-severity dose-response analysis using the 18-epsilon FGSM/PGD prediction sweep.
+Table 27, Figure 4.2, and Figure 4.3 add an expanded attack-severity dose-response analysis using the 18-epsilon FGSM/PGD prediction sweep.
 
 **Files**
 
@@ -716,7 +716,7 @@ Does fall-safety degradation increase systematically as adversarial attack stren
 
 **Interpretation**
 
-This strengthens the thesis result beyond a single epsilon point. The fall-safety degradation is not only observed at epsilon = 0.03; it appears systematically across attack strength in the current processed-tensor stress test. The companion Figure 27B helps reveal the early-epsilon FGSM-vs-PGD differences more clearly.
+This strengthens the thesis result beyond a single epsilon point. The fall-safety degradation is not only observed at epsilon = 0.03; it appears systematically across attack strength in the current processed-tensor stress test. The companion Figure 4.3 helps reveal the early-epsilon FGSM-vs-PGD differences more clearly.
 
 **Claim boundary**
 
@@ -778,3 +778,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+

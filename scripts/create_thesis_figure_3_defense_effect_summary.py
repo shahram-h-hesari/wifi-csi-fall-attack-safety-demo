@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 
 # ============================================================
-# Thesis Figure 3: Defense Effect Summary
+# Defense Effect Summary
 #
 # Purpose:
 # Create a compact thesis-ready visual summary of the first
@@ -154,7 +154,7 @@ def add_bar_labels(ax, bars, value_format):
 def write_markdown(summary):
     lines = []
 
-    lines.append("# Thesis Figure 3: Defense Effect Summary")
+    lines.append("# Defense Effect Summary")
     lines.append("")
     lines.append("This figure provides a compact visual summary of the first short 5-epoch FGSM adversarial-training defense.")
     lines.append("")
@@ -279,7 +279,7 @@ def main():
     )
 
     fig.suptitle(
-        "Thesis Figure 3: Defense Effect Summary",
+        "Defense Effect Summary",
         fontsize=14,
         fontweight="bold",
     )

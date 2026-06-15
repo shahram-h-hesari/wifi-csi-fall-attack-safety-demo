@@ -5,7 +5,7 @@ import numpy as np
 
 
 # ============================================================
-# Thesis Figure 4: Clean vs Defended Clean Tradeoff
+# Clean vs Defended Clean Tradeoff
 #
 # Purpose:
 # Compare the undefended clean baseline against the defended
@@ -149,7 +149,7 @@ def add_bar_labels(ax, bars, value_format):
 def write_markdown(summary):
     lines = []
 
-    lines.append("# Thesis Figure 4: Clean vs Defended Clean Tradeoff")
+    lines.append("# Clean vs Defended Clean Tradeoff")
     lines.append("")
     lines.append("This figure compares the undefended clean baseline against the defended clean model to show the clean-performance cost of the first short 5-epoch FGSM adversarial-training defense.")
     lines.append("")
@@ -283,7 +283,7 @@ def main():
     add_bar_labels(axes[1], bars_3, value_format="integer")
 
     fig.suptitle(
-        "Thesis Figure 4: Clean vs Defended Clean Tradeoff",
+        "Clean vs Defended Clean Tradeoff",
         fontsize=14,
         fontweight="bold",
     )

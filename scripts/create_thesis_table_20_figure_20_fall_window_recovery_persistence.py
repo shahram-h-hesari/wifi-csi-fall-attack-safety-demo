@@ -394,7 +394,7 @@ def create_figure(rows):
     )
 
     ax.set_title(
-        "Thesis Figure 20: Fall-Window Recall Recovery After Attack and Defense",
+        "Fall-Window Recall Recovery After Attack and Defense",
         fontsize=15.5,
         pad=16,
     )

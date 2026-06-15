@@ -1,4 +1,4 @@
-# Thesis Figure 4: Clean vs Defended Clean Tradeoff
+# Clean vs Defended Clean Tradeoff
 
 This figure compares the undefended clean baseline against the defended clean model to show the clean-performance cost of the first short 5-epoch FGSM adversarial-training defense.
 

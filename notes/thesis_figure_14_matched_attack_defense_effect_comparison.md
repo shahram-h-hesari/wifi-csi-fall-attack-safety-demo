@@ -1,4 +1,4 @@
-# Thesis Figure 14: Matched Attack Defense Effect Comparison
+# Matched Attack Defense Effect Comparison
 
 This figure compares matched undefended and defended attack conditions using three metrics that improved under defense, while explicitly noting that missed fall rate did not improve.
 

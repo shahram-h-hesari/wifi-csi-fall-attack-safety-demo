@@ -487,7 +487,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
 
     # Title and legend in figure coordinates so they never overlap.
     fig.suptitle(
-        "Figure 24: Defense Recovery Fraction and Residual Safety Gap",
+        "Defense Recovery Fraction and Residual Safety Gap",
         fontsize=18.6,
         fontweight="bold",
         y=0.965,
@@ -546,7 +546,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
     ax.text(
         1.5,
         -0.135,
-        "FGSM attack → Defended FGSM",
+        "FGSM attack -> Defended FGSM",
         ha="center",
         va="top",
         fontsize=11.0,
@@ -557,7 +557,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
     ax.text(
         6.5,
         -0.135,
-        "PGD attack → Defended PGD",
+        "PGD attack -> Defended PGD",
         ha="center",
         va="top",
         fontsize=11.0,
@@ -596,7 +596,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
         0.080,
         (
             "FN:FP weighting: 1:1 = equal; 2:1, 5:1, 10:1 = "
-            "missed-fall errors weighted 2×, 5×, and 10× higher than false alerts."
+            "missed-fall errors weighted 2x, 5x, and 10x higher than false alerts."
         ),
         ha="center",
         va="center",
@@ -656,7 +656,7 @@ def write_note(rows: list[dict[str, Any]], condition_metrics: dict[str, dict[str
         )
     input_files_text = "\n".join(input_file_lines)
 
-    text = f"""# Thesis Table 24 and Figure 24: Defense Recovery Fraction and Residual Safety Gap
+    text = f"""# Thesis Table 24 and Defense Recovery Fraction and Residual Safety Gap
 
 ## Purpose
 
@@ -750,7 +750,7 @@ def replace_or_append_readme_section(text: str, section_marker: str, section: st
 
 
 def update_readme() -> None:
-    section_marker = "### Thesis Table 24 and Figure 24: Defense Recovery Fraction and Residual Safety Gap"
+    section_marker = "### Thesis Table 24 and Defense Recovery Fraction and Residual Safety Gap"
 
     section = f"""
 {section_marker}

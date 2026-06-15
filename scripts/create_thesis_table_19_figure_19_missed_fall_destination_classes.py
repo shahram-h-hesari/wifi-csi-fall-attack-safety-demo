@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import csv
 import math
 from collections import defaultdict
@@ -356,7 +356,7 @@ def create_figure(heatmap_rate_matrix, heatmap_share_matrix, y_labels):
     )
 
     ax.set_title(
-        "Thesis Figure 19: Predicted Non-Fall Classes for Missed Fall Windows",
+        "Predicted Non-Fall Classes for Missed Fall Windows",
         fontsize=16,
         pad=16,
     )
@@ -680,3 +680,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

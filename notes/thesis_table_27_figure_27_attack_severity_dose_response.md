@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Table 27, Figure 27A, and Figure 27B ask:
+Table 27, Figure 4.2, and Figure 4.3 ask:
 
 ```text
 Does fall-safety degradation increase systematically as adversarial attack strength increases?
@@ -15,10 +15,10 @@ This directly addresses the concern that a single selected epsilon value could b
 **Table 27**  
 `<REPO_ROOT>\results\thesis_table_27_attack_severity_dose_response.csv`
 
-**Figure 27A**  
+**Figure 4.2**  
 `<REPO_ROOT>\figures\thesis_figure_27a_attack_severity_dose_response.png`
 
-**Figure 27B**  
+**Figure 4.3**  
 `<REPO_ROOT>\figures\thesis_figure_27b_attack_severity_dose_response_zoom.png`
 
 **Companion note**  
@@ -99,7 +99,7 @@ The sweep contains 18 epsilon values for FGSM and PGD, giving 36 attack-conditio
 
 ## Interpretation
 
-The expanded sweep shows a clear attack-severity dose response. As epsilon increases, missed-fall rate rises sharply, safety-priority score increases, and attacked accuracy decreases. The Figure 27A shows the overall dose-response pattern, while the Figure 27B focuses on the early-epsilon region where FGSM and PGD are visually close and easier to compare.
+The expanded sweep shows a clear attack-severity dose response. As epsilon increases, missed-fall rate rises sharply, safety-priority score increases, and attacked accuracy decreases. The Figure 4.2 shows the overall dose-response pattern, while the Figure 4.3 focuses on the early-epsilon region where FGSM and PGD are visually close and easier to compare.
 
 This makes the adversarial robustness result stronger than the earlier single-point epsilon = 0.03 analysis because it shows that the degradation is systematic across attack strength.
 

@@ -1,5 +1,5 @@
 ﻿"""
-Create Thesis Figure 6: Seven-Class Confusion Matrix Figure.
+Create Figure 4.5: Seven-Class Confusion Matrix Figure.
 
 This script creates a thesis-ready six-panel confusion-matrix figure for:
 1. undefended clean baseline
@@ -180,7 +180,7 @@ def plot_matrices(matrices, summaries):
                     ax.text(j, i, str(value), ha="center", va="center", fontsize=8)
 
     fig.suptitle(
-        "Thesis Figure 6: Seven-Class Confusion Matrices\n"
+        "Figure 4.5: Seven-Class Confusion Matrices\n"
         "SenseFi / UT-HAR / LeNet, clean vs attacked vs defended conditions",
         fontsize=14,
     )
@@ -195,7 +195,7 @@ def write_note(matrices, summaries):
     NOTES_DIR.mkdir(parents=True, exist_ok=True)
 
     lines = []
-    lines.append("# Thesis Figure 6: Seven-Class Confusion Matrix Figure")
+    lines.append("# Figure 4.5: Seven-Class Confusion Matrix Figure")
     lines.append("")
     lines.append(
         "This figure visualizes seven-class confusion matrices for the clean, "
@@ -280,7 +280,7 @@ def main():
     plot_matrices(matrices, summaries)
     write_note(matrices, summaries)
 
-    print("Created Thesis Figure 6 outputs:")
+    print("Created Figure 4.5 outputs:")
     print(f"  {OUTPUT_FIGURE}")
     print(f"  {OUTPUT_NOTE}")
     print("")
@@ -296,3 +296,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

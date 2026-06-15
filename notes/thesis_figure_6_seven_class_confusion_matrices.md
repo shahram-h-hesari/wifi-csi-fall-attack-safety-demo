@@ -1,4 +1,4 @@
-# Thesis Figure 6: Seven-Class Confusion Matrix Figure
+# Figure 4.5: Seven-Class Confusion Matrix Figure
 
 This figure visualizes seven-class confusion matrices for the clean, attacked, and defended conditions in the WiFi CSI Fall Attack-Safety Demo.
 

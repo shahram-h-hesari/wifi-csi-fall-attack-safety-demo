@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import csv
 from collections import defaultdict
 
@@ -205,7 +205,7 @@ def create_figure(missed_fall_counts, false_alarm_counts):
     )
 
     fig.suptitle(
-        "Thesis Figure 10: High-Risk Multiclass Fall Error Pathways",
+        "Figure 4.4: High-Risk Multiclass Fall Error Pathways",
         fontsize=14,
         y=0.97,
     )
@@ -230,7 +230,7 @@ def create_figure(missed_fall_counts, false_alarm_counts):
 
 def create_note(missed_fall_counts, false_alarm_counts):
     lines = []
-    lines.append("# Thesis Figure 10: High-Risk Multiclass Fall Error Pathways")
+    lines.append("# Figure 4.4: High-Risk Multiclass Fall Error Pathways")
     lines.append("")
     lines.append("This figure summarizes the most clinically motivated multiclass error pathways behind the binary fall-vs-non-fall safety-proxy results.")
     lines.append("")
@@ -301,7 +301,7 @@ def main():
     create_figure(missed_fall_counts, false_alarm_counts)
     create_note(missed_fall_counts, false_alarm_counts)
 
-    print("Created Thesis Figure 10 outputs:")
+    print("Created Figure 4.4 outputs:")
     print(f"  {OUTPUT_FIGURE}")
     print(f"  {OUTPUT_NOTE}")
     print("")

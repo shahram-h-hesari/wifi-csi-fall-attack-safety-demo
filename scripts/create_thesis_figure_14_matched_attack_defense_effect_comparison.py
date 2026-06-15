@@ -244,7 +244,7 @@ plot_grouped_panel(
 handles, labels = axes[0].get_legend_handles_labels()
 
 fig.suptitle(
-    "Thesis Figure 14: Matched Attack Defense Effect Comparison",
+    "Matched Attack Defense Effect Comparison",
     fontsize=15,
     y=0.965,
 )
@@ -311,7 +311,7 @@ plt.close(fig)
 
 lines = []
 
-lines.append("# Thesis Figure 14: Matched Attack Defense Effect Comparison")
+lines.append("# Matched Attack Defense Effect Comparison")
 lines.append("")
 lines.append(
     "This figure compares matched undefended and defended attack conditions using three metrics that improved under defense, while explicitly noting that missed fall rate did not improve."

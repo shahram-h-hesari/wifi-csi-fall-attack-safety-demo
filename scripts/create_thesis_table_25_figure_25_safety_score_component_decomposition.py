@@ -388,7 +388,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
     )
 
     fig.suptitle(
-        "Figure 25: Safety-Score Component Decomposition",
+        "Safety-Score Component Decomposition",
         fontsize=18.6,
         fontweight="bold",
         y=0.965,
@@ -476,7 +476,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
         0.200,
         (
             "Scenario shown: FN:FP = 10:1, meaning missed-fall errors are weighted "
-            "10× higher than false alerts."
+            "10x higher than false alerts."
         ),
         ha="center",
         va="center",
@@ -489,7 +489,7 @@ def create_figure(rows: list[dict[str, Any]]) -> None:
         0.160,
         (
             "Total score = missed-fall component + false-alert component "
-            "= 10 × FNR + 1 × FPR."
+            "= 10 x FNR + 1 x FPR."
         ),
         ha="center",
         va="center",
@@ -587,7 +587,7 @@ def write_note(rows: list[dict[str, Any]], condition_metrics: list[dict[str, Any
         )
     table_text = "\n".join(table_lines)
 
-    text = f"""# Thesis Table 25 and Figure 25: Safety-Score Component Decomposition
+    text = f"""# Thesis Table 25 and Safety-Score Component Decomposition
 
 ## Purpose
 
@@ -625,7 +625,7 @@ Figure 25 focuses on the strongest missed-fall-priority scenario:
 FN:FP = 10:1
 ```
 
-This means missed-fall errors are weighted 10× higher than false-alert errors.
+This means missed-fall errors are weighted 10x higher than false-alert errors.
 
 ## Metric Definition
 
@@ -633,8 +633,8 @@ This means missed-fall errors are weighted 10× higher than false-alert errors.
 total safety-priority score =
 missed-fall component + false-alert component
 
-missed-fall component = 10 × FNR
-false-alert component = 1 × FPR
+missed-fall component = 10 x FNR
+false-alert component = 1 x FPR
 ```
 
 where:
@@ -686,7 +686,7 @@ def replace_or_append_readme_section(text: str, section_marker: str, section: st
 
 
 def update_readme() -> None:
-    section_marker = "### Thesis Table 25 and Figure 25: Safety-Score Component Decomposition"
+    section_marker = "### Thesis Table 25 and Safety-Score Component Decomposition"
 
     section = f"""
 {section_marker}
@@ -709,7 +709,7 @@ This artifact explains why the safety-priority scores in Tables/Figures 23 and 2
 FN:FP = 10:1
 ```
 
-This means missed-fall errors are weighted 10× higher than false-alert errors.
+This means missed-fall errors are weighted 10x higher than false-alert errors.
 
 **Metric**
 
@@ -717,8 +717,8 @@ This means missed-fall errors are weighted 10× higher than false-alert errors.
 total safety-priority score =
 missed-fall component + false-alert component
 
-missed-fall component = 10 × FNR
-false-alert component = 1 × FPR
+missed-fall component = 10 x FNR
+false-alert component = 1 x FPR
 ```
 
 **Main interpretation**

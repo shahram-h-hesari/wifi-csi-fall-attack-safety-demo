@@ -3134,3 +3134,83 @@ This strengthens the thesis result beyond a single epsilon point. The fall-safet
 **Claim boundary**
 
 This is a window-level software adversarial stress test on processed UT-HAR / SenseFi CSI tensors. It is not clinical validation, event-level fall validation, physical-layer validation, packet-level validation, SDR validation, or over-the-air validation.
+
+### Thesis Table 24 and Defense Recovery Fraction and Residual Safety Gap
+
+Table 24 and Figure 24 add a defense-recovery and residual-gap analysis.
+
+**Files**
+
+- `results/thesis_table_24_defense_recovery_residual_gap.csv`
+- `figures/thesis_figure_24_defense_recovery_residual_gap.png`
+- `notes/thesis_table_24_figure_24_defense_recovery_residual_gap.md`
+
+**Purpose**
+
+This artifact asks how much of the attack-induced safety-priority degradation is recovered by the defended model, and how much gap remains relative to clean baseline.
+
+**Metric definitions**
+
+```text
+attack gap to clean =
+attack score − clean baseline score
+
+defended gap to clean =
+defended attack score − clean baseline score
+
+recovery fraction =
+(attack score − defended attack score) /
+(attack score − clean baseline score)
+
+residual gap fraction =
+(defended attack score − clean baseline score) /
+(attack score − clean baseline score)
+```
+
+**Main interpretation**
+
+The defended model recovers only a small fraction of the attack-induced safety-priority gap, especially as missed-fall errors receive stronger weighting. This indicates that reducing false-alert burden is not enough if missed-fall behavior remains unresolved.
+
+**Claim boundary**
+
+This is a descriptive window-level recovery and residual-gap analysis using current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.
+
+### Thesis Table 25 and Safety-Score Component Decomposition
+
+Table 25 and Figure 25 add a safety-score component decomposition.
+
+**Files**
+
+- `results/thesis_table_25_safety_score_component_decomposition.csv`
+- `figures/thesis_figure_25_safety_score_component_decomposition.png`
+- `notes/thesis_table_25_figure_25_safety_score_component_decomposition.md`
+
+**Purpose**
+
+This artifact explains why the safety-priority scores in Tables/Figures 23 and 24 are high or low by decomposing each total score into missed-fall and false-alert components.
+
+**Scenario**
+
+```text
+FN:FP = 10:1
+```
+
+This means missed-fall errors are weighted 10x higher than false-alert errors.
+
+**Metric**
+
+```text
+total safety-priority score =
+missed-fall component + false-alert component
+
+missed-fall component = 10 x FNR
+false-alert component = 1 x FPR
+```
+
+**Main interpretation**
+
+The high scores under attack and defended attack are dominated by the missed-fall component. The tested defense reduces false-alert contribution but does not recover missed-fall behavior in the current outputs.
+
+**Claim boundary**
+
+This is a descriptive window-level score-decomposition analysis using current prediction outputs. It is not clinical validation, event-level fall validation, alarm-fatigue validation, time-to-alarm validation, health-economic analysis, or physical-layer / over-the-air validation.

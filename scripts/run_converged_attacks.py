@@ -56,6 +56,12 @@ REGEN_COMMAND = (
     "--epochs 200 --patience 20 --seed 42 --run-name converged_seed42"
 )
 
+# Canonical 18-epsilon sweep list (epsilon 0.0 = clean / no perturbation).
+EPSILON_SWEEP = [
+    0.0, 0.0025, 0.005, 0.0075, 0.010, 0.0125, 0.015, 0.0175, 0.020,
+    0.025, 0.030, 0.035, 0.040, 0.045, 0.050, 0.055, 0.060, 0.075,
+]
+
 
 def import_stage1():
     """Import the Stage 1 module so loader/preprocessing/metrics are identical."""
@@ -251,6 +257,66 @@ def stage1_clean_references(results_dir: Path) -> dict:
     }
 
 
+def sweep_summary_row(m: dict) -> dict:
+    """Map a metrics dict into an ordered epsilon-sweep summary row."""
+    def f(x):
+        return f"{x:.6f}" if isinstance(x, float) else x
+
+    return {
+        "attack": m["attack"],
+        "split": m["split"],
+        "epsilon": m["epsilon"],
+        "pgd_steps": m["pgd_steps"],
+        "pgd_alpha": m["alpha"],
+        "attack_accuracy": f(m["attack_accuracy"]),
+        "attack_macro_f1": f(m["attack_macro_f1"]),
+        "fall_recall": f(m["fall_recall"]),
+        "missed_fall_rate": f(m["missed_fall_rate"]),
+        "fall_precision": f(m["fall_precision"]),
+        "fall_f1": f(m["fall_f1"]),
+        "fall_true_positive": m["fall_true_positive"],
+        "fall_false_negative": m["fall_false_negative"],
+        "fall_false_positive": m["fall_false_positive"],
+        "fall_true_negative": m["fall_true_negative"],
+        "false_fall_alarm_count": m["false_fall_alarm_count"],
+        "prediction_change_rate": f(m["prediction_change_rate"]),
+        "fall_recall_drop_vs_clean": f(m["fall_recall_drop_vs_clean"]),
+        "accuracy_drop_vs_clean": f(m["accuracy_drop_vs_clean"]),
+    }
+
+
+def write_sweep_summary_csv(path: Path, rows: list) -> None:
+    fieldnames = list(rows[0].keys())
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def find_sweep_thresholds(metric_dicts: list) -> dict:
+    """Given per-epsilon metric dicts (ascending epsilon) for one attack/split,
+    return the epsilon thresholds of interest. Clean fall recall is taken from
+    epsilon 0.0 (the unperturbed row).
+    """
+    ms = sorted(metric_dicts, key=lambda d: float(d["epsilon"]))
+    clean_recall = ms[0]["clean_fall_recall"]
+
+    def first(predicate):
+        for d in ms:
+            if predicate(d):
+                return float(d["epsilon"])
+        return None
+
+    return {
+        "clean_fall_recall": clean_recall,
+        "first_epsilon_drop_ge_0_10": first(
+            lambda d: (clean_recall - d["fall_recall"]) >= 0.10
+        ),
+        "first_epsilon_recall_below_0_50": first(lambda d: d["fall_recall"] < 0.50),
+        "first_epsilon_recall_zero": first(lambda d: d["fall_recall"] == 0.0),
+    }
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Stage 2: FGSM/PGD attacks on the frozen converged clean checkpoint.",
@@ -276,6 +342,13 @@ def parse_args() -> argparse.Namespace:
         type=str,
         default=str(DEFAULT_CHECKPOINT),
         help="Path to the frozen Stage 1 checkpoint.",
+    )
+    parser.add_argument(
+        "--epsilon-sweep",
+        action="store_true",
+        help="Run the canonical 18-epsilon FGSM/PGD sweep against the frozen "
+        "checkpoint (PGD alpha = epsilon/6 per point) instead of a single epsilon. "
+        "Writes sweep summary + aggregated per-window prediction CSVs.",
     )
     parser.add_argument(
         "--dry-run",
@@ -340,6 +413,116 @@ def main() -> None:
     alpha = args.pgd_alpha if args.pgd_alpha is not None else args.epsilon / 6.0
     attacks = ["fgsm", "pgd"] if args.attacks == "both" else [args.attacks]
     eps_token = epsilon_to_token(args.epsilon)
+    loaders = {"test": test_loader, "legacy": legacy_loader}
+    clean_refs = stage1_clean_references(stage1_results_dir)
+
+    # ------------------------------------------------------------------
+    # Epsilon-sweep mode: 18-point FGSM/PGD sweep, PGD alpha = epsilon/6.
+    # ------------------------------------------------------------------
+    if args.epsilon_sweep:
+        sweep_planned = {}
+        for attack in attacks:
+            for split in ("test", "legacy"):
+                sweep_planned[f"{attack}_{split}_summary"] = (
+                    results_dir / f"{args.run_name}_{attack}_epsilon_sweep_{split}.csv"
+                )
+                sweep_planned[f"{attack}_{split}_predictions"] = (
+                    results_dir / f"{args.run_name}_{attack}_sweep_predictions_{split}.csv"
+                )
+        sweep_meta_path = results_dir / f"{args.run_name}_sweep_metadata.json"
+
+        print("Stage 2: converged-checkpoint EPSILON SWEEP")
+        print("-" * 70)
+        print(f"Checkpoint:        {checkpoint_path}")
+        print(f"Checkpoint epoch:  {checkpoint_epoch}")
+        print(f"Device:            {device}")
+        print(f"Attacks:           {attacks}")
+        print(f"Epsilon list ({len(EPSILON_SWEEP)}): {EPSILON_SWEEP}")
+        print(f"PGD steps / alpha: {args.pgd_steps} / epsilon/6 per point")
+        print(f"Split sizes:       {split_sizes}")
+        print("-" * 70)
+
+        if args.dry_run:
+            _, yt, yc, _ = s1.run_inference(model, test_loader, criterion, device)
+            print(f"[dry-run] clean TEST accuracy from loaded checkpoint: {s1.accuracy_of(yt, yc):.4f} "
+                  f"(Stage 1 committed: {clean_refs.get('test_accuracy')})")
+            print("[dry-run] no sweep executed, no files written.")
+            print("[dry-run] planned sweep output files:")
+            for key, path in sweep_planned.items():
+                print(f"    {key}: {path}")
+            print(f"    sweep_metadata_json: {sweep_meta_path}")
+            return
+
+        # ---- Real sweep (only when NOT a dry-run). ----
+        results_dir.mkdir(parents=True, exist_ok=True)
+        thresholds = {}
+        for attack in attacks:
+            for split, loader in loaders.items():
+                summary_rows = []
+                metric_dicts = []
+                all_pred_rows = []
+                for eps in EPSILON_SWEEP:
+                    a = (eps / 6.0) if attack == "pgd" else 0.0
+                    rows, y_true, y_clean, y_attacked = collect_paired_predictions(
+                        model, loader, criterion, device, attack, eps, a, args.pgd_steps, s1
+                    )
+                    m = compute_attack_safety_metrics(
+                        y_true, y_clean, y_attacked, attack, eps, a, args.pgd_steps, split, s1
+                    )
+                    m["fall_recall_drop_vs_clean"] = m["clean_fall_recall"] - m["fall_recall"]
+                    m["accuracy_drop_vs_clean"] = m["clean_accuracy"] - m["attack_accuracy"]
+                    metric_dicts.append(m)
+                    summary_rows.append(sweep_summary_row(m))
+                    all_pred_rows.extend(rows)
+                    print(
+                        f"{attack.upper():4s} [{split:6s}] eps={eps:.4f} "
+                        f"acc={m['attack_accuracy']:.4f} fall_recall={m['fall_recall']:.4f} "
+                        f"missed={m['missed_fall_rate']:.4f} FP={m['false_fall_alarm_count']}"
+                    )
+
+                write_sweep_summary_csv(sweep_planned[f"{attack}_{split}_summary"], summary_rows)
+                write_predictions_csv(sweep_planned[f"{attack}_{split}_predictions"], all_pred_rows)
+                thresholds[f"{attack}_{split}"] = find_sweep_thresholds(metric_dicts)
+
+        sweep_metadata = {
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "stage": "stage2_converged_attacks_epsilon_sweep",
+            "run_name": args.run_name,
+            "checkpoint_path": str(checkpoint_path),
+            "checkpoint_epoch": checkpoint_epoch,
+            "checkpoint_val_macro_f1": state.get("val_macro_f1"),
+            "stage1_clean_references": clean_refs,
+            "epsilon_list": EPSILON_SWEEP,
+            "attack_parameters": {
+                "attacks": attacks,
+                "pgd_steps": args.pgd_steps,
+                "pgd_alpha_rule": "epsilon/6 per point",
+                "epsilon_zero_handling": "epsilon=0.0 applies no perturbation (clean baseline row)",
+                "value_clamp": "none (processed CSI tensors, not [0,1] pixels)",
+                "seed": args.seed,
+            },
+            "split_sizes": split_sizes,
+            "legacy_note": (
+                "legacy val+test (996 windows) is a comparison-only pool for prior "
+                "thesis artifacts; no training or selection occurs in Stage 2."
+            ),
+            "fall_recall_thresholds": thresholds,
+            "device": str(device),
+            "python_version": platform.python_version(),
+            "torch_version": torch.__version__,
+            "sensefi_commit_sha": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(benchmark_dir)),
+            "git_branch": s1.get_command_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=str(experiment_dir)),
+            "git_commit": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(experiment_dir)),
+            "outputs": {k: str(v) for k, v in sweep_planned.items()},
+        }
+        with sweep_meta_path.open("w", encoding="utf-8") as f:
+            json.dump(sweep_metadata, f, indent=2)
+
+        print("-" * 70)
+        print("Epsilon sweep completed successfully.")
+        print(f"Thresholds: {json.dumps(thresholds, indent=2)}")
+        print(f"Sweep metadata: {sweep_meta_path}")
+        return
 
     # Planned output paths.
     planned = {}
@@ -352,8 +535,6 @@ def main() -> None:
                 results_dir / f"{args.run_name}_{attack}_safety_metrics_{split}_epsilon_{eps_token}.csv"
             )
     metadata_path = results_dir / f"{args.run_name}_attacks_metadata.json"
-
-    clean_refs = stage1_clean_references(stage1_results_dir)
 
     print("Stage 2: converged-checkpoint attacks")
     print("-" * 70)
@@ -382,7 +563,6 @@ def main() -> None:
 
     # ---- Full attack run (only reached when NOT a dry-run). ----
     results_dir.mkdir(parents=True, exist_ok=True)
-    loaders = {"test": test_loader, "legacy": legacy_loader}
     metrics_index = {}
 
     for attack in attacks:

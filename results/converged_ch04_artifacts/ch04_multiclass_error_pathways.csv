@@ -1,0 +1,4 @@
+condition,missed_fall_pathways,false_fall_alarm_pathways
+Undefended clean,fall $\rightarrow$ walk: 1; fall $\rightarrow$ stand up: 1,none
+"Undefended FGSM, $\epsilon=0.030$",fall $\rightarrow$ walk: 12; fall $\rightarrow$ pickup: 11; fall $\rightarrow$ run: 11; fall $\rightarrow$ stand up: 9; fall $\rightarrow$ lie down: 1; fall $\rightarrow$ sit down: 1,run $\rightarrow$ fall: 30; walk $\rightarrow$ fall: 6; pickup $\rightarrow$ fall: 5; stand up $\rightarrow$ fall: 5; lie down $\rightarrow$ fall: 1
+"Undefended PGD, $\epsilon=0.030$",fall $\rightarrow$ walk: 12; fall $\rightarrow$ pickup: 11; fall $\rightarrow$ run: 10; fall $\rightarrow$ stand up: 9; fall $\rightarrow$ lie down: 2; fall $\rightarrow$ sit down: 1,run $\rightarrow$ fall: 31; walk $\rightarrow$ fall: 9; pickup $\rightarrow$ fall: 5; stand up $\rightarrow$ fall: 2; lie down $\rightarrow$ fall: 1

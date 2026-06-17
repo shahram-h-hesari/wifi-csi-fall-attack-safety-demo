@@ -1,0 +1,25 @@
+condition,direction,other_class,count
+Undefended clean,fall_to_nonfall,walk,1
+Undefended clean,fall_to_nonfall,stand up,1
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,walk,12
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,pickup,11
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,run,11
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,stand up,9
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,lie down,1
+"Undefended FGSM, $\epsilon=0.030$",fall_to_nonfall,sit down,1
+"Undefended FGSM, $\epsilon=0.030$",nonfall_to_fall,run,30
+"Undefended FGSM, $\epsilon=0.030$",nonfall_to_fall,walk,6
+"Undefended FGSM, $\epsilon=0.030$",nonfall_to_fall,pickup,5
+"Undefended FGSM, $\epsilon=0.030$",nonfall_to_fall,stand up,5
+"Undefended FGSM, $\epsilon=0.030$",nonfall_to_fall,lie down,1
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,walk,12
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,pickup,11
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,run,10
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,stand up,9
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,lie down,2
+"Undefended PGD, $\epsilon=0.030$",fall_to_nonfall,sit down,1
+"Undefended PGD, $\epsilon=0.030$",nonfall_to_fall,run,31
+"Undefended PGD, $\epsilon=0.030$",nonfall_to_fall,walk,9
+"Undefended PGD, $\epsilon=0.030$",nonfall_to_fall,pickup,5
+"Undefended PGD, $\epsilon=0.030$",nonfall_to_fall,stand up,2
+"Undefended PGD, $\epsilon=0.030$",nonfall_to_fall,lie down,1

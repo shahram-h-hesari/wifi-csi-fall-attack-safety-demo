@@ -1,0 +1,38 @@
+{
+  "timestamp_utc": "2026-06-17T20:09:40.681808+00:00",
+  "run_name": "converged_seed42",
+  "split_used": "primary test split (n=500)",
+  "legacy_note": "Legacy val+test (n=996) is NOT used for primary Chapter 4 figures/tables.",
+  "input_files": {
+    "clean": "<REPO_ROOT>\\results\\converged_baseline\\converged_seed42_test_predictions.csv",
+    "fgsm": "<REPO_ROOT>\\results\\converged_attacks\\converged_seed42_fgsm_predictions_test_epsilon_0_03.csv",
+    "pgd": "<REPO_ROOT>\\results\\converged_attacks\\converged_seed42_pgd_predictions_test_epsilon_0_03.csv",
+    "fgsm_sweep": "<REPO_ROOT>\\results\\converged_attacks\\converged_seed42_fgsm_epsilon_sweep_test.csv",
+    "pgd_sweep": "<REPO_ROOT>\\results\\converged_attacks\\converged_seed42_pgd_epsilon_sweep_test.csv"
+  },
+  "formulas": {
+    "false_positive_rate": "FP / (FP + TN)",
+    "safety_score_10_to_1": "10 * missed_fall_rate + false_positive_rate"
+  },
+  "selected_epsilons": [
+    0.0,
+    0.0025,
+    0.005,
+    0.0075,
+    0.01,
+    0.03
+  ],
+  "generated_tables": [
+    "<REPO_ROOT>\\results\\converged_ch04_artifacts\\ch04_epsilon_sweep_selected.csv",
+    "<REPO_ROOT>\\results\\converged_ch04_artifacts\\ch04_multiclass_error_pathways.csv",
+    "<REPO_ROOT>\\results\\converged_ch04_artifacts\\ch04_transition_detail.csv",
+    "<REPO_ROOT>\\results\\converged_ch04_artifacts\\ch04_walking_class_vulnerability.csv"
+  ],
+  "generated_figures": [
+    "<REPO_ROOT>\\figures\\converged_ch04_artifacts\\ch04_figure_4_2_attack_severity_dose_response.png",
+    "<REPO_ROOT>\\figures\\converged_ch04_artifacts\\ch04_figure_4_3_attack_severity_zoom.png",
+    "<REPO_ROOT>\\figures\\converged_ch04_artifacts\\ch04_figure_4_4_multiclass_fall_error_pathways.png",
+    "<REPO_ROOT>\\figures\\converged_ch04_artifacts\\ch04_figure_4_5_seven_class_confusion_matrices.png"
+  ],
+  "scope": "window-level software-tensor; not physical/over-the-air, not clinical, not event-level"
+}

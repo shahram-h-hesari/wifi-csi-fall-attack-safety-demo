@@ -1,5 +1,5 @@
 {
-  "timestamp_utc": "2026-06-18T01:24:57.808886+00:00",
+  "timestamp_utc": "2026-06-18T01:48:28.592793+00:00",
   "split_used": "primary test split (n=500, fall=45, non-fall=455)",
   "defense": "Stage 3 FGSM adversarial training (converged); partial, attack-specific recovery; mitigates but does not solve; no certified robustness.",
   "defended_clean_source": "clean_predicted_label/clean_fall_pred_binary/clean_prediction_confidence of defended attack CSVs",

@@ -369,8 +369,10 @@ def main():
     ax.bar(xx, rec, label="Recovered (detected) fall windows", color="#2ca02c")
     ax.bar(xx, res, bottom=rec, label="Residual missed fall windows", color="#d62728")
     ax.set_xticks(xx); ax.set_xticklabels(cats); ax.set_ylabel("fall windows (of 45)")
-    ax.set_title("Fall-window recovery after defense"); ax.legend(); ax.grid(axis="y", alpha=0.3)
-    fig.tight_layout(); fig.savefig(out_fig / "ch06_figure_6_5_fall_window_recovery_persistence.png", dpi=300); plt.close(fig)
+    ax.set_title("Fall-window recovery after defense")
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=True)
+    ax.grid(axis="y", alpha=0.3)
+    fig.tight_layout(); fig.savefig(out_fig / "ch06_figure_6_5_fall_window_recovery_persistence.png", dpi=300, bbox_inches="tight"); plt.close(fig)
 
     # 6.6 threshold shift (zero-recall epsilon undef vs def)
     fig, ax = plt.subplots(figsize=(8, 5))
@@ -391,8 +393,9 @@ def main():
     ax.bar(xx, fa, bottom=mf, label="false-alert component (FPR)", color="#ff7f0e")
     ax.set_xticks(xx); ax.set_xticklabels(labels, rotation=20, ha="right", fontsize=8)
     ax.set_ylabel("safety-priority score (10:1)"); ax.set_title("Safety-score component decomposition (10:1)")
-    ax.legend(); ax.grid(axis="y", alpha=0.3); fig.tight_layout()
-    fig.savefig(out_fig / "ch06_figure_6_7_safety_score_component_decomposition.png", dpi=300); plt.close(fig)
+    ax.legend(loc="center left", bbox_to_anchor=(1.02, 0.5), frameon=True)
+    ax.grid(axis="y", alpha=0.3); fig.tight_layout()
+    fig.savefig(out_fig / "ch06_figure_6_7_safety_score_component_decomposition.png", dpi=300, bbox_inches="tight"); plt.close(fig)
 
     # ---------------------- metadata ----------------------
     meta = {

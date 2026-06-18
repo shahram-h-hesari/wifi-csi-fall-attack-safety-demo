@@ -1,0 +1,7 @@
+condition,walk_windows,walk_correct,walk_recall
+Undefended clean,147,147,1.0000
+Undefended FGSM,147,5,0.0340
+Undefended PGD,147,0,0.0000
+Defended clean,147,143,0.9728
+Defended FGSM,147,103,0.7007
+Defended PGD,147,56,0.3810

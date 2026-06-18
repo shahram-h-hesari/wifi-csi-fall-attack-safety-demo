@@ -1,0 +1,7 @@
+metric,undefended_clean,defended_clean,change_def_minus_undef
+fall_recall,0.9556,0.9111,-0.0444
+missed_fall_rate,0.0444,0.0889,0.0444
+false_fall_alarms,0,8,8
+fall_f1,0.9773,0.8723,-0.1049
+balanced_accuracy,0.9778,0.9468,-0.0310
+tp_fn_fp_tn,43/2/0/455,41/4/8/447,

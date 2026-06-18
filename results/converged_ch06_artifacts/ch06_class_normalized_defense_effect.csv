@@ -1,0 +1,13 @@
+comparison,true_nonfall_class,class_windows,attack_FP,def_FP,attack_rate,def_rate,change_pp
+FGSM -> Def. FGSM,lie down,66,1,0,0.0152,0.0000,-1.52
+FGSM -> Def. FGSM,walk,147,6,9,0.0408,0.0612,2.04
+FGSM -> Def. FGSM,pickup,50,5,4,0.1000,0.0800,-2.00
+FGSM -> Def. FGSM,run,121,30,4,0.2479,0.0331,-21.49
+FGSM -> Def. FGSM,sit down,40,0,0,0.0000,0.0000,0.00
+FGSM -> Def. FGSM,stand up,31,5,10,0.1613,0.3226,16.13
+PGD -> Def. PGD,lie down,66,1,1,0.0152,0.0152,0.00
+PGD -> Def. PGD,walk,147,9,15,0.0612,0.1020,4.08
+PGD -> Def. PGD,pickup,50,5,4,0.1000,0.0800,-2.00
+PGD -> Def. PGD,run,121,31,24,0.2562,0.1983,-5.79
+PGD -> Def. PGD,sit down,40,0,1,0.0000,0.0250,2.50
+PGD -> Def. PGD,stand up,31,2,9,0.0645,0.2903,22.58

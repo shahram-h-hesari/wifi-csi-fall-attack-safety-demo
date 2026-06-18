@@ -1,0 +1,54 @@
+{
+  "timestamp_utc": "2026-06-18T01:24:57.808886+00:00",
+  "split_used": "primary test split (n=500, fall=45, non-fall=455)",
+  "defense": "Stage 3 FGSM adversarial training (converged); partial, attack-specific recovery; mitigates but does not solve; no certified robustness.",
+  "defended_clean_source": "clean_predicted_label/clean_fall_pred_binary/clean_prediction_confidence of defended attack CSVs",
+  "high_conf_missed_fall_definition": "share of fall windows missed with prediction confidence >= 0.5",
+  "median_missed_fall_confidence_definition": "median prediction confidence over missed (FN) fall windows",
+  "safety_score_formula": "score = w * FNR + 1 * FPR (illustrative window-level proxy weights; not clinical utilities)",
+  "recall_recovery_formula": "(def_attacked_recall - undef_attacked_recall) / (clean_recall - undef_attacked_recall)",
+  "claim_boundaries": "window-level safety-proxy; digital/software-tensor; not clinical/medical-device/physical-OTA/event-level/long-lie/fall-risk/certified-robustness.",
+  "validation": "passed",
+  "thresholds": {
+    "undef_fgsm": {
+      "drop10": 0.005,
+      "below50": 0.005,
+      "zero": 0.01
+    },
+    "undef_pgd": {
+      "drop10": 0.0025,
+      "below50": 0.005,
+      "zero": 0.0075
+    },
+    "def_fgsm": {
+      "drop10": 0.0075,
+      "below50": 0.025,
+      "zero": 0.075
+    },
+    "def_pgd": {
+      "drop10": 0.0075,
+      "below50": 0.0175,
+      "zero": 0.035
+    }
+  },
+  "confidence_columns_available": true,
+  "class_normalized_available": true,
+  "outputs_tables": [
+    "ch06_class_normalized_defense_effect.csv",
+    "ch06_defense_tradeoff.csv",
+    "ch06_fall_window_recovery.csv",
+    "ch06_matched_defense_summary.csv",
+    "ch06_recovery_residual_gap.csv",
+    "ch06_safety_score_decomposition.csv",
+    "ch06_walking_reliability.csv"
+  ],
+  "outputs_figures": [
+    "ch06_figure_6_1_defense_effect_summary.png",
+    "ch06_figure_6_2_clean_defense_tradeoff.png",
+    "ch06_figure_6_3_matched_attack_defense_effect_comparison.png",
+    "ch06_figure_6_4_class_normalized_defense_effect_heatmap.png",
+    "ch06_figure_6_5_fall_window_recovery_persistence.png",
+    "ch06_figure_6_6_defense_recovery_residual_gap.png",
+    "ch06_figure_6_7_safety_score_component_decomposition.png"
+  ]
+}

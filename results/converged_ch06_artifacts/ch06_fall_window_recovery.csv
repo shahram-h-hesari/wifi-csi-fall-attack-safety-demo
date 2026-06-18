@@ -1,0 +1,3 @@
+attack,total_fall_windows,undef_detected_tp,def_detected_tp,recovered_fall_windows,residual_missed_fn,def_fall_recall,def_missed_fall_rate
+FGSM,45,0,14,14,31,0.3111,0.6889
+PGD,45,0,4,4,41,0.0889,0.9111

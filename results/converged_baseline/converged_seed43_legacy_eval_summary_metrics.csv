@@ -1,0 +1,12 @@
+metric,value
+run_name,converged_seed43
+eval_split,legacy_val_plus_test
+eval_windows,996
+checkpoint_used,best (validation-selected)
+legacy_loss,0.097743
+legacy_accuracy,0.983936
+legacy_macro_f1,0.974811
+fall_recall,0.988764
+missed_fall_rate,0.011236
+fall_precision,0.988764
+fall_f1,0.988764

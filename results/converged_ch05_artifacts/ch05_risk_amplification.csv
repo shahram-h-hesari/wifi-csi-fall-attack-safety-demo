@@ -1,0 +1,7 @@
+condition,fall_recall,missed_fall_rate,missed_fall_rate_ratio_vs_clean,missed_fall_count,false_fall_alarm_count,false_alarm_increase_vs_clean,false_alarm_ratio_vs_clean,prediction_change_rate
+Undefended clean,0.9556,0.0444,1.0000,2,0,0,undefined (clean FP=0),n/a
+"Undefended FGSM, $\epsilon=0.03$",0.0000,1.0000,22.5000,45,47,47,undefined (clean FP=0),0.9520
+"Undefended PGD, $\epsilon=0.03$",0.0000,1.0000,22.5000,45,48,48,undefined (clean FP=0),0.9720
+Defended clean,0.9111,0.0889,2.0000,4,8,8,undefined (clean FP=0),n/a
+"Defended FGSM, $\epsilon=0.03$",0.3111,0.6889,15.5000,31,27,27,undefined (clean FP=0),0.3580
+"Defended PGD, $\epsilon=0.03$",0.0889,0.9111,20.5000,41,54,54,undefined (clean FP=0),0.5920

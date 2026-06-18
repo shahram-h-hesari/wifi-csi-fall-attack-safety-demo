@@ -1,0 +1,38 @@
+{
+  "timestamp_utc": "2026-06-18T00:36:47.711882+00:00",
+  "split_used": "primary test split (n=500, fall=45, non-fall=455)",
+  "legacy_note": "Legacy 996-window pool is not used here; primary Chapter 5 = 500-window test split.",
+  "defense_note": "Defended rows refreshed from Stage 3 converged FGSM adversarial training. Defense is partial and attack-specific: FGSM AT partially recovers FGSM fall recall; PGD remains weak at eps=0.03; defense mitigates but does not solve the safety failure. No certified robustness.",
+  "defended_clean_source": "clean_predicted_label column of Stage 3 defended attack CSVs",
+  "paired_transition_matching": "Within-file per-sample_id: each attack CSV stores the model's clean and attacked prediction for the identical window; clean vs attacked safety state compared per window. No cross-file matching.",
+  "claim_boundaries": "window-level safety-proxy; digital/software-tensor; not clinical/medical-device/physical-OTA/event-level/long-lie/fall-risk/certified-robustness.",
+  "input_files": [
+    "results/converged_baseline/converged_seed42_test_predictions.csv",
+    "results/converged_attacks/converged_seed42_fgsm_predictions_test_epsilon_0_03.csv",
+    "results/converged_attacks/converged_seed42_pgd_predictions_test_epsilon_0_03.csv",
+    "results/converged_attacks/converged_seed42_fgsm_epsilon_sweep_test.csv",
+    "results/converged_attacks/converged_seed42_pgd_epsilon_sweep_test.csv",
+    "results/converged_defense/defended_fgsm_at_seed42_clean_metrics_test.csv",
+    "results/converged_attacks/defended_fgsm_at_seed42_fgsm_predictions_test_epsilon_0_03.csv",
+    "results/converged_attacks/defended_fgsm_at_seed42_pgd_predictions_test_epsilon_0_03.csv",
+    "results/converged_attacks/defended_fgsm_at_seed42_fgsm_epsilon_sweep_test.csv",
+    "results/converged_attacks/defended_fgsm_at_seed42_pgd_epsilon_sweep_test.csv",
+    "results/converged_ch04_artifacts/ch04_walking_class_vulnerability.csv"
+  ],
+  "validation": "passed",
+  "walking_class": {
+    "total_walking_windows": "147",
+    "clean_walking_correct": "147",
+    "clean_walking_recall": "1.0",
+    "fgsm_walking_correct": "5",
+    "fgsm_walking_recall": "0.034",
+    "pgd_walking_correct": "0",
+    "pgd_walking_recall": "0.0",
+    "fgsm_walking_availability_drop": "0.966",
+    "pgd_walking_availability_drop": "1.0",
+    "fgsm_walk_to_fall_count": "6",
+    "pgd_walk_to_fall_count": "9",
+    "fgsm_walk_to_fall_rate": "0.0408",
+    "pgd_walk_to_fall_rate": "0.0612"
+  }
+}

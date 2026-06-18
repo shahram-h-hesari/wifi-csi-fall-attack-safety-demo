@@ -1,0 +1,5 @@
+attack,model,clean_fall_recall,first_eps_drop_ge_0_10,first_eps_recall_below_0_50,first_eps_recall_zero
+FGSM,undefended,0.9556,0.005,0.005,0.01
+PGD,undefended,0.9556,0.0025,0.005,0.0075
+FGSM,defended,0.9111,0.0075,0.025,0.075
+PGD,defended,0.9111,0.0075,0.0175,0.035

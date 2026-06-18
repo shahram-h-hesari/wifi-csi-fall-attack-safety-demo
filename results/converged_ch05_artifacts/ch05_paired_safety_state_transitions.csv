@@ -1,0 +1,23 @@
+comparison,transition,count,source_total,row_share_pct
+Clean -> FGSM,FN -> FN,2,2,100.0
+Clean -> FGSM,TN -> FP,47,455,10.3
+Clean -> FGSM,TN -> TN,408,455,89.7
+Clean -> FGSM,TP -> FN,43,43,100.0
+Clean -> PGD,FN -> FN,2,2,100.0
+Clean -> PGD,TN -> FP,48,455,10.5
+Clean -> PGD,TN -> TN,407,455,89.5
+Clean -> PGD,TP -> FN,43,43,100.0
+Defended clean -> Defended FGSM,FN -> FN,4,4,100.0
+Defended clean -> Defended FGSM,FP -> FP,6,8,75.0
+Defended clean -> Defended FGSM,FP -> TN,2,8,25.0
+Defended clean -> Defended FGSM,TN -> FP,21,447,4.7
+Defended clean -> Defended FGSM,TN -> TN,426,447,95.3
+Defended clean -> Defended FGSM,TP -> FN,27,41,65.9
+Defended clean -> Defended FGSM,TP -> TP,14,41,34.1
+Defended clean -> Defended PGD,FN -> FN,4,4,100.0
+Defended clean -> Defended PGD,FP -> FP,5,8,62.5
+Defended clean -> Defended PGD,FP -> TN,3,8,37.5
+Defended clean -> Defended PGD,TN -> FP,49,447,11.0
+Defended clean -> Defended PGD,TN -> TN,398,447,89.0
+Defended clean -> Defended PGD,TP -> FN,37,41,90.2
+Defended clean -> Defended PGD,TP -> TP,4,41,9.8

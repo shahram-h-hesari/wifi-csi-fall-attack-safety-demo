@@ -1,20 +1,21 @@
-% Seed-42 cross-architecture pilot table (LeNet / ResNet18 / GRU / BiLSTM).
+% Seed-42 cross-architecture pilot table (LeNet / ResNet18 / GRU / BiLSTM / Transformer).
 % Source: results/cross_architecture/cross_architecture_seed42_pilot_summary.csv
 %         results/cross_architecture/cross_architecture_seed42_pilot_thresholds.csv
-% Commits: LeNet (Priority 1, 3200a89), ResNet18 (3578136), GRU (40bd655), BiLSTM (c298471).
+% Commits: LeNet (Priority 1, 3200a89), ResNet18 (3578136), GRU (40bd655),
+%          BiLSTM (c298471), Transformer/ViT (5202608).
 % Seed 42; test split n=500 (45 fall, 455 non-fall); attacks at epsilon=0.030.
 % Requires \usepackage{booktabs} and \usepackage{multirow}.
 
 \begin{table}[t]
   \centering
   \caption[Seed-42 cross-architecture adversarial safety-proxy comparison]{%
-    Seed-42 cross-architecture pilot: window-level safety-proxy metrics for four
+    Seed-42 cross-architecture pilot: window-level safety-proxy metrics for five
     UT-HAR/SenseFi architecture families under matched digital-domain $L_\infty$
     attacks at $\varepsilon=0.030$. Test split $n=500$ ($45$ fall, $455$
     non-fall). Priority~1 established five-seed reliability for the LeNet baseline;
     this pilot uses seed~42 for each architecture to test whether the failure also
-    appears when the architecture changes. BiLSTM is included as a stronger
-    bidirectional temporal-sequence robustness baseline (not fall-risk
+    appears when the architecture changes. BiLSTM and the Transformer (ViT) are
+    included as temporal/attention-based robustness baselines (not fall-risk
     prediction). Not a multi-seed cross-architecture result; no clinical,
     over-the-air, or certified-robustness claims.}
   \label{tab:cross-arch-seed42}
@@ -41,6 +42,11 @@
       & Clean              & $0.889$ & $7$  & $0.857$ \\
     & & FGSM $\varepsilon{=}0.03$ & $0.000$ & $30$ & $-0.080$ \\
     & & PGD $\varepsilon{=}0.03$  & $0.000$ & $55$ & $-0.111$ \\
+    \midrule
+    \multirow{3}{*}{Transformer} & \multirow{3}{*}{Attention (ViT)}
+      & Clean              & $0.978$ & $1$  & $0.976$ \\
+    & & FGSM $\varepsilon{=}0.03$ & $0.000$ & $45$ & $-0.099$ \\
+    & & PGD $\varepsilon{=}0.03$  & $0.000$ & $47$ & $-0.101$ \\
     \bottomrule
   \end{tabular}
 
@@ -59,11 +65,15 @@
     GRU      & PGD  & $0.0075$ & $0.0125$ & $0.015$ \\
     BiLSTM   & FGSM & $0.0075$ & $0.0175$ & $0.0175$ \\
     BiLSTM   & PGD  & $0.0075$ & $0.015$  & $0.0175$ \\
+    Transformer & FGSM & $0.010$  & $0.0125$ & $0.030$ \\
+    Transformer & PGD  & $0.0075$ & $0.0125$ & $0.025$ \\
     \bottomrule
   \end{tabular}
   \\[0.3em]
-  {\footnotesize Under PGD at $\varepsilon=0.03$ all four architectures miss every
-  one of the 45 fall windows (fall recall $0.000$). BiLSTM is the weakest clean
-  classifier (clean accuracy $0.814$; it did not early-stop within the 200-epoch
-  cap) yet collapses identically under attack.}
+  {\footnotesize Under PGD at $\varepsilon=0.03$ all five architectures miss every
+  one of the 45 fall windows (fall recall $0.000$). The Transformer is a strong,
+  normally early-stopped clean classifier (clean fall recall $0.978$) yet is still
+  driven to $0.000$ fall recall. BiLSTM is the weakest clean classifier (clean
+  accuracy $0.814$; no early stop within the 200-epoch cap) yet collapses
+  identically under attack.}
 \end{table}

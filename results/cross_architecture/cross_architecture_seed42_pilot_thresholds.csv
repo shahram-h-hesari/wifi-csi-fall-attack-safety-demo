@@ -1,0 +1,7 @@
+model,model_family,seed,attack,first_eps_recall_below_0_50,first_eps_recall_below_0_10,first_eps_recall_zero,source_sweep_csv
+LeNet,CNN (LeNet),42,fgsm,0.005,0.01,0.01,results/converged_attacks/converged_seed42_fgsm_epsilon_sweep_test.csv
+LeNet,CNN (LeNet),42,pgd,0.005,0.0075,0.0075,results/converged_attacks/converged_seed42_pgd_epsilon_sweep_test.csv
+ResNet18,Deep CNN (ResNet-18),42,fgsm,0.005,0.0125,0.035,results/cross_architecture/resnet/resnet18_seed42_fgsm_epsilon_sweep_test.csv
+ResNet18,Deep CNN (ResNet-18),42,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed42_pgd_epsilon_sweep_test.csv
+GRU,Recurrent (GRU),42,fgsm,0.01,0.0175,0.02,results/cross_architecture/gru/gru_seed42_fgsm_epsilon_sweep_test.csv
+GRU,Recurrent (GRU),42,pgd,0.0075,0.0125,0.015,results/cross_architecture/gru/gru_seed42_pgd_epsilon_sweep_test.csv

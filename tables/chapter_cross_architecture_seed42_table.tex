@@ -1,0 +1,60 @@
+% Seed-42 cross-architecture pilot table (LeNet / ResNet18 / GRU).
+% Source: results/cross_architecture/cross_architecture_seed42_pilot_summary.csv
+%         results/cross_architecture/cross_architecture_seed42_pilot_thresholds.csv
+% Commits: LeNet (Priority 1, 3200a89), ResNet18 (3578136), GRU (40bd655).
+% Seed 42; test split n=500 (45 fall, 455 non-fall); attacks at epsilon=0.030.
+% Requires \usepackage{booktabs}.
+
+\begin{table}[t]
+  \centering
+  \caption[Seed-42 cross-architecture adversarial safety-proxy comparison]{%
+    Seed-42 cross-architecture pilot: window-level safety-proxy metrics for
+    three UT-HAR/SenseFi architecture families under matched digital-domain
+    $L_\infty$ attacks at $\varepsilon=0.030$. Test split $n=500$ ($45$ fall,
+    $455$ non-fall). Priority~1 already established five-seed reliability for the
+    LeNet baseline; this pilot uses seed~42 for each architecture to test whether
+    the failure also appears when the architecture changes. Not a multi-seed
+    cross-architecture result; no clinical, over-the-air, or certified-robustness
+    claims.}
+  \label{tab:cross-arch-seed42}
+  \begin{tabular}{l l c c c c}
+    \toprule
+    Model & Family & Condition & Fall recall & False-fall alarms & MCC \\
+    \midrule
+    \multirow{3}{*}{LeNet} & \multirow{3}{*}{CNN}
+      & Clean              & $0.956$ & $0$  & $0.975$ \\
+    & & FGSM $\varepsilon{=}0.03$ & $0.000$ & $47$ & $-0.101$ \\
+    & & PGD $\varepsilon{=}0.03$  & $0.000$ & $48$ & $-0.102$ \\
+    \midrule
+    \multirow{3}{*}{ResNet18} & \multirow{3}{*}{Deep CNN}
+      & Clean              & $0.978$ & $1$  & $0.976$ \\
+    & & FGSM $\varepsilon{=}0.03$ & $0.022$ & $14$ & $-0.014$ \\
+    & & PGD $\varepsilon{=}0.03$  & $0.000$ & $43$ & $-0.096$ \\
+    \midrule
+    \multirow{3}{*}{GRU} & \multirow{3}{*}{Recurrent}
+      & Clean              & $0.933$ & $2$  & $0.938$ \\
+    & & FGSM $\varepsilon{=}0.03$ & $0.000$ & $53$ & $-0.108$ \\
+    & & PGD $\varepsilon{=}0.03$  & $0.000$ & $65$ & $-0.122$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+
+  % Collapse thresholds: smallest epsilon (18-point grid) meeting each criterion.
+  \begin{tabular}{l l c c c}
+    \toprule
+    Model & Attack & $\varepsilon$: recall $<0.50$ & $\varepsilon$: recall $<0.10$ & $\varepsilon$: recall $=0$ \\
+    \midrule
+    LeNet    & FGSM & $0.005$  & $0.010$  & $0.010$ \\
+    LeNet    & PGD  & $0.005$  & $0.0075$ & $0.0075$ \\
+    ResNet18 & FGSM & $0.005$  & $0.0125$ & $0.035$ \\
+    ResNet18 & PGD  & $0.0025$ & $0.005$  & $0.0075$ \\
+    GRU      & FGSM & $0.010$  & $0.0175$ & $0.020$ \\
+    GRU      & PGD  & $0.0075$ & $0.0125$ & $0.015$ \\
+    \bottomrule
+  \end{tabular}
+  \\[0.3em]
+  {\footnotesize Requires \texttt{\textbackslash usepackage\{multirow\}} for the
+  grouped model rows. Under PGD at $\varepsilon=0.03$ all three architectures miss
+  every one of the 45 fall windows (fall recall $0.000$).}
+\end{table}

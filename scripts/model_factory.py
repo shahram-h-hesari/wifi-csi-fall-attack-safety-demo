@@ -29,10 +29,16 @@ _MODEL_ALIASES = {
     "gru": "UT_HAR_GRU",
     "lstm": "UT_HAR_LSTM",
     "bilstm": "UT_HAR_BiLSTM",
+    # Attention-based model: ViT-style transformer. Consumes (N,1,250,90)
+    # (patch-embeds the 250x90 window); attention weights are not exposed.
+    "vit": "UT_HAR_ViT",
+    "transformer": "UT_HAR_ViT",
+    "attention": "UT_HAR_ViT",
 }
 
 # Choices that consume the LeNet-style (N,1,250,90) processed-tensor input.
-CNN_LIKE_INPUT = {"lenet", "resnet", "resnet18", "resnet50", "resnet101"}
+CNN_LIKE_INPUT = {"lenet", "resnet", "resnet18", "resnet50", "resnet101",
+                  "vit", "transformer", "attention"}
 
 
 def normalize_model_name(model_name: str) -> str:

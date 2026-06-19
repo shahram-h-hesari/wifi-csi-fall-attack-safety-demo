@@ -344,6 +344,21 @@ def parse_args() -> argparse.Namespace:
         help="Path to the frozen Stage 1 checkpoint.",
     )
     parser.add_argument(
+        "--model",
+        type=str,
+        default="lenet",
+        help="Architecture of the checkpoint being attacked (default: lenet, "
+        "identical to prior behavior). Must match the trained checkpoint; "
+        "resolved via model_factory.",
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=str,
+        default=None,
+        help="Override the attack-results output directory "
+        "(default: results/converged_attacks).",
+    )
+    parser.add_argument(
         "--epsilon-sweep",
         action="store_true",
         help="Run the canonical 18-epsilon FGSM/PGD sweep against the frozen "
@@ -367,7 +382,11 @@ def main() -> None:
     data_dir = benchmark_dir / "Data" / "UT_HAR"
     checkpoint_path = (experiment_dir / args.checkpoint) if not Path(args.checkpoint).is_absolute() else Path(args.checkpoint)
 
-    results_dir = experiment_dir / "results" / "converged_attacks"
+    results_dir = (
+        Path(args.results_dir)
+        if args.results_dir
+        else experiment_dir / "results" / "converged_attacks"
+    )
     stage1_results_dir = experiment_dir / "results" / "converged_baseline"
 
     # ---- Fail fast on a missing checkpoint, with the regeneration command. ----
@@ -388,7 +407,10 @@ def main() -> None:
     s1.patch_sensefi_dataset_loader(benchmark_dir)
     if str(benchmark_dir) not in sys.path:
         sys.path.insert(0, str(benchmark_dir))
-    from UT_HAR_model import UT_HAR_LeNet
+    scripts_dir = Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    from model_factory import build_model
 
     s1.set_seed(args.seed)
 
@@ -404,7 +426,7 @@ def main() -> None:
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     state = torch.load(checkpoint_path, map_location=device, weights_only=False)
-    model = UT_HAR_LeNet().to(device)
+    model = build_model(args.model).to(device)
     model.load_state_dict(state["model_state_dict"], strict=True)
     model.eval()
     criterion = nn.CrossEntropyLoss()

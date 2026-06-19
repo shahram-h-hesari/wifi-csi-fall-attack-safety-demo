@@ -408,6 +408,26 @@ def parse_args() -> argparse.Namespace:
         default="converged_clean_baseline",
         help="Run name; used as the output filename prefix.",
     )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="lenet",
+        help="Architecture to train (default: lenet, identical to prior behavior). "
+        "Cross-architecture choices, e.g. resnet18, are resolved via model_factory.",
+    )
+    parser.add_argument(
+        "--results-dir",
+        type=str,
+        default=None,
+        help="Override the results output directory (default: results/converged_baseline).",
+    )
+    parser.add_argument(
+        "--checkpoint-dir",
+        type=str,
+        default=None,
+        help="Override the checkpoint output directory "
+        "(default: checkpoints/converged_clean_baseline).",
+    )
     return parser.parse_args()
 
 
@@ -418,8 +438,16 @@ def main() -> None:
     benchmark_dir = experiment_dir / "third_party" / "WiFi-CSI-Sensing-Benchmark"
     data_dir = benchmark_dir / "Data" / "UT_HAR"
 
-    checkpoints_dir = experiment_dir / "checkpoints" / "converged_clean_baseline"
-    results_dir = experiment_dir / "results" / "converged_baseline"
+    checkpoints_dir = (
+        Path(args.checkpoint_dir)
+        if args.checkpoint_dir
+        else experiment_dir / "checkpoints" / "converged_clean_baseline"
+    )
+    results_dir = (
+        Path(args.results_dir)
+        if args.results_dir
+        else experiment_dir / "results" / "converged_baseline"
+    )
 
     if not benchmark_dir.exists():
         raise FileNotFoundError(
@@ -455,7 +483,10 @@ def main() -> None:
     patch_sensefi_dataset_loader(benchmark_dir)
     if str(benchmark_dir) not in sys.path:
         sys.path.insert(0, str(benchmark_dir))
-    from UT_HAR_model import UT_HAR_LeNet
+    scripts_dir = Path(__file__).resolve().parent
+    if str(scripts_dir) not in sys.path:
+        sys.path.insert(0, str(scripts_dir))
+    from model_factory import build_model
 
     set_seed(args.seed)
 
@@ -463,7 +494,7 @@ def main() -> None:
     train_loader, val_loader, test_loader, split_sizes = build_loaders(data, args.batch_size)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = UT_HAR_LeNet().to(device)
+    model = build_model(args.model).to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
@@ -480,6 +511,7 @@ def main() -> None:
     print("SenseFi UT-HAR LeNet converged clean baseline (Stage 1)")
     print("-" * 70)
     print(f"Run name:             {args.run_name}")
+    print(f"Model:                {args.model}")
     print(f"Experiment directory: {experiment_dir}")
     print(f"Benchmark directory:  {benchmark_dir}")
     print(f"Data path:            {data_dir}")
@@ -677,6 +709,7 @@ def main() -> None:
     metadata = {
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "run_name": args.run_name,
+        "model": args.model,
         "seed": args.seed,
         "max_epochs": args.epochs,
         "epochs_run": last_epoch,

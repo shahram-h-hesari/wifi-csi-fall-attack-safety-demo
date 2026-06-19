@@ -10,21 +10,33 @@ families**, not a full multi-seed cross-architecture study.
 Priority 1 already established **five-seed (42–46) reliability for LeNet**: the
 collapse there is reproducible, not a single-seed artifact. This pilot asks the
 complementary question — does the same failure mode appear under a deeper
-convolutional network and under a recurrent network — using **seed 42 only** for
+convolutional network and under recurrent networks — using **seed 42 only** for
 each new architecture.
+
+## BiLSTM framing (thesis-safe)
+The BiLSTM experiment is **not** presented as fall-risk prediction. Instead, it
+serves as a temporal-sequence robustness check motivated by future gait-based
+fall-risk monitoring. Because fall-risk estimation requires longitudinal labels
+and clinical outcome data, this thesis uses BiLSTM only to test whether temporal
+CSI models exhibit similar adversarial safety-proxy degradation under the
+available UT-HAR activity-recognition protocol. UT-HAR contains no longitudinal
+older-adult fall-risk labels, clinical scores, future-fall outcomes, or multi-day
+gait trajectories; BiLSTM is therefore a stronger bidirectional temporal-sequence
+robustness baseline only.
 
 ## Models used (all from the SenseFi UT-HAR family, same input `(N,1,250,90)`)
 | Model | Family | Source class | Params | Commit |
 |---|---|---|---|---|
-| LeNet | CNN (LeNet) | `UT_HAR_LeNet` | 296K | Priority 1 (aggregate `3200a89`, package `14a1e6f`) |
-| ResNet18 | Deep CNN (ResNet-18) | `UT_HAR_ResNet18` | 11.18M | `3578136` |
-| GRU | Recurrent (GRU) | `UT_HAR_GRU` | 30K | `40bd655` |
+| LeNet | CNN (LeNet) | `UT_HAR_LeNet` | 295,655 | Priority 1 (aggregate `3200a89`, package `14a1e6f`) |
+| ResNet18 | Deep CNN (ResNet-18) | `UT_HAR_ResNet18` | 11,182,142 | `3578136` |
+| GRU | Recurrent (GRU) | `UT_HAR_GRU` | 30,407 | `40bd655` |
+| BiLSTM | Recurrent (BiLSTM) | `UT_HAR_BiLSTM` | 80,327 | `c298471` |
 
-Selected via the `--model` factory (`scripts/model_factory.py`). The ResNet and
-GRU models already existed in the SenseFi clone
+Selected via the `--model` factory (`scripts/model_factory.py`). All four models
+already existed in the SenseFi clone
 (`third_party/WiFi-CSI-Sensing-Benchmark/UT_HAR_model.py`); no new architecture
-code was written. ResNet carries its own input reshape head; GRU reshapes
-internally via `x.view(-1,250,90)` — both consume the same processed tensors as
+code was written. ResNet carries its own input reshape head; GRU/BiLSTM reshape
+internally via `x.view(-1,250,90)` — all consume the same processed tensors as
 LeNet, so preprocessing, FGSM/PGD attack math, and metric scripts are unchanged.
 
 ## Protocol (identical to Priority 1)
@@ -45,8 +57,13 @@ LeNet, so preprocessing, FGSM/PGD attack math, and metric scripts are unchanged.
 | LeNet | 0.970 | 0.952 | 0.956 | 0.044 | 0 | 0.975 | 43/2/0/455 |
 | ResNet18 | 0.942 | 0.900 | 0.978 | 0.022 | 1 | 0.976 | 44/1/1/454 |
 | GRU | 0.904 | 0.882 | 0.933 | 0.067 | 2 | 0.938 | 42/3/2/453 |
+| BiLSTM | 0.814 | 0.769 | 0.889 | 0.111 | 7 | 0.857 | 40/5/7/448 |
 
-All three are strong clean classifiers (clean fall recall 0.93–0.98).
+LeNet, ResNet18, and GRU are strong clean classifiers (clean fall recall
+0.93–0.98). BiLSTM is the weakest clean classifier (accuracy 0.814, fall recall
+0.889) and did **not** early-stop — it ran the full 200-epoch cap, indicating it
+is harder to converge on UT-HAR. Its clean fall recall is still high enough
+(0.889) to make the post-attack collapse meaningful.
 
 ## FGSM / PGD at epsilon = 0.03
 | Model | FGSM recall | FGSM FP | FGSM MCC | PGD recall | PGD FP | PGD MCC | FGSM TP/FN/FP/TN | PGD TP/FN/FP/TN |
@@ -54,11 +71,12 @@ All three are strong clean classifiers (clean fall recall 0.93–0.98).
 | LeNet | 0.000 | 47 | −0.101 | 0.000 | 48 | −0.102 | 0/45/47/408 | 0/45/48/407 |
 | ResNet18 | 0.022 | 14 | −0.014 | 0.000 | 43 | −0.096 | 1/44/14/441 | 0/45/43/412 |
 | GRU | 0.000 | 53 | −0.108 | 0.000 | 65 | −0.122 | 0/45/53/402 | 0/45/65/390 |
+| BiLSTM | 0.000 | 30 | −0.080 | 0.000 | 55 | −0.111 | 0/45/30/425 | 0/45/55/400 |
 
-Under PGD at ε=0.03, **all three architectures miss every one of the 45 fall
-windows** (fall recall 0.000). FGSM at ε=0.03 collapses LeNet and GRU to 0.000
-and ResNet18 to 0.022. MCC at ε=0.03 is ≤ 0 for every model/attack — worse than
-chance on the fall-vs-nonfall proxy.
+Under PGD at ε=0.03, **all four architectures miss every one of the 45 fall
+windows** (fall recall 0.000). FGSM at ε=0.03 collapses LeNet, GRU, and BiLSTM to
+0.000 and ResNet18 to 0.022. MCC at ε=0.03 is ≤ 0 for every model/attack — worse
+than chance on the fall-vs-nonfall proxy.
 
 ## Collapse thresholds (smallest ε on the grid)
 | Model | Attack | recall < 0.50 | recall < 0.10 | recall = 0 |
@@ -69,8 +87,10 @@ chance on the fall-vs-nonfall proxy.
 | ResNet18 | PGD | 0.0025 | 0.005 | 0.0075 |
 | GRU | FGSM | 0.010 | 0.0175 | 0.020 |
 | GRU | PGD | 0.0075 | 0.0125 | 0.015 |
+| BiLSTM | FGSM | 0.0075 | 0.0175 | 0.0175 |
+| BiLSTM | PGD | 0.0075 | 0.015 | 0.0175 |
 
-PGD reaches zero fall recall at a small budget (ε ≤ 0.015) for all three models.
+PGD reaches zero fall recall at a small budget (ε ≤ 0.0175) for all four models.
 ResNet18 is the most FGSM-tolerant (FGSM recall hits 0 only at ε=0.035) but is
 still fully broken by PGD by ε=0.0075.
 
@@ -81,18 +101,22 @@ still fully broken by PGD by ε=0.0075.
   - `results/cross_architecture/figures/cross_architecture_seed42_fall_recall_vs_epsilon.png` (FGSM & PGD panels)
   - `results/cross_architecture/figures/cross_architecture_seed42_pgd_false_alarms_at_003.png`
 - LaTeX: `tables/chapter_cross_architecture_seed42_table.tex`, `tables/chapter_cross_architecture_seed42_figure_caption.tex`
-- Per-model raw results: `results/converged_*` (LeNet), `results/cross_architecture/resnet/`, `results/cross_architecture/gru/`
+- Per-model raw results: `results/converged_*` (LeNet), `results/cross_architecture/{resnet,gru,bilstm}/`
 
 ## Limitations
-- **Seed-42 pilot only** for ResNet18 and GRU (single seed each). Multi-seed
-  reliability is established **only for LeNet** (Priority 1, seeds 42–46). This
-  pilot does **not** establish multi-seed cross-architecture reliability.
-- Three architectures (one each: LeNet/ResNet18/GRU) — not an exhaustive sweep
-  of model families.
+- **Seed-42 pilot only** for ResNet18, GRU, and BiLSTM (single seed each).
+  Multi-seed reliability is established **only for LeNet** (Priority 1, seeds
+  42–46). This pilot does **not** establish multi-seed cross-architecture
+  reliability.
+- Four architectures (one each: LeNet/ResNet18/GRU/BiLSTM) — not an exhaustive
+  sweep of model families; Transformer/attention not included.
+- BiLSTM did not converge as strongly as the other models (no early stop; clean
+  accuracy 0.814). Its post-attack collapse is still complete, but its weaker
+  clean baseline should be reported alongside.
 - ResNet18 seed-42 clean training was run under heavy machine contention
-  (recorded `elapsed ≈ 7.9 h`); this is a non-representative wall-clock time, not
-  a property of the model, and does not affect correctness (deterministic seed,
-  normal early-stopping).
+  (recorded `elapsed ≈ 7.9 h`); a non-representative wall-clock time, not a model
+  property, and not affecting correctness (deterministic seed, normal
+  early-stopping).
 - All quantities are window-level safety-proxy metrics on digital-domain,
   processed-tensor perturbations.
 
@@ -100,12 +124,16 @@ still fully broken by PGD by ε=0.0075.
 - This is a **seed-42 cross-architecture pilot**. Priority 1 already established
   **five-seed reliability for the LeNet baseline**; this pilot tests whether the
   same safety-proxy failure **also appears when the architecture changes**
-  (deeper CNN, recurrent network), using seed 42 for each new architecture.
-- The pilot indicates the failure is **not specific to LeNet**: under matched
-  PGD at ε=0.03, LeNet, ResNet18, and GRU all collapse to 0.000 window-level
+  (deeper CNN, recurrent GRU, bidirectional BiLSTM), using seed 42 for each new
+  architecture.
+- **BiLSTM extends the pilot to a stronger bidirectional temporal model**, framed
+  only as a temporal-sequence robustness check motivated by future gait/fall-risk
+  monitoring — **not** as clinical fall-risk prediction.
+- The pilot indicates the failure is **not specific to LeNet**: under matched PGD
+  at ε=0.03, LeNet, ResNet18, GRU, and BiLSTM all collapse to 0.000 window-level
   fall recall on seed 42.
 - Do **not** claim full multi-seed cross-architecture reliability (only LeNet has
   multi-seed evidence so far).
-- Do **not** claim real-world clinical unsafe behavior, over-the-air validation,
-  or certified robustness. These are digital-domain, software-only, window-level
-  safety-proxy results.
+- Do **not** claim clinical fall-risk prediction, real-world clinical unsafe
+  behavior, over-the-air validation, or certified robustness. These are
+  digital-domain, software-only, window-level safety-proxy results.

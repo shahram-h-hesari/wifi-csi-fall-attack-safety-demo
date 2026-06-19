@@ -5,3 +5,5 @@ ResNet18,Deep CNN (ResNet-18),42,fgsm,0.005,0.0125,0.035,results/cross_architect
 ResNet18,Deep CNN (ResNet-18),42,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed42_pgd_epsilon_sweep_test.csv
 GRU,Recurrent (GRU),42,fgsm,0.01,0.0175,0.02,results/cross_architecture/gru/gru_seed42_fgsm_epsilon_sweep_test.csv
 GRU,Recurrent (GRU),42,pgd,0.0075,0.0125,0.015,results/cross_architecture/gru/gru_seed42_pgd_epsilon_sweep_test.csv
+BiLSTM,Recurrent (BiLSTM),42,fgsm,0.0075,0.0175,0.0175,results/cross_architecture/bilstm/bilstm_seed42_fgsm_epsilon_sweep_test.csv
+BiLSTM,Recurrent (BiLSTM),42,pgd,0.0075,0.015,0.0175,results/cross_architecture/bilstm/bilstm_seed42_pgd_epsilon_sweep_test.csv

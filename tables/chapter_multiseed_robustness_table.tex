@@ -1,0 +1,53 @@
+% Multi-seed (Priority 1) window-level safety-proxy robustness table.
+% Source: results/multiseed_robustness/multiseed_summary_stats.csv and
+%         results/multiseed_robustness/multiseed_collapse_thresholds.csv
+% Commit: 3200a89 (branch feature/converged-clean-baseline)
+% Values are mean +/- SD across 5 seeds (42-46). Test split n=500, 45 fall windows.
+% Requires \usepackage{booktabs} (and \usepackage{siunitx} optional).
+
+\begin{table}[t]
+  \centering
+  \caption[Multi-seed adversarial safety-proxy robustness (UT-HAR/SenseFi LeNet)]{%
+    Window-level safety-proxy metrics across five independent training seeds
+    (42--46) on the UT-HAR/SenseFi LeNet classifier. Values are mean~$\pm$~SD.
+    Test split: $n=500$ windows ($45$ fall, $455$ non-fall). Attacks are
+    digital-domain, processed-tensor $L_\infty$ perturbations at
+    $\varepsilon=0.030$; the defense is a software-only FGSM
+    adversarial-training baseline. These are not clinical, physical-layer, or
+    over-the-air measurements, and no certified robustness is claimed.}
+  \label{tab:multiseed-robustness}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Condition & Fall recall & Missed-fall rate & False-fall alarms & Macro-F1 \\
+    \midrule
+    \multicolumn{5}{l}{\emph{Undefended}}\\
+    Clean              & $0.978 \pm 0.016$ & $0.022 \pm 0.016$ & $0.8 \pm 0.4$   & $0.955 \pm 0.009$ \\
+    FGSM $\varepsilon{=}0.030$ & $0.049 \pm 0.046$ & $0.951 \pm 0.046$ & $57.8 \pm 10.3$ & $0.043 \pm 0.026$ \\
+    PGD $\varepsilon{=}0.030$  & $0.000 \pm 0.000$ & $1.000 \pm 0.000$ & $58.4 \pm 6.3$  & $0.000 \pm 0.000$ \\
+    \midrule
+    \multicolumn{5}{l}{\emph{FGSM adversarial-training defense}}\\
+    Clean              & $0.956 \pm 0.035$ & $0.044 \pm 0.035$ & $4.4 \pm 3.9$   & $0.875 \pm 0.040$ \\
+    FGSM $\varepsilon{=}0.030$ & $0.498 \pm 0.135$ & $0.502 \pm 0.135$ & $26.4 \pm 12.4$ & $0.442 \pm 0.020$ \\
+    PGD $\varepsilon{=}0.030$  & $0.084 \pm 0.060$ & $0.916 \pm 0.060$ & $50.6 \pm 14.4$ & $0.210 \pm 0.041$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+
+  % Collapse-threshold sub-table: smallest epsilon (ascending 18-point grid)
+  % meeting each criterion; mean +/- SD across seeds.
+  \begin{tabular}{l c c c}
+    \toprule
+    Attack & $\varepsilon$: recall drop $\geq 0.10$ & $\varepsilon$: recall $< 0.50$ & $\varepsilon$: recall $= 0$ \\
+    \midrule
+    FGSM & $0.0050 \pm 0.0000$ & $0.0070 \pm 0.0011$ & $0.0367 \pm 0.0340$\textsuperscript{\dag} \\
+    PGD  & $0.0045 \pm 0.0011$ & $0.0060 \pm 0.0014$ & $0.0125 \pm 0.0031$ \\
+    \bottomrule
+  \end{tabular}
+  \\[0.3em]
+  {\footnotesize \textsuperscript{\dag}~Undefended FGSM fall recall reached
+  exactly $0$ within the $\varepsilon$-grid for only $3/5$ seeds (it bottomed
+  near $0.067$ for seeds 44 and 46); undefended PGD reached $0$ in all $5$
+  seeds. The FGSM ``recall${=}0$'' threshold is therefore averaged over $3$
+  seeds.}
+\end{table}

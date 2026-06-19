@@ -1,0 +1,13 @@
+metric,value
+split,legacy_val_plus_test
+n_windows,996
+accuracy,0.908635
+macro_f1,0.902084
+fall_recall,0.955056
+missed_fall_rate,0.044944
+fall_precision,0.934066
+fall_f1,0.944444
+fall_true_positive,85
+fall_false_negative,4
+fall_false_positive,6
+fall_true_negative,901

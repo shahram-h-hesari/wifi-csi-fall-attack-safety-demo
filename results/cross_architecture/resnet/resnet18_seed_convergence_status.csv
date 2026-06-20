@@ -1,0 +1,6 @@
+seed,status,clean_accuracy,clean_fall_recall,best_epoch,note
+42,clean_qualified,0.942000,0.977778,43,included in clean-qualified aggregate
+43,clean_qualified,0.964000,0.955556,21,included in clean-qualified aggregate
+44,clean_qualified,0.984000,0.977778,70,included in clean-qualified aggregate
+45,non_converged,0.294000,0.000000,1,"diverged (Adam lr 1e-3, val_loss~1e15; walk-only clean classifier); EXCLUDED from clean-qualified aggregate"
+46,clean_qualified,0.982000,0.977778,44,included in clean-qualified aggregate

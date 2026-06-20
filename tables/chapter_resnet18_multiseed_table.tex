@@ -1,0 +1,61 @@
+% ResNet18 multi-seed clean-qualified aggregate table.
+% Source: results/cross_architecture/resnet/resnet18_clean_qualified_summary.csv
+%         results/cross_architecture/resnet/resnet18_clean_qualified_thresholds.csv
+%         results/cross_architecture/resnet/resnet18_seed_convergence_status.csv
+% Commits: seed42 3578136, seed43 5024193, seed44 dd3460b, seed45 6db1485 (NON-CONVERGED),
+%          seed45 note ba4cc9f, seed46 9cf6172.
+% Clean-qualified seeds: 42, 43, 44, 46 (n=4). Seed 45 excluded as non-converged.
+% Test split n=500 (45 fall, 455 non-fall); attacks at epsilon=0.030.
+% Requires \usepackage{booktabs}.
+
+\begin{table}[t]
+  \centering
+  \caption[ResNet18 multi-seed adversarial safety-proxy collapse (clean-qualified)]{%
+    ResNet18 multi-seed aggregate over four clean-qualified seeds (42, 43, 44, 46)
+    on UT-HAR/SenseFi, under matched digital-domain $L_\infty$ attacks at
+    $\varepsilon=0.030$. Test split $n=500$ ($45$ fall, $455$ non-fall). Values are
+    mean~$\pm$~SD; 95\% CI is Student-$t$ ($df=3$). Seed~45 diverged
+    (non-converged) and is excluded from this aggregate; it appears only in the
+    convergence-status panel. This is a ResNet18 multi-seed result, not a
+    multi-seed cross-architecture reliability claim; no clinical, over-the-air, or
+    certified-robustness claims.}
+  \label{tab:resnet18-multiseed}
+  \begin{tabular}{l l c c}
+    \toprule
+    Condition & Metric & Mean $\pm$ SD & 95\% CI \\
+    \midrule
+    \multirow{2}{*}{Clean}
+      & Fall recall        & $0.972 \pm 0.011$ & $[0.955,\ 0.990]$ \\
+    & & False-fall alarms  & $1.25 \pm 0.96$   & $[0,\ 2.8]$ \\
+    \midrule
+    \multirow{2}{*}{FGSM $\varepsilon{=}0.03$}
+      & Fall recall        & $0.011 \pm 0.013$ & $[0,\ 0.032]$ \\
+    & & False-fall alarms  & $31.3 \pm 23.3$   & $[0,\ 68.4]$ \\
+    \midrule
+    \multirow{2}{*}{PGD $\varepsilon{=}0.03$}
+      & Fall recall        & $\mathbf{0.000 \pm 0.000}$ & $[0.000,\ 0.000]$ \\
+    & & False-fall alarms  & $55.0 \pm 36.9$   & $[0,\ 113.7]$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.6em}
+
+  % Convergence status of all five seeds.
+  \begin{tabular}{l l c c c}
+    \toprule
+    Seed & Status & Clean acc. & Clean fall recall & PGD $\varepsilon{=}0.03$ fall recall \\
+    \midrule
+    42 & clean-qualified & $0.942$ & $0.978$ & $0.000$ \\
+    43 & clean-qualified & $0.964$ & $0.956$ & $0.000$ \\
+    44 & clean-qualified & $0.984$ & $0.978$ & $0.000$ \\
+    46 & clean-qualified & $0.982$ & $0.978$ & $0.000$ \\
+    45 & \emph{non-converged} & $0.294$ & $0.000$ & --- (excluded) \\
+    \bottomrule
+  \end{tabular}
+  \\[0.3em]
+  {\footnotesize Requires \texttt{\textbackslash usepackage\{multirow\}}.
+  \textbf{4/4 clean-qualified ResNet18 seeds collapsed to zero PGD fall recall at
+  $\varepsilon=0.03$}; seed~45 was non-converged (diverged to a walk-only clean
+  classifier, fall recall $0.000$ before attack) and is excluded from
+  clean-qualified adversarial-degradation aggregation.}
+\end{table}

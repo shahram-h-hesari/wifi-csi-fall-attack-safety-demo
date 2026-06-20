@@ -1,0 +1,13 @@
+seed,attack,first_eps_recall_below_0_50,first_eps_recall_below_0_10,first_eps_recall_zero,source_sweep_csv
+42,fgsm,0.005,0.0125,0.035,results/cross_architecture/resnet/resnet18_seed42_fgsm_epsilon_sweep_test.csv
+42,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed42_pgd_epsilon_sweep_test.csv
+43,fgsm,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed43_fgsm_epsilon_sweep_test.csv
+43,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed43_pgd_epsilon_sweep_test.csv
+44,fgsm,0.005,0.0075,0.015,results/cross_architecture/resnet/resnet18_seed44_fgsm_epsilon_sweep_test.csv
+44,pgd,0.0025,0.005,0.01,results/cross_architecture/resnet/resnet18_seed44_pgd_epsilon_sweep_test.csv
+46,fgsm,0.005,0.0075,0.01,results/cross_architecture/resnet/resnet18_seed46_fgsm_epsilon_sweep_test.csv
+46,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed46_pgd_epsilon_sweep_test.csv
+mean,fgsm,0.004375,0.008125,0.016875,
+std,fgsm,0.001250,0.003146,0.012479,
+mean,pgd,0.002500,0.005000,0.008125,
+std,pgd,0.000000,0.000000,0.001250,

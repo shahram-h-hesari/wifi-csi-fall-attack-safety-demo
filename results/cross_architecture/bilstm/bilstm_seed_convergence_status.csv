@@ -1,0 +1,3 @@
+seed,status,clean_accuracy,clean_fall_recall,best_epoch,note
+42,clean_qualified,0.814000,0.888889,200,seed-42 cross-architecture pilot; ran full 200-epoch budget (no early stop); weakest clean classifier of the family but non-trivial; included in BiLSTM clean-qualified evidence
+43,clean_qualified,0.830000,0.822222,196,converged (ran full 200-epoch budget; no early stop, expected BiLSTM behavior; val_loss 0.400 healthy); PASS strict clean gate; included in BiLSTM clean-qualified evidence

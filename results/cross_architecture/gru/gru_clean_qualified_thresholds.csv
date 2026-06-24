@@ -1,0 +1,15 @@
+seed,attack,first_eps_recall_drop_ge_0_10,first_eps_recall_below_0_50,first_eps_recall_zero,source_sweep_csv
+42,fgsm,0.005,0.01,0.02,results/cross_architecture/gru/gru_seed42_fgsm_epsilon_sweep_test.csv
+42,pgd,0.005,0.0075,0.015,results/cross_architecture/gru/gru_seed42_pgd_epsilon_sweep_test.csv
+43,fgsm,0.0025,0.0075,0.035,results/cross_architecture/gru/gru_seed43_fgsm_epsilon_sweep_test.csv
+43,pgd,0.0025,0.0075,0.025,results/cross_architecture/gru/gru_seed43_pgd_epsilon_sweep_test.csv
+44,fgsm,0.005,0.0075,0.02,results/cross_architecture/gru/gru_seed44_fgsm_epsilon_sweep_test.csv
+44,pgd,0.0025,0.0075,0.015,results/cross_architecture/gru/gru_seed44_pgd_epsilon_sweep_test.csv
+45,fgsm,0.0075,0.0125,0.045,results/cross_architecture/gru/gru_seed45_fgsm_epsilon_sweep_test.csv
+45,pgd,0.005,0.0075,0.025,results/cross_architecture/gru/gru_seed45_pgd_epsilon_sweep_test.csv
+46,fgsm,0.0075,0.01,0.03,results/cross_architecture/gru/gru_seed46_fgsm_epsilon_sweep_test.csv
+46,pgd,0.005,0.0075,0.025,results/cross_architecture/gru/gru_seed46_pgd_epsilon_sweep_test.csv
+mean,fgsm,0.005500,0.009500,0.030000,
+std,fgsm,0.002092,0.002092,0.010607,
+mean,pgd,0.004000,0.007500,0.021000,
+std,pgd,0.001369,0.000000,0.005477,

@@ -1,0 +1,6 @@
+architecture,family,seeds_run,n_seeds_run,clean_qualified_seeds,n_clean_qualified,clean_fall_recall_mean,clean_fall_recall_sd,fgsm03_fall_recall_mean,fgsm03_fall_recall_sd,pgd03_fall_recall_mean,pgd03_fall_recall_sd,pgd03_collapse_count,evidence_status,source
+LeNet,CNN (LeNet),42-46,5,"42,43,44,45,46",5,0.977778,0.015713,0.048889,0.045542,0.000000,0.000000,5/5,full five-seed,results/multiseed_robustness/multiseed_summary_stats.csv
+GRU,recurrent (GRU),42-46,5,"42,43,44,45,46",5,0.920000,0.012171,0.008889,0.012172,0.000000,0.000000,5/5,full five-seed,results/cross_architecture/gru/gru_clean_qualified_summary.csv
+ResNet18,deep CNN (ResNet-18),42-46,5,"42,43,44,46",4,0.972222,0.011111,0.011111,0.012830,0.000000,0.000000,4/4,clean-qualified multi-seed (seed 45 excluded: non-converged),results/cross_architecture/resnet/resnet18_clean_qualified_summary.csv
+BiLSTM,recurrent (BiLSTM),42,1,42,1,0.888889,,0.000000,,0.000000,,1/1,seed-42 pilot,results/cross_architecture/bilstm/bilstm_seed42_fall_binary_metrics.csv
+Transformer,attention (ViT),42,1,42,1,0.977778,,0.000000,,0.000000,,1/1,seed-42 pilot,results/cross_architecture/transformer/transformer_seed42_fall_binary_metrics.csv

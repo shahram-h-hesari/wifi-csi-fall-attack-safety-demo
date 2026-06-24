@@ -1,3 +1,4 @@
 seed,status,clean_accuracy,clean_fall_recall,best_epoch,note
 42,clean_qualified,0.904000,0.933333,116,seed-42 cross-architecture pilot; converged (early-stopped); included in GRU clean-qualified evidence
 43,clean_qualified,0.904000,0.911111,151,converged (early-stopped); PASS clean gate; included in GRU clean-qualified evidence
+44,clean_qualified,0.932000,0.911111,150,converged (early-stopped); PASS clean gate; included in GRU clean-qualified evidence

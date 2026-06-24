@@ -1,0 +1,99 @@
+{
+  "timestamp_utc": "2026-06-24T01:36:31.806746+00:00",
+  "stage": "stage2_converged_attacks_epsilon_sweep",
+  "run_name": "gru_seed45",
+  "checkpoint_path": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\cross_architecture\\gru\\gru_seed45_best.pt",
+  "checkpoint_epoch": 124,
+  "checkpoint_val_macro_f1": 0.9273791237824466,
+  "stage1_clean_references": {
+    "test_accuracy": "0.970000",
+    "test_macro_f1": "0.952150",
+    "test_fall_recall": "0.955556",
+    "legacy_accuracy": "0.976908",
+    "legacy_macro_f1": "0.963155",
+    "legacy_fall_recall": "0.966292"
+  },
+  "epsilon_list": [
+    0.0,
+    0.0025,
+    0.005,
+    0.0075,
+    0.01,
+    0.0125,
+    0.015,
+    0.0175,
+    0.02,
+    0.025,
+    0.03,
+    0.035,
+    0.04,
+    0.045,
+    0.05,
+    0.055,
+    0.06,
+    0.075
+  ],
+  "attack_parameters": {
+    "attacks": [
+      "fgsm",
+      "pgd"
+    ],
+    "pgd_steps": 10,
+    "pgd_alpha_rule": "epsilon/6 per point",
+    "epsilon_zero_handling": "epsilon=0.0 applies no perturbation (clean baseline row)",
+    "value_clamp": "none (processed CSI tensors, not [0,1] pixels)",
+    "seed": 45
+  },
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "legacy_note": "legacy val+test (996 windows) is a comparison-only pool for prior thesis artifacts; no training or selection occurs in Stage 2.",
+  "fall_recall_thresholds": {
+    "fgsm_test": {
+      "clean_fall_recall": 0.9333333333333333,
+      "first_epsilon_drop_ge_0_10": 0.0075,
+      "first_epsilon_recall_below_0_50": 0.0125,
+      "first_epsilon_recall_zero": 0.045
+    },
+    "fgsm_legacy": {
+      "clean_fall_recall": 0.9438202247191011,
+      "first_epsilon_drop_ge_0_10": 0.005,
+      "first_epsilon_recall_below_0_50": 0.0125,
+      "first_epsilon_recall_zero": 0.045
+    },
+    "pgd_test": {
+      "clean_fall_recall": 0.9333333333333333,
+      "first_epsilon_drop_ge_0_10": 0.005,
+      "first_epsilon_recall_below_0_50": 0.0075,
+      "first_epsilon_recall_zero": 0.025
+    },
+    "pgd_legacy": {
+      "clean_fall_recall": 0.9438202247191011,
+      "first_epsilon_drop_ge_0_10": 0.005,
+      "first_epsilon_recall_below_0_50": 0.01,
+      "first_epsilon_recall_zero": 0.025
+    }
+  },
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "sensefi_commit_sha": "15fd872433a46935f1be706e57395d5c57181c6d",
+  "git_branch": "feature/converged-clean-baseline",
+  "git_commit": "ad7fcb7d0c3c991a760b5b0762aed71a39ce43d1",
+  "outputs": {
+    "fgsm_test_summary": "results\\cross_architecture\\gru\\gru_seed45_fgsm_epsilon_sweep_test.csv",
+    "fgsm_test_predictions": "results\\cross_architecture\\gru\\gru_seed45_fgsm_sweep_predictions_test.csv",
+    "fgsm_legacy_summary": "results\\cross_architecture\\gru\\gru_seed45_fgsm_epsilon_sweep_legacy.csv",
+    "fgsm_legacy_predictions": "results\\cross_architecture\\gru\\gru_seed45_fgsm_sweep_predictions_legacy.csv",
+    "pgd_test_summary": "results\\cross_architecture\\gru\\gru_seed45_pgd_epsilon_sweep_test.csv",
+    "pgd_test_predictions": "results\\cross_architecture\\gru\\gru_seed45_pgd_sweep_predictions_test.csv",
+    "pgd_legacy_summary": "results\\cross_architecture\\gru\\gru_seed45_pgd_epsilon_sweep_legacy.csv",
+    "pgd_legacy_predictions": "results\\cross_architecture\\gru\\gru_seed45_pgd_sweep_predictions_legacy.csv"
+  }
+}

@@ -1,0 +1,12 @@
+metric,value
+run_name,gru_seed45
+eval_split,legacy_val_plus_test
+eval_windows,996
+checkpoint_used,best (validation-selected)
+legacy_loss,0.205197
+legacy_accuracy,0.927711
+legacy_macro_f1,0.909926
+fall_recall,0.943820
+missed_fall_rate,0.056180
+fall_precision,0.913043
+fall_f1,0.928177

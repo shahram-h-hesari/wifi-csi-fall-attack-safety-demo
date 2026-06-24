@@ -1,0 +1,13 @@
+metric,value
+fall_true_positive,42
+fall_false_negative,3
+fall_false_positive,6
+fall_true_negative,449
+fall_windows,45
+nonfall_windows,455
+fall_recall,0.933333
+missed_fall_rate,0.066667
+fall_precision,0.875000
+fall_f1,0.903226
+specificity,0.986813
+false_positive_rate,0.013187

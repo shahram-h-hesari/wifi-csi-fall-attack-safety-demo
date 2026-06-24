@@ -1,0 +1,15 @@
+seed,attack,first_eps_recall_drop_ge_0_10,first_eps_recall_below_0_50,first_eps_recall_zero,source_sweep_csv,note
+42,fgsm,0.005,0.0075,0.0175,results/cross_architecture/bilstm/bilstm_seed42_fgsm_epsilon_sweep_test.csv,
+42,pgd,0.005,0.0075,0.0175,results/cross_architecture/bilstm/bilstm_seed42_pgd_epsilon_sweep_test.csv,
+43,fgsm,0.005,0.0075,0.0175,results/cross_architecture/bilstm/bilstm_seed43_fgsm_epsilon_sweep_test.csv,
+43,pgd,0.005,0.0075,0.015,results/cross_architecture/bilstm/bilstm_seed43_pgd_epsilon_sweep_test.csv,
+44,fgsm,0.005,0.0075,0.03,results/cross_architecture/bilstm/bilstm_seed44_fgsm_epsilon_sweep_test.csv,
+44,pgd,0.0025,0.0075,0.025,results/cross_architecture/bilstm/bilstm_seed44_pgd_epsilon_sweep_test.csv,
+45,fgsm,0.0075,0.0125,none,results/cross_architecture/bilstm/bilstm_seed45_fgsm_epsilon_sweep_test.csv,FGSM never reaches exactly 0 in 0.0-0.075 grid (bottoms at 0.022)
+45,pgd,0.0075,0.01,0.035,results/cross_architecture/bilstm/bilstm_seed45_pgd_epsilon_sweep_test.csv,
+46,fgsm,0.0075,0.01,0.02,results/cross_architecture/bilstm/bilstm_seed46_fgsm_epsilon_sweep_test.csv,
+46,pgd,0.005,0.0075,0.015,results/cross_architecture/bilstm/bilstm_seed46_pgd_epsilon_sweep_test.csv,
+mean,fgsm,0.006000,0.009000,0.021250,,recall_zero mean over 4/5 seeds; seed 45 excluded (no in-grid zero; not averaged as 0)
+std,fgsm,0.001369,0.002236,0.005951,,recall_zero std over 4/5 seeds; seed 45 excluded (no in-grid zero; not averaged as 0)
+mean,pgd,0.005000,0.008000,0.021500,,recall_zero mean over 5/5 seeds
+std,pgd,0.001768,0.001118,0.008588,,recall_zero std over 5/5 seeds

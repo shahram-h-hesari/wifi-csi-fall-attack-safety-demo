@@ -1,0 +1,15 @@
+seed,attack,first_eps_recall_drop_ge_0_10,first_eps_recall_below_0_50,first_eps_recall_zero,source_sweep_csv,note
+42,fgsm,0.005,0.01,0.03,results/cross_architecture/transformer/transformer_seed42_fgsm_epsilon_sweep_test.csv,
+42,pgd,0.005,0.0075,0.025,results/cross_architecture/transformer/transformer_seed42_pgd_epsilon_sweep_test.csv,
+43,fgsm,0.0025,0.01,0.025,results/cross_architecture/transformer/transformer_seed43_fgsm_epsilon_sweep_test.csv,
+43,pgd,0.0025,0.01,0.025,results/cross_architecture/transformer/transformer_seed43_pgd_epsilon_sweep_test.csv,
+44,fgsm,0.005,0.0075,0.03,results/cross_architecture/transformer/transformer_seed44_fgsm_epsilon_sweep_test.csv,
+44,pgd,0.005,0.0075,0.025,results/cross_architecture/transformer/transformer_seed44_pgd_epsilon_sweep_test.csv,
+45,fgsm,0.005,0.0125,0.04,results/cross_architecture/transformer/transformer_seed45_fgsm_epsilon_sweep_test.csv,"seed 45 FGSM residual: FGSM@0.03=0.022, reaches 0 at eps=0.04"
+45,pgd,0.005,0.01,0.03,results/cross_architecture/transformer/transformer_seed45_pgd_epsilon_sweep_test.csv,
+46,fgsm,0.0025,0.0075,0.0175,results/cross_architecture/transformer/transformer_seed46_fgsm_epsilon_sweep_test.csv,
+46,pgd,0.0025,0.0075,0.015,results/cross_architecture/transformer/transformer_seed46_pgd_epsilon_sweep_test.csv,
+mean,fgsm,0.004000,0.009500,0.028500,,recall_zero mean over 5/5 seeds
+std,fgsm,0.001369,0.002092,0.008216,,recall_zero std over 5/5 seeds
+mean,pgd,0.004000,0.008500,0.024000,,recall_zero mean over 5/5 seeds
+std,pgd,0.001369,0.001369,0.005477,,recall_zero std over 5/5 seeds

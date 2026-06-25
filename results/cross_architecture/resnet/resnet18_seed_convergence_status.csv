@@ -5,3 +5,4 @@ seed,status,clean_accuracy,clean_fall_recall,best_epoch,note
 45,non_converged,0.294000,0.000000,1,"diverged (Adam lr 1e-3, val_loss~1e15; walk-only clean classifier); EXCLUDED from clean-qualified aggregate"
 46,clean_qualified,0.982000,0.977778,44,included in clean-qualified aggregate
 47,non_converged,0.294000,0.000000,6,"diverged (Adam lr 1e-3, val_loss~8.6e6; walk-only clean classifier; best_epoch 6); replacement attempt for seed 45 also failed; EXCLUDED from clean-qualified aggregate; attacks intentionally skipped"
+48,clean_qualified,0.978000,1.000000,73,"second replacement attempt (after seeds 45, 47 diverged); converged (early-stopped at epoch 93; val_loss 0.043 healthy; perfect clean fall recall 1.000); PASS strict clean gate; included in clean-qualified aggregate as the 5th seed"

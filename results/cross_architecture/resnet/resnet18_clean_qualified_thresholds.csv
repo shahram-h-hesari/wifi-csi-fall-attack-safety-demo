@@ -7,7 +7,9 @@ seed,attack,first_eps_recall_below_0_50,first_eps_recall_below_0_10,first_eps_re
 44,pgd,0.0025,0.005,0.01,results/cross_architecture/resnet/resnet18_seed44_pgd_epsilon_sweep_test.csv
 46,fgsm,0.005,0.0075,0.01,results/cross_architecture/resnet/resnet18_seed46_fgsm_epsilon_sweep_test.csv
 46,pgd,0.0025,0.005,0.0075,results/cross_architecture/resnet/resnet18_seed46_pgd_epsilon_sweep_test.csv
-mean,fgsm,0.004375,0.008125,0.016875,
-std,fgsm,0.001250,0.003146,0.012479,
-mean,pgd,0.002500,0.005000,0.008125,
-std,pgd,0.000000,0.000000,0.001250,
+48,fgsm,0.0075,0.0125,0.03,results/cross_architecture/resnet/resnet18_seed48_fgsm_epsilon_sweep_test.csv
+48,pgd,0.005,0.0075,0.0075,results/cross_architecture/resnet/resnet18_seed48_pgd_epsilon_sweep_test.csv
+mean,fgsm,0.005000,0.009000,0.019500,
+std,fgsm,0.001768,0.003354,0.012298,
+mean,pgd,0.003000,0.005500,0.008000,
+std,pgd,0.001118,0.001118,0.001118,

@@ -1,0 +1,12 @@
+metric,value
+run_name,resnet18_seed48
+eval_split,legacy_val_plus_test
+eval_windows,996
+checkpoint_used,best (validation-selected)
+legacy_loss,0.084175
+legacy_accuracy,0.982932
+legacy_macro_f1,0.973788
+fall_recall,1.000000
+missed_fall_rate,0.000000
+fall_precision,0.967391
+fall_f1,0.983425

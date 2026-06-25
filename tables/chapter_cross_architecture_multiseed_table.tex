@@ -1,0 +1,54 @@
+% Final cross-architecture multi-seed table (five-seed clean-qualified, all configs).
+% Source: results/cross_architecture/cross_architecture_multiseed_summary.csv
+%         notes/priority2_cross_architecture_multiseed_summary.md
+%         per-config aggregates: results/multiseed_robustness/multiseed_summary_stats.csv (LeNet),
+%         results/cross_architecture/{gru,bilstm,transformer,resnet}/*_clean_qualified_summary.csv
+% Five architecture configurations, five clean-qualified seeds each.
+% Test split n=500 (45 fall, 455 non-fall); attacks at epsilon=0.030.
+% Requires \usepackage{booktabs} and \usepackage{multirow}.
+
+\begin{table}[t]
+  \centering
+  \caption[Final cross-architecture multi-seed adversarial safety-proxy collapse]{%
+    Final cross-architecture multi-seed result: window-level fall-vs-non-fall
+    safety-proxy metrics for five UT-HAR/SenseFi architecture configurations under
+    matched digital-domain $L_\infty$ attacks at $\varepsilon=0.030$. Each
+    configuration has a full five-seed clean-qualified evaluation; values are
+    mean~$\pm$~SD over the clean-qualified seeds (test split $n=500$, $45$ fall,
+    $455$ non-fall). The configurations span a shallow CNN (LeNet), a deep CNN
+    (ResNet18), a recurrent network (GRU), a bidirectional recurrent network
+    (BiLSTM), and an attention-based network (Transformer/ViT)---five architecture
+    \emph{configurations}, not five model families (LeNet and ResNet18 are both
+    CNNs). PGD is the consistent worst-case attack: it drives fall recall to
+    exactly $0.000$ at $\varepsilon=0.03$ in every clean-qualified seed of LeNet,
+    GRU, Transformer, and ResNet18 (5/5 each) and in 4/5 BiLSTM seeds, and reaches
+    exactly $0.000$ in all clean-qualified seeds of every configuration by
+    $\varepsilon\le0.035$. FGSM at $\varepsilon=0.03$ is severe but not universally
+    exact (exact-$0.000$ in 2/5--4/5 seeds per configuration). These are UT-HAR,
+    processed-CSI-tensor, digital white-box, window-level safety-proxy results; no
+    clinical-deployment, over-the-air, or certified-robustness claims.}
+  \label{tab:cross-arch-multiseed}
+  \begin{tabular}{l l c c c c}
+    \toprule
+    Model & Type & Clean fall recall & FGSM$_{\varepsilon{=}0.03}$ & PGD$_{\varepsilon{=}0.03}$ & Exact $0.000$ @ $\varepsilon{=}0.03$ (FGSM / PGD) \\
+    \midrule
+    LeNet       & Shallow CNN             & $0.978 \pm 0.016$ & $0.049 \pm 0.046$ & $\mathbf{0.000 \pm 0.000}$ & 2/5 \ / \ \textbf{5/5} \\
+    GRU         & Recurrent               & $0.920 \pm 0.012$ & $0.009 \pm 0.012$ & $\mathbf{0.000 \pm 0.000}$ & 3/5 \ / \ \textbf{5/5} \\
+    BiLSTM      & Bidirectional recurrent & $0.884 \pm 0.043$ & $0.022 \pm 0.050$ & $0.004 \pm 0.010$         & 4/5 \ / \ 4/5\,$^{\dagger}$ \\
+    Transformer & Attention (ViT)         & $0.947 \pm 0.049$ & $0.004 \pm 0.010$ & $\mathbf{0.000 \pm 0.000}$ & 4/5 \ / \ \textbf{5/5}\,$^{\ddagger}$ \\
+    ResNet18    & Deep CNN                & $0.978 \pm 0.016$ & $0.009 \pm 0.012$ & $\mathbf{0.000 \pm 0.000}$ & 3/5 \ / \ \textbf{5/5}\,$^{\S}$ \\
+    \bottomrule
+  \end{tabular}
+  \\[0.3em]
+  {\footnotesize All five configurations are full five-seed clean-qualified results
+  (seeds 42--46), with means over five clean-qualified seeds. $^{\dagger}$BiLSTM
+  seed~45 retains FGSM$_{0.03}{=}0.111$ and PGD$_{0.03}{=}0.022$ (PGD reaches
+  $0.000$ by $\varepsilon{=}0.035$); the other four collapse at $\varepsilon=0.03$.
+  $^{\ddagger}$Transformer seed~45 retains FGSM$_{0.03}{=}0.022$ (reaches $0.000$ by
+  $\varepsilon{=}0.040$); PGD$_{0.03}{=}0.000$. $^{\S}$ResNet18 used clean-qualified
+  seeds 42, 43, 44, 46, 48; obtaining five clean-qualified seeds required seven
+  fixed-protocol runs (seeds 42--48), as seeds~45 and~47 each diverged to a
+  walk-only clean classifier (clean fall recall $0.000$) and were excluded before
+  attack evaluation. All clean-qualified seeds of all five configurations reach
+  exactly $0.000$ PGD fall recall by $\varepsilon\le0.035$.}
+\end{table}

@@ -2,45 +2,48 @@
 % Source: results/cross_architecture/resnet/resnet18_clean_qualified_summary.csv
 %         results/cross_architecture/resnet/resnet18_clean_qualified_thresholds.csv
 %         results/cross_architecture/resnet/resnet18_seed_convergence_status.csv
-% Commits: seed42 3578136, seed43 5024193, seed44 dd3460b, seed45 6db1485 (NON-CONVERGED),
-%          seed45 note ba4cc9f, seed46 9cf6172.
-% Clean-qualified seeds: 42, 43, 44, 46 (n=4). Seed 45 excluded as non-converged.
+%         notes/priority2_resnet18_multiseed_summary.md
+% Clean-qualified seeds: 42, 43, 44, 46, 48 (n=5). Seeds 45 and 47 excluded as
+% non-converged (walk-only, clean fall recall 0.000 before attack). Seven
+% fixed-protocol runs (seeds 42-48) were needed to obtain five clean-qualified seeds.
 % Test split n=500 (45 fall, 455 non-fall); attacks at epsilon=0.030.
-% Requires \usepackage{booktabs}.
+% Requires \usepackage{booktabs} and \usepackage{multirow}.
 
 \begin{table}[t]
   \centering
   \caption[ResNet18 multi-seed adversarial safety-proxy collapse (clean-qualified)]{%
-    ResNet18 multi-seed aggregate over four clean-qualified seeds (42, 43, 44, 46)
-    on UT-HAR/SenseFi, under matched digital-domain $L_\infty$ attacks at
+    ResNet18 multi-seed aggregate over five clean-qualified seeds (42, 43, 44, 46,
+    48) on UT-HAR/SenseFi, under matched digital-domain $L_\infty$ attacks at
     $\varepsilon=0.030$. Test split $n=500$ ($45$ fall, $455$ non-fall). Values are
-    mean~$\pm$~SD; 95\% CI is Student-$t$ ($df=3$). Seed~45 diverged
-    (non-converged) and is excluded from this aggregate; it appears only in the
-    convergence-status panel. This is a ResNet18 multi-seed result, not a
-    multi-seed cross-architecture reliability claim; no clinical, over-the-air, or
-    certified-robustness claims.}
+    mean~$\pm$~SD; 95\% CI is Student-$t$ ($df=4$). Seeds~45 and~47 diverged
+    (non-converged) and are excluded from this aggregate; they appear only in the
+    convergence-status panel. Obtaining five clean-qualified seeds required seven
+    fixed-protocol runs (seeds 42--48). This is a ResNet18 five-seed
+    clean-qualified result on UT-HAR processed-CSI tensors (window-level
+    safety-proxy metrics); no clinical, over-the-air, or certified-robustness
+    claims.}
   \label{tab:resnet18-multiseed}
   \begin{tabular}{l l c c}
     \toprule
     Condition & Metric & Mean $\pm$ SD & 95\% CI \\
     \midrule
     \multirow{2}{*}{Clean}
-      & Fall recall        & $0.972 \pm 0.011$ & $[0.955,\ 0.990]$ \\
-    & & False-fall alarms  & $1.25 \pm 0.96$   & $[0,\ 2.8]$ \\
+      & Fall recall        & $0.978 \pm 0.016$ & $[0.958,\ 0.997]$ \\
+    & & False-fall alarms  & $1.40 \pm 0.89$   & $[0.3,\ 2.5]$ \\
     \midrule
     \multirow{2}{*}{FGSM $\varepsilon{=}0.03$}
-      & Fall recall        & $0.011 \pm 0.013$ & $[0,\ 0.032]$ \\
-    & & False-fall alarms  & $31.3 \pm 23.3$   & $[0,\ 68.4]$ \\
+      & Fall recall        & $0.009 \pm 0.012$ & $[0,\ 0.024]$ \\
+    & & False-fall alarms  & $32.2 \pm 20.3$   & $[7.0,\ 57.4]$ \\
     \midrule
     \multirow{2}{*}{PGD $\varepsilon{=}0.03$}
       & Fall recall        & $\mathbf{0.000 \pm 0.000}$ & $[0.000,\ 0.000]$ \\
-    & & False-fall alarms  & $55.0 \pm 36.9$   & $[0,\ 113.7]$ \\
+    & & False-fall alarms  & $54.0 \pm 32.0$   & $[14.2,\ 93.8]$ \\
     \bottomrule
   \end{tabular}
 
   \vspace{0.6em}
 
-  % Convergence status of all five seeds.
+  % Convergence status of all seven attempted seeds.
   \begin{tabular}{l l c c c}
     \toprule
     Seed & Status & Clean acc. & Clean fall recall & PGD $\varepsilon{=}0.03$ fall recall \\
@@ -49,13 +52,18 @@
     43 & clean-qualified & $0.964$ & $0.956$ & $0.000$ \\
     44 & clean-qualified & $0.984$ & $0.978$ & $0.000$ \\
     46 & clean-qualified & $0.982$ & $0.978$ & $0.000$ \\
+    48 & clean-qualified & $0.978$ & $1.000$ & $0.000$ \\
     45 & \emph{non-converged} & $0.294$ & $0.000$ & --- (excluded) \\
+    47 & \emph{non-converged} & $0.294$ & $0.000$ & --- (excluded) \\
     \bottomrule
   \end{tabular}
   \\[0.3em]
   {\footnotesize Requires \texttt{\textbackslash usepackage\{multirow\}}.
-  \textbf{4/4 clean-qualified ResNet18 seeds collapsed to zero PGD fall recall at
-  $\varepsilon=0.03$}; seed~45 was non-converged (diverged to a walk-only clean
-  classifier, fall recall $0.000$ before attack) and is excluded from
-  clean-qualified adversarial-degradation aggregation.}
+  \textbf{5/5 clean-qualified ResNet18 seeds collapsed to exactly zero PGD fall
+  recall at $\varepsilon=0.03$}; FGSM at $\varepsilon=0.03$ reached exactly $0.000$
+  in 3/5 clean-qualified seeds (seeds 42 and 44 retain $0.022$). Seeds~45 and~47
+  were non-converged (each diverged to a walk-only clean classifier, fall recall
+  $0.000$ before attack) and are excluded from clean-qualified
+  adversarial-degradation aggregation. Five clean-qualified seeds required seven
+  fixed-protocol runs; no protocol change was made to rescue the diverged seeds.}
 \end{table}

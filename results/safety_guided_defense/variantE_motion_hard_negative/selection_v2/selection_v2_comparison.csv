@@ -1,0 +1,13 @@
+seed,model,selection,clean_accuracy,clean_fall_recall,pgd_0p030_fall_recall,pgd_false_fall_alarms,pgd_walk_to_fall,pgd_run_to_fall,pgd_collapse_epsilon,fgsm_0p030_fall_recall,fgsm_false_fall_alarms
+42,FGSM_defense,fgsmAT,0.834,0.911,0.089,54,15,24,0.018,0.311,27
+42,D_safety,safety,0.746,1.000,0.444,157,55,65,0.030,0.778,123
+42,priorE_safety,safety,0.806,0.978,0.356,117,37,43,0.030,0.711,80
+42,priorE_macroF1,macroF1,0.836,0.911,0.000,20,9,6,0.013,0.000,13
+42,v2safety,v2safety,0.806,0.978,0.356,117,37,43,0.030,0.711,80
+42,v2lowFA,v2lowFA,0.818,0.956,0.133,61,16,20,0.025,0.400,40
+43,FGSM_defense,fgsmAT,0.902,0.956,0.022,35,8,18,0.018,0.400,12
+43,D_safety,safety,0.720,1.000,0.289,160,52,67,0.030,0.644,136
+43,priorE_safety,safety,0.630,0.978,0.378,151,48,60,0.030,0.644,122
+43,priorE_macroF1,macroF1,0.792,0.889,0.022,38,9,12,0.018,0.133,21
+43,v2safety,v2safety,0.720,0.933,0.111,79,14,36,0.025,0.400,66
+43,v2lowFA,v2lowFA,0.766,0.933,0.067,63,17,26,0.020,0.467,45

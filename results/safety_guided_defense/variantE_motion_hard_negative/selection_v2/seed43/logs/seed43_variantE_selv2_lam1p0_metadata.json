@@ -1,0 +1,53 @@
+{
+  "timestamp_utc": "2026-06-26T18:57:11.946571+00:00",
+  "stage": "variantE_selection_v2_pilot",
+  "run_name": "seed43_variantE_selv2_lam1p0",
+  "seed": 43,
+  "lambda_motion": 1.0,
+  "note": "Selection-v2 pilot: Variant E training objective UNCHANGED; only checkpoint selection/saving changed. NOT independent validation (guard motivated on seeds 42/43).",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "lowfa_recall_floor": 0.1,
+  "early_stop_fidelity": {
+    "orig_guard_acc": 0.6,
+    "orig_guard_f1": 0.5,
+    "patience": 15,
+    "min_epochs": 35,
+    "orig_best_safety_epoch": 18
+  },
+  "selected_epochs": {
+    "v2safety": 24,
+    "v2maxrec": 24,
+    "v2lowFA": 31,
+    "v2macroF1": 34
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "fall_weight": 3.0,
+  "epochs_run": 35,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantE_motion_hard_negative\\selection_v2\\seed43\\seed43_variantE_selv2_lam1p0_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantE_motion_hard_negative\\selection_v2\\seed43\\seed43_variantE_selv2_lam1p0_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantE_motion_hard_negative\\selection_v2\\seed43\\seed43_variantE_selv2_lam1p0_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantE_motion_hard_negative\\selection_v2\\seed43\\seed43_variantE_selv2_lam1p0_v2macroF1_best.pt"
+  },
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "96a371eac47edf7263a680fde6ec76a49a66fb23",
+  "elapsed_seconds": 1184.7008674144745
+}

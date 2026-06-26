@@ -1,0 +1,8 @@
+rule,selected_epoch,is_saved_checkpoint,val_clean_acc,val_pgd_recall,val_pgd_false_alarms,val_clean_fall_recall
+current_safety (W=0.10),56,safety(saved),0.859,0.386,101,0.977
+stronger_FP_penalty (W=0.30),56,safety(saved),0.859,0.386,101,0.977
+stronger_FP_penalty (W=0.50),56,safety(saved),0.859,0.386,101,0.977
+maxrecall_FPval<=80,58,NO (no test metrics),0.855,0.250,79,0.955
+cost_FN10_FP1,56,safety(saved),0.859,0.386,101,0.977
+cost_FN5_FP1,70,NO (no test metrics),0.843,0.250,60,0.977
+cost_FN2_FP1,66,macroF1(saved),0.875,0.000,13,0.932

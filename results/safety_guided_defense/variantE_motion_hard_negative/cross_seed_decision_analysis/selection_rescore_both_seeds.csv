@@ -1,0 +1,15 @@
+seed,rule,selected_epoch,saved?,val_clean_acc,val_clean_macroF1,val_pgd_recall,val_pgd_FP,recall>FGSMdef?
+42,R0 current_safety(guard.60/.50),56,safety,0.859,0.851,0.386,101,yes
+42,R1 stronger_acc_guard(.70),56,safety,0.859,0.851,0.386,101,yes
+42,R2 stronger_f1_guard(.65),56,safety,0.859,0.851,0.386,101,yes
+42,R3 FPconstrained(FP<=110),56,safety,0.859,0.851,0.386,101,yes
+42,R4 cost_FN10_FP1,56,safety,0.859,0.851,0.386,101,yes
+42,R5 minacc.75+maxrecall,56,safety,0.859,0.851,0.386,101,yes
+42,R6 minf1.70+maxrecall,56,safety,0.859,0.851,0.386,101,yes
+43,R0 current_safety(guard.60/.50),18,safety,0.643,0.640,0.432,146,yes
+43,R1 stronger_acc_guard(.70),24,NOT saved,0.738,0.711,0.273,81,yes
+43,R2 stronger_f1_guard(.65),24,NOT saved,0.738,0.711,0.273,81,yes
+43,R3 FPconstrained(FP<=110),24,NOT saved,0.738,0.711,0.273,81,yes
+43,R4 cost_FN10_FP1,18,safety,0.643,0.640,0.432,146,yes
+43,R5 minacc.75+maxrecall,28,NOT saved,0.764,0.747,0.182,60,yes
+43,R6 minf1.70+maxrecall,24,NOT saved,0.738,0.711,0.273,81,yes

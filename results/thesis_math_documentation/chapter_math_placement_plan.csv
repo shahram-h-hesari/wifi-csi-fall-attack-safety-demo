@@ -1,0 +1,32 @@
+formula_topic,layer,recommended_chapter,recommended_section,priority,reason,source_artifact,suggested_equation_label
+OFDM received-signal model,Layer1,Chapter 2,"OFDM, Training Fields, Pilots, and CSI Estimation",must-have,Grounds CSI as a channel measurement; chapter already describes it in prose,ch02_background.tex,eq:ofdm-rx
+CSI estimate from training symbols,Layer1,Chapter 2,"OFDM, Training Fields, Pilots, and CSI Estimation",must-have,Defines CSI as Y/X; needed before perturbation domain,ch02_background.tex,eq:csi-estimate
+CSI amplitude/phase polar form,Layer1,Chapter 2,Human Motion Observability in CSI,should-have,Links motion to CSI variation,ch02_background.tex,eq:csi-polar
+CSI tensor (antennas/subcarriers),Layer1,Chapter 2,Sensing Pipeline,optional,General multi-antenna notation; dataset-specific factorization,ch02_background.tex,eq:csi-tensor
+Processed CSI window + dataset,Layer1,Chapter 3,Phase 1 Dataset: SenseFi/UT-HAR,must-have,Defines x_i shape (1x250x90) and D used by classifier,scripts/train_converged_clean_baseline.py,eq:processed-window
+Dataset and label set,Layer1,Chapter 3,Task Definition and Label Mapping,must-have,K=7 classes; basis for all metrics,ch03_threat_model.tex,eq:dataset
+Normalization statement,Layer1,Chapter 3,Phase 1 Dataset: SenseFi/UT-HAR,should-have,Thesis-safe preprocessing statement,EXPERIMENT_EVIDENCE_INDEX.md,eq:normalization
+Perturbation-domain clarification,Layer1,Chapter 3,Formal Threat Model for Later Attack Evaluation,must-have,Critical non-claim: digital tensor not RF/OTA,ch03_threat_model.tex,eq:perturb-domain
+Classifier/logits/softmax/argmax,Layer2,Chapter 4,White-Box Attack Problem Formulation,must-have,Needed before gradient attacks,ch04_adversarial_attack_methodology.tex,eq:logits;eq:softmax;eq:argmax
+Cross-entropy loss,Layer2,Chapter 4,White-Box Attack Problem Formulation,must-have,Attack objective,ch04_adversarial_attack_methodology.tex,eq:ce
+FGSM,Layer2,Chapter 4,Fast Gradient Sign Method Attack,must-have,Section already exists in prose,ch04_adversarial_attack_methodology.tex,eq:fgsm
+PGD,Layer2,Chapter 4,Projected Gradient Descent Attack,must-have,Section already exists; add steps=10 alpha=eps/6,run_converged_attacks.py,eq:pgd
+Epsilon sweep R_f(eps),Layer2,Chapter 4,Perturbation Budgets and Experimental Settings,must-have,18-point sweep grid used throughout,run_converged_attacks.py,eq:eps-sweep
+Collapse-epsilon thresholds,Layer2,Chapter 4,Standard Robustness Metrics,should-have,Defines epsilon_<0.5 used in tables,thesis_table_9_robustness_failure_thresholds.csv,eq:collapse-half;eq:collapse-zero;eq:collapse-drop
+Fall-weighted cross-entropy,Layer2,Chapter 6,Adversarial Training Methodology / Training Objective,must-have,Defense training loss component,train_safety_guided_defense.py,eq:fwce
+Binary fall-alert reduction,Layer3,Chapter 5,From Prediction Errors to Safety-Proxy Outcomes,must-have,Maps multiclass to fall alert; basis of safety metrics,ch05_clinical_safety_evaluation.tex,eq:fall-binary;eq:tpfn;eq:fptn
+Safety-proxy metrics (recall/miss/FFA/spec/PPV/F1),Layer3,Chapter 5,Error-to-Safety-Proxy Interpretation Framework,must-have,Core metrics reported in all results,thesis_table_1_safety_metrics.csv,eq:recall-miss;eq:ffa;eq:spec-ppv;eq:f1-macro
+Macro-F1 / balanced accuracy,Layer3,Chapter 5,Error-to-Safety-Proxy Interpretation Framework,should-have,Selection guard and aggregate metric,multiseed_summary_stats.csv,eq:f1-macro;eq:balanced-acc
+Class-normalized false alarms,Layer3,Chapter 5,Window-Level Limits and Deployment Interpretation,should-have,Shows walk/run rates not only counts,class_normalized_false_alarms.csv,eq:class-fa;eq:motion-fa
+Variant D training loss,Layer3,Chapter 6,Adversarial Training Methodology,must-have,Frozen Variant D recipe,SEED42_REPORT.md,eq:variantD-loss
+Variant E motion hard-negative loss,Layer3,Chapter 6,Software-Only Defense Design,must-have,Core novel defense term,VARIANT_E_SEED42_REPORT.md,eq:variantE-loss;eq:variantE-motion;eq:variantE-set
+Logit-margin false-alarm geometry,Layer3,Chapter 6,Defense-Specific Recovery Metrics,should-have,Explains residual high-confidence FAs,MATH_TO_BEHAVIOR_AUDIT.md,eq:margin-def
+Future margin-based loss,Layer3,Chapter 7,Limitations / Future Work,should-have,Clearly labeled future work only,MATH_TO_BEHAVIOR_AUDIT.md,eq:margin-loss-future
+Selection-v2 guard + safety score,Layer3,Chapter 6,Defended Evaluation Protocol,must-have,Checkpoint-selection rule used for E,SELECTION_V2_REPORT.md,eq:v2-guard;eq:safetyscore;eq:nfab
+Pareto dominance,Layer4,Chapter 7,Summary of Current Contributions,should-have,Frontier framing of trade-off operating points,pareto_points.csv,eq:pareto
+Cost-sensitive decision analysis,Layer4,Chapter 7,Summary of Current Contributions,should-have,FN:FP sensitivity; trade-off framing,cost_curve_preference.csv,eq:cost
+Wilson confidence interval,Layer4,Chapter 7,Summary of Current Contributions,must-have,n_f=45 uncertainty; prevents overclaim,uncertainty_intervals.csv,eq:wilson
+Validation-to-test gaps,Layer4,Chapter 7,Summary of Current Contributions,optional,Selection-reliability evidence,val_test_reliability.csv,eq:valtest-gap
+Calibration (ECE/Brier/NLL),Layer4,Chapter 7,Summary of Current Contributions,optional,Explains thresholding insufficiency,calibration_metrics.csv,eq:ece;eq:brier;eq:nll
+Stronger-PGD sanity,Layer4,Chapter 7,Summary of Current Contributions,should-have,Gradient-masking screen,stronger_pgd_sanity_check.csv,eq:stronger-pgd
+Seed-44 pre-registration criteria,Layer4,Chapter 7,Current Thesis Claim and Chapter Role,optional,Methodological rigor; experimental not clinical,seed44_preregistration.md,

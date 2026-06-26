@@ -1,0 +1,300 @@
+% =====================================================================
+% thesis_math_snippets.tex
+% Thesis-ready LaTeX math snippets for the WiFi-CSI adversarial robustness thesis.
+% DOCUMENTATION ONLY -- not yet inserted into the thesis.
+% Notation is consistent across snippets; equation labels are unique.
+% No fabricated citations: where a reference is needed it is marked
+%   "% citation needed" or "% cite existing reference (already in thesis .bib)".
+% Requires amsmath (and amssymb for \mathbb). All values match committed artifacts.
+% =====================================================================
+
+
+% =====================================================================
+% LAYER 1 -- WiFi-CSI sensing and signal model  (target: Chapter 2)
+% =====================================================================
+
+% --- WiFi CSI / OFDM measurement model ---
+% cite existing reference (halperin2011tool / gringoli2019free already in ch02)
+\begin{equation}\label{eq:ofdm-rx}
+  Y_k(t) = H_k(t)\,X_k(t) + N_k(t),
+\end{equation}
+% where $k$ indexes the OFDM subcarrier, $t$ indexes the packet/window,
+% $X_k(t)$ is the (known) transmitted preamble/training symbol, $Y_k(t)$ the
+% received symbol, $H_k(t)$ the channel frequency response (CSI), and
+% $N_k(t)$ additive noise.
+
+% --- CSI estimate from known training symbols (simplified channel estimation) ---
+\begin{equation}\label{eq:csi-estimate}
+  \hat{H}_k(t) = \frac{Y_k(t)}{X_k(t)}.
+\end{equation}
+% This is a simplified least-squares channel estimate on known preamble symbols.
+% The thesis operates on \emph{processed CSI tensors} provided by the
+% UT-HAR/SenseFi benchmark, not on raw RF waveform reconstruction.
+% % cite existing reference (sensefi / UT-HAR benchmark)
+
+% --- Complex CSI amplitude and phase ---
+\begin{equation}\label{eq:csi-polar}
+  H_k(t) = \lvert H_k(t)\rvert\, e^{\,j\phi_k(t)},
+\end{equation}
+% with amplitude $\lvert H_k(t)\rvert$ and phase $\phi_k(t)$. Human motion in the
+% environment perturbs the multipath channel, inducing time variation in
+% $\lvert H_k(t)\rvert$ and $\phi_k(t)$ across subcarriers $k$ and windows $t$;
+% this variation is the signal exploited for activity/fall recognition.
+
+% --- CSI tensor across antennas and subcarriers (general form) ---
+\begin{equation}\label{eq:csi-tensor}
+  \mathbf{H}(t) \in \mathbb{C}^{\,N_r \times N_t \times K},
+\end{equation}
+% $N_r$ receive antennas, $N_t$ transmit antennas, $K$ subcarriers, per window $t$.
+% (Dataset-specific: UT-HAR/SenseFi processed windows flatten the antenna-subcarrier
+%  dimensions; the exact antenna/subcarrier factorization is dataset-defined. % citation needed)
+
+% --- Processed CSI window used by the classifier ---
+\begin{equation}\label{eq:processed-window}
+  x_i \in \mathbb{R}^{\,C \times T \times S}, \qquad (C,T,S)=(1,\,250,\,90),
+\end{equation}
+% $x_i$ is the processed (real-valued) CSI window consumed by the classifier;
+% $C$ channel, $T$ time samples, $S$ flattened subcarrier-antenna features.
+% Label and dataset:
+\begin{equation}\label{eq:dataset}
+  y_i \in \{0,\dots,K-1\},\qquad
+  \mathcal{D}=\{(x_i,y_i)\}_{i=1}^{N},\qquad K=7 .
+\end{equation}
+
+% --- Preprocessing / normalization (thesis-safe statement) ---
+% The benchmark min-max / standardizes processed CSI windows. If a per-feature
+% standardization is reported it can be written as:
+\begin{equation}\label{eq:normalization}
+  \tilde{x} = \frac{x-\mu}{\sigma},
+\end{equation}
+% but the precise normalization is the benchmark's; the key claim is:
+% "The adversarial perturbations in this thesis are applied to the processed,
+%  normalized CSI tensor representation, not to raw over-the-air RF waveforms."
+
+% --- Perturbation domain clarification (digital-domain, processed tensor) ---
+\begin{equation}\label{eq:perturb-domain}
+  x_{\mathrm{adv}} = x + \delta, \qquad \lVert\delta\rVert_{\infty}\le\epsilon .
+\end{equation}
+% $\delta$ is a digital-domain perturbation of the processed CSI tensor. It is
+% NOT physical RF injection, NOT over-the-air transmission, and NOT channel-level
+% spoofing. This is a white-box, digital-domain robustness setting.
+
+
+% =====================================================================
+% LAYER 2 -- Classifier, learning, and adversarial attacks  (Chapters 3-4)
+% =====================================================================
+
+% --- Classifier, logits, softmax, prediction ---
+\begin{align}
+  z_\theta(x) &\in \mathbb{R}^{K}, \label{eq:logits}\\
+  p_\theta(y=k\mid x) &= \frac{\exp\!\big(z_{\theta,k}(x)\big)}{\sum_{j=1}^{K}\exp\!\big(z_{\theta,j}(x)\big)}, \label{eq:softmax}\\
+  f_\theta(x) &= \hat{y} = \arg\max_{k}\, z_{\theta,k}(x) = \arg\max_{k}\, p_\theta(y=k\mid x). \label{eq:argmax}
+\end{align}
+
+% --- Cross-entropy and fall-weighted cross-entropy ---
+\begin{align}
+  \mathcal{L}_{\mathrm{CE}}(\theta;x,y) &= -\log p_\theta(y\mid x), \label{eq:ce}\\
+  \mathcal{L}_{\mathrm{FWCE}}(\theta;x,y) &= -\,w_y\,\log p_\theta(y\mid x),
+     \qquad w_{c_f}=3,\;\; w_{c}=1\ (c\neq c_f). \label{eq:fwce}
+\end{align}
+% $c_f$ is the fall class; the fall class weight $w_{c_f}=3$ is the value used in
+% Variant D / Variant E training; non-fall weights are $1$.
+
+% --- FGSM ---
+\begin{equation}\label{eq:fgsm}
+  x_{\mathrm{adv}} = x + \epsilon\,\operatorname{sign}\!\big(\nabla_x \mathcal{L}_{\mathrm{CE}}(\theta;x,y)\big).
+\end{equation}
+
+% --- PGD ($\ell_\infty$, projected) ---
+\begin{equation}\label{eq:pgd}
+  x^{(m+1)} = \Pi_{B_\infty(x,\epsilon)}\!\Big(x^{(m)} + \alpha\,\operatorname{sign}\!\big(\nabla_x \mathcal{L}_{\mathrm{CE}}(\theta;x^{(m)},y)\big)\Big),
+\end{equation}
+% $\Pi_{B_\infty(x,\epsilon)}(\cdot)$ projects onto the $\ell_\infty$ ball of radius
+% $\epsilon$ around $x$ (no $[0,1]$ pixel clamp: processed CSI, not images).
+% Evaluation PGD: $M=10$ steps, $\alpha=\epsilon/6$, headline $\epsilon=0.030$.
+% (Variant D/E TRAINING PGD uses $M=7$, $\alpha=\epsilon/4$ for CPU tractability.)
+
+% --- Epsilon sweep and fall recall as a function of budget ---
+\begin{equation}\label{eq:eps-sweep}
+  R_f(\epsilon) = \text{fall recall under attack budget } \epsilon,
+  \quad \epsilon \in \mathcal{E},
+\end{equation}
+% $\mathcal{E}=\{0,0.0025,\dots,0.075\}$ is the 18-point sweep grid (committed).
+
+% --- Collapse-epsilon thresholds ---
+\begin{align}
+  \epsilon_{<0.5} &= \min\{\epsilon\in\mathcal{E} : R_f(\epsilon) < 0.5\}, \label{eq:collapse-half}\\
+  \epsilon_{0}    &= \min\{\epsilon\in\mathcal{E} : R_f(\epsilon) = 0\}, \label{eq:collapse-zero}\\
+  \epsilon_{\Delta 0.10} &= \min\{\epsilon\in\mathcal{E} : R_f(0)-R_f(\epsilon)\ge 0.10\}. \label{eq:collapse-drop}
+\end{align}
+
+
+% =====================================================================
+% LAYER 3 -- Safety-proxy metrics, defenses, selection  (Chapters 5-6)
+% =====================================================================
+
+% --- Binary fall-alert reduction and confusion counts ---
+% A multiclass prediction is mapped to a binary fall alert: "fall" iff $\hat{y}=c_f$.
+\begin{equation}\label{eq:fall-binary}
+  \text{alert}(x)=\mathbb{1}[\,f_\theta(x)=c_f\,].
+\end{equation}
+\begin{align}
+  TP_f &= \lvert\{i: y_i=c_f,\ \hat{y}_i=c_f\}\rvert, &
+  FN_f &= \lvert\{i: y_i=c_f,\ \hat{y}_i\neq c_f\}\rvert, \label{eq:tpfn}\\
+  FP_f &= \lvert\{i: y_i\neq c_f,\ \hat{y}_i=c_f\}\rvert, &
+  TN_f &= \lvert\{i: y_i\neq c_f,\ \hat{y}_i\neq c_f\}\rvert. \label{eq:fptn}
+\end{align}
+
+% --- Safety-proxy metrics ---
+\begin{align}
+  \mathrm{Recall}_f &= \frac{TP_f}{TP_f+FN_f}, &
+  \mathrm{Miss}_f &= \frac{FN_f}{TP_f+FN_f}=1-\mathrm{Recall}_f, \label{eq:recall-miss}\\
+  \mathrm{FFA}_f &= FP_f, &
+  \mathrm{FFAR}_f &= \frac{FP_f}{FP_f+TN_f}, \label{eq:ffa}\\
+  \mathrm{Spec}_f &= \frac{TN_f}{TN_f+FP_f}=1-\mathrm{FFAR}_f, &
+  \mathrm{PPV}_f &= \frac{TP_f}{TP_f+FP_f}, \label{eq:spec-ppv}\\
+  \mathrm{F1}_f &= \frac{2\,\mathrm{PPV}_f\,\mathrm{Recall}_f}{\mathrm{PPV}_f+\mathrm{Recall}_f}, &
+  \mathrm{MacroF1} &= \frac{1}{K}\sum_{k=1}^{K}\mathrm{F1}_k. \label{eq:f1-macro}
+\end{align}
+\begin{equation}\label{eq:balanced-acc}
+  \mathrm{BA} = \frac{1}{K}\sum_{k=1}^{K}\mathrm{Recall}_k \quad\text{(balanced accuracy, if reported).}
+\end{equation}
+
+% --- Class-normalized false alarms (source class $c\neq c_f$) ---
+\begin{align}
+  FA_{c\to f} &= \lvert\{i: y_i=c,\ \hat{y}_i=c_f\}\rvert, &
+  \mathrm{Rate}_{c\to f} &= \frac{FA_{c\to f}}{\lvert\{i: y_i=c\}\rvert}, \label{eq:class-fa}\\
+  FA_{\mathrm{walk/run}\to f} &= FA_{\mathrm{walk}\to f}+FA_{\mathrm{run}\to f}. &&  \label{eq:motion-fa}
+\end{align}
+
+% --- Variant D (frozen) adversarial-training objective ---
+% Per batch, batch-split mixture (50% clean / 25% FGSM / 25% PGD); training
+% epsilon sampled from $\{0.005,0.015,0.030\}$. With $\mathcal{B}=\mathcal{B}_{\mathrm{clean}}
+% \cup \mathcal{B}_{\mathrm{fgsm}}\cup\mathcal{B}_{\mathrm{pgd}}$:
+\begin{equation}\label{eq:variantD-loss}
+  \mathcal{L}_{D} = \frac{1}{|\mathcal{B}|}\sum_{i\in\mathcal{B}} \mathcal{L}_{\mathrm{FWCE}}\big(\theta;\,\tilde{x}_i,\,y_i\big),
+  \quad
+  \tilde{x}_i=\begin{cases} x_i, & i\in\mathcal{B}_{\mathrm{clean}}\\ x_i^{\mathrm{fgsm}}, & i\in\mathcal{B}_{\mathrm{fgsm}}\\ x_i^{\mathrm{pgd}}, & i\in\mathcal{B}_{\mathrm{pgd}} \end{cases}
+\end{equation}
+% This is an experimental adversarial-training recipe, NOT a certified defense.
+
+% --- Variant E motion hard-negative loss ($\lambda_{\mathrm{motion}}=1.0$) ---
+\begin{align}
+  \mathcal{L}_{E} &= \mathcal{L}_{\mathrm{FWCE}} + \lambda_{\mathrm{motion}}\,\mathcal{L}_{\mathrm{motion}}, \label{eq:variantE-loss}\\
+  \mathcal{L}_{\mathrm{motion}} &= \frac{1}{\lvert\mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}}\rvert}
+     \sum_{i\in\mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}}} p_\theta\!\big(y=c_f \mid x_i^{\mathrm{adv}}\big), \label{eq:variantE-motion}\\
+  \mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}} &= \{\,i : y_i\in\{\mathrm{walk},\mathrm{run}\},\ x_i^{\mathrm{adv}}\ \text{adversarial}\,\}. \label{eq:variantE-set}
+\end{align}
+% $\lambda_{\mathrm{motion}}=1.0$ for the frozen runs. The term penalizes the fall
+% PROBABILITY assigned to adversarial walk/run windows, reducing motion-class
+% false alarms. LIMITATION: it is a probability penalty, NOT a margin guarantee --
+% it can reduce the NUMBER of motion false alarms but does not guarantee that
+% residual false alarms become low-confidence.
+
+% --- Logit-margin false-alarm geometry ---
+\begin{equation}\label{eq:margin-def}
+  m_{f,c}(x) = z_f(x) - z_c(x).
+\end{equation}
+% A walk/run window is a false alarm iff $m_{f,y}(x_{\mathrm{adv}})>0$; large
+% positive $m_{f,y}$ is a high-confidence false-alarm geometry. Empirically the
+% residual walk/run false alarms have large positive $m_{f,y}$ (confidently wrong).
+
+% --- FUTURE WORK ONLY: margin-based motion hard-negative loss (NOT implemented) ---
+\begin{equation}\label{eq:margin-loss-future}
+  \mathcal{L}_{\mathrm{margin}} = \frac{1}{\lvert\mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}}\rvert}
+     \sum_{i\in\mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}}} \max\!\big(0,\ \gamma + z_f(x_i^{\mathrm{adv}}) - z_{y_i}(x_i^{\mathrm{adv}})\big).
+\end{equation}
+% PROPOSED future work; margin $\gamma>0$. This loss has NOT been implemented or
+% evaluated in this thesis and must be described as future work.
+
+% --- Selection-v2 checkpoint rule ---
+% Guard (eligibility for the safety-score pick):
+\begin{equation}\label{eq:v2-guard}
+  \mathrm{Acc}^{\mathrm{val}}_{\mathrm{clean}} \ge 0.70
+  \quad\text{and}\quad
+  \mathrm{MacroF1}^{\mathrm{val}}_{\mathrm{clean}} \ge 0.65 .
+\end{equation}
+% Safety score (validation only):
+\begin{align}
+  \mathrm{SafetyScore} &= 0.35\,R_{\mathrm{clean}} + 0.45\,R_{\mathrm{pgd}} + 0.10\,R_{\mathrm{fgsm}} - 0.10\,\mathrm{NFAB}, \label{eq:safetyscore}\\
+  \mathrm{NFAB} &= \tfrac{1}{2}\frac{FP^{\mathrm{val}}_{\mathrm{fgsm}}}{n_{\mathrm{nonfall}}} + \tfrac{1}{2}\frac{FP^{\mathrm{val}}_{\mathrm{pgd}}}{n_{\mathrm{nonfall}}} \in [0,1]. \label{eq:nfab}
+\end{align}
+% $R_{\mathrm{clean}},R_{\mathrm{pgd}},R_{\mathrm{fgsm}}$ are validation fall recalls
+% (clean / PGD@0.030 / FGSM@0.030); NFAB is the normalized false-alarm burden;
+% $n_{\mathrm{nonfall}}$ = non-fall validation windows. Candidates saved per run:
+%   v2safety   = guard-eligible $\arg\max$ SafetyScore;
+%   v2maxrec   = guard-eligible $\arg\max (R_{\mathrm{pgd}}^{\mathrm{val}},\,-FP^{\mathrm{val}}_{\mathrm{pgd}})$;
+%   v2lowFA    = guard-eligible, $R^{\mathrm{val}}_{\mathrm{pgd}}\ge 0.10$, $\arg\min (FP^{\mathrm{val}}_{\mathrm{pgd}},\,-R^{\mathrm{val}}_{\mathrm{pgd}})$;
+%   v2macroF1  = $\arg\max \mathrm{MacroF1}^{\mathrm{val}}$ (no guard).
+% Selection-v2 changes CHECKPOINT SELECTION ONLY (the original guard was 0.60/0.50);
+% the training loss is unchanged. It avoids clean-weak checkpoints and may yield a
+% more conservative attacked recall.
+
+
+% =====================================================================
+% LAYER 4 -- Decision / statistical / robustness-audit math  (Chapter 7)
+% =====================================================================
+
+% --- Pareto dominance on the recall/false-alarm frontier ---
+% Checkpoint $a$ dominates $b$ (both satisfying the clean guard, Eq.~\ref{eq:v2-guard}) iff:
+\begin{equation}\label{eq:pareto}
+  \mathrm{Recall}_f(a)\ge \mathrm{Recall}_f(b)\ \wedge\ FP_f(a)\le FP_f(b)
+  \ \wedge\ \big(\mathrm{Recall}_f(a)>\mathrm{Recall}_f(b)\ \vee\ FP_f(a)<FP_f(b)\big).
+\end{equation}
+% A point is Pareto-efficient if it is not dominated by any guard-satisfying point.
+
+% --- Cost-sensitive decision analysis (experimental sensitivity only) ---
+\begin{equation}\label{eq:cost}
+  \mathrm{Cost} = \lambda_{FN}\,FN_f + \lambda_{FP}\,FP_f,
+  \qquad \lambda_{FN}:\lambda_{FP}\in\{1,2,5,10,20,50\}:1 .
+\end{equation}
+% These are EXPERIMENTAL sensitivity ratios, NOT clinical cost ratios.
+
+% --- Statistical uncertainty: 95\% Wilson interval for a recall estimate ---
+% For $\hat{p}=TP_f/n_f$ with $z=1.96$ (95\%):
+\begin{equation}\label{eq:wilson}
+  \mathrm{CI}_{95\%}(\hat{p}) =
+  \frac{\hat{p}+\frac{z^2}{2n_f}\ \pm\ z\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n_f}+\dfrac{z^2}{4n_f^2}}}{1+\dfrac{z^2}{n_f}} .
+\end{equation}
+% $n_f=45$ test fall windows (val $n_f=44$): recall estimates are fragile and have
+% wide, overlapping intervals; false-alarm counts over $TN_f+FP_f=455$ non-fall
+% windows are more stable. Differences of a few fall windows must not be overclaimed.
+
+% --- Validation-to-test reliability gaps ---
+\begin{align}
+  \mathrm{Gap}_R &= R_f^{\mathrm{val}} - R_f^{\mathrm{test}}, &
+  \mathrm{Gap}_{FP} &= FP_f^{\mathrm{val}} - FP_f^{\mathrm{test}}. \label{eq:valtest-gap}
+\end{align}
+% Empirically $\mathrm{Gap}_R$ was large on one seed (validation recall optimistic)
+% while $\mathrm{Gap}_{FP}$ transferred reliably -- motivating selection on
+% false-alarm + clean guards rather than validation recall, and saving multiple
+% candidate checkpoints.
+
+% --- Calibration metrics under PGD@0.030 ---
+\begin{align}
+  \mathrm{ECE} &= \sum_{m=1}^{M_b}\frac{\lvert B_m\rvert}{n}\,\big\lvert \mathrm{acc}(B_m)-\mathrm{conf}(B_m)\big\rvert, \label{eq:ece}\\
+  \mathrm{Brier} &= \frac{1}{n}\sum_{i=1}^{n}\sum_{k=1}^{K}\big(p_{ik}-\mathbb{1}[y_i=k]\big)^2, \label{eq:brier}\\
+  \mathrm{NLL} &= -\frac{1}{n}\sum_{i=1}^{n}\log p_\theta(y_i\mid x_i). \label{eq:nll}
+\end{align}
+% $B_m$ are confidence bins ($M_b=10$). Empirically residual motion false alarms
+% are HIGH-confidence (fall probability higher than for true falls), so a single
+% fall-probability threshold cannot separate them: thresholding is not sufficient.
+
+% --- Stronger-PGD sanity check (gradient-masking screen) ---
+\begin{equation}\label{eq:stronger-pgd}
+  R_f^{\mathrm{PGD\text{-}10}}(\epsilon)\ \ge\ R_f^{\mathrm{PGD\text{-}20}}(\epsilon)\ \ge\ R_f^{\mathrm{PGD\text{-}40}}(\epsilon),
+  \quad \epsilon=0.030 .
+\end{equation}
+% Monotonic recall decrease under stronger PGD (fixed- and random-start) provides
+% NO EVIDENCE of gradient masking in this evaluation; it is NOT a formal proof of
+% robustness or of the absence of all masking.
+
+% --- Seed-44 pre-registration (frozen criteria; experimental, not clinical) ---
+% Frozen: $\mathcal{L}_E$ (Eq.~\ref{eq:variantE-loss}), $\lambda_{\mathrm{motion}}=1.0$,
+% selection-v2 guard (Eq.~\ref{eq:v2-guard}). Success (all): clean guard holds on
+% test; clean fall recall $\ge 0.90$; test $R_f$ strictly above the FGSM-defense
+% floor with Wilson lower bound $>0$; total and walk/run false alarms $\le 0.70\times$
+% Variant~D; collapse-$\epsilon$ reported. Failure (any): guard fails on test, or
+% $R_f\le$ FGSM-defense floor / collapses to $0$ under PGD-20. Margin-loss trigger:
+% recall at floor AND residual walk/run false alarms remain high-confidence.
+% These are EXPERIMENTAL criteria, NOT clinical thresholds.

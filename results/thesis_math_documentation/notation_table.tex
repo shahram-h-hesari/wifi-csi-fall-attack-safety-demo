@@ -1,0 +1,64 @@
+% =====================================================================
+% notation_table.tex  -- master notation table for the thesis math.
+% DOCUMENTATION ONLY (not yet inserted). Requires booktabs + amssymb.
+% "Introduced" column references the snippet equation labels in thesis_math_snippets.tex.
+% =====================================================================
+\begin{table}[t]
+  \centering
+  \caption{Mathematical notation used throughout the thesis.}
+  \label{tab:notation}
+  \small
+  \begin{tabular}{l l l l}
+    \toprule
+    Symbol & Meaning & Introduced & Notes \\
+    \midrule
+    $k$ & OFDM subcarrier index & Eq.~\ref{eq:ofdm-rx} & Layer 1 (CSI) \\
+    $t$ & packet / window / time index & Eq.~\ref{eq:ofdm-rx} & \\
+    $H_k(t)$ & channel frequency response (CSI) & Eq.~\ref{eq:ofdm-rx} & complex-valued \\
+    $\hat{H}_k(t)$ & estimated CSI from training symbols & Eq.~\ref{eq:csi-estimate} & simplified LS estimate \\
+    $\lvert H_k\rvert,\ \phi_k$ & CSI amplitude, phase & Eq.~\ref{eq:csi-polar} & motion-sensitive \\
+    $N_r,N_t,K$ & rx antennas, tx antennas, subcarriers & Eq.~\ref{eq:csi-tensor} & dataset-defined \\
+    $x_i$ & processed CSI window (classifier input) & Eq.~\ref{eq:processed-window} & $\in\mathbb{R}^{1\times250\times90}$ \\
+    $y_i$ & activity label & Eq.~\ref{eq:dataset} & $K=7$ classes \\
+    $\mathcal{D}$ & labeled dataset $\{(x_i,y_i)\}$ & Eq.~\ref{eq:dataset} & UT-HAR/SenseFi \\
+    $\tilde{x}$ & normalized window & Eq.~\ref{eq:normalization} & benchmark preprocessing \\
+    $\delta$ & adversarial perturbation & Eq.~\ref{eq:perturb-domain} & digital-domain, processed tensor \\
+    $\epsilon$ & $\ell_\infty$ perturbation budget & Eq.~\ref{eq:perturb-domain} & headline $0.030$ \\
+    $\alpha$ & PGD step size & Eq.~\ref{eq:pgd} & eval $\epsilon/6$ \\
+    $M$ & PGD iterations & Eq.~\ref{eq:pgd} & eval $10$ (train $7$) \\
+    $\Pi_{B_\infty(x,\epsilon)}$ & projection onto $\ell_\infty$ ball & Eq.~\ref{eq:pgd} & no $[0,1]$ clamp \\
+    $f_\theta$ & classifier (argmax) & Eq.~\ref{eq:argmax} & parameters $\theta$ \\
+    $z_\theta(x)$ & logits $\in\mathbb{R}^{K}$ & Eq.~\ref{eq:logits} & \\
+    $p_\theta(y{=}k\mid x)$ & softmax probability & Eq.~\ref{eq:softmax} & \\
+    $\hat{y}$ & predicted label & Eq.~\ref{eq:argmax} & \\
+    $\mathcal{L}_{\mathrm{CE}}$ & cross-entropy loss & Eq.~\ref{eq:ce} & \\
+    $\mathcal{L}_{\mathrm{FWCE}}$ & fall-weighted CE & Eq.~\ref{eq:fwce} & $w_{c_f}=3$ \\
+    $w_y$ & class loss weight & Eq.~\ref{eq:fwce} & fall $3$, else $1$ \\
+    $c_f$ & fall class & Eq.~\ref{eq:fall-binary} & index $1$ \\
+    $R_f,\ R_f(\epsilon)$ & fall recall (at budget $\epsilon$) & Eq.~\ref{eq:recall-miss},\ref{eq:eps-sweep} & safety-proxy metric \\
+    $\mathrm{Miss}_f$ & missed-fall rate $=1-R_f$ & Eq.~\ref{eq:recall-miss} & \\
+    $TP_f,FN_f,FP_f,TN_f$ & binary fall-alert confusion counts & Eq.~\ref{eq:tpfn},\ref{eq:fptn} & $c_f$ vs.\ non-$c_f$ \\
+    $\mathrm{FFA}_f,\mathrm{FFAR}_f$ & false-fall alarms, alarm rate & Eq.~\ref{eq:ffa} & $\mathrm{FFA}_f=FP_f$ \\
+    $\mathrm{Spec}_f,\mathrm{PPV}_f$ & specificity, precision & Eq.~\ref{eq:spec-ppv} & \\
+    $\mathrm{F1}_f,\mathrm{MacroF1}$ & binary / macro F1 & Eq.~\ref{eq:f1-macro} & \\
+    $FA_{c\to f},\mathrm{Rate}_{c\to f}$ & class-$c$ false alarms (count, rate) & Eq.~\ref{eq:class-fa} & walk/run dominant \\
+    $\epsilon_{<0.5},\epsilon_0,\epsilon_{\Delta0.10}$ & collapse-$\epsilon$ thresholds & Eq.~\ref{eq:collapse-half}--\ref{eq:collapse-drop} & \\
+    $\mathcal{L}_{D}$ & Variant D training loss & Eq.~\ref{eq:variantD-loss} & mixed clean/FGSM/PGD \\
+    $\mathcal{L}_{E}$ & Variant E loss & Eq.~\ref{eq:variantE-loss} & $+\lambda_{\mathrm{motion}}\mathcal{L}_{\mathrm{motion}}$ \\
+    $\mathcal{L}_{\mathrm{motion}}$ & motion hard-negative penalty & Eq.~\ref{eq:variantE-motion} & mean $p_\theta(c_f\mid x^{\mathrm{adv}})$ \\
+    $\lambda_{\mathrm{motion}}$ & motion penalty weight & Eq.~\ref{eq:variantE-loss} & $1.0$ (frozen) \\
+    $\mathcal{B}^{\mathrm{adv}}_{\mathrm{motion}}$ & adversarial walk/run set & Eq.~\ref{eq:variantE-set} & \\
+    $m_{f,c}(x)$ & logit margin $z_f-z_c$ & Eq.~\ref{eq:margin-def} & FA geometry \\
+    $\gamma$ & margin (future-work loss) & Eq.~\ref{eq:margin-loss-future} & NOT implemented \\
+    $\mathrm{SafetyScore}$ & selection-v2 score & Eq.~\ref{eq:safetyscore} & validation only \\
+    $R_{\mathrm{clean}},R_{\mathrm{pgd}},R_{\mathrm{fgsm}}$ & validation fall recalls & Eq.~\ref{eq:safetyscore} & \\
+    $\mathrm{NFAB}$ & normalized false-alarm burden & Eq.~\ref{eq:nfab} & $\in[0,1]$ \\
+    $n_{\mathrm{nonfall}}$ & non-fall validation windows & Eq.~\ref{eq:nfab} & \\
+    $\lambda_{FN},\lambda_{FP}$ & cost weights (FN, FP) & Eq.~\ref{eq:cost} & experimental ratios \\
+    $n_f$ & number of fall windows & Eq.~\ref{eq:wilson} & test $45$, val $44$ \\
+    $z$ & normal quantile (Wilson) & Eq.~\ref{eq:wilson} & $1.96$ at 95\% \\
+    $\mathrm{Gap}_R,\mathrm{Gap}_{FP}$ & val$-$test recall / FP gap & Eq.~\ref{eq:valtest-gap} & \\
+    $\mathrm{ECE},\mathrm{Brier},\mathrm{NLL}$ & calibration metrics & Eq.~\ref{eq:ece}--\ref{eq:nll} & under PGD \\
+    \bottomrule
+  \end{tabular}
+\end{table}

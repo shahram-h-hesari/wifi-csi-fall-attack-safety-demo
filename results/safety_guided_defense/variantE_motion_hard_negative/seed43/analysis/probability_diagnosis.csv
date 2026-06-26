@@ -1,0 +1,17 @@
+checkpoint,group,n,fallprob_median,fallprob_p25,fallprob_p75,maxconf_median
+D_safety,true_fall,45,0.2724,0.1696,0.3698,0.5213
+D_safety,walk_false_alarm,52,0.8659,0.7928,0.9350,0.8659
+D_safety,run_false_alarm,67,0.7996,0.6420,0.8692,0.7996
+D_safety,other_false_alarm,41,0.8326,0.5971,0.8962,0.8326
+D_macroF1,true_fall,45,0.0656,0.0286,0.1681,0.5296
+D_macroF1,walk_false_alarm,21,0.8193,0.6217,0.9088,0.8193
+D_macroF1,run_false_alarm,36,0.6820,0.5790,0.8001,0.6820
+D_macroF1,other_false_alarm,20,0.7220,0.5489,0.8805,0.7220
+E_lam1p0_bySafetyScore,true_fall,45,0.2561,0.1686,0.4054,0.4552
+E_lam1p0_bySafetyScore,walk_false_alarm,48,0.7126,0.5814,0.8623,0.7126
+E_lam1p0_bySafetyScore,run_false_alarm,60,0.7515,0.5993,0.8211,0.7515
+E_lam1p0_bySafetyScore,other_false_alarm,43,0.7075,0.5432,0.8218,0.7075
+E_lam1p0_byValMacroF1,true_fall,45,0.0239,0.0113,0.0543,0.6167
+E_lam1p0_byValMacroF1,walk_false_alarm,9,0.5321,0.5011,0.8779,0.5321
+E_lam1p0_byValMacroF1,run_false_alarm,12,0.5198,0.4347,0.7271,0.5198
+E_lam1p0_byValMacroF1,other_false_alarm,17,0.8151,0.6675,0.8565,0.8151

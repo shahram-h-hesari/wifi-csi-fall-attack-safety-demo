@@ -1,0 +1,16 @@
+checkpoint,condition,lie down,walk,pickup,run,sit down,stand up,total_false_fall
+FGSM_defense,clean,0,0,0,0,0,0,0
+FGSM_defense,fgsm003,0,4,2,2,0,4,12
+FGSM_defense,pgd003,0,8,4,18,0,5,35
+D_safety,clean,2,13,11,9,3,9,47
+D_safety,fgsm003,14,44,10,56,1,11,136
+D_safety,pgd003,14,52,11,67,5,11,160
+D_macroF1,clean,0,0,6,1,2,4,13
+D_macroF1,fgsm003,2,16,5,22,3,9,57
+D_macroF1,pgd003,2,21,5,36,3,10,77
+E_lam1p0_bySafetyScore,clean,4,10,9,6,3,10,42
+E_lam1p0_bySafetyScore,fgsm003,14,32,8,49,4,15,122
+E_lam1p0_bySafetyScore,pgd003,17,48,8,60,5,13,151
+E_lam1p0_byValMacroF1,clean,0,0,2,0,0,3,5
+E_lam1p0_byValMacroF1,fgsm003,1,5,3,4,1,7,21
+E_lam1p0_byValMacroF1,pgd003,2,9,5,12,3,7,38

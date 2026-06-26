@@ -1,0 +1,11 @@
+model_defense,selection_method,clean_accuracy,clean_fall_recall,fgsm_0p030_fall_recall,fgsm_false_fall_alarms,pgd_0p030_fall_recall,pgd_false_fall_alarms,fgsm_collapse_epsilon,pgd_collapse_epsilon,notes
+Clean LeNet baseline,val_macro_f1,0.970,0.956,0.000,47,0.000,48,0.005,0.005,undefended reference
+Existing FGSM defense,0.5*cleanF1+0.5*fgsmF1,0.834,0.911,0.311,27,0.089,54,0.025,0.018,prior FGSM adversarial training
+safety_guided_variantA,safety_score,0.678,0.822,0.222,52,0.133,76,0.020,0.018,safety-proxy-guided adversarial training
+safety_guided_variantA,val_macro_f1,0.706,0.711,0.111,11,0.044,25,0.007,0.007,safety-proxy-guided adversarial training
+safety_guided_variantB,safety_score,0.580,0.978,0.489,162,0.444,182,0.030,0.025,safety-proxy-guided adversarial training
+safety_guided_variantB,val_macro_f1,0.668,0.911,0.244,74,0.089,105,0.025,0.018,safety-proxy-guided adversarial training
+safety_guided_variantC,safety_score,0.642,0.978,0.556,146,0.489,190,0.040,0.030,safety-proxy-guided adversarial training
+safety_guided_variantC,val_macro_f1,0.750,0.933,0.422,64,0.200,86,0.030,0.025,safety-proxy-guided adversarial training
+safety_guided_variantD,safety_score,0.746,1.000,0.778,123,0.444,157,0.045,0.030,safety-proxy-guided adversarial training
+safety_guided_variantD,val_macro_f1,0.848,0.956,0.467,70,0.133,79,0.030,0.025,safety-proxy-guided adversarial training

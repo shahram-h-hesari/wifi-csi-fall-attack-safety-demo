@@ -1,0 +1,10 @@
+checkpoint,condition,lie down,walk,pickup,run,sit down,stand up,total_false_fall
+FGSM_defense,clean,0,0,0,0,0,0,0
+FGSM_defense,fgsm003,0,4,2,2,0,4,12
+FGSM_defense,pgd003,0,8,4,18,0,5,35
+D_safety,clean,2,13,11,9,3,9,47
+D_safety,fgsm003,14,44,10,56,1,11,136
+D_safety,pgd003,14,52,11,67,5,11,160
+D_macroF1,clean,0,0,6,1,2,4,13
+D_macroF1,fgsm003,2,16,5,22,3,9,57
+D_macroF1,pgd003,2,21,5,36,3,10,77

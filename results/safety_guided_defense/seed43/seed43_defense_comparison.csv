@@ -1,0 +1,5 @@
+model_defense,selection_method,clean_accuracy,clean_fall_recall,fgsm_0p030_fall_recall,fgsm_false_fall_alarms,pgd_0p030_fall_recall,pgd_false_fall_alarms,fgsm_collapse_epsilon,pgd_collapse_epsilon,notes
+Clean LeNet baseline,val_macro_f1,0.978,0.978,0.000,68,0.000,65,0.007,0.007,undefended reference
+Existing FGSM defense,0.5*cleanF1+0.5*fgsmF1,0.902,0.956,0.400,12,0.022,35,0.030,0.018,prior FGSM adversarial training
+Variant D safety-guided,safety_score,0.720,1.000,0.644,136,0.289,160,0.035,0.030,"frozen Variant D, safety-guided selection"
+Variant D macro-F1,val_macro_f1,0.794,0.956,0.200,57,0.111,77,0.025,0.018,"frozen Variant D, standard-selection comparison"

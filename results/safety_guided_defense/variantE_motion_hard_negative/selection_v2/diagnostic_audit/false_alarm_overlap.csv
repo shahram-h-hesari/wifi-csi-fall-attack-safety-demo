@@ -1,0 +1,11 @@
+seed,metric,value,detail
+42,v2safety_total_FA,117,
+42,removed_vs_priorE,0,walk/run share=0/0
+42,removed_vs_D,53,
+42,introduced_vs_priorE,0,[]
+42,common_FA_D_priorE_v2,104,shared hard cases
+43,v2safety_total_FA,79,
+43,removed_vs_priorE,75,walk/run share=58/75
+43,removed_vs_D,87,
+43,introduced_vs_priorE,3,"[117, 154, 332]"
+43,common_FA_D_priorE_v2,70,shared hard cases

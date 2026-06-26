@@ -1,0 +1,13 @@
+seed,metric,value,detail
+42,n_fall_windows,45,
+42,detected_by_all,0,[]
+42,missed_by_all,18,"[67, 68, 69, 70, 73, 75, 77, 78, 83, 84, 87, 90, 95, 96, 102, 103, 105, 106]"
+42,lost_by_v2safety_vs_priorE,0,[]
+42,recovered_by_v2safety_vs_priorE,0,[]
+42,lost_by_v2safety_vs_D,10,"[74, 80, 82, 86, 88, 89, 93, 97, 99, 104]"
+43,n_fall_windows,45,
+43,detected_by_all,0,[]
+43,missed_by_all,22,"[68, 70, 72, 73, 74, 75, 78, 80, 82, 84, 86, 87, 88, 89, 90, 96, 97, 99, 103, 105, 106, 108]"
+43,lost_by_v2safety_vs_priorE,13,"[66, 69, 71, 77, 81, 83, 91, 95, 98, 102, 107, 109, 110]"
+43,recovered_by_v2safety_vs_priorE,1,[67]
+43,lost_by_v2safety_vs_D,9,"[79, 85, 91, 95, 98, 100, 101, 107, 109]"

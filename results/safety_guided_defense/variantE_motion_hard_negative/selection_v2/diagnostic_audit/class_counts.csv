@@ -1,0 +1,22 @@
+split,class_index,class_name,count
+train,0,lie down,525
+train,1,fall,354
+train,2,walk,1172
+train,3,pickup,396
+train,4,run,967
+train,5,sit down,320
+train,6,stand up,243
+val,0,lie down,66
+val,1,fall,44
+val,2,walk,146
+val,3,pickup,49
+val,4,run,121
+val,5,sit down,40
+val,6,stand up,30
+test,0,lie down,66
+test,1,fall,45
+test,2,walk,147
+test,3,pickup,50
+test,4,run,121
+test,5,sit down,40
+test,6,stand up,31

@@ -1,0 +1,13 @@
+seed,FN_to_FP,preferred,cost_D_safety,cost_FGSM_defense,cost_priorE_macroF1,cost_priorE_safety,cost_v2lowFA,cost_v2safety
+42,1:1,priorE_macroF1,182,95,65,146,100,146
+42,2:1,priorE_macroF1,207,136,110,175,139,175
+42,5:1,priorE_macroF1,282,259,245,262,256,262
+42,10:1,D_safety,407,464,470,407,451,407
+42,20:1,D_safety,657,874,920,697,841,697
+42,50:1,D_safety,1407,2104,2270,1567,2011,1567
+43,1:1,FGSM_defense,192,79,82,179,105,119
+43,2:1,FGSM_defense,224,123,126,207,147,159
+43,5:1,FGSM_defense,320,255,258,291,273,279
+43,10:1,priorE_safety,480,475,478,431,483,479
+43,20:1,priorE_safety,800,915,918,711,903,879
+43,50:1,priorE_safety,1760,2235,2238,1551,2163,2079

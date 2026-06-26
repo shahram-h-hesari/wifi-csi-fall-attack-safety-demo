@@ -1,0 +1,7 @@
+seed,checkpoint,selected_epoch,val_clean_acc,test_clean_acc,val_clean_macro_f1,test_clean_macro_f1,val_pgd_recall,test_pgd_recall,val_pgd_false_alarms,test_pgd_false_alarms,val_minus_test_recall
+42,priorE_safety,56,0.858871,0.806000,0.851391,0.789737,0.386,0.356,101,117,0.031
+42,v2safety,56,0.858871,0.806000,0.851391,0.789737,0.386,0.356,101,117,0.031
+42,v2lowFA,64,0.836694,0.818000,0.830907,0.798563,0.136,0.133,52,61,0.003
+43,priorE_safety,18,0.643145,0.630000,0.640081,0.599734,0.432,0.378,146,151,0.054
+43,v2safety,24,0.737903,0.720000,0.711082,0.669172,0.273,0.111,81,79,0.162
+43,v2lowFA,31,0.784274,0.766000,0.770917,0.743247,0.182,0.067,49,63,0.115

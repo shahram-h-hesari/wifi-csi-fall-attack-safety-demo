@@ -1,0 +1,61 @@
+seed,checkpoint,true_class,n_class_windows,to_fall_count,to_fall_rate
+42,FGSM_defense,lie down,66,1,0.015
+42,FGSM_defense,walk,147,15,0.102
+42,FGSM_defense,pickup,50,4,0.080
+42,FGSM_defense,run,121,24,0.198
+42,FGSM_defense,sit down,40,1,0.025
+42,FGSM_defense,stand up,31,9,0.290
+42,D_safety,lie down,66,12,0.182
+42,D_safety,walk,147,55,0.374
+42,D_safety,pickup,50,10,0.200
+42,D_safety,run,121,65,0.537
+42,D_safety,sit down,40,2,0.050
+42,D_safety,stand up,31,13,0.419
+42,priorE_safety,lie down,66,10,0.152
+42,priorE_safety,walk,147,37,0.252
+42,priorE_safety,pickup,50,9,0.180
+42,priorE_safety,run,121,43,0.355
+42,priorE_safety,sit down,40,5,0.125
+42,priorE_safety,stand up,31,13,0.419
+42,v2safety,lie down,66,10,0.152
+42,v2safety,walk,147,37,0.252
+42,v2safety,pickup,50,9,0.180
+42,v2safety,run,121,43,0.355
+42,v2safety,sit down,40,5,0.125
+42,v2safety,stand up,31,13,0.419
+42,v2lowFA,lie down,66,1,0.015
+42,v2lowFA,walk,147,16,0.109
+42,v2lowFA,pickup,50,7,0.140
+42,v2lowFA,run,121,20,0.165
+42,v2lowFA,sit down,40,4,0.100
+42,v2lowFA,stand up,31,13,0.419
+43,FGSM_defense,lie down,66,0,0.000
+43,FGSM_defense,walk,147,8,0.054
+43,FGSM_defense,pickup,50,4,0.080
+43,FGSM_defense,run,121,18,0.149
+43,FGSM_defense,sit down,40,0,0.000
+43,FGSM_defense,stand up,31,5,0.161
+43,D_safety,lie down,66,14,0.212
+43,D_safety,walk,147,52,0.354
+43,D_safety,pickup,50,11,0.220
+43,D_safety,run,121,67,0.554
+43,D_safety,sit down,40,5,0.125
+43,D_safety,stand up,31,11,0.355
+43,priorE_safety,lie down,66,17,0.258
+43,priorE_safety,walk,147,48,0.327
+43,priorE_safety,pickup,50,8,0.160
+43,priorE_safety,run,121,60,0.496
+43,priorE_safety,sit down,40,5,0.125
+43,priorE_safety,stand up,31,13,0.419
+43,v2safety,lie down,66,8,0.121
+43,v2safety,walk,147,14,0.095
+43,v2safety,pickup,50,8,0.160
+43,v2safety,run,121,36,0.298
+43,v2safety,sit down,40,3,0.075
+43,v2safety,stand up,31,10,0.323
+43,v2lowFA,lie down,66,7,0.106
+43,v2lowFA,walk,147,17,0.116
+43,v2lowFA,pickup,50,5,0.100
+43,v2lowFA,run,121,26,0.215
+43,v2lowFA,sit down,40,2,0.050
+43,v2lowFA,stand up,31,6,0.194

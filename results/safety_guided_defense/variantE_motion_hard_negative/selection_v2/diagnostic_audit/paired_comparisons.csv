@@ -1,0 +1,9 @@
+seed,modelA,modelB,fall_both_detected,A_only,B_only,neither,mcnemar_b,mcnemar_c,mcnemar_chi2_cc,note
+42,D_safety,v2safety,10,10,6,19,10,6,0.562,"b,c = discordant fall windows; chi2 with continuity correction"
+42,priorE_safety,v2safety,16,0,0,29,0,0,0.000,"b,c = discordant fall windows; chi2 with continuity correction"
+42,FGSM_defense,v2safety,3,1,13,28,1,13,8.643,"b,c = discordant fall windows; chi2 with continuity correction"
+42,v2lowFA,v2safety,3,3,13,26,3,13,5.062,"b,c = discordant fall windows; chi2 with continuity correction"
+43,D_safety,v2safety,4,9,1,31,9,1,4.900,"b,c = discordant fall windows; chi2 with continuity correction"
+43,priorE_safety,v2safety,4,13,1,27,13,1,8.643,"b,c = discordant fall windows; chi2 with continuity correction"
+43,FGSM_defense,v2safety,0,1,5,39,1,5,1.500,"b,c = discordant fall windows; chi2 with continuity correction"
+43,v2lowFA,v2safety,1,2,4,38,2,4,0.167,"b,c = discordant fall windows; chi2 with continuity correction"

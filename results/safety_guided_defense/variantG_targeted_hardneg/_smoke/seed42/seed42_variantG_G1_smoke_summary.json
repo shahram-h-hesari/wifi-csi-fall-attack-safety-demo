@@ -1,0 +1,30 @@
+{
+  "timestamp_utc": "2026-06-27T09:04:36.080869+00:00",
+  "stage": "variantG_smoke",
+  "setting": "G1",
+  "setting_desc": "balanced A+B",
+  "seed": 42,
+  "lam_s": 1.0,
+  "lam_f": 1.0,
+  "lam_t": 1.0,
+  "w_wr": 2.0,
+  "gamma_m": 0.5,
+  "gamma_f": 0.5,
+  "gamma_t": 0.5,
+  "epochs": 2,
+  "smoke_batches": 5,
+  "elapsed_seconds": 36.030937910079956,
+  "final_components": {
+    "mean_base": 1.9623113870620728,
+    "mean_src_motion": 0.1800328843295574,
+    "mean_fall_margin": 0.9718584179878235,
+    "mean_targeted": 0.18916844800114632,
+    "train_loss": 3.3033710956573485
+  },
+  "test_set_used": false,
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "4f5d9e6232fca65c9c589cea21a84744a7949fb3",
+  "note": "SMOKE ONLY -- not a pilot result; .pt checkpoints are disposable."
+}

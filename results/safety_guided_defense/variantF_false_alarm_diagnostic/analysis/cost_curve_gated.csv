@@ -1,0 +1,5 @@
+seed,point,recall,fp,cost_1to1,cost_2to1,cost_5to1,cost_10to1,cost_20to1,cost_50to1
+42,raw_variantF,0.667,115,130,145,190,265,415,865
+42,best_gated,0.667,111,126,141,186,261,411,861
+44,raw_variantF,0.622,112,129,146,197,282,452,962
+44,best_gated,0.622,112,129,146,197,282,452,962

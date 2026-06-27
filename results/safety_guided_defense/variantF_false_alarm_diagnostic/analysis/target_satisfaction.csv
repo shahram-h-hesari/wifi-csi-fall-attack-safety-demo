@@ -1,0 +1,11 @@
+seed,target,met,rule,thresholds,recall,fp,walkrun_fp,f1
+42,recall>=0.5 & FP<=100,YES,A_pfall,"(np.float64(0.36), None)",0.556,99,68,0.296
+42,recall>=0.5 & FP<=80,NO,,,,,,
+42,recall>=0.4 & FP<=80,NO,,,,,,
+42,recall>=0.4 & FP<=60,NO,,,,,,
+42,recall>=0.3 & FP<=50,NO,,,,,,
+44,recall>=0.5 & FP<=100,NO,,,,,,
+44,recall>=0.5 & FP<=80,NO,,,,,,
+44,recall>=0.4 & FP<=80,NO,,,,,,
+44,recall>=0.4 & FP<=60,NO,,,,,,
+44,recall>=0.3 & FP<=50,NO,,,,,,

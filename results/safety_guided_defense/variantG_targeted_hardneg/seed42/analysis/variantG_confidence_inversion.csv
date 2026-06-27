@@ -1,0 +1,9 @@
+setting,group,n,median_p_fall,median_fall_vs_rest_margin,median_entropy,median_conf_margin
+F42_ref,A_true_fall,30,0.415,0.456,1.414,0.141
+F42_ref,B_false_alarm,115,0.518,0.881,1.296,0.306
+G1,A_true_fall,31,0.301,0.371,1.771,0.085
+G1,B_false_alarm,104,0.313,0.421,1.694,0.106
+G2,A_true_fall,29,0.322,0.513,1.792,0.130
+G2,B_false_alarm,106,0.329,0.576,1.719,0.138
+G3,A_true_fall,22,0.314,0.267,1.609,0.071
+G3,B_false_alarm,108,0.380,0.621,1.594,0.171

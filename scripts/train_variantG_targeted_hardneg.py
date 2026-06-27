@@ -61,6 +61,12 @@ def import_variantF():
     return tvf
 
 
+def safety_score(vb):
+    """Identical to the frozen Variant F / selection-v2 SafetyScore (NOT changed)."""
+    return (0.35 * vb["val_clean_fall_recall"] + 0.45 * vb["val_pgd_fall_recall"]
+            + 0.10 * vb["val_fgsm_fall_recall"] - 0.10 * vb["val_normalized_false_alarm_burden"])
+
+
 # ----------------------------------------------------------------------------- targeted PGD (spec sec.5)
 def targeted_fall_pgd(model, inputs, fall_idx, atk_criterion, epsilon, steps, alpha):
     """Targeted-to-fall L-inf PGD: DESCENT on CE-to-fall (opposite sign of the untargeted
@@ -372,6 +378,120 @@ def run_smoke(args, F):
     return summary
 
 
+def run_full(args, F):
+    """Full single-setting Variant G training with the frozen selection-v2 checkpoint rule
+    (clean guard 0.70/0.65; candidates v2safety/v2maxrec/v2lowFA/v2macroF1). Mirrors the
+    Variant F training/selection loop exactly; only the per-batch loss differs (Variant G terms).
+    Writes to the REAL seed-42 namespace."""
+    cfg = SETTINGS[args.setting]; tsg, s1 = F["tsg"], F["s1"]; device = F["device"]
+    run = f"seed{args.seed}_variantG_{args.setting}"
+    base = F["exp"] / "results" / "safety_guided_defense" / "variantG_targeted_hardneg" / f"seed{args.seed}"
+    ck_dir = F["exp"] / "checkpoints" / "safety_guided_defense" / "variantG_targeted_hardneg" / f"seed{args.seed}"
+    logs_dir = base / "logs"; ana_dir = base / "analysis"; meta_dir = base / "metadata"
+    for d in (ck_dir, logs_dir, ana_dir, meta_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    ck = {k: ck_dir / f"{run}_{k}_best.pt" for k in ("v2safety", "v2maxrec", "v2lowFA", "v2macroF1")}
+    ck_last = ck_dir / f"{run}_last.pt"
+
+    print("=" * 72)
+    print(f"Variant G FULL training  setting={args.setting} ({cfg['desc']})  run={run}")
+    print(f"  lam_s={LAM_S} lam_f={LAM_F} lam_t={cfg['lam_t']} w_wr={cfg['w_wr']} "
+          f"gamma_m=gamma_f=gamma_t={GAMMA_M} fall_weight={args.fall_weight}")
+    print(f"  guard clean_acc>={V2_GUARD_ACC} & macro_f1>={V2_GUARD_F1} | "
+          f"epochs={args.epochs} patience={args.patience} min={args.min_epochs} eps={F['train_epsilons']}")
+    print("=" * 72)
+
+    history = []
+    best = {"v2safety": (-1e9, -1), "v2maxrec": ((-1e9, 1e9), -1),
+            "v2lowFA": ((1e9, -1e9), -1), "v2macroF1": (-1e9, -1)}
+    best_rec = {}; no_improve = 0; start = time.time()
+
+    for epoch in range(1, args.epochs + 1):
+        tr = train_one_epoch_variantG(F["model"], F["train_loader"], F["train_criterion"], F["atk_criterion"],
+                                      F["optimizer"], device, F["train_epsilons"], args.train_pgd_steps,
+                                      F["rng"], tsg, cfg["lam_t"], cfg["w_wr"], F["fall_idx"], max_batches=None)
+        vb = tsg.compute_validation_bundle(s1, F["model"], F["val_loader"], F["atk_criterion"], device)
+        sc = safety_score(vb)
+        acc = vb["val_clean_accuracy"]; f1 = vb["val_clean_macro_f1"]
+        rec = vb["val_pgd_fall_recall"]; fpv = vb["val_pgd_false_fall_alarms"]
+        eligible = (acc >= V2_GUARD_ACC and f1 >= V2_GUARD_F1)
+
+        def save(key):
+            torch.save({"epoch": epoch, "model_state_dict": F["model"].state_dict(), "selection_method": key,
+                        "val_bundle": vb, "safety_score": sc, "run_name": run, "args": vars(args)}, ck[key])
+
+        flags = {k: 0 for k in ck}
+        if eligible:
+            if sc > best["v2safety"][0]:
+                best["v2safety"] = (sc, epoch); best_rec["v2safety"] = vb; save("v2safety"); flags["v2safety"] = 1; no_improve = 0
+            if (rec, -fpv) > best["v2maxrec"][0]:
+                best["v2maxrec"] = ((rec, -fpv), epoch); best_rec["v2maxrec"] = vb; save("v2maxrec"); flags["v2maxrec"] = 1
+            if rec >= LOWFA_RECALL_FLOOR and (fpv, -rec) < best["v2lowFA"][0]:
+                best["v2lowFA"] = ((fpv, -rec), epoch); best_rec["v2lowFA"] = vb; save("v2lowFA"); flags["v2lowFA"] = 1
+        if not flags["v2safety"] and best["v2safety"][1] > 0:
+            no_improve += 1
+        if f1 > best["v2macroF1"][0]:
+            best["v2macroF1"] = (f1, epoch); best_rec["v2macroF1"] = vb; save("v2macroF1"); flags["v2macroF1"] = 1
+
+        history.append({"epoch": epoch, "train_loss": tr["train_loss"], "mean_base": tr["mean_base"],
+                        "mean_src_motion": tr["mean_src_motion"], "mean_fall_margin": tr["mean_fall_margin"],
+                        "mean_targeted": tr["mean_targeted"], "val_clean_accuracy": acc, "val_clean_macro_f1": f1,
+                        "val_clean_fall_recall": vb["val_clean_fall_recall"], "val_fgsm_fall_recall": vb["val_fgsm_fall_recall"],
+                        "val_pgd_fall_recall": rec, "val_fgsm_false_fall_alarms": vb["val_fgsm_false_fall_alarms"],
+                        "val_pgd_false_fall_alarms": fpv, "val_normalized_false_alarm_burden": vb["val_normalized_false_alarm_burden"],
+                        "safety_score": sc, "v2_eligible": int(eligible),
+                        "sel_v2safety": flags["v2safety"], "sel_v2maxrec": flags["v2maxrec"],
+                        "sel_v2lowFA": flags["v2lowFA"], "sel_v2macroF1": flags["v2macroF1"]})
+        print(f"Epoch {epoch:03d}/{args.epochs} | loss={tr['train_loss']:.3f} base={tr['mean_base']:.3f} "
+              f"src={tr['mean_src_motion']:.3f} fall={tr['mean_fall_margin']:.3f} tgt={tr['mean_targeted']:.3f} | "
+              f"acc={acc:.3f} f1={f1:.3f} pgd_fr={rec:.3f} pgd_FP={fpv} score={sc:.3f} v2elig={int(eligible)} "
+              f"[{'S' if flags['v2safety'] else '.'}{'R' if flags['v2maxrec'] else '.'}"
+              f"{'L' if flags['v2lowFA'] else '.'}{'F' if flags['v2macroF1'] else '.'}]")
+        if args.patience > 0 and epoch >= args.min_epochs and no_improve >= args.patience:
+            print(f"Early stopping at epoch {epoch} (best v2safety epoch {best['v2safety'][1]})."); break
+
+    elapsed = time.time() - start
+    last_epoch = history[-1]["epoch"]
+    torch.save({"epoch": last_epoch, "model_state_dict": F["model"].state_dict(),
+                "selection_method": "last", "run_name": run, "args": vars(args)}, ck_last)
+
+    fields = list(history[0].keys())
+    with (logs_dir / f"{run}_training_log.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields); w.writeheader()
+        for r in history:
+            w.writerow({k: (f"{r[k]:.6f}" if isinstance(r[k], float) else r[k]) for k in fields})
+    with (ana_dir / f"{run}_selection_candidates.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["selection", "selected_epoch", "val_clean_acc", "val_clean_macro_f1",
+                    "val_pgd_recall", "val_pgd_false_alarms", "safety_score"])
+        for k in ck:
+            ep = best[k][1]; vb = best_rec.get(k, {})
+            w.writerow([k, ep, f"{vb.get('val_clean_accuracy', float('nan')):.4f}",
+                        f"{vb.get('val_clean_macro_f1', float('nan')):.4f}",
+                        f"{vb.get('val_pgd_fall_recall', float('nan')):.4f}",
+                        vb.get('val_pgd_false_fall_alarms', ''), f"{safety_score(vb):.4f}" if vb else ""])
+    meta = {"timestamp_utc": datetime.now(timezone.utc).isoformat(), "stage": "variantG_seed42_pilot",
+            "run_name": run, "setting": args.setting, "setting_desc": cfg["desc"], "seed": args.seed,
+            "lam_s": LAM_S, "lam_f": LAM_F, "lam_t": cfg["lam_t"], "w_wr": cfg["w_wr"],
+            "gamma_m": GAMMA_M, "gamma_f": GAMMA_F, "gamma_t": GAMMA_T, "fall_weight": args.fall_weight,
+            "objective": "L_FWCE + lam_s*w*relu(gm+z_fall-z_true)[adv nonfall] + lam_f*relu(gf+max_nonfall-z_fall)[adv fall] "
+                         "+ lam_t*w*relu(gt+z_fall-z_true)[targeted nonfall]",
+            "targeted_pgd": "descent on CE-to-fall (sign-flipped vs untargeted)",
+            "v2_guard": {"min_clean_accuracy": V2_GUARD_ACC, "min_clean_macro_f1": V2_GUARD_F1},
+            "train_epsilons": F["train_epsilons"], "train_pgd_steps": args.train_pgd_steps,
+            "epochs_run": last_epoch, "split_sizes": F["split_sizes"], "test_set_used": False,
+            "selected_epochs": {k: best[k][1] for k in ck}, "checkpoints": {k: str(v) for k, v in ck.items()},
+            "claim_boundary": "window-level digital-domain white-box; seed42/LeNet only; not solved/certified/clinical/OTA",
+            "device": str(device), "python_version": platform.python_version(), "torch_version": torch.__version__,
+            "git_commit": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(F["exp"])), "elapsed_seconds": elapsed}
+    with (meta_dir / f"{run}_metadata.json").open("w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+    print("-" * 72)
+    print(f"Done in {elapsed:.1f}s ({last_epoch} epochs). selected epochs: " +
+          ", ".join(f"{k}={best[k][1]}" for k in ck))
+    print("=" * 72)
+
+
 def main():
     args = parse_args()
     if args.seed != 42:
@@ -388,9 +508,15 @@ def main():
         if not ok:
             raise SystemExit("SIGN CHECK FAILED before smoke (spec sec.14.2).")
         run_smoke(args, F); return
-    # ----- full single-setting training (NOT launched during smoke validation) -----
-    raise SystemExit("Full Variant G training is intentionally gated: pass --self-check or --smoke. "
-                     "The full 3-setting pilot must be launched explicitly per the approved plan.")
+    # ----- full single-setting training: gate OPENED for the pre-registered seed-42 G1/G2/G3 pilot -----
+    _, ok = targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
+    if not ok:
+        raise SystemExit("SIGN CHECK FAILED before full training (spec sec.14.2).")
+    run_full(args, F)
+
+
+if __name__ == "__main__":
+    main()
 
 
 if __name__ == "__main__":

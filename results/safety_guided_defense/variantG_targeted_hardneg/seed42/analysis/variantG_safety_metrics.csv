@@ -1,0 +1,4 @@
+setting,cand,clean_acc,clean_macro_f1,clean_fall_recall,clean_fp,clean_wr_fa,clean_precision,clean_specificity,fgsm_recall,fgsm_fp,pgd_recall,pgd_wilson_lo,pgd_wilson_hi,pgd_fp,pgd_wr_fa,pgd_specificity,pgd_precision,pgd_f1,pgd20_recall,pgd20_ratio,tier
+G1,v2safety,0.7160,0.6697,0.9778,24,3,0.6471,0.9473,0.8444,74,0.6889,0.5433,0.8047,104,74,0.7714,0.2296,0.3444,0.6222,0.9032,MINIMUM USEFUL
+G2,v2safety,0.6900,0.6543,0.9333,26,7,0.6176,0.9429,0.7778,80,0.6444,0.4984,0.7678,106,79,0.7670,0.2148,0.3222,0.5778,0.8966,FAIL
+G3,v2safety,0.7220,0.6659,0.9778,26,3,0.6286,0.9429,0.7333,80,0.4889,0.3496,0.6300,108,76,0.7626,0.1692,0.2514,0.3556,0.7273,FAIL

@@ -1,0 +1,57 @@
+{
+  "timestamp_utc": "2026-06-27T17:08:17.935556+00:00",
+  "stage": "variantG_seed42_pilot",
+  "run_name": "seed42_variantG_G3",
+  "setting": "G3",
+  "setting_desc": "source-weighted / ablation anchor (isolates B)",
+  "seed": 42,
+  "lam_s": 1.0,
+  "lam_f": 1.0,
+  "lam_t": 0.0,
+  "w_wr": 2.0,
+  "gamma_m": 0.5,
+  "gamma_f": 0.5,
+  "gamma_t": 0.5,
+  "fall_weight": 3.0,
+  "objective": "L_FWCE + lam_s*w*relu(gm+z_fall-z_true)[adv nonfall] + lam_f*relu(gf+max_nonfall-z_fall)[adv fall] + lam_t*w*relu(gt+z_fall-z_true)[targeted nonfall]",
+  "targeted_pgd": "descent on CE-to-fall (sign-flipped vs untargeted)",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "train_pgd_steps": 7,
+  "epochs_run": 70,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "test_set_used": false,
+  "selected_epochs": {
+    "v2safety": 60,
+    "v2maxrec": 60,
+    "v2lowFA": 57,
+    "v2macroF1": 63
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantG_targeted_hardneg\\seed42\\seed42_variantG_G3_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantG_targeted_hardneg\\seed42\\seed42_variantG_G3_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantG_targeted_hardneg\\seed42\\seed42_variantG_G3_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantG_targeted_hardneg\\seed42\\seed42_variantG_G3_v2macroF1_best.pt"
+  },
+  "claim_boundary": "window-level digital-domain white-box; seed42/LeNet only; not solved/certified/clinical/OTA",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "2334bc6943d6f72cb45bf11044bab9c7ffd9f474",
+  "elapsed_seconds": 2218.8177342414856
+}

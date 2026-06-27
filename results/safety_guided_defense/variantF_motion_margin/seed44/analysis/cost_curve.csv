@@ -1,0 +1,5 @@
+label,cost_1to1,cost_2to1,cost_5to1,cost_10to1,cost_20to1,cost_50to1
+FGSM_defense_s44,85,128,257,472,902,2192
+D_safety_s44,195,223,307,447,727,1567
+F_lamM1p0_lamF1p0_v2lowFA,83,122,239,434,824,1994
+F_lamM1p0_lamF1p0_v2safety,129,146,197,282,452,962

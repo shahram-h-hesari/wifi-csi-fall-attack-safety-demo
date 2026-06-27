@@ -1,0 +1,3 @@
+candidate,c1_acc>=.70,c2_f1>=.65,c3_cleanfr>=.90,c4_recall_tier,c5_wilson_low>0,"c6_FP<=D(seed44,167)",c7_walkrun<=D(116),c8_geometry_improved,c9_pgd20_tier,c10_no_masking,decision_category
+F_lamM1p0_lamF1p0_v2lowFA,0,0,1,minimal,1,1,1,1,SUPPORT,1,REJECT / DOES NOT GENERALIZE
+F_lamM1p0_lamF1p0_v2safety,1,1,1,STRONG,1,1,1,1,STRONG,1,STRONG SUPPORT

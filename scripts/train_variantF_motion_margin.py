@@ -123,8 +123,10 @@ def safety_score(vb):
 
 def main():
     args = parse_args()
-    if args.seed != 42:
-        raise SystemExit("Variant F pilot is seed-42 ONLY.")
+    if args.seed not in (42, 44):
+        raise SystemExit("Variant F: only seed 42 (pilot) and seed 44 (frozen independent "
+                         "validation) are permitted. Eligibility relaxed for the pre-registered "
+                         "seed-44 validation; loss/lambda/margins/guard unchanged.")
     if (args.lambda_m, args.lambda_f) not in {(1.0, 0.5), (1.0, 1.0), (0.5, 1.0)}:
         raise SystemExit(f"Disallowed lambda setting {(args.lambda_m, args.lambda_f)}; "
                          "pilot permits only (1.0,0.5),(1.0,1.0),(0.5,1.0).")

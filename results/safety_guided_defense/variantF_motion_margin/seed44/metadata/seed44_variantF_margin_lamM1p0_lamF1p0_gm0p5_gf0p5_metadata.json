@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-06-27T03:03:18.326843+00:00",
+  "stage": "variantF_margin_seed42_pilot",
+  "run_name": "seed44_variantF_margin_lamM1p0_lamF1p0_gm0p5_gf0p5",
+  "seed": 44,
+  "lambda_m": 1.0,
+  "lambda_f": 1.0,
+  "gamma_m": 0.5,
+  "gamma_f": 0.5,
+  "fall_weight": 3.0,
+  "objective": "L_FWCE + lam_m*relu(gm+z_fall-z_true)[adv walk/run] + lam_f*relu(gf+max_nonfall-z_fall)[adv fall]",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "epochs_run": 70,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "selected_epochs": {
+    "v2safety": 70,
+    "v2maxrec": 70,
+    "v2lowFA": 59,
+    "v2macroF1": 60
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantF_motion_margin\\seed44\\seed44_variantF_margin_lamM1p0_lamF1p0_gm0p5_gf0p5_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantF_motion_margin\\seed44\\seed44_variantF_margin_lamM1p0_lamF1p0_gm0p5_gf0p5_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantF_motion_margin\\seed44\\seed44_variantF_margin_lamM1p0_lamF1p0_gm0p5_gf0p5_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantF_motion_margin\\seed44\\seed44_variantF_margin_lamM1p0_lamF1p0_gm0p5_gf0p5_v2macroF1_best.pt"
+  },
+  "claim_boundary": "window-level digital-domain white-box; seed42/LeNet only; not solved/certified/clinical/OTA",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "89839925d53b7816c4c7bae484deae285522b557",
+  "elapsed_seconds": 2448.742577791214
+}

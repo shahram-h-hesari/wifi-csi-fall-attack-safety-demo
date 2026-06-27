@@ -1,0 +1,4 @@
+label,wr_logit_margin,vs_priorE_ref_2.716,improved
+D_safety_s44,1.733,-0.983,1
+F_lamM1p0_lamF1p0_v2lowFA,0.847,-1.869,1
+F_lamM1p0_lamF1p0_v2safety,0.961,-1.755,1

@@ -1,0 +1,5 @@
+D_safety reference used: seed44 (FP=167, walk/run=116)
+F_lamM1p0_lamF1p0_v2lowFA: REJECT / DOES NOT GENERALIZE
+F_lamM1p0_lamF1p0_v2safety: STRONG SUPPORT
+
+PRIMARY (v2safety) DECISION: STRONG SUPPORT

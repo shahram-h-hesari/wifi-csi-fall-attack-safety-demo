@@ -1,0 +1,7 @@
+model,group,n,median_p_fall,median_fall_vs_rest_margin,median_entropy,median_conf_margin
+VariantF_v2safety,A_true_fall_detected,30,0.4155,0.4556,1.4140,0.1406
+VariantF_v2safety,B_false_alarm,115,0.5183,0.8815,1.2957,0.3056
+VariantG_G1_v2safety,A_true_fall_detected,31,0.3014,0.3709,1.7712,0.0848
+VariantG_G1_v2safety,B_false_alarm,104,0.3130,0.4215,1.6940,0.1059
+VariantF_v2safety,gap_B_minus_A_pfall,,0.1029,,,
+VariantG_G1_v2safety,gap_B_minus_A_pfall,,0.0116,,,

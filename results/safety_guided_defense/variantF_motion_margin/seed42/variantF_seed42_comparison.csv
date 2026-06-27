@@ -1,0 +1,10 @@
+group,label,pgd_recall,pgd_FP,walk_run_to_fall,clean_acc,clean_macro_f1,clean_fall_recall,wr_logit_margin,pgd20_recall
+reference,FGSM_defense,0.089,54,39,0.834,0.814,0.911,nan,nan
+reference,D_safety,0.444,157,120,0.746,0.700,1.000,nan,nan
+reference,priorE_safety,0.356,117,80,0.806,0.790,0.978,2.716,nan
+reference,selv2_v2safety,0.356,117,80,0.806,0.790,0.978,2.716,nan
+reference,selv2_v2lowFA,0.133,61,36,0.818,0.799,0.956,nan,nan
+variantF,F_lamM1p0_lamF0p5_v2lowFA,0.022,30,16,0.776,0.737,0.933,0.648,0.000
+variantF,F_lamM1p0_lamF0p5_v2safety,0.644,128,88,0.780,0.744,0.956,1.312,0.600
+variantF,F_lamM1p0_lamF1p0_v2lowFA,0.178,56,46,0.678,0.628,0.911,0.901,0.133
+variantF,F_lamM1p0_lamF1p0_v2safety,0.667,115,80,0.734,0.690,0.978,0.986,0.644

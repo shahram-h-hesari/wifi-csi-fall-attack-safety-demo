@@ -1,0 +1,5 @@
+candidate,c1_acc>=0.70,c2_f1>=0.65,c3_cleanfr>=0.90,c4_recall>=v2safety(0.356),c5_FP<=117_and<=110,c6_walkrun<=80,c7_geometry_improved_vs_priorE,c8_pgd20_not_zero,c9_wilson_low>0,overall
+F_lamM1p0_lamF0p5_v2lowFA,1,1,1,0,1,1,1,0,1,0
+F_lamM1p0_lamF0p5_v2safety,1,1,1,1,0,0,1,1,1,0
+F_lamM1p0_lamF1p0_v2lowFA,0,0,1,0,1,1,1,1,1,0
+F_lamM1p0_lamF1p0_v2safety,1,1,1,1,0,1,1,1,1,0

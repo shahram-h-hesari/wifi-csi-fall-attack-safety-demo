@@ -1,0 +1,10 @@
+label,median_logit_fall_minus_true_walkrun_FA,vs_priorE
+FGSM_defense,nan,+nan
+D_safety,nan,+nan
+priorE_safety,2.716,+0.000
+selv2_v2safety,2.716,+0.000
+selv2_v2lowFA,nan,+nan
+F_lamM1p0_lamF0p5_v2lowFA,0.648,-2.069
+F_lamM1p0_lamF0p5_v2safety,1.312,-1.405
+F_lamM1p0_lamF1p0_v2lowFA,0.901,-1.816
+F_lamM1p0_lamF1p0_v2safety,0.986,-1.731

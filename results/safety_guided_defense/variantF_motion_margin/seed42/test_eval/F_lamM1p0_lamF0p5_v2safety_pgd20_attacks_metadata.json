@@ -1,0 +1,97 @@
+{
+  "timestamp_utc": "2026-06-27T01:02:50.980408+00:00",
+  "stage": "stage2_converged_attacks",
+  "run_name": "F_lamM1p0_lamF0p5_v2safety_pgd20",
+  "checkpoint_path": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantF_motion_margin\\seed42\\seed42_variantF_margin_lamM1p0_lamF0p5_gm0p5_gf0p5_v2safety_best.pt",
+  "checkpoint_epoch": 61,
+  "checkpoint_val_macro_f1": null,
+  "stage1_clean_references": {
+    "test_accuracy": "0.970000",
+    "test_macro_f1": "0.952150",
+    "test_fall_recall": "0.955556",
+    "legacy_accuracy": "0.976908",
+    "legacy_macro_f1": "0.963155",
+    "legacy_fall_recall": "0.966292"
+  },
+  "attack_parameters": {
+    "attacks": [
+      "pgd"
+    ],
+    "epsilon": 0.03,
+    "pgd_steps": 20,
+    "pgd_alpha": 0.005,
+    "pgd_alpha_rule": "epsilon/6 (=0.005 at eps=0.03; matches old single-eps and 18-eps sweep)",
+    "value_clamp": "none (processed CSI tensors, not [0,1] pixels)",
+    "seed": 42
+  },
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "legacy_note": "legacy val+test (996 windows) is a comparison-only pool for prior thesis artifacts; it was not used for training or selection (no training occurs in Stage 2).",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "sensefi_commit_sha": "15fd872433a46935f1be706e57395d5c57181c6d",
+  "git_branch": "feature/safety-proxy-guided-defense",
+  "git_commit": "bc2ae2b5269901c44e25d44da39f14fbe35c8616",
+  "metrics": {
+    "pgd_test": {
+      "attack": "pgd",
+      "split": "test",
+      "epsilon": "0.030000",
+      "alpha": "0.005000",
+      "pgd_steps": 20,
+      "n_windows": 500,
+      "clean_accuracy": 0.78,
+      "clean_macro_f1": 0.7444379248245573,
+      "clean_fall_recall": 0.9555555555555556,
+      "attack_accuracy": 0.166,
+      "attack_macro_f1": 0.16215745900143566,
+      "fall_recall": 0.6,
+      "missed_fall_rate": 0.4,
+      "fall_precision": 0.15789473684210525,
+      "fall_f1": 0.25,
+      "fall_true_positive": 27,
+      "fall_false_negative": 18,
+      "fall_false_positive": 144,
+      "fall_true_negative": 311,
+      "false_fall_alarm_count": 144,
+      "prediction_change_rate": 0.658
+    },
+    "pgd_legacy": {
+      "attack": "pgd",
+      "split": "legacy",
+      "epsilon": "0.030000",
+      "alpha": "0.005000",
+      "pgd_steps": 20,
+      "n_windows": 996,
+      "clean_accuracy": 0.8022088353413654,
+      "clean_macro_f1": 0.7765478596245498,
+      "clean_fall_recall": 0.9550561797752809,
+      "attack_accuracy": 0.16265060240963855,
+      "attack_macro_f1": 0.1561404360446438,
+      "fall_recall": 0.6179775280898876,
+      "missed_fall_rate": 0.38202247191011235,
+      "fall_precision": 0.16819571865443425,
+      "fall_f1": 0.2644230769230769,
+      "fall_true_positive": 55,
+      "fall_false_negative": 34,
+      "fall_false_positive": 272,
+      "fall_true_negative": 635,
+      "false_fall_alarm_count": 272,
+      "prediction_change_rate": 0.678714859437751
+    }
+  },
+  "outputs": {
+    "pgd_test_predictions": "results\\safety_guided_defense\\variantF_motion_margin\\seed42\\test_eval\\F_lamM1p0_lamF0p5_v2safety_pgd20_pgd_predictions_test_epsilon_0_03.csv",
+    "pgd_test_safety_metrics": "results\\safety_guided_defense\\variantF_motion_margin\\seed42\\test_eval\\F_lamM1p0_lamF0p5_v2safety_pgd20_pgd_safety_metrics_test_epsilon_0_03.csv",
+    "pgd_legacy_predictions": "results\\safety_guided_defense\\variantF_motion_margin\\seed42\\test_eval\\F_lamM1p0_lamF0p5_v2safety_pgd20_pgd_predictions_legacy_epsilon_0_03.csv",
+    "pgd_legacy_safety_metrics": "results\\safety_guided_defense\\variantF_motion_margin\\seed42\\test_eval\\F_lamM1p0_lamF0p5_v2safety_pgd20_pgd_safety_metrics_legacy_epsilon_0_03.csv"
+  }
+}

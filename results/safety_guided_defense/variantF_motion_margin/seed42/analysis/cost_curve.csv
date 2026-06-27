@@ -1,0 +1,10 @@
+label,cost_1to1,cost_2to1,cost_5to1,cost_10to1,cost_20to1,cost_50to1
+FGSM_defense,95,136,259,464,874,2104
+D_safety,182,207,282,407,657,1407
+priorE_safety,146,175,262,407,697,1567
+selv2_v2safety,146,175,262,407,697,1567
+selv2_v2lowFA,100,139,256,451,841,2011
+F_lamM1p0_lamF0p5_v2lowFA,74,118,250,470,910,2230
+F_lamM1p0_lamF0p5_v2safety,144,160,208,288,448,928
+F_lamM1p0_lamF1p0_v2lowFA,93,130,241,426,796,1906
+F_lamM1p0_lamF1p0_v2safety,130,145,190,265,415,865

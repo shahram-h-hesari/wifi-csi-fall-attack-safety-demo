@@ -1,0 +1,10 @@
+label,recall,tp,n_fall,wilson_low,wilson_high
+FGSM_defense,0.089,4,45,0.035,0.207
+D_safety,0.444,20,45,0.309,0.588
+priorE_safety,0.356,16,45,0.232,0.502
+selv2_v2safety,0.356,16,45,0.232,0.502
+selv2_v2lowFA,0.133,6,45,0.063,0.262
+F_lamM1p0_lamF0p5_v2lowFA,0.022,1,45,0.004,0.116
+F_lamM1p0_lamF0p5_v2safety,0.644,29,45,0.498,0.768
+F_lamM1p0_lamF1p0_v2lowFA,0.178,8,45,0.093,0.313
+F_lamM1p0_lamF1p0_v2safety,0.667,30,45,0.521,0.786

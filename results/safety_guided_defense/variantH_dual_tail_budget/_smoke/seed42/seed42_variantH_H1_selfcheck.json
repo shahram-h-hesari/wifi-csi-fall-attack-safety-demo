@@ -1,0 +1,49 @@
+{
+  "setting": "H1",
+  "desc": "balanced dual-tail",
+  "class_index_ok": true,
+  "sign_check": {
+    "n_nonfall": 55,
+    "clean_median_fall_logit": 0.009531141258776188,
+    "targeted_median_fall_logit": 0.026995856314897537,
+    "clean_median_p_fall": 0.14136433601379395,
+    "targeted_median_p_fall": 0.14405792951583862,
+    "increased": true
+  },
+  "topk": {
+    "select_mean_top2_is_4.0": true,
+    "grad_only_selected": true,
+    "empty_returns_zero": true,
+    "k_at_least_1": true,
+    "selected_count": 2
+  },
+  "components": {
+    "FWCE_base": 1.945452332496643,
+    "src_motion": 0.7688181400299072,
+    "fall_margin": 0.5731469392776489,
+    "targeted": 0.792909562587738,
+    "nonfall_budget": 0.9820237159729004,
+    "fall_rescue": 0.5739735960960388,
+    "budget_diag": {
+      "valid": 30,
+      "selected": 8,
+      "mean_raw_margin": -0.008406203240156174,
+      "mean_selected_hinge": 0.9820237159729004
+    },
+    "rescue_diag": {
+      "valid": 2,
+      "selected": 1,
+      "mean_fall_margin": -0.07314692437648773,
+      "mean_selected_hinge": 0.5739735960960388
+    }
+  },
+  "directionality": {
+    "budget_r_before": -0.1126161441206932,
+    "budget_r_after": -0.2376161366701126,
+    "budget_reduced_r": true,
+    "rescue_mf_before": -1.1227277517318726,
+    "rescue_mf_after": -0.9977277517318726,
+    "rescue_increased_mf": true
+  },
+  "no_test_leakage": "self-check used train batches + a synthetic directionality probe only; test set untouched"
+}

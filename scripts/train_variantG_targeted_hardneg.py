@@ -494,9 +494,11 @@ def run_full(args, F):
 
 def main():
     args = parse_args()
-    if args.seed != 42:
-        raise SystemExit(f"Variant G pilot is seed-42 ONLY (got seed {args.seed}); "
-                         "seeds 43/44/45/46 are blocked for this script.")
+    if args.seed not in (42, 44):
+        raise SystemExit(f"Variant G is seed-42 (pilot) or seed-44 (pre-registered G1 validation) ONLY "
+                         f"(got seed {args.seed}); seeds 43/45/46 are blocked for this script. The seed-44 "
+                         "eligibility is the pre-registration's permitted gate relaxation; loss / class "
+                         "indices / targeted-PGD sign / source weighting / selection-v2 are unchanged.")
     if args.setting not in SETTINGS:
         raise SystemExit(f"Disallowed setting {args.setting!r}; permitted: {sorted(SETTINGS)}.")
     F = load_foundation(args)

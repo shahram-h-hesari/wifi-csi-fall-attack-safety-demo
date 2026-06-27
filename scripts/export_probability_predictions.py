@@ -60,7 +60,7 @@ def parse_args():
     p.add_argument("--pgd-alpha", type=float, default=None, help="Default epsilon/6.")
     p.add_argument("--run-name", required=True, help="Output filename prefix.")
     p.add_argument("--out-dir", required=True, help="Output directory for the probability CSVs.")
-    p.add_argument("--split", choices=["test", "legacy"], default="test")
+    p.add_argument("--split", choices=["test", "val", "legacy"], default="test")
     p.add_argument("--seed", type=int, default=0, help="Loader batching seed only (no effect on attacks).")
     return p.parse_args()
 
@@ -82,9 +82,13 @@ def main():
 
     s1.set_seed(args.seed)
     data = s1.load_raw_ut_har(benchmark_dir)
-    _, _, test_loader, split_sizes = s1.build_loaders(data, 64)
+    _, val_loader, test_loader, split_sizes = s1.build_loaders(data, 64)
     if args.split == "test":
         loader = test_loader
+    elif args.split == "val":
+        # eval-only validation-split export (added for the pre-registered seed-44 threshold selection;
+        # no training/loss/selection change). Same per-window CSV format as test/legacy.
+        loader = val_loader
     else:
         legacy_X = torch.cat((data["X_val"], data["X_test"]), 0)
         legacy_y = torch.cat((data["y_val"], data["y_test"]), 0)

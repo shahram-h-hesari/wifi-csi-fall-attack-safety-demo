@@ -1,0 +1,3 @@
+epoch,train_loss,mean_base,mean_src_motion,mean_fall_margin,mean_targeted,mean_nonfall_budget,mean_fall_rescue,nonfall_selected_count,fall_selected_count,topk_budget_selected,topk_rescue_selected,fall_k_abs_floor_active_frac,budget_to_rescue_loss_ratio,val_clean_accuracy,val_clean_macro_f1,val_clean_fall_recall,val_pgd_fall_recall,val_pgd_false_fall_alarms
+1,4.578407,1.972817,0.332965,0.906058,0.345930,0.456158,0.906597,7.500000,2.833333,7.500000,2.833333,1.000000,0.503155,0.243952,0.056031,0.000000,0.000000,0
+2,4.289734,1.969798,0.130262,1.004116,0.136333,0.180441,1.004116,8.000000,2.500000,8.000000,2.500000,1.000000,0.179702,0.243952,0.056031,0.000000,0.000000,0

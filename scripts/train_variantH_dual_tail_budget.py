@@ -246,6 +246,10 @@ def parse_args():
     p.add_argument("--self-check", action="store_true")
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--smoke-batches", type=int, default=5)
+    p.add_argument("--smoke-tag", default=None,
+                   help="Optional subfolder name for smoke/self-check artifacts (Option A only); defaults to "
+                        "the setting name. Use e.g. A1_gatefix to avoid overwriting committed A1 smoke artifacts. "
+                        "Does NOT affect the --pilot path.")
     p.add_argument("--pilot", action="store_true",
                    help="run the approved H1 seed-42 full pilot (H1 + seed 42 ONLY; requires explicit --pilot)")
     return p.parse_args()
@@ -405,8 +409,9 @@ def run_smoke(args, F):
     kabs = cfg.get("k_abs_min")
     if optionA:
         run = f"{args.setting}"
+        tag = args.smoke_tag or args.setting          # gate-fix re-smoke uses e.g. A1_gatefix (no overwrite)
         base = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget"
-                / "optionA_rebalanced" / "_smoke" / args.setting / f"seed{args.seed}")
+                / "optionA_rebalanced" / "_smoke" / tag / f"seed{args.seed}")
         log_name, sum_name = f"{run}_smoke_log.csv", f"{run}_smoke_summary.json"
     else:
         run = f"seed{args.seed}_variantH_{args.setting}_smoke"
@@ -483,12 +488,21 @@ def run_pilot(args, F):
     """Approved H1 seed-42 full pilot. Mirrors the frozen Variant G selection-v2 run_full protocol
     (guard 0.70/0.65; candidates v2safety/v2maxrec/v2lowFA/v2macroF1; same epochs/patience), only the
     per-batch loss adds the two Variant H TopK terms. Writes to the variantH H1/seed42 namespace.
-    Hard-asserts H1+seed42 and stops immediately on NaN/inf or always-zero TopK terms (spec sec.4)."""
-    assert args.setting == "H1" and args.seed == 42, "pilot is H1 + seed 42 ONLY"
+    Hard-asserts (H1|A1)+seed42 and stops immediately on NaN/inf or always-zero TopK terms (spec sec.4).
+    A1 threads the fall-rescue `k_abs_min` floor (Option A); H1 passes None (committed behavior unchanged)."""
+    assert args.setting in ("H1", "A1") and args.seed == 42, "pilot is (H1|A1) + seed 42 ONLY"
     cfg = SETTINGS[args.setting]; tsg, s1 = F["tsg"], F["s1"]; device = F["device"]
-    run = f"seed{args.seed}_variantH_{args.setting}"
-    base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / args.setting / f"seed{args.seed}"
-    ck_dir = F["exp"] / "checkpoints" / "safety_guided_defense" / "variantH_dual_tail_budget" / args.setting / f"seed{args.seed}"
+    kabs = cfg.get("k_abs_min")                         # Option A floor (None for H1 -> committed behavior)
+    optionA = args.setting in OPTIONA_SETTINGS
+    run = f"seed{args.seed}_{'variantH' if not optionA else 'optionA'}_{args.setting}"
+    nsroot = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget")
+    ckroot = (F["exp"] / "checkpoints" / "safety_guided_defense" / "variantH_dual_tail_budget")
+    if optionA:
+        base = nsroot / "optionA_rebalanced" / args.setting / f"seed{args.seed}"
+        ck_dir = ckroot / "optionA_rebalanced" / args.setting / f"seed{args.seed}"
+    else:
+        base = nsroot / args.setting / f"seed{args.seed}"
+        ck_dir = ckroot / args.setting / f"seed{args.seed}"
     logs_dir = base / "logs"; ana_dir = base / "analysis"; meta_dir = base / "metadata"
     for d in (ck_dir, logs_dir, ana_dir, meta_dir):
         d.mkdir(parents=True, exist_ok=True)
@@ -498,7 +512,8 @@ def run_pilot(args, F):
     print("=" * 74)
     print(f"Variant H FULL PILOT  setting={args.setting} ({cfg['desc']})  run={run}")
     print(f"  base(VariantG G1): lam_s={BASE_LAM_S} lam_f={BASE_LAM_F} lam_t={BASE_LAM_T} w_wr={BASE_W_WR} | "
-          f"NEW lam_b={cfg['lam_b']} lam_r={cfg['lam_r']} k_frac={K_FRAC} gamma_b={GAMMA_B} gamma_r={GAMMA_R} fw={args.fall_weight}")
+          f"NEW lam_b={cfg['lam_b']} lam_r={cfg['lam_r']} k_frac={K_FRAC} k_abs_min={kabs} gamma_b={GAMMA_B} "
+          f"gamma_r={GAMMA_R} fw={args.fall_weight}")
     print(f"  guard acc>={V2_GUARD_ACC} & mF1>={V2_GUARD_F1} | epochs={args.epochs} patience={args.patience} "
           f"min={args.min_epochs} eps={F['train_epsilons']}")
     print("=" * 74)
@@ -512,7 +527,8 @@ def run_pilot(args, F):
     for epoch in range(1, args.epochs + 1):
         tr = train_one_epoch_variantH(F["model"], F["train_loader"], F["train_criterion"], F["atk_criterion"],
                                       F["optimizer"], device, F["train_epsilons"], args.train_pgd_steps,
-                                      F["rng"], tsg, cfg["lam_b"], cfg["lam_r"], F["fall_idx"], max_batches=None)
+                                      F["rng"], tsg, cfg["lam_b"], cfg["lam_r"], F["fall_idx"], max_batches=None,
+                                      fall_k_abs_min=kabs)
         # spec sec.4 numerical stop conditions
         for k in ("train_loss", "mean_base", "mean_src_motion", "mean_fall_margin", "mean_targeted",
                   "mean_nonfall_budget", "mean_fall_rescue"):
@@ -548,7 +564,11 @@ def run_pilot(args, F):
                         "mean_src_motion": tr["mean_src_motion"], "mean_fall_margin": tr["mean_fall_margin"],
                         "mean_targeted": tr["mean_targeted"], "mean_nonfall_budget": tr["mean_nonfall_budget"],
                         "mean_fall_rescue": tr["mean_fall_rescue"], "topk_budget_selected": tr["topk_budget_selected"],
-                        "topk_rescue_selected": tr["topk_rescue_selected"], "val_clean_accuracy": acc, "val_clean_macro_f1": f1,
+                        "topk_rescue_selected": tr["topk_rescue_selected"],
+                        "nonfall_selected_count": tr["nonfall_selected_count"], "fall_selected_count": tr["fall_selected_count"],
+                        "fall_k_abs_floor_active_frac": tr["fall_k_abs_floor_active_frac"],
+                        "budget_to_rescue_loss_ratio": tr["budget_to_rescue_loss_ratio"],
+                        "val_clean_accuracy": acc, "val_clean_macro_f1": f1,
                         "val_clean_fall_recall": vb["val_clean_fall_recall"], "val_fgsm_fall_recall": vb["val_fgsm_fall_recall"],
                         "val_pgd_fall_recall": rec, "val_fgsm_false_fall_alarms": vb["val_fgsm_false_fall_alarms"],
                         "val_pgd_false_fall_alarms": fpv, "val_normalized_false_alarm_burden": vb["val_normalized_false_alarm_burden"],
@@ -591,10 +611,15 @@ def run_pilot(args, F):
                         f"{vbk.get('val_clean_macro_f1', float('nan')):.4f}",
                         f"{vbk.get('val_pgd_fall_recall', float('nan')):.4f}",
                         vbk.get('val_pgd_false_fall_alarms', ''), f"{tvg.safety_score(vbk):.4f}" if vbk else ""])
-    meta = {"timestamp_utc": datetime.now(timezone.utc).isoformat(), "stage": "variantH_H1_seed42_pilot",
+    meta = {"timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "stage": f"{'optionA' if optionA else 'variantH'}_{args.setting}_seed{args.seed}_pilot",
+            "namespace": ("optionA_rebalanced" if optionA else "variantH_dual_tail_budget"),
             "run_name": run, "setting": args.setting, "setting_desc": cfg["desc"], "seed": args.seed,
             "lam_s": BASE_LAM_S, "lam_f": BASE_LAM_F, "lam_t": BASE_LAM_T, "w_wr": BASE_W_WR,
-            "lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "k_frac": K_FRAC, "gamma_b": GAMMA_B, "gamma_r": GAMMA_R,
+            "lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "k_frac": K_FRAC, "k_abs_min": kabs,
+            "gamma_b": GAMMA_B, "gamma_r": GAMMA_R,
+            "fall_k_abs_floor_active_frac_final": history[-1].get("fall_k_abs_floor_active_frac"),
+            "budget_to_rescue_loss_ratio_final": history[-1].get("budget_to_rescue_loss_ratio"),
             "fall_weight": args.fall_weight,
             "objective": "L_FWCE + lam_s*src + lam_f*fall + lam_t*tgt (Variant G G1) "
                          "+ lam_b*TopKMean[relu(z_f-z_y+gb)][adv nonfall, src-weighted] "
@@ -603,7 +628,8 @@ def run_pilot(args, F):
             "train_epsilons": F["train_epsilons"], "train_pgd_steps": args.train_pgd_steps,
             "epochs_run": last_epoch, "split_sizes": F["split_sizes"], "test_set_used": False,
             "selected_epochs": {k: best[k][1] for k in ck}, "checkpoints": {k: str(v) for k, v in ck.items()},
-            "claim_boundary": "window-level digital-domain white-box; H1/seed42/LeNet only; not solved/certified/clinical/OTA",
+            "claim_boundary": f"window-level digital-domain white-box; {args.setting}/seed{args.seed}/LeNet only; "
+                              "not solved/certified/clinical/OTA",
             "device": str(device), "python_version": platform.python_version(), "torch_version": torch.__version__,
             "git_commit": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(F["exp"])), "elapsed_seconds": elapsed}
     with (meta_dir / f"{run}_metadata.json").open("w", encoding="utf-8") as f:
@@ -627,8 +653,9 @@ def main():
     if args.self_check:
         out = run_self_check(args, F)
         if args.setting in OPTIONA_SETTINGS:
+            tag = args.smoke_tag or args.setting      # gate-fix re-run uses e.g. A1_gatefix (no overwrite)
             base = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget"
-                    / "optionA_rebalanced" / "_smoke" / args.setting / f"seed{args.seed}")
+                    / "optionA_rebalanced" / "_smoke" / tag / f"seed{args.seed}")
             scname = f"{args.setting}_selfcheck_summary.json"
         else:
             base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / "_smoke" / f"seed{args.seed}"
@@ -646,17 +673,19 @@ def main():
             raise SystemExit("SIGN CHECK FAILED before smoke (spec sec.5).")
         run_smoke(args, F); return
     if args.pilot:
-        # ----- APPROVED H1 seed-42 pilot ONLY (code-review Decision A). H1+seed42 hard-required. -----
-        if args.setting != "H1":
-            raise SystemExit("Pilot is restricted to setting H1 (code-review Decision A); H2/H3 are NOT "
-                             "approved to run. Re-review required before any H2/H3 pilot.")
+        # ----- APPROVED pilots ONLY: H1 (Variant H, Decision A) and A1 (Option A, gate-fix). seed42 hard-required.
+        #       H2/H3 NOT approved; A2/A0 already hard-blocked above (OPTIONA_RUNNABLE). seed44/45/46 blocked above.
+        if args.setting not in ("H1", "A1"):
+            raise SystemExit("Pilot is restricted to setting H1 (Variant H, code-review Decision A) or A1 "
+                             "(Option A rebalanced, gate-fix). H2/H3/A2/A0 are NOT approved to run; re-review "
+                             "is required before any other pilot.")
         _, ok = tvg.targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
         if not ok:
             raise SystemExit("SIGN CHECK FAILED before pilot (spec sec.5).")
         run_pilot(args, F); return
     # ----- full training without --pilot: still GATED (no general full-training mode) -----
     raise SystemExit("Full Variant H training is intentionally gated. Pass --self-check, --smoke, or the "
-                     "approved --pilot (H1+seed42 only). General full-training mode is not available.")
+                     "approved --pilot (H1 or A1, seed42 only). General full-training mode is not available.")
 
 
 if __name__ == "__main__":

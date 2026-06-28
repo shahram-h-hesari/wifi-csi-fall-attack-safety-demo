@@ -1,0 +1,78 @@
+{
+  "setting": "A1",
+  "desc": "Option A1 recall-preserving rebalanced dual-tail",
+  "class_index_ok": true,
+  "params": {
+    "lam_b": 0.25,
+    "lam_r": 1.0,
+    "k_abs_min": 4,
+    "nonfall_k_frac": 0.25,
+    "fall_rescue_k_frac": 0.25,
+    "gamma_b": 0.5,
+    "gamma_r": 0.5
+  },
+  "kabs_floor": {
+    "10": {
+      "selected": 4,
+      "floor_active": true,
+      "rows_with_grad": 4
+    },
+    "3": {
+      "selected": 3,
+      "floor_active": true,
+      "rows_with_grad": 3
+    },
+    "0": {
+      "selected": 0,
+      "loss": 0.0,
+      "floor_active": false
+    },
+    "pass": true
+  },
+  "sign_check": {
+    "n_nonfall": 57,
+    "clean_median_fall_logit": 0.009712421335279942,
+    "targeted_median_fall_logit": 0.027904672548174858,
+    "clean_median_p_fall": 0.14138488471508026,
+    "targeted_median_p_fall": 0.14410185813903809,
+    "increased": true
+  },
+  "topk": {
+    "select_mean_top2_is_4.0": true,
+    "grad_only_selected": true,
+    "empty_returns_zero": true,
+    "k_at_least_1": true,
+    "selected_count": 2
+  },
+  "components": {
+    "FWCE_base": 1.9486993551254272,
+    "src_motion": 0.7926272749900818,
+    "fall_margin": 0.5728349089622498,
+    "targeted": 0.7591742873191833,
+    "nonfall_budget": 0.9798752665519714,
+    "fall_rescue": 0.5728349089622498,
+    "budget_diag": {
+      "valid": 29,
+      "selected": 8,
+      "mean_raw_margin": -0.010619004257023335,
+      "mean_selected_hinge": 0.9798752665519714
+    },
+    "rescue_diag": {
+      "valid": 3,
+      "selected": 3,
+      "k_abs_min": 4,
+      "floor_active": true,
+      "mean_fall_margin": -0.07283491641283035,
+      "mean_selected_hinge": 0.5728349089622498
+    }
+  },
+  "directionality": {
+    "budget_r_before": -0.1126161441206932,
+    "budget_r_after": -0.2376161366701126,
+    "budget_reduced_r": true,
+    "rescue_mf_before": -1.1227277517318726,
+    "rescue_mf_after": -0.9977277517318726,
+    "rescue_increased_mf": true
+  },
+  "no_test_leakage": "self-check used train batches + a synthetic directionality probe only; test set untouched"
+}

@@ -1,0 +1,43 @@
+{
+  "timestamp_utc": "2026-06-28T15:24:45.184942+00:00",
+  "stage": "optionB_seed42_pilot",
+  "namespace": "adaptive_lagrangian_far_constrained",
+  "run_name": "seed42_optionB",
+  "setting": "optionB",
+  "seed": 42,
+  "fixed_epochs": 70,
+  "early_stopping": false,
+  "patience": "inactive_not_used_for_optionB_pilot",
+  "min_epochs": "inactive_not_used_for_optionB_pilot",
+  "lambda_b0": 0.25,
+  "eta": 0.1,
+  "lambda_b_max": 1.0,
+  "lambda_r": 1.0,
+  "k_abs_min": 4,
+  "target_far": 0.1,
+  "n_val_nonfall": 452,
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "update_rule": "lambda_b(t+1)=clip(lambda_b(t)+0.10*(FAR_val_PGD10(t)-0.10),0,1.0); once per epoch, after validation, applied to the next epoch",
+  "selection": "validation-only: maxscore / maxrec-within-guard / minFA-within-guard",
+  "selected_epochs": {
+    "maxscore": 68,
+    "maxrec": 70,
+    "minFA": 66
+  },
+  "checkpoints": {
+    "maxscore": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\adaptive_lagrangian_far_constrained\\optionB\\seed42\\seed42_optionB_maxscore_best.pt",
+    "maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\adaptive_lagrangian_far_constrained\\optionB\\seed42\\seed42_optionB_maxrec_best.pt",
+    "minFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\adaptive_lagrangian_far_constrained\\optionB\\seed42\\seed42_optionB_minFA_best.pt",
+    "last": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\adaptive_lagrangian_far_constrained\\optionB\\seed42\\seed42_optionB_last.pt"
+  },
+  "test_set_used": false,
+  "claim_boundary": "window-level digital-domain white-box; optionB/seed42/LeNet only; no clinical/product/deployment/certified/over-the-air claim",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "elapsed_seconds": 6098.071574449539
+}

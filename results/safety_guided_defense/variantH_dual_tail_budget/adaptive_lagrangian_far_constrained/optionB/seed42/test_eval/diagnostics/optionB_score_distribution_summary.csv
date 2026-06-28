@@ -1,0 +1,7 @@
+checkpoint,condition,fall_Pfall_median,fall_q1,fall_q3,nonfall_Pfall_median,nonfall_q1,nonfall_q3
+maxscore,clean,0.3294,0.3166,0.3904,0.0102,0.0009,0.0578
+maxscore,pgd,0.1998,0.1585,0.2535,0.0161,0.0009,0.1130
+maxrec,clean,0.3879,0.3325,0.4512,0.0104,0.0006,0.0668
+maxrec,pgd,0.2656,0.1726,0.3282,0.0167,0.0005,0.1471
+minFA,clean,0.3185,0.2607,0.3789,0.0063,0.0005,0.0341
+minFA,pgd,0.1264,0.0732,0.1816,0.0079,0.0005,0.0664

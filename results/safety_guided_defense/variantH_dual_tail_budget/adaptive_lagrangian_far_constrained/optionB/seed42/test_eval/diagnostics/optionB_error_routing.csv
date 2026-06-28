@@ -1,0 +1,30 @@
+checkpoint,kind,class,count
+maxscore,missed_fall_predicted_as,walk,12
+maxscore,missed_fall_predicted_as,run,10
+maxscore,missed_fall_predicted_as,lie down,4
+maxscore,false_alarm_true_source,walk,19
+maxscore,false_alarm_true_source,run,17
+maxscore,false_alarm_true_source,stand up,9
+maxscore,false_alarm_true_source,lie down,8
+maxscore,false_alarm_true_source,pickup,5
+maxscore,false_alarm_true_source,sit down,1
+maxrec,missed_fall_predicted_as,walk,8
+maxrec,missed_fall_predicted_as,lie down,4
+maxrec,missed_fall_predicted_as,run,2
+maxrec,missed_fall_predicted_as,stand up,1
+maxrec,false_alarm_true_source,run,33
+maxrec,false_alarm_true_source,walk,24
+maxrec,false_alarm_true_source,lie down,10
+maxrec,false_alarm_true_source,stand up,10
+maxrec,false_alarm_true_source,pickup,7
+maxrec,false_alarm_true_source,sit down,1
+minFA,missed_fall_predicted_as,run,21
+minFA,missed_fall_predicted_as,lie down,8
+minFA,missed_fall_predicted_as,walk,6
+minFA,missed_fall_predicted_as,stand up,3
+minFA,missed_fall_predicted_as,pickup,1
+minFA,false_alarm_true_source,run,14
+minFA,false_alarm_true_source,walk,9
+minFA,false_alarm_true_source,stand up,8
+minFA,false_alarm_true_source,pickup,3
+minFA,false_alarm_true_source,lie down,2

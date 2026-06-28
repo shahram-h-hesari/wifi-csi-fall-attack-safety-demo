@@ -1,0 +1,62 @@
+{
+  "timestamp_utc": "2026-06-28T09:28:59.813931+00:00",
+  "stage": "optionA_A1_seed42_pilot",
+  "namespace": "optionA_rebalanced",
+  "run_name": "seed42_optionA_A1",
+  "setting": "A1",
+  "setting_desc": "Option A1 recall-preserving rebalanced dual-tail",
+  "seed": 42,
+  "lam_s": 1.0,
+  "lam_f": 1.0,
+  "lam_t": 1.0,
+  "w_wr": 2.0,
+  "lam_b": 0.25,
+  "lam_r": 1.0,
+  "k_frac": 0.25,
+  "k_abs_min": 4,
+  "gamma_b": 0.5,
+  "gamma_r": 0.5,
+  "fall_k_abs_floor_active_frac_final": 0.9838709677419355,
+  "budget_to_rescue_loss_ratio_final": 3.4838287918855015,
+  "fall_weight": 3.0,
+  "objective": "L_FWCE + lam_s*src + lam_f*fall + lam_t*tgt (Variant G G1) + lam_b*TopKMean[relu(z_f-z_y+gb)][adv nonfall, src-weighted] + lam_r*TopKMean[relu(gr+max_nonfall-z_f)][adv fall]",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "train_pgd_steps": 7,
+  "epochs_run": 70,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "test_set_used": false,
+  "selected_epochs": {
+    "v2safety": 70,
+    "v2maxrec": 70,
+    "v2lowFA": 67,
+    "v2macroF1": 68
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\optionA_rebalanced\\A1\\seed42\\seed42_optionA_A1_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\optionA_rebalanced\\A1\\seed42\\seed42_optionA_A1_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\optionA_rebalanced\\A1\\seed42\\seed42_optionA_A1_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\optionA_rebalanced\\A1\\seed42\\seed42_optionA_A1_v2macroF1_best.pt"
+  },
+  "claim_boundary": "window-level digital-domain white-box; A1/seed42/LeNet only; not solved/certified/clinical/OTA",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "fc96eeab52a779b505b73f2657586e1b1f154e9e",
+  "elapsed_seconds": 8337.29014658928
+}

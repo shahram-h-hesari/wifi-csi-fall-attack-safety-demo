@@ -19,18 +19,22 @@ and it already imports tvg the same way A1 did). NO helper logic is copied or du
 made these imports unsafe, the spec requires stopping for code review before copying -- not done here.
 
 Scope: seed 42 ONLY; LeNet only; UT-HAR only; train eps {0.005,0.015,0.03}. Window-level, digital-domain,
-white-box; NOT solved/certified/clinical/over-the-air. THIS FILE IS SMOKE/SELF-CHECK ONLY -- the full pilot
-is intentionally gated OFF (Gate 4 not reached). The test set is NEVER touched in training/selection.
+white-box; NOT solved/certified/clinical/over-the-air. The test set is NEVER touched in training/selection.
+
+Gate-4 (committed readiness review) OPENS the pilot for optionB+seed42 ONLY: FIXED 70 epochs, NO early
+stopping, validation-only checkpoint selection (maxscore / maxrec-within-guard / minFA-within-guard), no test
+evaluation. A2/A0/H2/H3/A1 and seed 44/45/46 remain blocked.
 
 Modes:
     --self-check  pure-function + gate checks (lambda update math, once-per-epoch, selection score, gate
-                  rejection, val-nonfall count) -- no training, no .pt
+                  rejection incl. opened-pilot semantics, val-nonfall count) -- no training, no .pt
     --smoke       tiny 2-epoch seed-42 run to a `_smoke` namespace exercising the adaptive loop (no .pt)
-    --pilot       REFUSED in this Gate-2 implementation (requires Gate-4 approval)
+    --pilot       Gate-4 approved full pilot: optionB + seed 42 ONLY (fixed 70 epochs, no early stopping)
 
-Commands (NOT run in Gate 2):
+Commands:
     python scripts/train_optionB_adaptive_lagrangian.py --setting optionB --self-check
     python scripts/train_optionB_adaptive_lagrangian.py --setting optionB --smoke --epochs 2 --smoke-batches 6
+    python scripts/train_optionB_adaptive_lagrangian.py --setting optionB --seed 42 --pilot   # full pilot
 """
 from __future__ import annotations
 from pathlib import Path
@@ -62,6 +66,7 @@ LAM_B_MAX = 1.0            # cap
 TARGET_FAR = 0.10          # FAR constraint
 K_ABS_MIN = 4              # fall-rescue floor (retained from A1)
 EXPECTED_VAL_NONFALL = 452  # seed-42 UT-HAR validation non-fall count (496 - 44 falls)
+PILOT_EPOCHS = 70          # fixed full-pilot schedule (Gate-4 decision: NO early stopping)
 # clean-guard floors (acc/mF1 reuse the frozen guard; clean-fall-recall floor is added by the spec)
 GUARD_CLEAN_FALL_RECALL = 0.90
 # pinned selection-score weights
@@ -102,23 +107,34 @@ def validation_nonfall_count(val_loader, fall_idx):
 
 # ----------------------------------------------------------------------------- gate (spec sec.1 / sec.5)
 def enforce_gate(setting, seed, pilot):
-    """Authorize ONLY (optionB + seed 42). Refuse everything else (incl. A2/A0/H2/H3, seed44/45/46) and refuse
-    the pilot in this Gate-2 implementation."""
+    """Authorize ONLY (optionB + seed 42), for self-check / smoke / pilot alike. Refuse everything else
+    (incl. A2/A0/H2/H3, A1, seed44/45/46, any non-optionB setting, any non-seed42).
+
+    Gate-4 (committed readiness review): the seed-42 pilot is now APPROVED, so `pilot=True` is allowed *only*
+    when setting==optionB AND seed==42 -- the two checks below already enforce that. A pilot for any other
+    setting or seed still raises here. The `pilot` flag is kept in the signature for call-site stability and
+    explicitness; it no longer triggers a refusal on its own."""
     if setting != SETTING_NAME:
         raise SystemExit(f"Disallowed setting {setting!r}: Option B is {SETTING_NAME!r} ONLY "
-                         "(A2/A0/H2/H3 and any other setting are out of scope).")
+                         "(A1/A2/A0/H2/H3 and any other setting are out of scope).")
     if seed != 42:
-        raise SystemExit(f"Option B is seed-42 ONLY for now (got seed {seed}); seeds 44/45/46 are blocked "
-                         "(require a separate committed pre-registration).")
-    if pilot:
-        raise SystemExit("The Option B FULL PILOT is NOT approved in this Gate-2 implementation. "
-                         "Pass --self-check or --smoke. The seed-42 pilot requires explicit Gate-4 approval.")
+        raise SystemExit(f"Option B is seed-42 ONLY (got seed {seed}); seeds 44/45/46 are blocked "
+                         f"(require a separate committed pre-registration). pilot={pilot}.")
 
 
 # ----------------------------------------------------------------------------- adaptive training loop
-def _adaptive_train(args, F, mode):
-    """Shared epoch loop with the once-per-epoch adaptive lambda_b update. `mode` in {'smoke'}.
-    Selection is validation-only; the test loader (F['_test_loader']) is NEVER referenced here."""
+def _save_ckpt(path, epoch, model, method, run, args):
+    """Persist a validation-selected checkpoint (pilot only). No test data is involved."""
+    torch.save({"epoch": epoch, "model_state_dict": model.state_dict(), "selection_method": method,
+                "run_name": run, "args": vars(args)}, path)
+
+
+def _adaptive_train(args, F, mode, n_epochs, ck=None, run=None):
+    """Shared epoch loop with the once-per-epoch adaptive lambda_b update. `mode` in {'smoke','pilot'}.
+    Runs a FIXED `n_epochs` with NO early stopping (patience/min-epochs are never consulted here).
+    Selection is validation-only; the test loader (F['_test_loader']) is NEVER referenced here. When
+    mode=='pilot' and `ck` (dict of paths) is provided, validation-selected checkpoints are saved on
+    improvement plus a final 'last' checkpoint for recovery diagnostics."""
     tsg, s1, device = F["tsg"], F["s1"], F["device"]
     fall_idx = F["fall_idx"]
 
@@ -129,13 +145,14 @@ def _adaptive_train(args, F, mode):
                          f"{EXPECTED_VAL_NONFALL} for the seed-42 UT-HAR split.")
 
     max_batches = args.smoke_batches if mode == "smoke" else None
+    save_ckpts = (mode == "pilot" and ck is not None)
     lam_b_current = LAM_B0
     history = []
     updates = 0
     budget_ever_nz = rescue_ever_nz = False
     best = {"maxscore": (-1e9, -1), "maxrec": ((-1e9, 1e9), -1), "minFA": ((1e9, -1e9), -1)}
 
-    for epoch in range(1, args.epochs + 1):
+    for epoch in range(1, n_epochs + 1):
         tr = vh.train_one_epoch_variantH(
             F["model"], F["train_loader"], F["train_criterion"], F["atk_criterion"], F["optimizer"], device,
             F["train_epsilons"], args.train_pgd_steps, F["rng"], tsg, lam_b_current, LAM_R, fall_idx,
@@ -165,10 +182,13 @@ def _adaptive_train(args, F, mode):
         if eligible:
             if score > best["maxscore"][0]:
                 best["maxscore"] = (score, epoch); flags["maxscore"] = 1
+                if save_ckpts: _save_ckpt(ck["maxscore"], epoch, F["model"], "maxscore", run, args)
             if (rec, -fp) > best["maxrec"][0]:
                 best["maxrec"] = ((rec, -fp), epoch); flags["maxrec"] = 1
+                if save_ckpts: _save_ckpt(ck["maxrec"], epoch, F["model"], "maxrec", run, args)
             if (fp, -rec) < best["minFA"][0]:
                 best["minFA"] = ((fp, -rec), epoch); flags["minFA"] = 1
+                if save_ckpts: _save_ckpt(ck["minFA"], epoch, F["model"], "minFA", run, args)
 
         history.append({
             "epoch": epoch, "lambda_b_current": lam_b_current, "lambda_b_next": lam_b_next,
@@ -192,7 +212,9 @@ def _adaptive_train(args, F, mode):
         raise SystemExit("STOP: nonfall_budget was always zero despite valid nonfall examples.")
     if not rescue_ever_nz:
         raise SystemExit("STOP: fall_rescue was always zero despite valid fall examples.")
-    assert updates == args.epochs, f"adaptive update cadence broken: {updates} updates over {args.epochs} epochs"
+    assert updates == n_epochs, f"adaptive update cadence broken: {updates} updates over {n_epochs} epochs"
+    if save_ckpts:
+        _save_ckpt(ck["last"], history[-1]["epoch"], F["model"], "last", run, args)
     return history, best, n_val_nonfall
 
 
@@ -211,7 +233,7 @@ def run_smoke(args, F):
     if not ok:
         raise SystemExit("SIGN CHECK FAILED before smoke.")
     t0 = time.time()
-    history, best, n_val_nonfall = _adaptive_train(args, F, mode="smoke")
+    history, best, n_val_nonfall = _adaptive_train(args, F, mode="smoke", n_epochs=args.epochs)
     fields = list(history[0].keys())
     with (base / f"{SETTING_NAME}_smoke_log.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=fields); w.writeheader()
@@ -235,8 +257,70 @@ def run_smoke(args, F):
 
 
 def run_pilot(args, F):
-    """Full seed-42 pilot -- INTENTIONALLY UNREACHABLE in the Gate-2 implementation (refused in main())."""
-    raise SystemExit("run_pilot is gated: the Option B pilot requires Gate-4 approval (not in this commit).")
+    """Gate-4 approved seed-42 Option B pilot: FIXED 70 epochs, NO early stopping, validation-only checkpoint
+    selection, NO test evaluation, NO test-loader access. Adaptive lambda_b updates once per epoch from the
+    validation PGD-10 FAR. Writes to the optionB/seed42 results + checkpoint namespaces."""
+    assert args.setting == SETTING_NAME and args.seed == 42, "pilot is optionB + seed 42 ONLY"
+    run = f"seed{args.seed}_optionB"
+    base = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget"
+            / "adaptive_lagrangian_far_constrained" / "optionB" / f"seed{args.seed}")
+    ck_dir = (F["exp"] / "checkpoints" / "safety_guided_defense" / "variantH_dual_tail_budget"
+              / "adaptive_lagrangian_far_constrained" / "optionB" / f"seed{args.seed}")
+    logs_dir = base / "logs"; ana_dir = base / "analysis"; meta_dir = base / "metadata"
+    for d in (ck_dir, logs_dir, ana_dir, meta_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    ck = {k: ck_dir / f"{run}_{k}_best.pt" for k in ("maxscore", "maxrec", "minFA")}
+    ck["last"] = ck_dir / f"{run}_last.pt"
+
+    print("=" * 74)
+    print(f"Option B FULL PILOT  setting={SETTING_NAME}  seed={args.seed}  (adaptive-Lagrangian FAR-constrained)")
+    print(f"  lam_r={LAM_R} lam_b(0)={LAM_B0} eta={ETA} lam_b_max={LAM_B_MAX} target_FAR={TARGET_FAR} "
+          f"k_abs_min={K_ABS_MIN} | FIXED epochs={PILOT_EPOCHS} early_stopping=FALSE "
+          f"(patience/min-epochs INACTIVE)")
+    print(f"  guard acc>={V2_GUARD_ACC} mF1>={V2_GUARD_F1} cleanFR>={GUARD_CLEAN_FALL_RECALL} | "
+          f"selection: maxscore/maxrec/minFA (validation only; test held out)")
+    print("=" * 74)
+    # sign check before the pilot (same discipline as Variant G/H/smoke)
+    _, ok = tvg.targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
+    if not ok:
+        raise SystemExit("SIGN CHECK FAILED before pilot.")
+    t0 = time.time()
+    history, best, n_val_nonfall = _adaptive_train(args, F, mode="pilot", n_epochs=PILOT_EPOCHS, ck=ck, run=run)
+
+    fields = list(history[0].keys())
+    with (logs_dir / f"{run}_training_log.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields); w.writeheader()
+        for r in history:
+            w.writerow({k: (f"{r[k]:.6f}" if isinstance(r[k], float) else r[k]) for k in fields})
+    with (ana_dir / f"{run}_selection_candidates.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f); w.writerow(["selection", "selected_epoch"])
+        for k in ("maxscore", "maxrec", "minFA"):
+            w.writerow([k, best[k][1]])
+    meta = {
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(), "stage": "optionB_seed42_pilot",
+        "namespace": "adaptive_lagrangian_far_constrained", "run_name": run,
+        "setting": SETTING_NAME, "seed": args.seed,
+        "fixed_epochs": PILOT_EPOCHS, "early_stopping": False,
+        "patience": "inactive_not_used_for_optionB_pilot", "min_epochs": "inactive_not_used_for_optionB_pilot",
+        "lambda_b0": LAM_B0, "eta": ETA, "lambda_b_max": LAM_B_MAX, "lambda_r": LAM_R,
+        "k_abs_min": K_ABS_MIN, "target_far": TARGET_FAR,
+        "n_val_nonfall": n_val_nonfall, "train_epsilons": F["train_epsilons"],
+        "update_rule": "lambda_b(t+1)=clip(lambda_b(t)+0.10*(FAR_val_PGD10(t)-0.10),0,1.0); once per epoch, "
+                       "after validation, applied to the next epoch",
+        "selection": "validation-only: maxscore / maxrec-within-guard / minFA-within-guard",
+        "selected_epochs": {k: best[k][1] for k in ("maxscore", "maxrec", "minFA")},
+        "checkpoints": {k: str(v) for k, v in ck.items()},
+        "test_set_used": False,
+        "claim_boundary": "window-level digital-domain white-box; optionB/seed42/LeNet only; "
+                          "no clinical/product/deployment/certified/over-the-air claim",
+        "device": str(F["device"]), "python_version": platform.python_version(),
+        "torch_version": torch.__version__, "elapsed_seconds": time.time() - t0}
+    with (meta_dir / f"{run}_metadata.json").open("w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2, default=float)
+    print("-" * 74)
+    print(f"Done in {meta['elapsed_seconds']:.1f}s ({PILOT_EPOCHS} epochs). selected epochs: "
+          + ", ".join(f"{k}={best[k][1]}" for k in ('maxscore', 'maxrec', 'minFA')))
+    print("=" * 74)
 
 
 # ----------------------------------------------------------------------------- self-check (spec sec.6)
@@ -278,20 +362,25 @@ def _check_selection_score():
 
 
 def _check_gate():
+    """Gate-4 semantics: optionB+seed42 is allowed for smoke AND pilot; everything else (incl. pilot for a
+    bad setting/seed) is refused."""
     out = {}
-    for bad in [("H2", 42, False), ("A1", 42, False), ("A0", 42, False), ("optionB", 44, False)]:
+    # these must all RAISE (blocked), including pilot attempts for unauthorized setting/seed
+    for bad in [("H2", 42, False), ("A1", 42, False), ("A0", 42, False), ("optionB", 44, False),
+                ("H2", 42, True), ("A1", 42, True), ("optionB", 44, True)]:
         try:
             enforce_gate(*bad); out[str(bad)] = False           # should have raised
         except SystemExit:
             out[str(bad)] = True
-    try:
-        enforce_gate("optionB", 42, True); out["pilot_refused"] = False
-    except SystemExit:
-        out["pilot_refused"] = True
+    # these must NOT raise (allowed): optionB+seed42 for both smoke and pilot
     try:
         enforce_gate("optionB", 42, False); out["optionB_seed42_smoke_ok"] = True
     except SystemExit:
         out["optionB_seed42_smoke_ok"] = False
+    try:
+        enforce_gate("optionB", 42, True); out["optionB_seed42_pilot_ok"] = True
+    except SystemExit:
+        out["optionB_seed42_pilot_ok"] = False
     out["pass"] = all(out.values())
     return out
 
@@ -331,8 +420,10 @@ def parse_args():
     p.add_argument("--setting", choices=[SETTING_NAME], required=True, help="optionB only")
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--epochs", type=int, default=70)
-    p.add_argument("--min-epochs", type=int, default=35)
-    p.add_argument("--patience", type=int, default=15)
+    p.add_argument("--min-epochs", type=int, default=35,
+                   help="INACTIVE for the Option B pilot (fixed 70 epochs, no early stopping); logged as not used.")
+    p.add_argument("--patience", type=int, default=15,
+                   help="INACTIVE for the Option B pilot (fixed 70 epochs, no early stopping); logged as not used.")
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--batch-size", type=int, default=64)
     p.add_argument("--train-pgd-steps", type=int, default=7)
@@ -342,7 +433,8 @@ def parse_args():
     p.add_argument("--smoke-batches", type=int, default=6)
     p.add_argument("--smoke-tag", default=None,
                    help="Optional subfolder for smoke/self-check artifacts (avoids overwriting committed ones).")
-    p.add_argument("--pilot", action="store_true", help="REFUSED in this Gate-2 implementation (Gate-4 only).")
+    p.add_argument("--pilot", action="store_true",
+                   help="Gate-4 approved full pilot: optionB + seed 42 ONLY; fixed 70 epochs, no early stopping.")
     return p.parse_args()
 
 
@@ -364,8 +456,11 @@ def main():
         return
     if args.smoke:
         run_smoke(args, F); return
-    raise SystemExit("Option B training is gated: pass --self-check or --smoke. The full pilot needs Gate-4 "
-                     "approval and is not runnable from this Gate-2 implementation.")
+    if args.pilot:
+        # Gate-4 approved: optionB + seed 42 only (already enforced by enforce_gate above). Fixed 70 epochs.
+        run_pilot(args, F); return
+    raise SystemExit("Option B training is gated: pass --self-check, --smoke, or the Gate-4 approved --pilot "
+                     "(optionB + seed 42 only). No general full-training mode is available.")
 
 
 if __name__ == "__main__":

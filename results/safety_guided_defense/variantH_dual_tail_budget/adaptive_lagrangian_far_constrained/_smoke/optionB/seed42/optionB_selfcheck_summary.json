@@ -22,8 +22,11 @@
     "('A1', 42, False)": true,
     "('A0', 42, False)": true,
     "('optionB', 44, False)": true,
-    "pilot_refused": true,
+    "('H2', 42, True)": true,
+    "('A1', 42, True)": true,
+    "('optionB', 44, True)": true,
     "optionB_seed42_smoke_ok": true,
+    "optionB_seed42_pilot_ok": true,
     "pass": true
   },
   "val_nonfall_count": {

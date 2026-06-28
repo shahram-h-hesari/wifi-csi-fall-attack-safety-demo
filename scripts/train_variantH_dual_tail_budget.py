@@ -215,6 +215,8 @@ def parse_args():
     p.add_argument("--self-check", action="store_true")
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--smoke-batches", type=int, default=5)
+    p.add_argument("--pilot", action="store_true",
+                   help="run the approved H1 seed-42 full pilot (H1 + seed 42 ONLY; requires explicit --pilot)")
     return p.parse_args()
 
 
@@ -393,6 +395,140 @@ def run_smoke(args, F):
     return summary
 
 
+def run_pilot(args, F):
+    """Approved H1 seed-42 full pilot. Mirrors the frozen Variant G selection-v2 run_full protocol
+    (guard 0.70/0.65; candidates v2safety/v2maxrec/v2lowFA/v2macroF1; same epochs/patience), only the
+    per-batch loss adds the two Variant H TopK terms. Writes to the variantH H1/seed42 namespace.
+    Hard-asserts H1+seed42 and stops immediately on NaN/inf or always-zero TopK terms (spec sec.4)."""
+    assert args.setting == "H1" and args.seed == 42, "pilot is H1 + seed 42 ONLY"
+    cfg = SETTINGS[args.setting]; tsg, s1 = F["tsg"], F["s1"]; device = F["device"]
+    run = f"seed{args.seed}_variantH_{args.setting}"
+    base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / args.setting / f"seed{args.seed}"
+    ck_dir = F["exp"] / "checkpoints" / "safety_guided_defense" / "variantH_dual_tail_budget" / args.setting / f"seed{args.seed}"
+    logs_dir = base / "logs"; ana_dir = base / "analysis"; meta_dir = base / "metadata"
+    for d in (ck_dir, logs_dir, ana_dir, meta_dir):
+        d.mkdir(parents=True, exist_ok=True)
+    ck = {k: ck_dir / f"{run}_{k}_best.pt" for k in ("v2safety", "v2maxrec", "v2lowFA", "v2macroF1")}
+    ck_last = ck_dir / f"{run}_last.pt"
+
+    print("=" * 74)
+    print(f"Variant H FULL PILOT  setting={args.setting} ({cfg['desc']})  run={run}")
+    print(f"  base(VariantG G1): lam_s={BASE_LAM_S} lam_f={BASE_LAM_F} lam_t={BASE_LAM_T} w_wr={BASE_W_WR} | "
+          f"NEW lam_b={cfg['lam_b']} lam_r={cfg['lam_r']} k_frac={K_FRAC} gamma_b={GAMMA_B} gamma_r={GAMMA_R} fw={args.fall_weight}")
+    print(f"  guard acc>={V2_GUARD_ACC} & mF1>={V2_GUARD_F1} | epochs={args.epochs} patience={args.patience} "
+          f"min={args.min_epochs} eps={F['train_epsilons']}")
+    print("=" * 74)
+
+    history = []
+    best = {"v2safety": (-1e9, -1), "v2maxrec": ((-1e9, 1e9), -1),
+            "v2lowFA": ((1e9, -1e9), -1), "v2macroF1": (-1e9, -1)}
+    best_rec = {}; no_improve = 0; start = time.time()
+    budget_ever_nz = rescue_ever_nz = False
+
+    for epoch in range(1, args.epochs + 1):
+        tr = train_one_epoch_variantH(F["model"], F["train_loader"], F["train_criterion"], F["atk_criterion"],
+                                      F["optimizer"], device, F["train_epsilons"], args.train_pgd_steps,
+                                      F["rng"], tsg, cfg["lam_b"], cfg["lam_r"], F["fall_idx"], max_batches=None)
+        # spec sec.4 numerical stop conditions
+        for k in ("train_loss", "mean_base", "mean_src_motion", "mean_fall_margin", "mean_targeted",
+                  "mean_nonfall_budget", "mean_fall_rescue"):
+            if not np.isfinite(tr[k]):
+                raise SystemExit(f"STOP (numerical): {k} not finite at epoch {epoch} (NaN/inf).")
+        budget_ever_nz = budget_ever_nz or (tr["mean_nonfall_budget"] > 0)
+        rescue_ever_nz = rescue_ever_nz or (tr["mean_fall_rescue"] > 0)
+
+        vb = tsg.compute_validation_bundle(s1, F["model"], F["val_loader"], F["atk_criterion"], device)
+        sc = tvg.safety_score(vb)
+        acc = vb["val_clean_accuracy"]; f1 = vb["val_clean_macro_f1"]
+        rec = vb["val_pgd_fall_recall"]; fpv = vb["val_pgd_false_fall_alarms"]
+        eligible = (acc >= V2_GUARD_ACC and f1 >= V2_GUARD_F1)
+
+        def save(key):
+            torch.save({"epoch": epoch, "model_state_dict": F["model"].state_dict(), "selection_method": key,
+                        "val_bundle": vb, "safety_score": sc, "run_name": run, "args": vars(args)}, ck[key])
+
+        flags = {k: 0 for k in ck}
+        if eligible:
+            if sc > best["v2safety"][0]:
+                best["v2safety"] = (sc, epoch); best_rec["v2safety"] = vb; save("v2safety"); flags["v2safety"] = 1; no_improve = 0
+            if (rec, -fpv) > best["v2maxrec"][0]:
+                best["v2maxrec"] = ((rec, -fpv), epoch); best_rec["v2maxrec"] = vb; save("v2maxrec"); flags["v2maxrec"] = 1
+            if rec >= tvg.LOWFA_RECALL_FLOOR and (fpv, -rec) < best["v2lowFA"][0]:
+                best["v2lowFA"] = ((fpv, -rec), epoch); best_rec["v2lowFA"] = vb; save("v2lowFA"); flags["v2lowFA"] = 1
+        if not flags["v2safety"] and best["v2safety"][1] > 0:
+            no_improve += 1
+        if f1 > best["v2macroF1"][0]:
+            best["v2macroF1"] = (f1, epoch); best_rec["v2macroF1"] = vb; save("v2macroF1"); flags["v2macroF1"] = 1
+
+        history.append({"epoch": epoch, "train_loss": tr["train_loss"], "mean_base": tr["mean_base"],
+                        "mean_src_motion": tr["mean_src_motion"], "mean_fall_margin": tr["mean_fall_margin"],
+                        "mean_targeted": tr["mean_targeted"], "mean_nonfall_budget": tr["mean_nonfall_budget"],
+                        "mean_fall_rescue": tr["mean_fall_rescue"], "topk_budget_selected": tr["topk_budget_selected"],
+                        "topk_rescue_selected": tr["topk_rescue_selected"], "val_clean_accuracy": acc, "val_clean_macro_f1": f1,
+                        "val_clean_fall_recall": vb["val_clean_fall_recall"], "val_fgsm_fall_recall": vb["val_fgsm_fall_recall"],
+                        "val_pgd_fall_recall": rec, "val_fgsm_false_fall_alarms": vb["val_fgsm_false_fall_alarms"],
+                        "val_pgd_false_fall_alarms": fpv, "val_normalized_false_alarm_burden": vb["val_normalized_false_alarm_burden"],
+                        "safety_score": sc, "v2_eligible": int(eligible),
+                        "sel_v2safety": flags["v2safety"], "sel_v2maxrec": flags["v2maxrec"],
+                        "sel_v2lowFA": flags["v2lowFA"], "sel_v2macroF1": flags["v2macroF1"]})
+        print(f"Epoch {epoch:03d}/{args.epochs} | loss={tr['train_loss']:.3f} base={tr['mean_base']:.3f} "
+              f"src={tr['mean_src_motion']:.3f} fall={tr['mean_fall_margin']:.3f} tgt={tr['mean_targeted']:.3f} "
+              f"budget={tr['mean_nonfall_budget']:.3f} rescue={tr['mean_fall_rescue']:.3f} "
+              f"ksel={tr['topk_budget_selected']:.1f}/{tr['topk_rescue_selected']:.1f} | "
+              f"acc={acc:.3f} f1={f1:.3f} cleanFR={vb['val_clean_fall_recall']:.3f} pgd_fr={rec:.3f} pgd_FP={fpv} "
+              f"score={sc:.3f} v2elig={int(eligible)} "
+              f"[{'S' if flags['v2safety'] else '.'}{'R' if flags['v2maxrec'] else '.'}"
+              f"{'L' if flags['v2lowFA'] else '.'}{'F' if flags['v2macroF1'] else '.'}]")
+        if args.patience > 0 and epoch >= args.min_epochs and no_improve >= args.patience:
+            print(f"Early stopping at epoch {epoch} (best v2safety epoch {best['v2safety'][1]})."); break
+
+    # spec sec.4: always-zero TopK term despite valid examples is a stop/flag condition
+    if not budget_ever_nz:
+        raise SystemExit("STOP: nonfall_budget was always zero across training despite valid nonfall examples.")
+    if not rescue_ever_nz:
+        raise SystemExit("STOP: fall_rescue was always zero across training despite valid fall examples.")
+
+    elapsed = time.time() - start
+    last_epoch = history[-1]["epoch"]
+    torch.save({"epoch": last_epoch, "model_state_dict": F["model"].state_dict(),
+                "selection_method": "last", "run_name": run, "args": vars(args)}, ck_last)
+    fields = list(history[0].keys())
+    with (logs_dir / f"{run}_training_log.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fields); w.writeheader()
+        for r in history:
+            w.writerow({k: (f"{r[k]:.6f}" if isinstance(r[k], float) else r[k]) for k in fields})
+    with (ana_dir / f"{run}_selection_candidates.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f)
+        w.writerow(["selection", "selected_epoch", "val_clean_acc", "val_clean_macro_f1",
+                    "val_pgd_recall", "val_pgd_false_alarms", "safety_score"])
+        for k in ck:
+            ep = best[k][1]; vbk = best_rec.get(k, {})
+            w.writerow([k, ep, f"{vbk.get('val_clean_accuracy', float('nan')):.4f}",
+                        f"{vbk.get('val_clean_macro_f1', float('nan')):.4f}",
+                        f"{vbk.get('val_pgd_fall_recall', float('nan')):.4f}",
+                        vbk.get('val_pgd_false_fall_alarms', ''), f"{tvg.safety_score(vbk):.4f}" if vbk else ""])
+    meta = {"timestamp_utc": datetime.now(timezone.utc).isoformat(), "stage": "variantH_H1_seed42_pilot",
+            "run_name": run, "setting": args.setting, "setting_desc": cfg["desc"], "seed": args.seed,
+            "lam_s": BASE_LAM_S, "lam_f": BASE_LAM_F, "lam_t": BASE_LAM_T, "w_wr": BASE_W_WR,
+            "lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "k_frac": K_FRAC, "gamma_b": GAMMA_B, "gamma_r": GAMMA_R,
+            "fall_weight": args.fall_weight,
+            "objective": "L_FWCE + lam_s*src + lam_f*fall + lam_t*tgt (Variant G G1) "
+                         "+ lam_b*TopKMean[relu(z_f-z_y+gb)][adv nonfall, src-weighted] "
+                         "+ lam_r*TopKMean[relu(gr+max_nonfall-z_f)][adv fall]",
+            "v2_guard": {"min_clean_accuracy": V2_GUARD_ACC, "min_clean_macro_f1": V2_GUARD_F1},
+            "train_epsilons": F["train_epsilons"], "train_pgd_steps": args.train_pgd_steps,
+            "epochs_run": last_epoch, "split_sizes": F["split_sizes"], "test_set_used": False,
+            "selected_epochs": {k: best[k][1] for k in ck}, "checkpoints": {k: str(v) for k, v in ck.items()},
+            "claim_boundary": "window-level digital-domain white-box; H1/seed42/LeNet only; not solved/certified/clinical/OTA",
+            "device": str(device), "python_version": platform.python_version(), "torch_version": torch.__version__,
+            "git_commit": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(F["exp"])), "elapsed_seconds": elapsed}
+    with (meta_dir / f"{run}_metadata.json").open("w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2)
+    print("-" * 74)
+    print(f"Done in {elapsed:.1f}s ({last_epoch} epochs). selected epochs: " + ", ".join(f"{k}={best[k][1]}" for k in ck))
+    print("=" * 74)
+
+
 def main():
     args = parse_args()
     if args.seed != 42:
@@ -415,9 +551,18 @@ def main():
         if not ok:
             raise SystemExit("SIGN CHECK FAILED before smoke (spec sec.5).")
         run_smoke(args, F); return
-    # ----- full training: GATED (smoke-only implementation; no pilot until reviewed) -----
-    raise SystemExit("Full Variant H training is intentionally gated (smoke-only implementation). Pass "
-                     "--self-check or --smoke. The H1/H2/H3 pilot must be launched explicitly after review.")
+    if args.pilot:
+        # ----- APPROVED H1 seed-42 pilot ONLY (code-review Decision A). H1+seed42 hard-required. -----
+        if args.setting != "H1":
+            raise SystemExit("Pilot is restricted to setting H1 (code-review Decision A); H2/H3 are NOT "
+                             "approved to run. Re-review required before any H2/H3 pilot.")
+        _, ok = tvg.targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
+        if not ok:
+            raise SystemExit("SIGN CHECK FAILED before pilot (spec sec.5).")
+        run_pilot(args, F); return
+    # ----- full training without --pilot: still GATED (no general full-training mode) -----
+    raise SystemExit("Full Variant H training is intentionally gated. Pass --self-check, --smoke, or the "
+                     "approved --pilot (H1+seed42 only). General full-training mode is not available.")
 
 
 if __name__ == "__main__":

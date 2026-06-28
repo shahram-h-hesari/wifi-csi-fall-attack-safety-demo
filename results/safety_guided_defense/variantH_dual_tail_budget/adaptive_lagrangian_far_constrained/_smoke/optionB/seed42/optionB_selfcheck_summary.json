@@ -1,0 +1,39 @@
+{
+  "lambda_update": {
+    "far0.15_0.25->0.255": true,
+    "far0.05_0.25->0.245": true,
+    "highFAR_clips_at_1.0": true,
+    "lowFAR_clips_at_0.0": true,
+    "pass": true
+  },
+  "once_per_epoch": {
+    "updates": 3,
+    "expected": 3,
+    "pass": true
+  },
+  "selection_score": {
+    "no_violation_0.60": true,
+    "far_only_0.40": true,
+    "all_three_0.10": true,
+    "pass": true
+  },
+  "gate": {
+    "('H2', 42, False)": true,
+    "('A1', 42, False)": true,
+    "('A0', 42, False)": true,
+    "('optionB', 44, False)": true,
+    "pilot_refused": true,
+    "optionB_seed42_smoke_ok": true,
+    "pass": true
+  },
+  "val_nonfall_count": {
+    "n_val_nonfall": 452,
+    "expected": 452,
+    "pass": true
+  },
+  "no_test_access": {
+    "test_loader_present_but_unused": true,
+    "pass": true
+  },
+  "sign_check_increased": true
+}

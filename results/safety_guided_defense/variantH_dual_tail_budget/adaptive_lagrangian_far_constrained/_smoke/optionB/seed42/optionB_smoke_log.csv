@@ -1,0 +1,3 @@
+epoch,lambda_b_current,lambda_b_next,far_val_pgd10,n_val_nonfall,val_pgd_false_fall_alarms,val_pgd_fall_recall,val_clean_accuracy,val_clean_macro_f1,val_clean_fall_recall,mean_nonfall_budget,mean_fall_rescue,budget_to_rescue_loss_ratio,fall_selected_count,fall_k_abs_floor_active_frac,clean_guard_eligible,selection_score,sel_maxscore,sel_maxrec,sel_minFA
+1,0.250000,0.240000,0.000000,452,0,0.000000,0.243952,0.056031,0.000000,0.415753,0.996562,0.417187,2.333333,1.000000,0,-2.712097,0,0,0
+2,0.240000,0.230000,0.000000,452,0,0.000000,0.243952,0.056031,0.000000,0.452687,0.683006,0.662786,2.500000,0.833333,0,-2.712097,0,0,0

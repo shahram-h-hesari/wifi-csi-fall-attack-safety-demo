@@ -57,10 +57,17 @@ BASE_LAM_S, BASE_LAM_F, BASE_LAM_T, BASE_W_WR = tvg.LAM_S, tvg.LAM_F, 1.0, 2.0
 # Variant H new-term defaults (spec sec.4; only lam_b/lam_r vary per setting).
 K_FRAC, GAMMA_B, GAMMA_R = 0.25, 0.5, 0.5
 SETTINGS = {
-    "H1": {"lam_b": 0.5, "lam_r": 0.5, "desc": "balanced dual-tail"},
-    "H2": {"lam_b": 1.0, "lam_r": 0.5, "desc": "nonfall-budget-heavy"},
-    "H3": {"lam_b": 0.5, "lam_r": 1.0, "desc": "fall-rescue-heavy"},
+    # Variant H committed settings (k_abs_min=None -> committed behavior unchanged).
+    "H1": {"lam_b": 0.5, "lam_r": 0.5, "k_abs_min": None, "desc": "balanced dual-tail"},
+    "H2": {"lam_b": 1.0, "lam_r": 0.5, "k_abs_min": None, "desc": "nonfall-budget-heavy"},
+    "H3": {"lam_b": 0.5, "lam_r": 1.0, "k_abs_min": None, "desc": "fall-rescue-heavy"},
+    # Option A rebalanced dual-tail (OPTION_A_REBALANCED_PREREGISTRATION.md). ONLY A1 is runnable.
+    "A1": {"lam_b": 0.25, "lam_r": 1.0, "k_abs_min": 4, "desc": "Option A1 recall-preserving rebalanced dual-tail"},
+    "A2": {"lam_b": 0.10, "lam_r": 1.5, "k_abs_min": 4, "desc": "Option A2 stronger fall rescue (BLOCKED until approved)"},
+    "A0": {"lam_b": 0.0, "lam_r": 1.0, "k_abs_min": 4, "desc": "Option A0 fall-rescue floor only (BLOCKED until approved)"},
 }
+OPTIONA_SETTINGS = {"A1", "A2", "A0"}        # Option A namespace, distinct from H1/H2/H3
+OPTIONA_RUNNABLE = {"A1"}                     # A2/A0 hard-blocked unless explicitly approved in a future task
 
 
 # --------------------------------------------------------------------------- TopK reducer (spec sec.3)
@@ -79,6 +86,18 @@ def topk_mean(values, k_frac=None, k_abs=None):
         return torch.zeros((), device=values.device, dtype=values.dtype)
     k = _resolve_k(n, k_frac, k_abs)
     return torch.topk(values, k, largest=True, sorted=False).values.mean()
+
+
+def _resolve_k_floor(n, k_frac, k_abs_min=None):
+    """K = max(ceil(k_frac*n), k_abs_min), clamped to [1, n]. Returns (k, base_k, floor_active).
+    floor_active = the k_abs_min floor raised K above the fraction-based base (Option A fall-rescue)."""
+    if n == 0:
+        return 0, 0, False
+    base = int(math.ceil((k_frac if k_frac is not None else 1.0) * n))
+    k = base if k_abs_min is None else max(base, int(k_abs_min))
+    k = max(1, min(k, n))
+    floor_active = bool(k_abs_min is not None and int(k_abs_min) > base)
+    return k, max(1, min(base, n)), floor_active
 
 
 # --------------------------------------------------------------------------- L_nonfall-budget (spec sec.3)
@@ -106,50 +125,55 @@ def nonfall_budget_loss(logits_adv, y, fall_idx, gamma_b, k_frac, source_weights
 
 
 # --------------------------------------------------------------------------- L_fall-rescue (spec sec.3)
-def fall_rescue_loss(logits_adv, y, fall_idx, gamma_r, k_frac):
+def fall_rescue_loss(logits_adv, y, fall_idx, gamma_r, k_frac, k_abs_min=None):
     """TopKMean_{y=f}[ relu(gamma_r + max_{c!=f} z_c - z_f) ] over the HARDEST adversarial FALL windows.
-    Returns (scalar loss, diagnostics)."""
+    K = max(ceil(k_frac*n_fall), k_abs_min) clamped to n_fall (Option A `k_abs_min` floor; default None ->
+    committed Variant H behavior). If n_fall < k_abs_min, selected = n_fall (not an error). Empty -> 0.
+    Returns (scalar loss, diagnostics incl. floor_active)."""
     device = logits_adv.device
     f = y == fall_idx
     valid = int(f.sum())
     if valid == 0:
-        return torch.zeros((), device=device), {"valid": 0, "selected": 0,
-                                                 "mean_fall_margin": float("nan"), "mean_selected_hinge": 0.0}
+        return torch.zeros((), device=device), {"valid": 0, "selected": 0, "k_abs_min": k_abs_min,
+                                                 "floor_active": False, "mean_fall_margin": float("nan"),
+                                                 "mean_selected_hinge": 0.0}
     zo = logits_adv[f].clone()
     zf = zo[:, fall_idx].clone()
     zo[:, fall_idx] = float("-inf")
     max_nf = zo.max(dim=1).values
     m_f = zf - max_nf                              # fall margin (positive = fall on top)
     hinge = torch.relu(gamma_r + (max_nf - zf))    # = relu(gamma_r - m_f); largest on the hardest falls
-    k = _resolve_k(hinge.numel(), k_frac=k_frac)
+    k, _base, floor_active = _resolve_k_floor(hinge.numel(), k_frac, k_abs_min)
     L = topk_mean(hinge, k_abs=k)
-    diag = {"valid": valid, "selected": int(k), "mean_fall_margin": float(m_f.mean().item()),
-            "mean_selected_hinge": float(L.item())}
+    diag = {"valid": valid, "selected": int(k), "k_abs_min": k_abs_min, "floor_active": bool(floor_active),
+            "mean_fall_margin": float(m_f.mean().item()), "mean_selected_hinge": float(L.item())}
     return L, diag
 
 
 # --------------------------------------------------------------------------- all components (spec sec.3)
 def variantH_margin_terms(adv_out, adv_lab, tgt_out, tgt_lab, w_wr, fall_idx,
-                          gamma_b, gamma_r, k_frac, device):
+                          gamma_b, gamma_r, k_frac, device, fall_k_abs_min=None):
     """Returns dict of the five Variant H loss components + budget/rescue diagnostics.
-    Reuses Variant G for src_motion / fall_margin / targeted (unchanged)."""
+    Reuses Variant G for src_motion / fall_margin / targeted (unchanged). `fall_k_abs_min` is the
+    Option A fall-rescue floor (default None -> committed Variant H behavior)."""
     L_src, L_fall, L_tgt = tvg.variantG_margin_terms(adv_out, adv_lab, tgt_out, tgt_lab, w_wr, fall_idx, device)
     nf = adv_lab != fall_idx
     sw = tvg.source_weights(adv_lab[nf], w_wr, device) if nf.any() else None
     L_budget, d_b = nonfall_budget_loss(adv_out, adv_lab, fall_idx, gamma_b, k_frac, source_weights=sw)
-    L_rescue, d_r = fall_rescue_loss(adv_out, adv_lab, fall_idx, gamma_r, k_frac)
+    L_rescue, d_r = fall_rescue_loss(adv_out, adv_lab, fall_idx, gamma_r, k_frac, k_abs_min=fall_k_abs_min)
     return {"src_motion": L_src, "fall_margin": L_fall, "targeted": L_tgt,
             "nonfall_budget": L_budget, "fall_rescue": L_rescue, "budget_diag": d_b, "rescue_diag": d_r}
 
 
 def train_one_epoch_variantH(model, loader, train_criterion, atk_criterion, optimizer, device,
                              train_epsilons, train_pgd_steps, rng, tsg, lam_b, lam_r, fall_idx,
-                             max_batches=None):
-    """Variant G batch-split FGSM+PGD + targeted/source terms, PLUS the two Variant H TopK terms."""
+                             max_batches=None, fall_k_abs_min=None):
+    """Variant G batch-split FGSM+PGD + targeted/source terms, PLUS the two Variant H TopK terms.
+    `fall_k_abs_min` (Option A) floors the fall-rescue TopK count; default None -> committed behavior."""
     model.train()
     tot_loss = tot = 0.0
     s = {"base": 0.0, "src": 0.0, "fall": 0.0, "tgt": 0.0, "budget": 0.0, "rescue": 0.0}
-    ksel = {"budget": 0, "rescue": 0}; nb = 0
+    ksel = {"budget": 0, "rescue": 0}; floor_batches = 0; nb = 0
     for bi, (inputs, labels) in enumerate(loader):
         if max_batches is not None and bi >= max_batches:
             break
@@ -183,7 +207,8 @@ def train_one_epoch_variantH(model, loader, train_criterion, atk_criterion, opti
         adv_out, adv_lab = outputs[n_clean:], batch_y[n_clean:]
         tgt_out = model(tgt_adv).float() if (tgt_adv is not None and tgt_adv.numel() > 0) else None
 
-        H = variantH_margin_terms(adv_out, adv_lab, tgt_out, tgt_lab, BASE_W_WR, fall_idx, GAMMA_B, GAMMA_R, K_FRAC, device)
+        H = variantH_margin_terms(adv_out, adv_lab, tgt_out, tgt_lab, BASE_W_WR, fall_idx, GAMMA_B, GAMMA_R,
+                                  K_FRAC, device, fall_k_abs_min=fall_k_abs_min)
         loss = (base + BASE_LAM_S * H["src_motion"] + BASE_LAM_F * H["fall_margin"] + BASE_LAM_T * H["targeted"]
                 + lam_b * H["nonfall_budget"] + lam_r * H["fall_rescue"])
         loss.backward(); optimizer.step()
@@ -193,11 +218,17 @@ def train_one_epoch_variantH(model, loader, train_criterion, atk_criterion, opti
         s["fall"] += float(H["fall_margin"].item()); s["tgt"] += float(H["targeted"].item())
         s["budget"] += float(H["nonfall_budget"].item()); s["rescue"] += float(H["fall_rescue"].item())
         ksel["budget"] += H["budget_diag"]["selected"]; ksel["rescue"] += H["rescue_diag"]["selected"]
+        floor_batches += int(H["rescue_diag"].get("floor_active", False))
     d = max(1, nb)
+    mean_budget = s["budget"] / d; mean_rescue = s["rescue"] / d
     return {"train_loss": tot_loss / max(1, tot), "mean_base": s["base"] / d, "mean_src_motion": s["src"] / d,
             "mean_fall_margin": s["fall"] / d, "mean_targeted": s["tgt"] / d,
-            "mean_nonfall_budget": s["budget"] / d, "mean_fall_rescue": s["rescue"] / d,
-            "topk_budget_selected": ksel["budget"] / d, "topk_rescue_selected": ksel["rescue"] / d, "batches": nb}
+            "mean_nonfall_budget": mean_budget, "mean_fall_rescue": mean_rescue,
+            "nonfall_selected_count": ksel["budget"] / d, "fall_selected_count": ksel["rescue"] / d,
+            "topk_budget_selected": ksel["budget"] / d, "topk_rescue_selected": ksel["rescue"] / d,
+            "fall_k_abs_floor_active_frac": floor_batches / d,
+            "budget_to_rescue_loss_ratio": (mean_budget / mean_rescue) if mean_rescue > 1e-12 else float("nan"),
+            "batches": nb}
 
 
 def parse_args():
@@ -265,6 +296,30 @@ def _directionality_check(device):
             "rescue_mf_before": mf_before, "rescue_mf_after": mf_after, "rescue_increased_mf": mf_after > mf_before}
 
 
+def _check_kabs_floor(device, fall_idx=1):
+    """Option A fall-rescue k_abs_min floor on deterministic synthetic fall logits:
+    n=10 -> 4 ; n=3 -> 3 ; n=0 -> 0 (loss 0). Selected = largest hinges; grads only through selected."""
+    res = {}
+    for n in (10, 3, 0):
+        if n == 0:
+            Z = torch.zeros(0, 7, device=device); y = torch.zeros(0, dtype=torch.long, device=device)
+            L, d = fall_rescue_loss(Z, y, fall_idx, GAMMA_R, k_frac=0.25, k_abs_min=4)
+            res[n] = {"selected": d["selected"], "loss": float(L.item()), "floor_active": d["floor_active"]}
+            continue
+        torch.manual_seed(100 + n)
+        Z = torch.randn(n, 7, device=device, requires_grad=True)
+        y = torch.full((n,), fall_idx, dtype=torch.long, device=device)
+        L, d = fall_rescue_loss(Z, y, fall_idx, GAMMA_R, k_frac=0.25, k_abs_min=4)
+        g = torch.autograd.grad(L, Z, retain_graph=False)[0]
+        rows_with_grad = int((g.abs().sum(dim=1) > 0).sum().item())
+        res[n] = {"selected": d["selected"], "floor_active": d["floor_active"],
+                  "rows_with_grad": rows_with_grad}
+    ok = (res[10]["selected"] == 4 and res[3]["selected"] == 3 and res[0]["selected"] == 0
+          and res[0]["loss"] == 0.0 and res[10]["rows_with_grad"] == 4 and res[3]["rows_with_grad"] == 3)
+    res["pass"] = bool(ok)
+    return res
+
+
 def run_self_check(args, F):
     cfg = SETTINGS[args.setting]
     out = {"setting": args.setting, "desc": cfg["desc"]}
@@ -274,6 +329,17 @@ def run_self_check(args, F):
     assert {c for c in range(7) if c != 1} == NONFALL_EXPECTED
     print(f"  class-index assertions PASSED: FALL={F['fall_idx']} NUM={F['num_classes']} WALK={WALK} RUN={RUN} nonfall={sorted(NONFALL_EXPECTED)}")
     out["class_index_ok"] = True
+    # setting-parameter check: A1 must exactly match the Option A pre-registration
+    out["params"] = {"lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "k_abs_min": cfg.get("k_abs_min"),
+                     "nonfall_k_frac": K_FRAC, "fall_rescue_k_frac": K_FRAC, "gamma_b": GAMMA_B, "gamma_r": GAMMA_R}
+    if args.setting == "A1":
+        assert (cfg["lam_b"], cfg["lam_r"], cfg.get("k_abs_min")) == (0.25, 1.0, 4) and K_FRAC == 0.25 \
+            and GAMMA_B == 0.5 and GAMMA_R == 0.5, "A1 parameters must match the Option A pre-registration"
+        print(f"  A1 params PASSED: {out['params']}")
+    # Option A fall-rescue k_abs_min floor check (synthetic, deterministic)
+    out["kabs_floor"] = _check_kabs_floor(F["device"], F["fall_idx"])
+    print(f"  k_abs_min floor (n=10->4, n=3->3, n=0->0): {out['kabs_floor']}")
+    assert out["kabs_floor"]["pass"], "k_abs_min floor check failed"
     # targeted-PGD sign check (reuse Variant G's; train/val data only -> no test leakage)
     sc, ok = tvg.targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
     pct = None
@@ -302,7 +368,8 @@ def run_self_check(args, F):
     outputs = F["model"](torch.cat([inputs[:n_clean], fgsm, pgd], 0)).float()
     base = F["train_criterion"](outputs, labels)
     H = variantH_margin_terms(outputs[n_clean:], labels[n_clean:], F["model"](tgt_adv).float(), labels[nf],
-                              BASE_W_WR, F["fall_idx"], GAMMA_B, GAMMA_R, K_FRAC, F["device"])
+                              BASE_W_WR, F["fall_idx"], GAMMA_B, GAMMA_R, K_FRAC, F["device"],
+                              fall_k_abs_min=cfg.get("k_abs_min"))
     comp = {"FWCE_base": base.item(), "src_motion": H["src_motion"].item(), "fall_margin": H["fall_margin"].item(),
             "targeted": H["targeted"].item(), "nonfall_budget": H["nonfall_budget"].item(),
             "fall_rescue": H["fall_rescue"].item(), "budget_diag": H["budget_diag"], "rescue_diag": H["rescue_diag"]}
@@ -334,19 +401,28 @@ def run_self_check(args, F):
 
 def run_smoke(args, F):
     cfg = SETTINGS[args.setting]; tsg, s1 = F["tsg"], F["s1"]
-    run = f"seed{args.seed}_variantH_{args.setting}_smoke"
-    base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / "_smoke" / f"seed{args.seed}"
+    optionA = args.setting in OPTIONA_SETTINGS
+    kabs = cfg.get("k_abs_min")
+    if optionA:
+        run = f"{args.setting}"
+        base = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget"
+                / "optionA_rebalanced" / "_smoke" / args.setting / f"seed{args.seed}")
+        log_name, sum_name = f"{run}_smoke_log.csv", f"{run}_smoke_summary.json"
+    else:
+        run = f"seed{args.seed}_variantH_{args.setting}_smoke"
+        base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / "_smoke" / f"seed{args.seed}"
+        log_name, sum_name = f"{run}_log.csv", f"{run}_summary.json"
     base.mkdir(parents=True, exist_ok=True)
     print("=" * 74); print(f"Variant H --smoke  setting={args.setting} ({cfg['desc']})  run={run}")
     print(f"  base(VariantG G1): lam_s={BASE_LAM_S} lam_f={BASE_LAM_F} lam_t={BASE_LAM_T} w_wr={BASE_W_WR} | "
-          f"NEW lam_b={cfg['lam_b']} lam_r={cfg['lam_r']} k_frac={K_FRAC} gamma_b={GAMMA_B} gamma_r={GAMMA_R} | "
-          f"epochs={args.epochs} smoke_batches={args.smoke_batches}")
+          f"NEW lam_b={cfg['lam_b']} lam_r={cfg['lam_r']} k_frac={K_FRAC} k_abs_min={kabs} gamma_b={GAMMA_B} "
+          f"gamma_r={GAMMA_R} | epochs={args.epochs} smoke_batches={args.smoke_batches}")
     history = []; start = time.time(); collapse = False; fp_drop_by_collapse = False
     for epoch in range(1, args.epochs + 1):
         tr = train_one_epoch_variantH(F["model"], F["train_loader"], F["train_criterion"], F["atk_criterion"],
                                       F["optimizer"], F["device"], F["train_epsilons"], args.train_pgd_steps,
                                       F["rng"], tsg, cfg["lam_b"], cfg["lam_r"], F["fall_idx"],
-                                      max_batches=args.smoke_batches)
+                                      max_batches=args.smoke_batches, fall_k_abs_min=kabs)
         vb = tsg.compute_validation_bundle(s1, F["model"], F["val_loader"], F["atk_criterion"], F["device"])
         acc, f1 = vb["val_clean_accuracy"], vb["val_clean_macro_f1"]
         rec, fpv = vb["val_pgd_fall_recall"], vb["val_pgd_false_fall_alarms"]
@@ -363,21 +439,29 @@ def run_smoke(args, F):
               f"src={tr['mean_src_motion']:.3f} fall={tr['mean_fall_margin']:.3f} tgt={tr['mean_targeted']:.3f} "
               f"budget={tr['mean_nonfall_budget']:.3f} rescue={tr['mean_fall_rescue']:.3f} "
               f"| ksel(b/r)={tr['topk_budget_selected']:.1f}/{tr['topk_rescue_selected']:.1f} "
+              f"floor={tr['fall_k_abs_floor_active_frac']:.2f} b/r_ratio={tr['budget_to_rescue_loss_ratio']:.3f} "
               f"| acc={acc:.3f} f1={f1:.3f} cleanFR={clean_fr:.3f} pgd_fr={rec:.3f} pgd_FP={fpv}")
     elapsed = time.time() - start
-    with (base / f"{run}_log.csv").open("w", newline="", encoding="utf-8") as f:
+    with (base / log_name).open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(history[0].keys())); w.writeheader()
         for r in history:
             w.writerow({k: (f"{r[k]:.6f}" if isinstance(r[k], float) else r[k]) for k in history[0]})
-    summary = {"timestamp_utc": datetime.now(timezone.utc).isoformat(), "stage": "variantH_smoke",
+    summary = {"timestamp_utc": datetime.now(timezone.utc).isoformat(),
+               "stage": "optionA_smoke" if optionA else "variantH_smoke",
                "setting": args.setting, "desc": cfg["desc"], "seed": args.seed,
                "lam_s": BASE_LAM_S, "lam_f": BASE_LAM_F, "lam_t": BASE_LAM_T, "w_wr": BASE_W_WR,
-               "lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "k_frac": K_FRAC, "gamma_b": GAMMA_B, "gamma_r": GAMMA_R,
+               "lam_b": cfg["lam_b"], "lam_r": cfg["lam_r"], "nonfall_k_frac": K_FRAC, "fall_rescue_k_frac": K_FRAC,
+               "fall_rescue_k_abs_min": kabs, "gamma_b": GAMMA_B, "gamma_r": GAMMA_R,
                "epochs": args.epochs, "smoke_batches": args.smoke_batches, "elapsed_seconds": elapsed,
                "final": {k: history[-1][k] for k in ("train_loss", "mean_nonfall_budget", "mean_fall_rescue",
+                                                     "nonfall_selected_count", "fall_selected_count",
+                                                     "fall_k_abs_floor_active_frac", "budget_to_rescue_loss_ratio",
                                                      "val_clean_fall_recall", "val_pgd_fall_recall", "val_pgd_false_fall_alarms")},
                "clean_fall_recall_collapsed": bool(collapse),
                "fp_dropped_only_by_recall_collapse": bool(fp_drop_by_collapse),
+               "clean_fall_recall_collapse_after_warmup": "not_applicable_smoke",
+               "pgd_fall_recall_collapse_after_warmup": "not_applicable_smoke",
+               "fall_class_suppression_warning": "not_applicable_smoke",
                "test_set_used": False, "device": str(F["device"]),
                "python_version": platform.python_version(), "torch_version": torch.__version__,
                "git_commit": s1.get_command_output(["git", "rev-parse", "HEAD"], cwd=str(F["exp"])),
@@ -386,11 +470,11 @@ def run_smoke(args, F):
                         "(Variant G/G1 began identically, recall 0 until it recovered around epoch 27); "
                         "it is NOT a convergence conclusion. No full-training / pilot conclusion may be "
                         "drawn from smoke results. No .pt persisted; no scientific claim is made.")}
-    with (base / f"{run}_summary.json").open("w", encoding="utf-8") as f:
+    with (base / sum_name).open("w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2)
     print(f"  smoke done in {elapsed:.1f}s | clean_fall_recall_collapsed={collapse} "
           f"fp_dropped_only_by_recall_collapse={fp_drop_by_collapse}")
-    print(f"  summary -> {base / (run + '_summary.json')}")
+    print(f"  summary -> {base / sum_name}")
     print("=" * 74)
     return summary
 
@@ -536,17 +620,27 @@ def main():
                          "blocked. seed-44 requires a separate committed pre-registration (spec sec.8).")
     if args.setting not in SETTINGS:
         raise SystemExit(f"Disallowed setting {args.setting!r}; permitted: {sorted(SETTINGS)}.")
+    if args.setting in OPTIONA_SETTINGS and args.setting not in OPTIONA_RUNNABLE:
+        raise SystemExit(f"Option A setting {args.setting!r} is BLOCKED (only A1 is approved per "
+                         "OPTION_A_REBALANCED_PREREGISTRATION.md). A2/A0 require explicit approval in a future task.")
     F = tvg.load_foundation(args)
     if args.self_check:
         out = run_self_check(args, F)
-        base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / "_smoke" / f"seed{args.seed}"
+        if args.setting in OPTIONA_SETTINGS:
+            base = (F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget"
+                    / "optionA_rebalanced" / "_smoke" / args.setting / f"seed{args.seed}")
+            scname = f"{args.setting}_selfcheck_summary.json"
+        else:
+            base = F["exp"] / "results" / "safety_guided_defense" / "variantH_dual_tail_budget" / "_smoke" / f"seed{args.seed}"
+            scname = f"seed{args.seed}_variantH_{args.setting}_selfcheck.json"
         base.mkdir(parents=True, exist_ok=True)
-        with (base / f"seed{args.seed}_variantH_{args.setting}_selfcheck.json").open("w", encoding="utf-8") as f:
+        with (base / scname).open("w", encoding="utf-8") as f:
             json.dump(out, f, indent=2, default=float)
         return
     if args.smoke:
-        if args.setting != "H1":
-            raise SystemExit("Smoke is restricted to setting H1 (spec sec.6); H2/H3 are defined but not run.")
+        if args.setting not in ("H1", "A1"):
+            raise SystemExit("Smoke is restricted to H1 (Variant H) or A1 (Option A); "
+                             "H2/H3/A2/A0 are defined but not run.")
         _, ok = tvg.targeted_sign_check(F["model"], F["train_loader"], F["atk_criterion"], F["fall_idx"], F["device"])
         if not ok:
             raise SystemExit("SIGN CHECK FAILED before smoke (spec sec.5).")

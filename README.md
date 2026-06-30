@@ -39,7 +39,14 @@ Prediction-column provenance and sanity-check audit completed as Table 26.
 Expanded 18-epsilon FGSM/PGD attack prediction sweep completed.
 Attack-severity dose-response analysis completed as Table/Figure 27A/27B.
 
-Next planned artifact: Table/Figure 28 window-level bootstrap stability analysis.
+Safety-guided defense seed-42 pilot completed (Variants A–D; Variant D frozen as best-balanced).
+Multi-seed defense protocol frozen; seeds 43–46 not yet run.
+False-alarm and decision analysis completed (seed-42 pilot).
+BiLSTM representation investigation completed (G1 non-convergence documented; do not cite).
+Dual-specialist safety gate experiment (DSGE A1/seed-42) completed.
+Boundary-aware selective AT experiments (BASAT, BASAT-GAIRAT, BASAT-SAT/seed-42) completed.
+Capstone defense synthesis completed; representation ceiling analysis completed.
+Chapter 6 capstone additions drafted; PGD separability frontier figure (Figure 6.9) created.
 ```
 
 This is a research implementation demo. It is not clinical validation, medical-device validation, real patient deployment, diagnostic evidence, regulatory evaluation, physical-layer attack validation, SDR validation, packet-level validation, preamble-level validation, event-level fall validation, long-lie validation, or over-the-air validation.
@@ -244,15 +251,13 @@ non-fall = classes 0, 2, 3, 4, 5, 6
 
 ## 6A. Current Thesis Artifact Status
 
-Tables/Figures 1–27 are complete for the current window-level UT-HAR / SenseFi fall attack-safety workflow.
+Thesis Tables/Figures 1–27 are complete for the window-level UT-HAR / SenseFi fall attack-safety workflow. The most recent of these is Table/Figure 27A/27B (attack-severity dose-response, 18-epsilon FGSM/PGD sweep).
 
-The latest completed artifact is Table/Figure 27A/27B, which expands the FGSM/PGD attack-severity sweep to 18 epsilon values and shows systematic dose-response degradation rather than relying on one selected epsilon value.
+The Chapter 6 safety-guided defense capstone workstream has additionally produced: seed-42 Variant A–D pilot, frozen multi-seed Variant D protocol, decision/false-alarm analysis, BiLSTM representation investigation (G1 non-convergence documented), dual-specialist safety gate (DSGE A1/seed-42), boundary-aware selective AT (BASAT/BASAT-GAIRAT/BASAT-SAT), capstone defense synthesis, representation ceiling analysis, Chapter 6 capstone LaTeX additions, and PGD separability frontier Figure 6.9. Full artifact details and commit trail are in `EXPERIMENT_EVIDENCE_INDEX.md`.
 
-The current artifact package supports descriptive window-level safety-proxy analysis, software-level FGSM/PGD processed-tensor attack stress testing, short FGSM adversarial-training defense comparison, safety-priority weighting, residual-gap analysis, and prediction-column provenance auditing.
+The next planned experiment phase is multi-seed Variant D confirmation (seeds 43–46, per `results/safety_guided_defense/MULTISEED_PLAN.md`).
 
-The next planned artifact is Table/Figure 28: window-level bootstrap stability analysis of missed-fall rate, false-positive rate, attacked accuracy, and 10:1 safety-priority score.
-
-Claim boundary: these artifacts are window-level research/prototype outputs. They do not establish clinical validation, subject-level uncertainty, room-level uncertainty, deployment confidence, event-level fall validation, long-lie validation, physical-layer validation, SDR validation, packet-level validation, preamble-level validation, or over-the-air validation.
+Claim boundary: window-level research/prototype outputs only. These do not establish clinical validation, subject-level uncertainty, room-level uncertainty, deployment confidence, event-level fall validation, long-lie validation, physical-layer validation, SDR validation, packet-level validation, preamble-level validation, or over-the-air validation.
 
 ---
 
@@ -753,6 +758,8 @@ Claim boundary: this is a window-level software comparison on processed CSI tens
 
 ### Scripts
 
+Core pipeline scripts:
+
 ```text
 scripts/run_sensefi_smoke_test.py
 scripts/run_sensefi_clean_baseline_short.py
@@ -773,6 +780,22 @@ scripts/export_defended_predictions_short.py
 scripts/compute_defended_safety_metrics.py
 scripts/compare_defended_vs_undefended_safety_metrics.py
 scripts/plot_defended_vs_undefended_safety_comparison.py
+```
+
+Capstone defense scripts (added `d6e5753`):
+
+```text
+scripts/train_basat.py
+scripts/train_basat_gairat.py
+scripts/train_basat_sat.py
+scripts/train_bilstm_clean.py
+scripts/train_bilstm_g1.py
+scripts/train_bilstm_g1_finetune.py
+scripts/gate_dual_specialist.py
+scripts/adaptive_gate_attack.py
+scripts/compute_g1_baseline_val_frontier.py
+scripts/plot_dsge_stage_a.py
+scripts/create_representation_ceiling_figure.py
 ```
 
 ### Results
@@ -918,16 +941,10 @@ The current contribution is a reproducible software pipeline for showing how cle
 
 ## 22. Next Planned Work
 
-Planned next steps:
-
 ```text
-update experiment status summary with defended-vs-undefended comparison
-copy Priority 8 outputs to standalone repo
-mark Priority 8 project card/status if needed
-prepare thesis-ready tables and figures one by one
-evaluate whether longer clean training changes robustness
-rerun FGSM and PGD sweeps on a longer-trained model later
-evaluate stronger defense settings later
+run Variant D on seeds 43–46 (multi-seed defense confirmation, per MULTISEED_PLAN.md)
+review BASAT and DSGE capstone results for thesis integration
+Table/Figure 28: window-level bootstrap stability analysis (parked)
 ```
 ---
 

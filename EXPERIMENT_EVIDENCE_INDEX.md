@@ -20,11 +20,11 @@ it does not itself constitute new evidence.
 |---|---|
 | Repo path | `C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo` |
 | Current branch | `feature/safety-proxy-guided-defense` |
-| Latest commit (HEAD) | `4f6bf9c Freeze safety-guided defense multiseed protocol` |
-| Previous commit | `f9e5ac5 Add seed42 safety-proxy-guided defense pilot` |
+| Latest commit (HEAD) | `28118b1 Add Chapter 6 capstone additions and separability figure` |
+| Recent ancestors | `dc79159 Add capstone defense evidence and representation analysis` · `d6e5753 Add defense experiment scripts for capstone analysis` · `7b9db40 Add audited Chapter 6 defense draft synthesis` |
 | Remote | `origin` → `https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git` |
-| Upstream tracking | `origin/feature/safety-proxy-guided-defense` (branch pushed; in sync, 0 ahead / 0 behind) |
-| Working tree | **Clean** at time of writing (before this index file was created) |
+| Upstream tracking | `origin/feature/safety-proxy-guided-defense` (`28118b1` pushed to origin; in sync) |
+| Working tree | Documentation-only edits pending review: `README.md`, `EXPERIMENT_EVIDENCE_INDEX.md`, `LOCAL_PROJECT_MAP.md` (new). No experiment artifacts modified. |
 
 All commits referenced in this index are ancestors of `HEAD` on the current branch and are
 therefore **committed and pushed** to `origin`, unless explicitly marked local-only.
@@ -126,7 +126,45 @@ therefore **committed and pushed** to `origin`, unless explicitly marked local-o
   - Main metric PGD@0.030 fall recall; secondary metrics FGSM@0.030 recall, clean accuracy, clean fall recall, false-fall alarms, collapse epsilon, confusion transitions.
   - **Claim boundaries:** window-level digital-domain white-box only; no solved/closed robustness, no clinical safety, no certified robustness, no over-the-air validation.
 
-## 11. Thesis / Overleaf link map (not edited)
+## 11. Capstone defense experiment scripts
+
+- **Commit:** `d6e5753 Add defense experiment scripts for capstone analysis`
+- **New scripts:**
+  - `scripts/train_basat.py` — Boundary-Aware Selective AT (BASAT) training
+  - `scripts/train_basat_gairat.py` — BASAT with GAIRAT loss variant
+  - `scripts/train_basat_sat.py` — BASAT with SAT loss variant
+  - `scripts/train_bilstm_clean.py` — BiLSTM clean baseline training
+  - `scripts/train_bilstm_g1.py` — BiLSTM G1 (safety-guided) training
+  - `scripts/train_bilstm_g1_finetune.py` — BiLSTM G1 finetuning from clean init
+  - `scripts/gate_dual_specialist.py` — Dual-specialist safety gate (DSGE) training/eval
+  - `scripts/adaptive_gate_attack.py` — Adaptive attack evaluation against the gate
+  - `scripts/compute_g1_baseline_val_frontier.py` — G1 baseline validation frontier computation
+  - `scripts/plot_dsge_stage_a.py` — DSGE Stage A result plot
+  - `scripts/create_representation_ceiling_figure.py` — Generates `representation_ceiling.png`
+- **Note:** All scripts are committed. Corresponding checkpoints (`*.pt`) are **local-only, gitignored**.
+
+## 12. Capstone defense evidence and representation analysis
+
+- **Commit:** `dc79159 Add capstone defense evidence and representation analysis`
+- **Committed result artifacts:**
+  - `results/safety_guided_defense/boundary_aware_selective_at/` — BASAT seed-42: `g1_baseline_val_frontier.{json,md}`, `STAGE1_CLOSEOUT.md`, `BASAT_WITHIN_TRAINING_CLOSEOUT.md`
+  - `results/safety_guided_defense/dual_specialist_safety_gate/` — DSGE A1/seed-42: gate config, grid validation, frontier points, metrics CSVs, probability CSVs, REPORT.md, `CH6_DSGE_SUBSECTION_DRAFT.md`
+  - `results/safety_guided_defense/representation_bilstm/` — `NON_CONVERGENCE_DO_NOT_CITE.md` (**negative result; do not cite as positive evidence**)
+  - `results/safety_guided_defense/variantG_bilstm_representation_test/` — `BILSTM_G1_REPRESENTATION_TEST_PREREGISTRATION.md`, `seed42/g1_finetune_cleaninit/BILSTM_G1_GO_NO_GO.md`
+  - `results/safety_guided_defense/final_defense_synthesis/REPRESENTATION_CEILING_CAPSTONE.md` — capstone synthesis memo
+  - `results/safety_guided_defense/final_defense_synthesis/figures/representation_ceiling.png` — representation ceiling figure
+  - `results/safety_guided_defense/final_defense_synthesis/` synthesis memos (e.g., `FINAL_DEFENSE_SYNTHESIS.md`, `FINAL_DEFENSE_LINE_CLOSURE.md`, `HIGH_RECALL_LOW_FP_FEASIBILITY.md`, `CH6_UPDATE_OUTLINE.md`, `FALSE_ALARM_MECHANISM_INVESTIGATION.md`, `POST_CLOSURE_TARGET_GAP_ANALYSIS.md`)
+
+## 13. Chapter 6 capstone additions
+
+- **Commit:** `28118b1 Add Chapter 6 capstone additions and separability figure` (HEAD)
+- **Committed artifacts:**
+  - `thesis_artifacts/chapter6/ch06_capstone_additions.tex` — Chapter 6 capstone LaTeX draft
+  - `thesis_artifacts/chapter6/figures/ch06_figure_6_9_pgd_separability_frontier.png` — PGD separability frontier figure for thesis
+- **Pre-capstone backup (moved outside repo):** `C:\Users\Hesar\Documents\GitHub\_backups\ch06_backup_pre_capstone_20260630.tex` — local snapshot only; do not cite as source.
+- **Relationship to Ch. 6 Overleaf source:** the authoritative Ch. 6 source is `C:\Users\Hesar\Documents\GitHub\thesis-overleaf-local\overleaf_upload_ch06\ch06_robustness_enhancement.tex` (separate repo, not modified here).
+
+## 14. Thesis / Overleaf link map (not edited)
 
 Latest local thesis files are **outside this repo** (in `thesis-overleaf-local`) and were
 **not modified**. Expected locations:
@@ -143,7 +181,7 @@ Latest local thesis files are **outside this repo** (in `thesis-overleaf-local`)
 (All eight were verified to exist on disk on 2026-06-25; they are tracked in a separate repo,
 not this one.)
 
-## 12. Desktop quick-access folder
+## 15. Desktop quick-access folder
 
 - `C:\Users\Hesar\OneDrive\Desktop\Thesis_Quick_Access`
 
@@ -152,29 +190,32 @@ the seed-42 comparison CSV, the seed-42 figures folder, the multi-seed plan, the
 repo, the `thesis-overleaf-local` folder, and the latest Overleaf chapter `.tex` files
 (abstract + ch01–ch07). Shortcuts only; targets are not modified.
 
-## 13. Missing or local-only artifacts
+## 16. Missing or local-only artifacts
 
 - **Model checkpoints (`*.pt`)** — **local-only**, excluded by `.gitignore` (`*.pt`, `*.pth`,
   `*.ckpt`). Includes `checkpoints/converged_clean_baseline/`, `checkpoints/converged_defense/`,
-  `checkpoints/cross_architecture/`, and `checkpoints/safety_guided_defense/seed42/`.
+  `checkpoints/cross_architecture/`, and `checkpoints/safety_guided_defense/seed42/`. Capstone
+  checkpoints (BASAT, BiLSTM, DSGE) are similarly local-only.
 - **Console log dumps (`*.log`)** — **local-only**, excluded by `.gitignore` (`*.log`). Includes
-  `results/safety_guided_defense/seed42/logs/console_variant_*.log`, `driver.log`,
-  `test_eval_driver.log`, and the per-architecture `notes/*.log` stage logs.
+  root-level pilot logs (`A1_seed42_pilot_run.log`, `basat_*.log`, `bilstm_*.log`,
+  `optionB_seed42_pilot_run.log`), and `results/safety_guided_defense/seed42/logs/console_variant_*.log`.
 - **Large arrays (`*.npy`, `*.npz`, `*.pkl`)** — excluded by `.gitignore` if present.
-- **Acceptability:** this is acceptable for reproducibility because every checkpoint's exact
-  regeneration command, seed, and selection metric are preserved in committed `*_metadata.json`
-  files, and the per-epoch training data is preserved in committed `*_training_log.csv` files.
-  Checkpoints and console logs are byte-regenerable from committed code + metadata; no committed
-  result depends on an un-committed binary that lacks a recorded regeneration path.
-- **Not found:** no additional expected artifacts were searched-for-and-missing at index time.
-  (`.gitignore` was inspected, not modified.)
+- **Raw datasets** — `Data/` (UT-HAR) and `third_party/` clones — **local-only**, gitignored.
+- **Python environment** — `.venv/` — **local-only**, gitignored.
+- **Pre-capstone backup** — `C:\Users\Hesar\Documents\GitHub\_backups\ch06_backup_pre_capstone_20260630.tex` — moved outside the repo; local-only.
+- **Acceptability:** every checkpoint's exact regeneration command, seed, and selection metric
+  are preserved in committed `*_metadata.json` files, and per-epoch training data is preserved
+  in committed `*_training_log.csv` files. No committed result depends on an uncommitted binary
+  that lacks a recorded regeneration path.
 
-## 14. Recommended next action
+## 17. Recommended next action
 
-- **Review this index.**
-- **Then decide whether to run frozen Variant D on seeds 43–46** (per
-  `results/safety_guided_defense/MULTISEED_PLAN.md`).
-- **Do not edit thesis Chapter 6** (`ch06_robustness_enhancement.tex`) until the multi-seed
-  defense confirmation is run and reviewed.
+- **Review the documentation diff**, then commit `README.md`, `EXPERIMENT_EVIDENCE_INDEX.md`, and `LOCAL_PROJECT_MAP.md` together.
+- **Run frozen Variant D on seeds 43–46** per `results/safety_guided_defense/MULTISEED_PLAN.md`
+  before editing thesis Chapter 6.
+- **Review `NON_CONVERGENCE_DO_NOT_CITE.md`** in `representation_bilstm/seed42/G1/` before
+  referencing any BiLSTM G1 result in the thesis.
+- **Do not cite BASAT or DSGE results** in the thesis until multi-seed confirmation is complete
+  and the evidence index is updated accordingly.
 
 _No experiments were run and no artifacts were modified to produce this index._

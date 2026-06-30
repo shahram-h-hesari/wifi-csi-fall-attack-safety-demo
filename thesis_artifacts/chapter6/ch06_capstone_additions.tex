@@ -1,0 +1,209 @@
+% =====================================================================================
+% Chapter 6 capstone additions (paste into Overleaf).  Scope-safe wording.
+% All new results below are VALIDATION-ONLY, seed-42 negatives; the TEST split was NOT
+% touched for the BASAT (TRADES/GAIRAT/SAT) or BiLSTM pilots. Prior Variant F/G and
+% Option B test numbers are the previously committed test results.
+%
+% INSERTION POINT: place all three \subsection blocks below at the END of
+% Section 6.9 (\label{sec:ch6-defense-frontier-limit}), immediately BEFORE
+% \section{Chapter Summary and Bridge to Chapter 7}.  (They follow the existing
+% "Why further LeNet loss-reweighting should stop." paragraph.)
+%
+% NEW FIGURE to upload to Overleaf images/:
+%   thesis_artifacts/chapter6/figures/ch06_figure_6_9_pgd_separability_frontier.png
+% NEW CITATIONS to add to the .bib (see report): wang2020mart, zhang2021gairat, pan2024sat
+% (zhang2019trades is already cited in the chapter).
+% =====================================================================================
+
+
+\subsection{Paper-Driven LeNet Defense Closeout: TRADES, GAIRAT, and SAT}
+\label{subsec:ch6-paper-driven-closeout}
+
+The preceding analysis motivated stopping ad hoc LeNet loss-reweighting. For completeness, and to test
+whether established literature objectives behave differently from the in-house variants, three
+published adversarial-training mechanisms were additionally evaluated as single-ingredient additions to
+the frozen Variant~G (G1) objective on the same LeNet representation. To compare defenses without
+committing to one decision threshold, this closeout uses a threshold-free separability diagnostic: the
+area under the ROC curve (AUROC) of the fall score \(s_f\) separating attacked fall windows from attacked
+non-fall windows under PGD at \(\epsilon=0.030\). AUROC is a separability indicator, \emph{not} the final
+safety target, which remains the operating-point criterion \(\mathrm{Recall}_f\geq 0.80\) at
+\(\mathrm{FAR}_f\leq 0.10\). All decisions in this closeout were made on the validation split only (seed~42);
+the held-out test split was not used for these pilots.
+
+On this diagnostic the LeNet G1 objective reaches a validation PGD separability of
+\(\mathrm{AUROC}\approx 0.876\) (clean separability \(\approx 0.99\)). The three mechanisms evaluated as
+additions to G1 were: a TRADES-style clean/adversarial fall-probability consistency
+term~\cite{zhang2019trades}; a GAIRAT-style boundary-margin instance reweighting~\cite{zhang2021gairat};
+and a SAT-style calibrated, safety-asymmetric selective filtering of adversarial windows~\cite{pan2024sat}
+(the misclassification-aware principle of MART~\cite{wang2020mart} informs the safety-error weighting). As
+summarized in Table~\ref{tab:ch6-paper-driven-closeout}, none of the three expanded the validation PGD
+separability envelope beyond G1. The SAT variant's nominally higher validation recall at
+\(\mathrm{FAR}\leq 10\%\) is \emph{not} claimed as an improvement: it corresponds to only two additional
+validation fall windows at the false-alarm cap, and its separability AUROC is not above G1's, so it is
+within validation noise rather than a frontier gain. An earlier post-hoc dual-specialist safety-gate
+(a recall specialist combined with a false-alarm specialist) was also an informative negative: the two
+specialists were nested rather than complementary, so output combination could not expand the frontier.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Paper-driven LeNet defense closeout under PGD at \(\epsilon=0.030\) (validation split, seed~42;
+threshold-free fall-score AUROC). Each mechanism is added to the frozen Variant~G (G1) objective on the same
+LeNet representation. None expands the validation PGD separability beyond G1. These are validation-only,
+seed-42 results; the test split was not touched for these pilots.}
+\label{tab:ch6-paper-driven-closeout}
+\begin{tabular}{p{0.30\textwidth}p{0.30\textwidth}cc}
+\hline
+Approach & Mechanism & PGD AUROC & Target reached \\
+\hline
+Variant G (G1) & fall-weighted AT + margins (baseline) & 0.876 & no \\
++ TRADES (\(\beta=3\)) & fall-probability consistency & 0.876 & no \\
++ TRADES (\(\beta=6\)) & fall-probability consistency (stronger) & 0.869 & no \\
++ GAIRAT & boundary-margin reweighting & 0.871 & no \\
++ SAT & calibrated selective filtering & 0.873 & no \\
+\hline
+\end{tabular}
+\end{table}
+
+Because these published objectives, like the earlier in-house variants, did not expand the validation PGD
+separability on the LeNet representation, the evidence indicates that additional loss-reweighting on this
+shallow-CNN backbone is unlikely to reach the joint target. This motivated a controlled change of the
+representation rather than further reweighting.
+
+
+\subsection{BiLSTM Representation-Pivot Result}
+\label{subsec:ch6-bilstm-pivot}
+
+To test whether a higher-clean-headroom temporal representation could expand the frontier where the LeNet
+objectives saturated, a defended bidirectional-LSTM (BiLSTM) was evaluated under the identical frozen G1
+objective, with the backbone as the single intended change. Clean BiLSTM checkpoints already existed from
+the completed cross-architecture study (five seeds, all clean-qualified, clean fall recall \(\approx
+0.82\)--\(0.93\)), so no new clean baseline was trained. As with every undefended backbone in that study,
+the undefended BiLSTM collapses under PGD at \(\epsilon=0.030\) (attacked fall recall \(\approx 0\)), so
+clean capacity alone does not confer robustness.
+
+Training a BiLSTM from random initialization under the G1 adversarial recipe did \emph{not} converge: clean
+fall recall remained at \(0\) and no validation clean-guard-eligible checkpoint was produced. This is a
+training/optimization failure of the recurrent backbone under the CNN-tuned schedule, not a robustness
+result, and it is not reported as one. A clean-initialized BiLSTM (initialized from a clean-qualified
+checkpoint, with gradient clipping and a lower learning rate as validation-only budget accommodations)
+\emph{did} train successfully and held the clean guard on validation. It preserved clean separability
+(\(\mathrm{AUROC}\approx 0.99\)), but its validation PGD separability reached only
+\(\mathrm{AUROC}\approx 0.726\) --- below the LeNet G1 value of \(0.876\) --- with validation recall at
+\(\mathrm{FAR}\leq 10\%\) near zero. Under the stated protocol, the temporal representation therefore did
+not improve the observed PGD separability frontier and was in fact more PGD-fragile than LeNet G1. This is a
+seed-42, validation-only result; the test split was not touched. It complements, rather than replaces, the
+two-seed Variant~F/G operating-point evidence reported earlier in this chapter.
+
+
+\subsection{Synthesis: Observed PGD Fall-Separability Frontier}
+\label{subsec:ch6-frontier-synthesis}
+
+Table~\ref{tab:ch6-frontier-synthesis} and Figure~\ref{fig:ch6-pgd-separability-frontier} consolidate the
+evaluated defenses and the representation pivot on the threshold-free PGD separability diagnostic. Every
+model separates clean falls almost perfectly (\(\mathrm{AUROC}\approx 0.99\)), but PGD at
+\(\epsilon=0.030\) lowers separability to roughly \(0.69\)--\(0.88\): the LeNet reweighting variants cluster
+near \(0.876\), and the BiLSTM representation is lower. Across the evaluated window-level, digital-domain,
+white-box, processed-CSI defenses and the representation pivot, the target region
+(\(\mathrm{Recall}_f\geq 0.80\) at \(\mathrm{FAR}_f\leq 0.10\)) was not reached by the evaluated methods
+under the stated protocol. Combined with the threshold diagnostic and the attacked score-overlap observed
+in Section~\ref{sec:ch6-defense-frontier-limit}, the evidence suggests the residual obstacle is
+representation-level --- the attacked fall and non-fall fall-score distributions overlap near the
+fall\,\(\leftrightarrow\)\,walk/run boundary --- rather than a matter of threshold or checkpoint selection.
+This is a bounded safety-proxy result on the evaluated configurations, not a proof that no architecture or
+training regime can reach the target.
+
+\begin{table}[H]
+\centering
+\footnotesize
+\caption{Observed PGD fall-separability frontier across the evaluated defenses and the BiLSTM
+representation pivot, under PGD at \(\epsilon=0.030\). Separability is the threshold-free AUROC of the fall
+score; clean AUROC \(\approx 0.99\) for all. The BASAT (TRADES/GAIRAT/SAT) and BiLSTM rows are validation-only
+seed-42 results (test not touched); the DS-SGE and Option~B rows are previously committed results. No row
+reaches the target \(\mathrm{Recall}_f\geq 0.80\) at \(\mathrm{FAR}_f\leq 0.10\).}
+\label{tab:ch6-frontier-synthesis}
+\begin{tabular}{p{0.16\textwidth}p{0.20\textwidth}cccp{0.21\textwidth}}
+\hline
+Approach & Mechanism & Clean AUROC & PGD AUROC & Recall@FAR\(\leq\)10\% & Interpretation \\
+\hline
+LeNet G1 & fall-weighted AT + margins & \(\approx\)0.99 & 0.876 & 0.477 & best LeNet validation frontier \\
+DS-SGE gate & output combination & --- & \(\approx\)0.81 & --- & nested specialists; no complementarity \\
+Option B & adaptive false-alarm-rate controller & --- & 0.840 & \(\approx\)0.34 & moved operating point, not the frontier \\
+TRADES \(\beta\)=3/6 & fall-probability consistency & \(\approx\)0.99 & 0.876 / 0.869 & 0.477 / 0.36 & no separability gain \\
+GAIRAT & boundary-margin reweighting & \(\approx\)0.99 & 0.871 & 0.34 & mechanism active; no frontier gain \\
+SAT & calibrated selective filtering & \(\approx\)0.99 & 0.873 & 0.52\(^{*}\) & reduces to G1 at trained checkpoints \\
+BiLSTM G1 & temporal/recurrent representation & \(\approx\)0.99 & 0.726 & \(\approx\)0 & worse than LeNet G1 under PGD \\
+\hline
+\end{tabular}
+
+\vspace{2pt}
+{\footnotesize \(^{*}\) The SAT validation recall@FAR\(\leq\)10\% of 0.52 is a two-fall operating-point
+difference at the false-alarm cap; its separability AUROC is not above G1's, so it is not claimed as a
+frontier gain.}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.96\textwidth]{images/ch06_figure_6_9_pgd_separability_frontier.png}
+    \caption{Observed PGD fall-separability frontier across the evaluated defense and representation
+    variants. The vertical axis is the threshold-free AUROC of fall-score separability (fall vs.\ non-fall),
+    \emph{not} the final safety target itself; AUROC is used here only as a threshold-free separability
+    diagnostic. The final safety target remains the operating-point criterion \(\mathrm{Recall}_f\geq 0.80\)
+    at \(\mathrm{FAR}_f\leq 0.10\). Every model separates clean falls well (\(\approx 0.99\)); PGD at
+    \(\epsilon=0.030\) lowers separability for all of them, the LeNet variants cluster near \(0.876\), and
+    the BiLSTM is lower. All values are window-level, digital-domain, white-box, processed-CSI-tensor
+    results; the BASAT and BiLSTM points are validation-only, seed-42 results.}
+    \label{fig:ch6-pgd-separability-frontier}
+\end{figure}
+
+
+% =====================================================================================
+% SECTION 6.10 EDITS
+% (A) APPEND the following bullets to the existing \itemize list in
+%     \section{Chapter Summary and Bridge to Chapter 7} (after the last existing \item).
+% =====================================================================================
+
+    \item Three published adversarial-training objectives adapted to the fall-safety task --- a TRADES-style
+    fall-probability consistency term, a GAIRAT-style boundary-margin reweighting, and a SAT-style selective
+    filtering --- were evaluated as single-ingredient additions to the LeNet G1 objective (validation-only,
+    seed~42). None expanded the validation PGD fall-separability beyond G1
+    (\(\mathrm{AUROC}\approx 0.876\); Table~\ref{tab:ch6-paper-driven-closeout}); the test split was not
+    touched for these pilots.
+    \item A defended BiLSTM representation-pivot experiment was completed (Section~\ref{subsec:ch6-bilstm-pivot}).
+    A from-scratch BiLSTM under the G1 recipe did not converge (a training failure, not a robustness result);
+    a clean-initialized BiLSTM fine-tune trained successfully and preserved clean separability
+    (\(\mathrm{AUROC}\approx 0.99\)), but its validation PGD separability (\(\mathrm{AUROC}\approx 0.726\),
+    recall@FAR\(\leq\)10\% \(\approx 0\)) was below LeNet G1's, i.e.\ more PGD-fragile rather than more
+    robust. This is a seed-42, validation-only negative.
+    \item Synthesis: across the evaluated window-level, digital-domain, white-box, processed-CSI defenses and
+    the BiLSTM representation pivot, the joint high-recall/low-false-alarm target was not reached by the
+    evaluated methods under the stated protocol (Table~\ref{tab:ch6-frontier-synthesis},
+    Figure~\ref{fig:ch6-pgd-separability-frontier}); the evidence suggests a representation-level frontier
+    rather than a threshold- or checkpoint-selection limitation. This is a bounded safety-proxy finding, not
+    an impossibility result.
+
+% =====================================================================================
+% (B) REPLACE the final bridge paragraph of Section 6.10 (the paragraph beginning
+%     "Chapter~7 uses these findings to define the next research steps...") with the
+%     following.  In particular this removes the prior "a single narrow defended BiLSTM
+%     or Transformer experiment ... is future work" sentence.
+% =====================================================================================
+
+Chapter~7 uses these findings to define the next research steps. Because the extended LeNet safety-guided
+defense line and the three published paper-driven objectives did not expand the validation PGD
+fall-separability (Sections~\ref{sec:ch6-defense-frontier-limit}--\ref{subsec:ch6-frontier-synthesis}),
+\emph{further LeNet loss-reweighting is not the recommended direction}. A defended BiLSTM
+representation-pivot experiment was completed and did not improve the PGD frontier; it was in fact more
+PGD-fragile than LeNet G1 under the stated protocol. The remaining directions are therefore: (i) perturbation-budget
+(\(\epsilon\)) characterization, to map where on the budget axis the separability frontier degrades rather
+than only reporting \(\epsilon=0.030\); (ii) evaluation on additional datasets; (iii) additional or stronger
+representations, pursued only under explicit pre-registration and not assumed to solve the problem; (iv)
+event-level temporal aggregation (future work, because it changes the evaluation unit from the window to the
+event and requires reliable window/event ordering that the current per-window outputs do not carry); and (v)
+certified and physical-layer robustness. The cross-architecture robustness evaluation across five
+architecture configurations has been completed and indicates that undefended model capacity alone does not
+confer robustness under PGD at \(\epsilon=0.030\). The current Chapter~6 results are best interpreted as a
+research-stage, window-level, white-box, processed-CSI-tensor safety-proxy analysis: reducing false alarms
+and partially recovering fall recall is possible, but the joint high-recall/low-false-alarm target was not
+reached by the evaluated methods under the stated protocol, and no clinical, deployment, product,
+certified-robustness, or over-the-air claim is made.

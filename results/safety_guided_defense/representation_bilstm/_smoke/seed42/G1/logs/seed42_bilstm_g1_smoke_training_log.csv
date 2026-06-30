@@ -1,0 +1,3 @@
+epoch,train_loss,mean_base,mean_src_motion,mean_fall_margin,mean_targeted,val_clean_accuracy,val_clean_macro_f1,val_clean_fall_recall,val_fgsm_fall_recall,val_pgd_fall_recall,val_fgsm_false_fall_alarms,val_pgd_false_fall_alarms,val_normalized_false_alarm_burden,safety_score,v2_eligible,sel_v2safety,sel_v2maxrec,sel_v2lowFA,sel_v2macroF1
+1,3.959434,1.959807,0.633862,0.735311,0.630455,0.304435,0.110862,0.000000,0.000000,0.000000,0,0,0.000000,0.000000,0,0,0,0,1
+2,3.068361,1.997229,0.017682,1.029324,0.024126,0.308468,0.114313,0.000000,0.000000,0.000000,0,0,0.000000,0.000000,0,0,0,0,1

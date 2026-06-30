@@ -1,0 +1,55 @@
+{
+  "timestamp_utc": "2026-06-29T22:13:03.780743+00:00",
+  "stage": "basat_stage1_safety_trades_seed42_pilot",
+  "method": "Safety-TRADES (G1 + beta*fall-prob consistency)",
+  "namespace": "boundary_aware_selective_at",
+  "run_name": "seed42_basat_stage1_beta6p0",
+  "beta": 6.0,
+  "seed": 42,
+  "lam_s": 1.0,
+  "lam_f": 1.0,
+  "lam_t": 1.0,
+  "w_wr": 2.0,
+  "fall_weight": 3.0,
+  "objective": "L_G1 (frozen Variant G G1) + beta*mean_{adv fall}(sg[p_f(x_clean)] - p_f(x_adv))^2",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "train_pgd_steps": 7,
+  "epochs_run": 70,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "test_set_used": false,
+  "selected_epochs": {
+    "v2safety": 57,
+    "v2maxrec": 57,
+    "v2lowFA": 52,
+    "v2macroF1": 70
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\seed42\\beta6p0\\seed42_basat_stage1_beta6p0_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\seed42\\beta6p0\\seed42_basat_stage1_beta6p0_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\seed42\\beta6p0\\seed42_basat_stage1_beta6p0_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\seed42\\beta6p0\\seed42_basat_stage1_beta6p0_v2macroF1_best.pt"
+  },
+  "go_no_go_ref": "results/safety_guided_defense/boundary_aware_selective_at/seed42/g1_baseline_val_frontier.json",
+  "claim_boundary": "window-level digital-domain white-box; seed42/LeNet only; not solved/certified/clinical/OTA",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "7b9db40fec3b19790d05c5cf67e67c2efe5683a9",
+  "elapsed_seconds": 6411.838929176331
+}

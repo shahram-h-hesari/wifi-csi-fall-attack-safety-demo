@@ -1,0 +1,63 @@
+{
+  "timestamp_utc": "2026-06-30T00:32:36.044756+00:00",
+  "stage": "basat_gairat_GR1_seed42_pilot",
+  "method": "BASAT Stage 2 GAIRAT-only (G1 + margin-based adv reweighting)",
+  "namespace": "boundary_aware_selective_at/gairat",
+  "run_name": "seed42_basat_gairat_GR1",
+  "setting": "GR1",
+  "cfg": {
+    "lam_g": 1.0,
+    "g_min": 0.5,
+    "g_max": 2.0,
+    "rho": 1.0,
+    "burn_in": 10,
+    "desc": "margin GAIRAT, loco off"
+  },
+  "seed": 42,
+  "fall_weight": 3.0,
+  "lam_s": 1.0,
+  "lam_f": 1.0,
+  "lam_t": 1.0,
+  "w_wr": 2.0,
+  "objective": "reweighted base FWCE (mult=1 clean, w_i adv; ==G1 at w==1) + lam_s*L_src + lam_f*L_fall + lam_t*L_tgt; w_i = margin GAIRAT g_min+(g_max-g_min)*0.5*(1+tanh(-lam_g*mu)), detached, mean-1, burn_in epochs",
+  "v2_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65
+  },
+  "train_epsilons": [
+    0.005,
+    0.015,
+    0.03
+  ],
+  "train_pgd_steps": 7,
+  "epochs_run": 70,
+  "split_sizes": {
+    "train": 3977,
+    "val": 496,
+    "test": 500,
+    "train_batches_per_epoch": 62,
+    "train_batch_size": 64,
+    "eval_batch_size": 256,
+    "train_drop_last": true
+  },
+  "test_set_used": false,
+  "selected_epochs": {
+    "v2safety": 57,
+    "v2maxrec": 57,
+    "v2lowFA": 62,
+    "v2macroF1": 69
+  },
+  "checkpoints": {
+    "v2safety": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\gairat\\seed42\\GR1\\seed42_basat_gairat_GR1_v2safety_best.pt",
+    "v2maxrec": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\gairat\\seed42\\GR1\\seed42_basat_gairat_GR1_v2maxrec_best.pt",
+    "v2lowFA": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\gairat\\seed42\\GR1\\seed42_basat_gairat_GR1_v2lowFA_best.pt",
+    "v2macroF1": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\boundary_aware_selective_at\\gairat\\seed42\\GR1\\seed42_basat_gairat_GR1_v2macroF1_best.pt"
+  },
+  "go_no_go_ref": "results/safety_guided_defense/boundary_aware_selective_at/seed42/g1_baseline_val_frontier.json",
+  "claim_boundary": "window-level digital-domain white-box; seed42/LeNet only; not solved/certified/clinical/OTA",
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "7b9db40fec3b19790d05c5cf67e67c2efe5683a9",
+  "elapsed_seconds": 7251.415342330933
+}

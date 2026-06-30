@@ -1,0 +1,26 @@
+{
+  "timestamp_utc": "2026-06-29T15:41:23.604230+00:00",
+  "stage": "basat_stage1_smoke",
+  "method": "Safety-TRADES (G1 + beta*fall-prob consistency)",
+  "beta": 3.0,
+  "seed": 42,
+  "epochs": 2,
+  "smoke_batches": 5,
+  "elapsed_seconds": 34.22224831581116,
+  "per_epoch_seconds_estimate": 17.11112415790558,
+  "final": {
+    "train_loss": 3.2602097511291506,
+    "mean_fallconsist": 5.099559518839669e-06,
+    "consist_p_f_clean": 0.10189565420150756,
+    "consist_p_f_adv": 0.10012288242578507,
+    "val_clean_fall_recall": 0.0,
+    "val_pgd_fall_recall": 0.0,
+    "val_pgd_false_fall_alarms": 0
+  },
+  "test_set_used": false,
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "7b9db40fec3b19790d05c5cf67e67c2efe5683a9",
+  "note": "SMOKE ONLY -- code-correctness + runtime estimate; NOT a pilot/convergence result; no .pt persisted."
+}

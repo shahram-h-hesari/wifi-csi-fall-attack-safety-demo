@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-06-30T01:01:32.946815+00:00",
+  "stage": "basat_sat_smoke",
+  "setting": "SA1",
+  "cfg": {
+    "alpha_f": 0.03,
+    "alpha_n": 0.08,
+    "burn_in": 15,
+    "recalib": 10,
+    "desc": "asym confidence-collapse filter"
+  },
+  "seed": 42,
+  "epochs": 18,
+  "smoke_batches": 5,
+  "elapsed_seconds": 336.5136396884918,
+  "per_epoch_seconds_estimate": 18.695202204916214,
+  "final_tau": 0.8,
+  "test_set_used": false,
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "7b9db40fec3b19790d05c5cf67e67c2efe5683a9",
+  "note": "SMOKE ONLY -- code-correctness + runtime + keep-rate sanity; selection off during burn_in; no .pt."
+}

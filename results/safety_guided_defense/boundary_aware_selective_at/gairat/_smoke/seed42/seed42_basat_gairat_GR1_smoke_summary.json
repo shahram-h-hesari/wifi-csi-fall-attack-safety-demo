@@ -1,0 +1,24 @@
+{
+  "timestamp_utc": "2026-06-29T22:30:57.545805+00:00",
+  "stage": "basat_gairat_smoke",
+  "setting": "GR1",
+  "cfg": {
+    "lam_g": 1.0,
+    "g_min": 0.5,
+    "g_max": 2.0,
+    "rho": 1.0,
+    "burn_in": 10,
+    "desc": "margin GAIRAT, loco off"
+  },
+  "seed": 42,
+  "epochs": 12,
+  "smoke_batches": 5,
+  "elapsed_seconds": 198.7665994167328,
+  "per_epoch_seconds_estimate": 16.563883284727734,
+  "test_set_used": false,
+  "device": "cpu",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "git_commit": "7b9db40fec3b19790d05c5cf67e67c2efe5683a9",
+  "note": "SMOKE ONLY -- code-correctness + runtime; weights inactive during burn_in; no .pt persisted."
+}

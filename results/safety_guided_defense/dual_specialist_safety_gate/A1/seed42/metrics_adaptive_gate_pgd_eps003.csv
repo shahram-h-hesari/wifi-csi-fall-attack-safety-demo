@@ -1,0 +1,2 @@
+TP,FN,FP,TN,n_fall,n_nonfall,fall_recall,missed_fall_rate,false_alarm_rate,fall_precision,fall_f1,binary_accuracy,system,attack,alpha,tau,epsilon,steps,split
+21,24,112,343,45,455,0.4666666666666667,0.5333333333333333,0.24615384615384617,0.15789473684210525,0.23595505617977527,0.728,DS_SGE_adaptive_gate_pgd,adaptive_gate_pgd,0.48,0.23,0.03,10,test

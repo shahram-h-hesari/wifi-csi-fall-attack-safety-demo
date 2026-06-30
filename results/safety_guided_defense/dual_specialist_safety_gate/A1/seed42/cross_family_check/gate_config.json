@@ -1,0 +1,70 @@
+{
+  "method": "DS-SGE post-hoc smooth safety gate S=alpha*p_R+(1-alpha)*p_B, fall<=>S>=tau",
+  "recall_specialist": "seed42_variantG_G1_v2maxrec_best",
+  "far_specialist": "seed42_optionB_minFA_best",
+  "selection_split": "validation",
+  "selection_condition": "pgd",
+  "selection_epsilon": 0.03,
+  "selection_rule": "max val fall recall s.t. val FAR<=0.10; tie-break precision,F1,acc,lower tau",
+  "far_budget": 0.1,
+  "alpha": 0.03,
+  "tau": 0.16,
+  "constraint_met": true,
+  "val_pgd_metrics_at_locked_point": {
+    "TP": 18,
+    "FN": 26,
+    "FP": 44,
+    "TN": 408,
+    "fall_recall": 0.4090909090909091,
+    "false_alarm_rate": 0.09734513274336283,
+    "fall_precision": 0.2903225806451613,
+    "fall_f1": 0.339622641509434,
+    "binary_accuracy": 0.8588709677419355
+  },
+  "val_locked_metrics_all_conditions": {
+    "clean": {
+      "TP": 42,
+      "FN": 2,
+      "FP": 18,
+      "TN": 434,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "fall_recall": 0.9545454545454546,
+      "missed_fall_rate": 0.045454545454545414,
+      "false_alarm_rate": 0.03982300884955752,
+      "fall_precision": 0.7,
+      "fall_f1": 0.8076923076923077,
+      "binary_accuracy": 0.9596774193548387
+    },
+    "fgsm": {
+      "TP": 26,
+      "FN": 18,
+      "FP": 35,
+      "TN": 417,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "fall_recall": 0.5909090909090909,
+      "missed_fall_rate": 0.40909090909090906,
+      "false_alarm_rate": 0.07743362831858407,
+      "fall_precision": 0.4262295081967213,
+      "fall_f1": 0.49523809523809526,
+      "binary_accuracy": 0.8931451612903226
+    },
+    "pgd": {
+      "TP": 18,
+      "FN": 26,
+      "FP": 44,
+      "TN": 408,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "fall_recall": 0.4090909090909091,
+      "missed_fall_rate": 0.5909090909090908,
+      "false_alarm_rate": 0.09734513274336283,
+      "fall_precision": 0.2903225806451613,
+      "fall_f1": 0.339622641509434,
+      "binary_accuracy": 0.8588709677419355
+    }
+  },
+  "grid_step": 0.01,
+  "scope": "window-level, digital-domain, white-box, processed CSI, eps=0.030; NOT certified/clinical/deployment/OTA."
+}

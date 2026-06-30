@@ -1,0 +1,128 @@
+{
+  "purpose": "G1 seed-42 VALIDATION frontier baseline for Safety-TRADES / BASAT Stage 1 go/no-go",
+  "generated_utc": "2026-06-29T15:35:18.744059+00:00",
+  "read_only": true,
+  "trained": false,
+  "test_tuning": false,
+  "far_budget": 0.1,
+  "primary_baseline_checkpoint": "G1 seed42 v2safety (== v2maxrec, epoch 58)",
+  "eval_attack_note": "committed 'pgd' = eval PGD-10 (alpha=eps/6); 'pgd20' = 20-step audit",
+  "validation": {
+    "v2safety(=maxrec,ep58) val clean": {
+      "file": "R_G1maxrec_clean_probabilities_val_epsilon_0_03.csv",
+      "n": 496,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "auroc_pfall": 0.9924074818986324
+    },
+    "v2safety(=maxrec,ep58) val fgsm": {
+      "file": "R_G1maxrec_fgsm_probabilities_val_epsilon_0_03.csv",
+      "n": 496,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "auroc_pfall": 0.8941069991954947
+    },
+    "v2safety(=maxrec,ep58) val pgd": {
+      "file": "R_G1maxrec_pgd_probabilities_val_epsilon_0_03.csv",
+      "n": 496,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "auroc_pfall": 0.8079243765084473,
+      "auroc_ci95": [
+        0.7638125372501375,
+        0.8518900211830852
+      ],
+      "recall_at_far10": {
+        "tau": 0.318273,
+        "recall": 0.20454545454545456,
+        "FAR": 0.09513274336283185,
+        "TP": 9,
+        "FP": 43,
+        "FN": 35,
+        "n_fall": 44,
+        "n_nonfall": 452,
+        "feasible": true
+      },
+      "argmax_operating_point": {
+        "recall": 0.5681818181818182,
+        "FAR": 0.20575221238938052,
+        "TP": 25,
+        "FP": 93,
+        "FN": 19,
+        "n_fall": 44,
+        "n_nonfall": 452
+      }
+    },
+    "v2lowFA(ep68) val pgd": {
+      "file": "B_G1lowFA_pgd_probabilities_val_epsilon_0_03.csv",
+      "n": 496,
+      "n_fall": 44,
+      "n_nonfall": 452,
+      "auroc_pfall": 0.8756033789219629,
+      "auroc_ci95": [
+        0.835017779110135,
+        0.9098206962414938
+      ],
+      "recall_at_far10": {
+        "tau": 0.164404,
+        "recall": 0.4772727272727273,
+        "FAR": 0.09292035398230089,
+        "TP": 21,
+        "FP": 42,
+        "FN": 23,
+        "n_fall": 44,
+        "n_nonfall": 452,
+        "feasible": true
+      },
+      "argmax_operating_point": {
+        "recall": 0.2727272727272727,
+        "FAR": 0.05309734513274336,
+        "TP": 12,
+        "FP": 24,
+        "FN": 32,
+        "n_fall": 44,
+        "n_nonfall": 452
+      }
+    }
+  },
+  "test_reference": {
+    "v2safety test pgd (PGD-10, ref)": {
+      "file": "G_G1_v2safety_pgd_probabilities_test_epsilon_0_03.csv",
+      "auroc_pfall": 0.8044932844932845,
+      "auroc_ci95": [
+        0.7598985596891277,
+        0.8453178578563886
+      ],
+      "n_fall": 45,
+      "n_nonfall": 455
+    },
+    "v2safety test pgd20 (PGD-20, ref)": {
+      "file": "G_G1_v2safety_pgd20_pgd_probabilities_test_epsilon_0_03.csv",
+      "auroc_pfall": 0.7821733821733822,
+      "auroc_ci95": [
+        0.7365266847847493,
+        0.8242362456283572
+      ],
+      "n_fall": 45,
+      "n_nonfall": 455
+    }
+  },
+  "go_no_go_bar": {
+    "rule": "Safety-TRADES must beat the BEST G1 selection-v2 checkpoint, not the matched selector only",
+    "g1_best_val_pgd_auroc": 0.8756033789219629,
+    "g1_best_val_pgd_auroc_checkpoint": "v2lowFA(ep68) val pgd",
+    "auroc_go_threshold_+0.03": 0.9056,
+    "g1_best_val_recall_at_far10": 0.4772727272727273,
+    "g1_best_val_recall_at_far10_checkpoint": "v2lowFA(ep68) val pgd",
+    "matched_selector_v2safety_auroc": 0.8079243765084473,
+    "matched_selector_v2safety_recall_at_far10": 0.20454545454545456,
+    "GO_requires": [
+      "best Safety-TRADES val PGD AUROC > 0.9056 (best G1 0.8756 + 0.03 meaningful margin)",
+      "best Safety-TRADES val recall@FAR<=10% >= 0.4773 (no worse than best G1)",
+      "clean guard holds (val acc>=0.70, macro_f1>=0.65)",
+      "PGD-20 reveals no gradient masking/collapse",
+      "confirm with paired bootstrap on matched-selector AUROC difference (CI excludes 0)"
+    ],
+    "caveat": "n_fall(val)=44; single-checkpoint AUROC CI half-width ~0.04. +0.03 is suggestive, not conclusive; matched-selector paired bootstrap + (deferred) seed replication confirm."
+  }
+}

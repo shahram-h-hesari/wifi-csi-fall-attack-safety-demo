@@ -1,0 +1,5 @@
+selection,selected_epoch,val_clean_acc,val_clean_macro_f1,val_pgd_recall,val_pgd_false_alarms,safety_score
+v2safety,57,0.7278,0.7069,0.6818,104,0.7028
+v2maxrec,57,0.7278,0.7069,0.6818,104,0.7028
+v2lowFA,62,0.7581,0.7501,0.1818,29,0.4223
+v2macroF1,69,0.8024,0.7966,0.2500,41,0.4826

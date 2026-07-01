@@ -1,0 +1,7 @@
+﻿condition,model,fall_recall,false_fall_alarms,n_nonfall
+Clean,Undefended,0.9556,0,455
+Clean,Defended FGSM-AT,0.9111,8,455
+FGSM 0.03,Undefended,0.0000,47,455
+FGSM 0.03,Defended FGSM-AT,0.3111,27,455
+PGD 0.03,Undefended,0.0000,48,455
+PGD 0.03,Defended FGSM-AT,0.0889,54,455

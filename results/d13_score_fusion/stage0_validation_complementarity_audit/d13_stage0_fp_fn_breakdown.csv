@@ -1,0 +1,19 @@
+model,type,class_or_bucket,count
+AFAC,FP_source,other,23
+AFAC,FP_source,run,31
+AFAC,FP_source,walk,17
+AFAC,FN_destination,lie down,3
+AFAC,FN_destination,pickup,1
+AFAC,FN_destination,run,3
+AFAC,FN_destination,walk,3
+D10,FP_source,other,20
+D10,FP_source,run,41
+D10,FP_source,walk,20
+D10,FN_destination,lie down,2
+D10,FN_destination,run,2
+D10,FN_destination,walk,8
+D11b,FP_source,other,25
+D11b,FP_source,run,39
+D11b,FP_source,walk,16
+D11b,FN_destination,lie down,1
+D11b,FN_destination,walk,7

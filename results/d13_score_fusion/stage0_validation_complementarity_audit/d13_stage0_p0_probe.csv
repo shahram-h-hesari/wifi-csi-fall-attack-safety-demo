@@ -1,0 +1,3 @@
+far_cap,threshold_on_ecdf_mean,TP,FN,FP,TN,recall,FAR,AUROC,pAUC_McClish_0_20,caveat
+0.18,0.758861,34,10,75,377,0.772727,0.165929,0.880078,0.711704,"saved-score feasibility probe (per-model independent adversarial examples), not deployment-equivalent fusion"
+0.20,0.721234,40,4,90,362,0.909091,0.199115,0.880078,0.711704,"saved-score feasibility probe (per-model independent adversarial examples), not deployment-equivalent fusion"

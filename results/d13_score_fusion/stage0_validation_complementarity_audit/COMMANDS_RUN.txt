@@ -1,0 +1,22 @@
+# Commands run for D13 Step 0A/0B (2026-07-04)
+# Python: .venv (Python 3.10.11, torch 2.12.0+cpu), repo commit 1bcf6b8, branch feature/safety-proxy-guided-defense
+# Validation-only. No training. No fusion-weight fitting. No thesis edits. No commit. No push.
+
+# 1. Pre-execution self-check: confirm no test-file references in the Step 0A script
+grep -in 'test_eval\|split.*test\b\|test_pgd\|_test_epsilon' scripts/analysis/d13_stage0_complementarity_audit.py
+# (expected: no matches)
+
+# 2. Step 0A: saved-score complementarity audit (validation only; per-model metrics, overlap,
+#    correlations, vote patterns, Oracle A/B, P0 probe, bootstrap)
+.venv/Scripts/python.exe scripts/analysis/d13_stage0_complementarity_audit.py
+
+# 3. Pre-execution self-check: confirm no test-file references in the Step 0B script
+grep -in 'test_eval\|split.*test\b\|X_test\|y_test\|test_loader' scripts/analysis/d13_stage0_transfer_audit.py
+# (expected: only the docstring's disclaimer sentence mentioning the absence of test paths;
+#  no actual test_eval/X_test/y_test/test_loader usage)
+
+# 4. Step 0B: shared-input transfer audit (regenerates validation-only PGD adversarial examples
+#    against each source model; evaluates all three models on all three source batches; 3x3 matrix)
+.venv/Scripts/python.exe scripts/analysis/d13_stage0_transfer_audit.py
+
+# Outputs written to results/d13_score_fusion/stage0_validation_complementarity_audit/

@@ -1,0 +1,76 @@
+{
+  "epsilon": 0.03,
+  "mean_diagonal_fall_recall": 0.7727273333333334,
+  "mean_offdiagonal_fall_recall": 0.9204543333333333,
+  "pgd_alpha": 0.005,
+  "pgd_steps": 10,
+  "seed": 1337,
+  "step0b_valid": true,
+  "transfer_veto_condition": "mean_offdiag >= mean_diag + 0.15",
+  "transfer_veto_pass": false,
+  "validity_report": {
+    "AFAC": {
+      "diff": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 0,
+        "TP": 0
+      },
+      "regenerated": {
+        "FN": 10,
+        "FP": 71,
+        "TN": 381,
+        "TP": 34
+      },
+      "step0A_reference": {
+        "FN": 10,
+        "FP": 71,
+        "TN": 381,
+        "TP": 34
+      },
+      "within_tolerance_2": true
+    },
+    "D10": {
+      "diff": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 0,
+        "TP": 0
+      },
+      "regenerated": {
+        "FN": 12,
+        "FP": 81,
+        "TN": 371,
+        "TP": 32
+      },
+      "step0A_reference": {
+        "FN": 12,
+        "FP": 81,
+        "TN": 371,
+        "TP": 32
+      },
+      "within_tolerance_2": true
+    },
+    "D11b": {
+      "diff": {
+        "FN": 0,
+        "FP": 0,
+        "TN": 0,
+        "TP": 0
+      },
+      "regenerated": {
+        "FN": 8,
+        "FP": 80,
+        "TN": 372,
+        "TP": 36
+      },
+      "step0A_reference": {
+        "FN": 8,
+        "FP": 80,
+        "TN": 372,
+        "TP": 36
+      },
+      "within_tolerance_2": true
+    }
+  }
+}

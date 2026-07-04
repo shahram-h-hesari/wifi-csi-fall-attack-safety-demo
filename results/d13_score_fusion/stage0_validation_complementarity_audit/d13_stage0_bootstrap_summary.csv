@@ -1,0 +1,8 @@
+metric,median,ci95_lo,ci95_hi,n_boot
+AFAC_recall_at_FAR0.18,0.772727,0.636364,0.886364,2000
+D10_recall_at_FAR0.18,0.727273,0.590909,0.863636,2000
+D11b_recall_at_FAR0.18,0.818182,0.704545,0.931818,2000
+OracleB_TP_gain_over_best_single,4.0000,-1.0000,8.0000,2000
+OracleB_frac_resamples_gain_ge_2,0.8205,,,2000
+P0_TP_gain_over_best_single,-2.0000,-7.0000,1.0000,2000
+P0_frac_resamples_gain_ge_2,0.0080,,,2000

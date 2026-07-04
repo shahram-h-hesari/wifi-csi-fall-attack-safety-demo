@@ -1,0 +1,7 @@
+pair,subset,n,spearman_rho
+AFAC&D10,all_validation,496,0.915062
+AFAC&D10,fall_run_walk,311,0.924890
+AFAC&D11b,all_validation,496,0.916105
+AFAC&D11b,fall_run_walk,311,0.909997
+D10&D11b,all_validation,496,0.891398
+D10&D11b,fall_run_walk,311,0.890108

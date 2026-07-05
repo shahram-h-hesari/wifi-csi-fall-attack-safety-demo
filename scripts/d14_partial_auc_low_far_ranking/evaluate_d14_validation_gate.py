@@ -122,10 +122,40 @@ def stratified_bootstrap(y, s, tau, y_ref=None, s_ref=None, tau_ref=None,
     return out
 
 
+MISSING_EXPORT_STATUS = "CLEAN_GUARD_FAILED_NO_VALIDATION_EXPORT"
+MISSING_EXPORT_NOTE = (
+    "This run completed training but produced no clean-guard-eligible best checkpoint or "
+    "validation export; it is treated as ineligible for promotion and as zero validation recall "
+    "for conservative gate evaluation.")
+
+
+def conservative_failure_result(config: str, seed: int):
+    """Build a conservative FAILURE seed-result for a config/seed with no validation export.
+
+    A config/seed can complete training yet produce no clean-guard-eligible best checkpoint, in
+    which case the training script writes no validation score export (as observed for seed 42).
+    Such a run is treated as ineligible for promotion and assigned conservative zero-recall
+    failure metrics (TP=0, FN=44, FP=0, TN=452, recall=0.0, FAR=0.0, precision=0.0, F1=0.0,
+    AUROC=NaN) and a failing clean guard. This can NEVER help D14 pass the gate: it ranks lowest in
+    median selection, and if it becomes the median seed it fails gate condition 1 (TP < 38) and
+    condition 4 (clean guard), and no bootstrap can run (no scores) so conditions 2 and 3 also fail.
+    """
+    fail = {"threshold": None, "TP": 0, "FN": C.VAL_FALL_WINDOWS, "FP": 0,
+            "TN": C.VAL_NONFALL_WINDOWS, "recall": 0.0, "FAR": 0.0,
+            "precision": 0.0, "F1": 0.0}
+    return {"config": config, "seed": seed, "y": None, "s": None,
+            "primary": dict(fail), "secondary": dict(fail), "best_epoch": None,
+            "guard": {"clean_accuracy": None, "clean_macro_f1": None,
+                      "clean_fall_recall": None, "guard_pass": False},
+            "auroc": float("nan"), "status": MISSING_EXPORT_STATUS}
+
+
 def per_seed_metrics(config: str, seed: int):
     path = d14_val_pgd_path(config, seed)
     if not path.exists():
-        return None
+        # Missing validation export -> the run produced no clean-guard-eligible best checkpoint
+        # (or was not run). Do NOT drop it: treat it conservatively so it cannot help the gate.
+        return conservative_failure_result(config, seed)
     y, s = load_val_scores(path)
     if len(y) != 496 or sum(y) != 44:
         raise SystemExit(f"REFUSED: {path} is not a 496-window/44-fall validation export "
@@ -136,7 +166,7 @@ def per_seed_metrics(config: str, seed: int):
     guard = clean_guard_from_log(config, seed, best_epoch)
     return {"config": config, "seed": seed, "y": y, "s": s,
             "primary": prim, "secondary": sec, "best_epoch": best_epoch, "guard": guard,
-            "auroc": C.auroc(y, s)}
+            "auroc": C.auroc(y, s), "status": "OK"}
 
 
 def median_seed(seed_results):
@@ -178,25 +208,24 @@ def main():
         ref_sel = C.select_threshold(y_ref, s_ref, C.PRIMARY_FAR_CAP)
         afac_ref = {"y": y_ref, "s": s_ref, "tau": ref_sel["threshold"] if ref_sel else None}
 
-    # gather per config/seed
+    # gather per config/seed. Every seed yields a result: real metrics if a validation export
+    # exists, otherwise a conservative FAILURE result (never dropped, so it cannot help the gate).
     by_config = {}
     missing = []
     for cf in args.configs:
         seed_results = []
         for sd in args.seeds:
             m = per_seed_metrics(cf, sd)
-            if m is None:
+            seed_results.append(m)
+            if m["status"] == MISSING_EXPORT_STATUS:
                 missing.append((cf, sd))
-            else:
-                seed_results.append(m)
-        if seed_results:
-            by_config[cf] = seed_results
+        by_config[cf] = seed_results
 
     if missing:
-        print(f"[info] missing D14 validation exports for: {missing}. "
-              "Run training for all requested config/seed combinations first.")
+        print(f"[info] {len(missing)} config/seed run(s) with NO validation export "
+              f"(clean-guard-failed, conservative failure): {missing}")
     if not by_config:
-        raise SystemExit("No D14 validation exports found; nothing to gate. (No test read performed.)")
+        raise SystemExit("No configs requested; nothing to gate. (No test read performed.)")
 
     # config selection: higher median-seed recall@0.17, then lower median-seed FAR, then Config A
     config_summ = []
@@ -249,16 +278,35 @@ def main():
     lines.append("")
     lines.append(f"- Chosen config (tie-break: higher median recall@0.17 -> lower FAR -> Config A): "
                  f"**{chosen_cf}**")
-    lines.append(f"- Median seed of chosen config: **{ms['seed']}** (best epoch {ms['best_epoch']})")
-    if prim:
+    ms_status = ms.get("status", "OK")
+    lines.append(f"- Median seed of chosen config: **{ms['seed']}** (best epoch {ms['best_epoch']}, "
+                 f"status {ms_status})")
+    if ms_status == MISSING_EXPORT_STATUS:
+        lines.append(f"- Median-seed cap-0.17 operating point: "
+                     f"CLEAN_GUARD_FAILED_NO_VALIDATION_EXPORT -> conservative failure "
+                     f"TP/FN/FP/TN={prim['TP']}/{prim['FN']}/{prim['FP']}/{prim['TN']}, "
+                     f"recall={prim['recall']:.4f}, FAR={prim['FAR']:.4f} (no threshold; no scores).")
+        lines.append(f"- Note: {MISSING_EXPORT_NOTE}")
+    elif prim and prim["threshold"] is not None:
         lines.append(f"- Median-seed cap-0.17 operating point: threshold={prim['threshold']:.6f}, "
                      f"TP/FN/FP/TN={prim['TP']}/{prim['FN']}/{prim['FP']}/{prim['TN']}, "
                      f"recall={prim['recall']:.4f}, FAR={prim['FAR']:.4f}")
-    if ms["secondary"]:
-        se = ms["secondary"]
-        lines.append(f"- Median-seed cap-0.20 comparison: threshold={se['threshold']:.6f}, "
-                     f"recall={se['recall']:.4f}, FAR={se['FAR']:.4f}")
+        if ms["secondary"] and ms["secondary"]["threshold"] is not None:
+            se = ms["secondary"]
+            lines.append(f"- Median-seed cap-0.20 comparison: threshold={se['threshold']:.6f}, "
+                         f"recall={se['recall']:.4f}, FAR={se['FAR']:.4f}")
+    else:
+        lines.append("- Median-seed cap-0.17 operating point: no threshold satisfied FAR cap 0.17.")
     lines.append(f"- Median-seed validation PGD AUROC: {ms['auroc']:.4f}")
+    lines.append("")
+    # Per config/seed status table (transparency about missing exports).
+    lines.append("## Per config/seed status")
+    for cf, seed_results in by_config.items():
+        for r in sorted(seed_results, key=lambda r: r["seed"]):
+            st = r.get("status", "OK")
+            rec = r["primary"]["recall"] if r["primary"] else float("nan")
+            lines.append(f"- Config {cf} seed {r['seed']}: {st}"
+                         + (f" (cap-0.17 recall {rec:.4f})" if st == "OK" and r["primary"] else ""))
     lines.append("")
     lines.append("## Gate conditions")
     lines.append(f"1. median-seed recall >= 38/44 (0.8636): "
@@ -276,11 +324,14 @@ def main():
     else:
         lines.append("2. bootstrap recall: FAIL (no cap-0.17 threshold available)")
         lines.append("3. bootstrap gain: FAIL (no cap-0.17 threshold available)")
-    if guard:
+    if guard and guard.get("clean_accuracy") is not None:
         lines.append(f"4. clean guard (acc>=0.70, mF1>=0.65, fallR>=0.90): "
                      f"{'PASS' if cond4 else 'FAIL'} "
                      f"(acc={guard['clean_accuracy']:.3f}, mF1={guard['clean_macro_f1']:.3f}, "
                      f"fallR={guard['clean_fall_recall']:.3f})")
+    elif ms_status == MISSING_EXPORT_STATUS:
+        lines.append("4. clean guard: FAIL (no clean-guard-eligible best checkpoint; "
+                     "conservative failure)")
     else:
         lines.append("4. clean guard: FAIL (no training-log clean metrics found)")
     lines.append("")
@@ -304,7 +355,9 @@ def main():
     report_path.write_text("\n".join(lines), encoding="utf-8")
     print(f"[write] {report_path.relative_to(C.REPO)}")
 
-    if gate_pass and prim is not None:
+    # A conservative-failure median seed has threshold=None and cannot pass the gate; the extra
+    # threshold-not-None guard is defensive so a frozen-thresholds file is never written on failure.
+    if gate_pass and prim is not None and prim["threshold"] is not None:
         frozen = {
             "verdict": verdict,
             "chosen_config": chosen_cf,

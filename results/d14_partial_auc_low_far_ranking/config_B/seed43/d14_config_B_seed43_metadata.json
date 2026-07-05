@@ -1,0 +1,44 @@
+{
+  "stage": "d14_low_far_ranking_finetune",
+  "timestamp_utc": "2026-07-05T08:52:32.763440+00:00",
+  "thesis_prereg_commit": "7ee228369052461682741a372a1ac2c3209fecb1",
+  "thesis_clarification_commit": "06c93abb635b3bcaf2e5591f214bd57d00faf831",
+  "preflight_commit": "67efeda578db53ae4eab0ca82dccb0d5c9373f23",
+  "config": "B",
+  "seed": 43,
+  "lambda_ce": 1.0,
+  "lambda_rank": 1.0,
+  "start_checkpoint": "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo\\checkpoints\\safety_guided_defense\\variantH_dual_tail_budget\\adaptive_lagrangian_far_constrained\\optionB\\seed42\\seed42_optionB_maxscore_best.pt",
+  "start_checkpoint_rule": "AFAC-score primary; D10 fallback only if AFAC unusable",
+  "used_d10_fallback": false,
+  "score_convention": "s(x) = softmax(logits)[:, 1] (fall class index 1); higher = more fall-like",
+  "pgd": {
+    "epsilon": 0.03,
+    "steps": 10,
+    "alpha": 0.005,
+    "random_start": false,
+    "projection": "L-infinity, no [0,1] clamp",
+    "loss": "untargeted cross-entropy on true label"
+  },
+  "ranking_loss": {
+    "margin_m": 0.1,
+    "tail_fraction": 0.2,
+    "definition": "H=top-k nonfall by s(x), k=max(1,ceil(0.20*N_nonfall_batch)); L_rank=mean_{i in fall, j in H} max(0, m-(s_i-s_j)); 0 if batch lacks fall or non-fall"
+  },
+  "adv_fraction": 1.0,
+  "full_batch_pgd_statement": "D14 uses full-batch PGD adversarial fine-tuning; no 50/50 clean/PGD mixture was used. Both L_PGD_CE and L_rank are computed on the PGD-attacked minibatch. Clean behavior is protected by the clean validation guard.",
+  "clean_guard": {
+    "min_clean_accuracy": 0.7,
+    "min_clean_macro_f1": 0.65,
+    "min_clean_fall_recall": 0.9
+  },
+  "epochs": 40,
+  "lr": 0.0003,
+  "batch_size": 64,
+  "best_epoch": 1,
+  "test_set_used": false,
+  "no_test_read_statement": "This training script performed NO held-out test read. Only the training and validation splits were accessed.",
+  "python_version": "3.10.11",
+  "torch_version": "2.12.0+cpu",
+  "elapsed_seconds": 3909.6186022758484
+}

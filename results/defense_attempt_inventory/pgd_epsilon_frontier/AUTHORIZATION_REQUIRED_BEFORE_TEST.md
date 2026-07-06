@@ -33,3 +33,4 @@ authorizing the read, so the pre-registration timestamp is independent of the re
 ---
 
 (authorization lines below this rule)
+AUTHORIZED: Shahram Hesari approved exactly one frozen held-out test read for protocol commit 92f7bbb20817a8c5e003b1304ac20ad4071d7d07, AFAC_maxscore, PGD epsilon 0.015, tau 0.168754. No threshold sweep, no second model, no second epsilon.

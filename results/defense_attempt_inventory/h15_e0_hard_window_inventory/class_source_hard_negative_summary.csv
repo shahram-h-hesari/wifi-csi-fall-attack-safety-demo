@@ -1,0 +1,7 @@
+true_nonfall_class,class_total_in_val,n_hard_negatives_union,share_of_union_hard_negatives,class_rate,avg_fall_score_when_hard,max_fall_score_when_hard,families_producing_them_with_counts
+run,121,44,0.3793,0.3636,0.33172,0.877676,SA1_sat:91;GR1_gairat:86;ST1b6_beta6p0:81;G1_hardneg:76;ST1_beta3p0:71;D14_pauc_rank:54;BiLSTM_finetune:53;AFAC_optionB:51
+walk,146,28,0.2414,0.1918,0.429593,0.99924,GR1_gairat:40;ST1_beta3p0:38;ST1b6_beta6p0:38;G1_hardneg:29;BiLSTM_finetune:25;SA1_sat:25;AFAC_optionB:24;D14_pauc_rank:24;variantD:2
+lie down,66,19,0.1638,0.2879,0.373367,0.845811,G1_hardneg:26;SA1_sat:20;ST1_beta3p0:20;AFAC_optionB:17;GR1_gairat:17;ST1b6_beta6p0:16;BiLSTM_finetune:16;D14_pauc_rank:12
+stand up,30,12,0.1034,0.4,0.284124,0.633736,ST1_beta3p0:18;G1_hardneg:16;ST1b6_beta6p0:14;SA1_sat:13;AFAC_optionB:12;D14_pauc_rank:10;GR1_gairat:5;BiLSTM_finetune:1
+pickup,49,10,0.0862,0.2041,0.363807,0.692039,BiLSTM_finetune:8;ST1_beta3p0:7;SA1_sat:4;ST1b6_beta6p0:4;GR1_gairat:3;G1_hardneg:3;AFAC_optionB:2
+sit down,40,3,0.0259,0.075,0.305456,0.641573,AFAC_optionB:2;SA1_sat:2;BiLSTM_finetune:2;ST1b6_beta6p0:2;D14_pauc_rank:2;G1_hardneg:1;GR1_gairat:1

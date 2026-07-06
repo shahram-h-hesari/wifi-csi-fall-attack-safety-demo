@@ -1,0 +1,1085 @@
+split,sample_id,true_class,model,family,representation,fall_score,predicted_class,above_operating_threshold,operating_threshold_far012,rank_among_nonfalls_desc
+val,1,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.26735,fall,True,0.200578,28
+val,1,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.24482,fall,True,0.227623,50
+val,1,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.249813,fall,True,0.144991,23
+val,1,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.340871,fall,True,0.306177,34
+val,1,lie down,G1_safety_s44,G1_hardneg,lenet,0.317509,fall,True,0.314376,50
+val,1,lie down,SA1_lowFA,SA1_sat,lenet,0.12075,walk,True,0.104403,48
+val,1,lie down,SA1_macroF1,SA1_sat,lenet,0.260994,fall,True,0.259205,50
+val,1,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.438363,fall,True,0.393386,41
+val,6,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.292727,fall,True,0.200578,24
+val,6,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.281658,fall,True,0.143261,11
+val,6,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.339351,fall,True,0.293561,25
+val,6,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.304603,fall,True,0.227623,14
+val,6,lie down,D14B_seed43,D14_pauc_rank,lenet,0.304316,fall,True,0.200217,14
+val,6,lie down,D14B_seed44,D14_pauc_rank,lenet,0.296221,fall,True,0.191555,13
+val,6,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.31635,fall,True,0.144991,14
+val,6,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.390327,fall,True,0.306177,12
+val,6,lie down,G1_safety_s44,G1_hardneg,lenet,0.435607,fall,True,0.314376,20
+val,6,lie down,GR1_lowFA,GR1_gairat,lenet,0.244324,stand up,True,0.187872,38
+val,6,lie down,GR1_macroF1,GR1_gairat,lenet,0.238267,stand up,True,0.201419,42
+val,6,lie down,GR1_safety,GR1_gairat,lenet,0.368567,fall,True,0.36618,47
+val,6,lie down,SA1_lowFA,SA1_sat,lenet,0.201989,stand up,True,0.104403,24
+val,6,lie down,SA1_macroF1,SA1_sat,lenet,0.444157,fall,True,0.259205,10
+val,6,lie down,SA1_safety,SA1_sat,lenet,0.438032,fall,True,0.310699,9
+val,6,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.192907,stand up,True,0.157616,38
+val,6,lie down,ST1_macroF1,ST1_beta3p0,lenet,0.292442,fall,True,0.190872,25
+val,6,lie down,ST1_safety,ST1_beta3p0,lenet,0.596797,fall,True,0.422517,8
+val,6,lie down,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.268029,fall,True,0.153511,21
+val,6,lie down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.357422,fall,True,0.289528,42
+val,6,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.459343,fall,True,0.393386,35
+val,8,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.27552,walk,True,0.227623,37
+val,8,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.449456,fall,True,0.306177,8
+val,8,lie down,G1_safety_s44,G1_hardneg,lenet,0.711954,fall,True,0.314376,5
+val,8,lie down,GR1_macroF1,GR1_gairat,lenet,0.249484,lie down,True,0.201419,39
+val,8,lie down,GR1_safety,GR1_gairat,lenet,0.705104,fall,True,0.36618,5
+val,8,lie down,SA1_macroF1,SA1_sat,lenet,0.320355,lie down,True,0.259205,40
+val,8,lie down,SA1_safety,SA1_sat,lenet,0.527725,fall,True,0.310699,5
+val,8,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.289087,lie down,True,0.157616,17
+val,8,lie down,ST1_safety,ST1_beta3p0,lenet,0.519044,fall,True,0.422517,21
+val,8,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.705737,fall,True,0.393386,14
+val,11,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.34041,fall,True,0.227623,8
+val,11,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.565443,fall,True,0.306177,5
+val,11,lie down,GR1_lowFA,GR1_gairat,lenet,0.511915,fall,True,0.187872,6
+val,11,lie down,GR1_safety,GR1_gairat,lenet,0.578246,fall,True,0.36618,9
+val,11,lie down,SA1_safety,SA1_sat,lenet,0.333594,fall,True,0.310699,43
+val,12,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.38697,fall,True,0.293561,8
+val,12,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.374076,fall,True,0.227623,4
+val,12,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.393694,lie down,True,0.306177,11
+val,12,lie down,G1_safety_s44,G1_hardneg,lenet,0.32466,lie down,True,0.314376,47
+val,12,lie down,GR1_lowFA,GR1_gairat,lenet,0.426432,fall,True,0.187872,9
+val,12,lie down,GR1_safety,GR1_gairat,lenet,0.421808,fall,True,0.36618,26
+val,12,lie down,SA1_safety,SA1_sat,lenet,0.377469,fall,True,0.310699,22
+val,17,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.205574,fall,True,0.200578,51
+val,21,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.418057,fall,True,0.200578,6
+val,21,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.396079,fall,True,0.293561,6
+val,21,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.353077,fall,True,0.227623,7
+val,21,lie down,D14B_seed43,D14_pauc_rank,lenet,0.412277,fall,True,0.200217,2
+val,21,lie down,D14B_seed44,D14_pauc_rank,lenet,0.392242,fall,True,0.191555,2
+val,21,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.743162,fall,True,0.306177,2
+val,21,lie down,G1_safety_s44,G1_hardneg,lenet,0.841619,fall,True,0.314376,2
+val,21,lie down,GR1_lowFA,GR1_gairat,lenet,0.818103,fall,True,0.187872,2
+val,21,lie down,GR1_macroF1,GR1_gairat,lenet,0.682335,fall,True,0.201419,3
+val,21,lie down,GR1_safety,GR1_gairat,lenet,0.845811,fall,True,0.36618,3
+val,21,lie down,SA1_lowFA,SA1_sat,lenet,0.121001,lie down,True,0.104403,47
+val,21,lie down,SA1_macroF1,SA1_sat,lenet,0.573212,fall,True,0.259205,4
+val,21,lie down,SA1_safety,SA1_sat,lenet,0.602276,fall,True,0.310699,2
+val,21,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.31524,lie down,True,0.157616,14
+val,21,lie down,ST1_macroF1,ST1_beta3p0,lenet,0.369809,lie down,True,0.190872,15
+val,21,lie down,ST1_safety,ST1_beta3p0,lenet,0.60994,fall,True,0.422517,7
+val,21,lie down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.394732,lie down,True,0.289528,31
+val,21,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.829403,fall,True,0.393386,6
+val,23,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.284427,fall,True,0.200578,25
+val,23,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.266087,fall,True,0.144991,18
+val,23,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.348528,fall,True,0.306177,29
+val,23,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.168691,run,True,0.157616,43
+val,23,lie down,ST1_macroF1,ST1_beta3p0,lenet,0.259501,fall,True,0.190872,35
+val,23,lie down,ST1_safety,ST1_beta3p0,lenet,0.492005,fall,True,0.422517,33
+val,23,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.397038,fall,True,0.393386,50
+val,25,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.295235,fall,True,0.200578,21
+val,25,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.249138,fall,True,0.143261,19
+val,25,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.194751,walk,True,0.144991,39
+val,25,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.423857,fall,True,0.393386,45
+val,30,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.3957,fall,True,0.293561,7
+val,30,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.389899,fall,True,0.227623,3
+val,33,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.431855,fall,True,0.200578,5
+val,33,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.25241,fall,True,0.143261,18
+val,33,lie down,D14B_seed43,D14_pauc_rank,lenet,0.352393,fall,True,0.200217,5
+val,33,lie down,D14B_seed44,D14_pauc_rank,lenet,0.341175,fall,True,0.191555,5
+val,33,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.336976,fall,True,0.306177,39
+val,33,lie down,ST1_safety,ST1_beta3p0,lenet,0.579731,fall,True,0.422517,9
+val,33,lie down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.59508,fall,True,0.289528,9
+val,33,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.735756,fall,True,0.393386,10
+val,38,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.266487,fall,True,0.227623,41
+val,39,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.323522,fall,True,0.293561,34
+val,50,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.167457,stand up,True,0.143261,42
+val,51,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.29616,fall,True,0.200578,20
+val,51,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.245605,fall,True,0.143261,20
+val,51,lie down,D14B_seed43,D14_pauc_rank,lenet,0.260336,fall,True,0.200217,28
+val,51,lie down,D14B_seed44,D14_pauc_rank,lenet,0.259866,fall,True,0.191555,25
+val,51,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.27568,fall,True,0.144991,16
+val,51,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.355331,fall,True,0.306177,20
+val,51,lie down,G1_safety_s44,G1_hardneg,lenet,0.372372,fall,True,0.314376,35
+val,51,lie down,GR1_macroF1,GR1_gairat,lenet,0.224091,walk,True,0.201419,45
+val,51,lie down,SA1_lowFA,SA1_sat,lenet,0.149471,run,True,0.104403,38
+val,51,lie down,SA1_macroF1,SA1_sat,lenet,0.354719,fall,True,0.259205,25
+val,51,lie down,SA1_safety,SA1_sat,lenet,0.360137,fall,True,0.310699,31
+val,51,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.20873,stand up,True,0.157616,35
+val,51,lie down,ST1_macroF1,ST1_beta3p0,lenet,0.317562,fall,True,0.190872,22
+val,51,lie down,ST1_safety,ST1_beta3p0,lenet,0.535416,fall,True,0.422517,15
+val,51,lie down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.413312,fall,True,0.289528,27
+val,51,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.42844,fall,True,0.393386,42
+val,52,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.219575,fall,True,0.200578,47
+val,52,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.202152,fall,True,0.143261,34
+val,52,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.301293,fall,True,0.293561,46
+val,52,lie down,BLF_safety,BiLSTM_finetune,bilstm,0.268318,pickup,True,0.227623,39
+val,52,lie down,D14B_seed43,D14_pauc_rank,lenet,0.279139,fall,True,0.200217,21
+val,52,lie down,D14B_seed44,D14_pauc_rank,lenet,0.269071,fall,True,0.191555,23
+val,52,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.311923,fall,True,0.306177,46
+val,52,lie down,G1_safety_s44,G1_hardneg,lenet,0.329581,fall,True,0.314376,43
+val,52,lie down,GR1_lowFA,GR1_gairat,lenet,0.218804,stand up,True,0.187872,47
+val,52,lie down,SA1_safety,SA1_sat,lenet,0.334769,fall,True,0.310699,42
+val,54,lie down,AFAC_maxscore,AFAC_optionB,lenet,0.248525,fall,True,0.200578,37
+val,54,lie down,AFAC_optBminFA,AFAC_optionB,lenet,0.244456,fall,True,0.143261,21
+val,54,lie down,BLF_maxrec,BiLSTM_finetune,bilstm,0.35006,fall,True,0.293561,22
+val,54,lie down,D14B_seed43,D14_pauc_rank,lenet,0.222669,fall,True,0.200217,40
+val,54,lie down,D14B_seed44,D14_pauc_rank,lenet,0.208124,fall,True,0.191555,43
+val,54,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.221249,fall,True,0.144991,33
+val,54,lie down,G1_safety_s44,G1_hardneg,lenet,0.362997,fall,True,0.314376,36
+val,54,lie down,GR1_lowFA,GR1_gairat,lenet,0.208086,stand up,True,0.187872,49
+val,54,lie down,GR1_macroF1,GR1_gairat,lenet,0.222819,fall,True,0.201419,46
+val,54,lie down,SA1_lowFA,SA1_sat,lenet,0.249087,fall,True,0.104403,18
+val,54,lie down,SA1_macroF1,SA1_sat,lenet,0.368528,fall,True,0.259205,21
+val,54,lie down,SA1_safety,SA1_sat,lenet,0.347115,fall,True,0.310699,36
+val,54,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.217624,fall,True,0.157616,32
+val,54,lie down,ST1_macroF1,ST1_beta3p0,lenet,0.248302,fall,True,0.190872,38
+val,54,lie down,ST1_safety,ST1_beta3p0,lenet,0.51036,fall,True,0.422517,26
+val,54,lie down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.339133,fall,True,0.289528,45
+val,54,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.416676,fall,True,0.393386,47
+val,61,lie down,G1_lowFA_s42,G1_hardneg,lenet,0.198846,lie down,True,0.144991,37
+val,61,lie down,G1_maxrec_s42,G1_hardneg,lenet,0.666456,fall,True,0.306177,3
+val,61,lie down,GR1_safety,GR1_gairat,lenet,0.555916,fall,True,0.36618,12
+val,61,lie down,ST1_lowFA,ST1_beta3p0,lenet,0.287638,lie down,True,0.157616,18
+val,61,lie down,ST1_safety,ST1_beta3p0,lenet,0.668854,fall,True,0.422517,6
+val,61,lie down,ST1b6_safety,ST1b6_beta6p0,lenet,0.677297,fall,True,0.393386,16
+val,65,lie down,SA1_safety,SA1_sat,lenet,0.36846,fall,True,0.310699,27
+val,115,pickup,GR1_macroF1,GR1_gairat,lenet,0.295618,fall,True,0.201419,34
+val,115,pickup,ST1_safety,ST1_beta3p0,lenet,0.457695,fall,True,0.422517,39
+val,117,pickup,BLF_safety,BiLSTM_finetune,bilstm,0.231654,fall,True,0.227623,52
+val,119,pickup,AFAC_maxscore,AFAC_optionB,lenet,0.260959,fall,True,0.200578,30
+val,119,pickup,BLF_maxrec,BiLSTM_finetune,bilstm,0.327791,fall,True,0.293561,32
+val,119,pickup,G1_maxrec_s42,G1_hardneg,lenet,0.309623,fall,True,0.306177,49
+val,119,pickup,G1_safety_s44,G1_hardneg,lenet,0.410098,fall,True,0.314376,27
+val,119,pickup,GR1_macroF1,GR1_gairat,lenet,0.311999,fall,True,0.201419,31
+val,119,pickup,GR1_safety,GR1_gairat,lenet,0.381431,fall,True,0.36618,43
+val,119,pickup,SA1_macroF1,SA1_sat,lenet,0.342471,fall,True,0.259205,30
+val,119,pickup,SA1_safety,SA1_sat,lenet,0.342626,fall,True,0.310699,39
+val,119,pickup,ST1_lowFA,ST1_beta3p0,lenet,0.224351,fall,True,0.157616,30
+val,119,pickup,ST1_macroF1,ST1_beta3p0,lenet,0.288429,fall,True,0.190872,29
+val,119,pickup,ST1_safety,ST1_beta3p0,lenet,0.495018,fall,True,0.422517,32
+val,119,pickup,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.505861,fall,True,0.289528,13
+val,119,pickup,ST1b6_safety,ST1b6_beta6p0,lenet,0.515745,fall,True,0.393386,25
+val,127,pickup,BLF_macroF1,BiLSTM_finetune,bilstm,0.543669,fall,True,0.543669,1
+val,127,pickup,BLF_maxrec,BiLSTM_finetune,bilstm,0.605073,fall,True,0.293561,1
+val,127,pickup,BLF_safety,BiLSTM_finetune,bilstm,0.513778,fall,True,0.227623,1
+val,128,pickup,AFAC_maxscore,AFAC_optionB,lenet,0.204385,run,True,0.200578,53
+val,128,pickup,G1_lowFA_s42,G1_hardneg,lenet,0.288967,fall,True,0.144991,15
+val,128,pickup,SA1_lowFA,SA1_sat,lenet,0.131816,run,True,0.104403,43
+val,128,pickup,ST1_macroF1,ST1_beta3p0,lenet,0.200695,run,True,0.190872,50
+val,128,pickup,ST1_safety,ST1_beta3p0,lenet,0.423962,fall,True,0.422517,52
+val,129,pickup,SA1_safety,SA1_sat,lenet,0.313296,fall,True,0.310699,53
+val,129,pickup,ST1b6_safety,ST1b6_beta6p0,lenet,0.692039,fall,True,0.393386,15
+val,133,pickup,BLF_safety,BiLSTM_finetune,bilstm,0.285802,fall,True,0.227623,26
+val,141,pickup,BLF_safety,BiLSTM_finetune,bilstm,0.259529,walk,True,0.227623,44
+val,151,pickup,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.336585,fall,True,0.289528,46
+val,153,pickup,BLF_maxrec,BiLSTM_finetune,bilstm,0.31712,fall,True,0.293561,35
+val,153,pickup,ST1_safety,ST1_beta3p0,lenet,0.459937,fall,True,0.422517,38
+val,160,run,AFAC_maxscore,AFAC_optionB,lenet,0.263814,fall,True,0.200578,29
+val,160,run,AFAC_optBminFA,AFAC_optionB,lenet,0.214848,fall,True,0.143261,27
+val,160,run,D14B_seed43,D14_pauc_rank,lenet,0.261375,run,True,0.200217,26
+val,160,run,D14B_seed44,D14_pauc_rank,lenet,0.257037,run,True,0.191555,27
+val,160,run,G1_lowFA_s42,G1_hardneg,lenet,0.244442,walk,True,0.144991,25
+val,160,run,G1_maxrec_s42,G1_hardneg,lenet,0.337064,fall,True,0.306177,38
+val,160,run,GR1_lowFA,GR1_gairat,lenet,0.247273,run,True,0.187872,37
+val,160,run,GR1_macroF1,GR1_gairat,lenet,0.316775,fall,True,0.201419,30
+val,160,run,GR1_safety,GR1_gairat,lenet,0.383853,fall,True,0.36618,42
+val,160,run,SA1_macroF1,SA1_sat,lenet,0.349412,fall,True,0.259205,28
+val,160,run,SA1_safety,SA1_sat,lenet,0.347541,fall,True,0.310699,35
+val,160,run,ST1_lowFA,ST1_beta3p0,lenet,0.236664,walk,True,0.157616,25
+val,160,run,ST1_macroF1,ST1_beta3p0,lenet,0.245301,walk,True,0.190872,40
+val,160,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.310038,walk,True,0.289528,50
+val,160,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.428288,fall,True,0.393386,43
+val,161,run,AFAC_optBminFA,AFAC_optionB,lenet,0.190618,run,True,0.143261,37
+val,161,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.356502,fall,True,0.293561,19
+val,161,run,BLF_safety,BiLSTM_finetune,bilstm,0.305833,fall,True,0.227623,12
+val,161,run,D14B_seed43,D14_pauc_rank,lenet,0.232564,run,True,0.200217,35
+val,161,run,D14B_seed44,D14_pauc_rank,lenet,0.226644,run,True,0.191555,35
+val,161,run,G1_maxrec_s42,G1_hardneg,lenet,0.343327,fall,True,0.306177,31
+val,161,run,G1_safety_s44,G1_hardneg,lenet,0.412907,fall,True,0.314376,25
+val,161,run,GR1_lowFA,GR1_gairat,lenet,0.276944,run,True,0.187872,28
+val,161,run,GR1_macroF1,GR1_gairat,lenet,0.275753,fall,True,0.201419,37
+val,161,run,GR1_safety,GR1_gairat,lenet,0.397739,fall,True,0.36618,36
+val,161,run,SA1_lowFA,SA1_sat,lenet,0.184604,pickup,True,0.104403,28
+val,161,run,SA1_macroF1,SA1_sat,lenet,0.315654,fall,True,0.259205,43
+val,161,run,SA1_safety,SA1_sat,lenet,0.337021,fall,True,0.310699,40
+val,161,run,ST1_lowFA,ST1_beta3p0,lenet,0.158108,pickup,True,0.157616,49
+val,161,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.161104,run,True,0.153511,45
+val,161,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.364746,fall,True,0.289528,41
+val,161,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.39417,fall,True,0.393386,53
+val,163,run,AFAC_maxscore,AFAC_optionB,lenet,0.33353,fall,True,0.200578,11
+val,163,run,AFAC_optBminFA,AFAC_optionB,lenet,0.314625,fall,True,0.143261,6
+val,163,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.366804,fall,True,0.293561,12
+val,163,run,BLF_safety,BiLSTM_finetune,bilstm,0.291613,fall,True,0.227623,20
+val,163,run,D14B_seed43,D14_pauc_rank,lenet,0.300814,fall,True,0.200217,15
+val,163,run,D14B_seed44,D14_pauc_rank,lenet,0.288905,fall,True,0.191555,15
+val,163,run,G1_lowFA_s42,G1_hardneg,lenet,0.385706,fall,True,0.144991,4
+val,163,run,G1_maxrec_s42,G1_hardneg,lenet,0.349608,fall,True,0.306177,27
+val,163,run,G1_safety_s44,G1_hardneg,lenet,0.450348,fall,True,0.314376,17
+val,163,run,GR1_lowFA,GR1_gairat,lenet,0.312651,fall,True,0.187872,21
+val,163,run,GR1_macroF1,GR1_gairat,lenet,0.363806,fall,True,0.201419,22
+val,163,run,GR1_safety,GR1_gairat,lenet,0.493595,fall,True,0.36618,13
+val,163,run,SA1_lowFA,SA1_sat,lenet,0.280863,fall,True,0.104403,12
+val,163,run,SA1_macroF1,SA1_sat,lenet,0.409922,fall,True,0.259205,14
+val,163,run,SA1_safety,SA1_sat,lenet,0.429649,fall,True,0.310699,12
+val,163,run,ST1_lowFA,ST1_beta3p0,lenet,0.32544,fall,True,0.157616,12
+val,163,run,ST1_macroF1,ST1_beta3p0,lenet,0.34913,fall,True,0.190872,17
+val,163,run,ST1_safety,ST1_beta3p0,lenet,0.526392,fall,True,0.422517,18
+val,163,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.28651,fall,True,0.153511,17
+val,163,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.410157,fall,True,0.289528,29
+val,163,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.520844,fall,True,0.393386,24
+val,168,run,AFAC_maxscore,AFAC_optionB,lenet,0.240562,fall,True,0.200578,38
+val,168,run,AFAC_optBminFA,AFAC_optionB,lenet,0.200284,run,True,0.143261,36
+val,168,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.334598,fall,True,0.293561,27
+val,168,run,BLF_safety,BiLSTM_finetune,bilstm,0.296657,walk,True,0.227623,17
+val,168,run,D14B_seed43,D14_pauc_rank,lenet,0.229174,run,True,0.200217,36
+val,168,run,D14B_seed44,D14_pauc_rank,lenet,0.225961,run,True,0.191555,36
+val,168,run,G1_lowFA_s42,G1_hardneg,lenet,0.234294,run,True,0.144991,28
+val,168,run,G1_maxrec_s42,G1_hardneg,lenet,0.337533,fall,True,0.306177,37
+val,168,run,G1_safety_s44,G1_hardneg,lenet,0.344353,fall,True,0.314376,41
+val,168,run,GR1_lowFA,GR1_gairat,lenet,0.26703,walk,True,0.187872,31
+val,168,run,GR1_macroF1,GR1_gairat,lenet,0.356913,fall,True,0.201419,24
+val,168,run,GR1_safety,GR1_gairat,lenet,0.398573,fall,True,0.36618,34
+val,168,run,SA1_lowFA,SA1_sat,lenet,0.254635,fall,True,0.104403,16
+val,168,run,SA1_macroF1,SA1_sat,lenet,0.400639,fall,True,0.259205,17
+val,168,run,SA1_safety,SA1_sat,lenet,0.379351,fall,True,0.310699,20
+val,168,run,ST1_lowFA,ST1_beta3p0,lenet,0.289932,fall,True,0.157616,16
+val,168,run,ST1_macroF1,ST1_beta3p0,lenet,0.373576,fall,True,0.190872,14
+val,168,run,ST1_safety,ST1_beta3p0,lenet,0.432438,fall,True,0.422517,49
+val,168,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.286953,fall,True,0.153511,16
+val,168,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.422033,fall,True,0.289528,26
+val,168,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.441269,fall,True,0.393386,39
+val,169,run,AFAC_maxscore,AFAC_optionB,lenet,0.30096,fall,True,0.200578,18
+val,169,run,AFAC_optBminFA,AFAC_optionB,lenet,0.266856,fall,True,0.143261,13
+val,169,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.377651,fall,True,0.293561,9
+val,169,run,BLF_safety,BiLSTM_finetune,bilstm,0.300739,fall,True,0.227623,16
+val,169,run,D14B_seed43,D14_pauc_rank,lenet,0.280683,fall,True,0.200217,20
+val,169,run,D14B_seed44,D14_pauc_rank,lenet,0.280742,fall,True,0.191555,19
+val,169,run,G1_lowFA_s42,G1_hardneg,lenet,0.237965,walk,True,0.144991,27
+val,169,run,G1_maxrec_s42,G1_hardneg,lenet,0.323994,fall,True,0.306177,42
+val,169,run,G1_safety_s44,G1_hardneg,lenet,0.399609,fall,True,0.314376,30
+val,169,run,GR1_lowFA,GR1_gairat,lenet,0.30197,fall,True,0.187872,24
+val,169,run,GR1_macroF1,GR1_gairat,lenet,0.318562,fall,True,0.201419,28
+val,169,run,GR1_safety,GR1_gairat,lenet,0.453961,fall,True,0.36618,22
+val,169,run,SA1_lowFA,SA1_sat,lenet,0.186649,walk,True,0.104403,27
+val,169,run,SA1_macroF1,SA1_sat,lenet,0.326128,fall,True,0.259205,36
+val,169,run,SA1_safety,SA1_sat,lenet,0.369139,fall,True,0.310699,26
+val,169,run,ST1_lowFA,ST1_beta3p0,lenet,0.293877,fall,True,0.157616,15
+val,169,run,ST1_macroF1,ST1_beta3p0,lenet,0.336677,fall,True,0.190872,19
+val,169,run,ST1_safety,ST1_beta3p0,lenet,0.502435,fall,True,0.422517,28
+val,169,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.280994,fall,True,0.153511,18
+val,169,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.374868,fall,True,0.289528,37
+val,169,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.469618,fall,True,0.393386,32
+val,174,run,AFAC_maxscore,AFAC_optionB,lenet,0.249664,fall,True,0.200578,36
+val,174,run,AFAC_optBminFA,AFAC_optionB,lenet,0.218562,run,True,0.143261,26
+val,174,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.374561,fall,True,0.293561,11
+val,174,run,BLF_safety,BiLSTM_finetune,bilstm,0.302638,fall,True,0.227623,15
+val,174,run,D14B_seed43,D14_pauc_rank,lenet,0.263961,run,True,0.200217,25
+val,174,run,D14B_seed44,D14_pauc_rank,lenet,0.258256,run,True,0.191555,26
+val,174,run,G1_lowFA_s42,G1_hardneg,lenet,0.232256,run,True,0.144991,30
+val,174,run,G1_safety_s44,G1_hardneg,lenet,0.334968,fall,True,0.314376,42
+val,174,run,GR1_lowFA,GR1_gairat,lenet,0.248167,run,True,0.187872,36
+val,174,run,GR1_macroF1,GR1_gairat,lenet,0.258875,run,True,0.201419,38
+val,174,run,GR1_safety,GR1_gairat,lenet,0.388725,fall,True,0.36618,39
+val,174,run,SA1_lowFA,SA1_sat,lenet,0.141813,run,True,0.104403,40
+val,174,run,SA1_macroF1,SA1_sat,lenet,0.286183,run,True,0.259205,47
+val,174,run,SA1_safety,SA1_sat,lenet,0.315892,fall,True,0.310699,50
+val,174,run,ST1_lowFA,ST1_beta3p0,lenet,0.195994,run,True,0.157616,37
+val,174,run,ST1_macroF1,ST1_beta3p0,lenet,0.243152,run,True,0.190872,41
+val,174,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.237942,run,True,0.153511,30
+val,174,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.305812,run,True,0.289528,52
+val,175,run,AFAC_maxscore,AFAC_optionB,lenet,0.223248,run,True,0.200578,46
+val,175,run,AFAC_optBminFA,AFAC_optionB,lenet,0.221378,fall,True,0.143261,24
+val,175,run,D14B_seed43,D14_pauc_rank,lenet,0.226914,run,True,0.200217,39
+val,175,run,D14B_seed44,D14_pauc_rank,lenet,0.238044,run,True,0.191555,31
+val,175,run,G1_safety_s44,G1_hardneg,lenet,0.806878,fall,True,0.314376,3
+val,175,run,GR1_lowFA,GR1_gairat,lenet,0.282914,run,True,0.187872,27
+val,175,run,GR1_macroF1,GR1_gairat,lenet,0.715258,fall,True,0.201419,2
+val,175,run,GR1_safety,GR1_gairat,lenet,0.669958,fall,True,0.36618,6
+val,175,run,SA1_lowFA,SA1_sat,lenet,0.456762,fall,True,0.104403,2
+val,175,run,SA1_macroF1,SA1_sat,lenet,0.46878,fall,True,0.259205,9
+val,175,run,SA1_safety,SA1_sat,lenet,0.600328,fall,True,0.310699,3
+val,175,run,ST1_lowFA,ST1_beta3p0,lenet,0.356243,fall,True,0.157616,9
+val,175,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.679583,fall,True,0.289528,7
+val,175,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.877676,fall,True,0.393386,3
+val,178,run,AFAC_maxscore,AFAC_optionB,lenet,0.236662,run,True,0.200578,40
+val,178,run,AFAC_optBminFA,AFAC_optionB,lenet,0.188519,run,True,0.143261,38
+val,178,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.327073,fall,True,0.293561,33
+val,178,run,BLF_safety,BiLSTM_finetune,bilstm,0.296606,fall,True,0.227623,18
+val,178,run,D14B_seed43,D14_pauc_rank,lenet,0.253398,run,True,0.200217,30
+val,178,run,D14B_seed44,D14_pauc_rank,lenet,0.23937,run,True,0.191555,30
+val,178,run,G1_lowFA_s42,G1_hardneg,lenet,0.259793,walk,True,0.144991,20
+val,178,run,G1_safety_s44,G1_hardneg,lenet,0.325988,walk,True,0.314376,45
+val,178,run,GR1_lowFA,GR1_gairat,lenet,0.221797,run,True,0.187872,46
+val,178,run,GR1_macroF1,GR1_gairat,lenet,0.226388,run,True,0.201419,44
+val,178,run,GR1_safety,GR1_gairat,lenet,0.399096,fall,True,0.36618,33
+val,178,run,SA1_lowFA,SA1_sat,lenet,0.135634,run,True,0.104403,41
+val,178,run,SA1_safety,SA1_sat,lenet,0.326244,fall,True,0.310699,47
+val,178,run,ST1_macroF1,ST1_beta3p0,lenet,0.227618,run,True,0.190872,45
+val,178,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.1969,run,True,0.153511,35
+val,186,run,AFAC_maxscore,AFAC_optionB,lenet,0.320634,fall,True,0.200578,14
+val,186,run,AFAC_optBminFA,AFAC_optionB,lenet,0.306916,fall,True,0.143261,7
+val,186,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.360702,fall,True,0.293561,14
+val,186,run,BLF_safety,BiLSTM_finetune,bilstm,0.287885,fall,True,0.227623,24
+val,186,run,D14B_seed43,D14_pauc_rank,lenet,0.289732,fall,True,0.200217,17
+val,186,run,D14B_seed44,D14_pauc_rank,lenet,0.282796,fall,True,0.191555,18
+val,186,run,G1_lowFA_s42,G1_hardneg,lenet,0.367107,fall,True,0.144991,8
+val,186,run,G1_maxrec_s42,G1_hardneg,lenet,0.351527,fall,True,0.306177,25
+val,186,run,G1_safety_s44,G1_hardneg,lenet,0.440253,fall,True,0.314376,19
+val,186,run,GR1_lowFA,GR1_gairat,lenet,0.308944,fall,True,0.187872,22
+val,186,run,GR1_macroF1,GR1_gairat,lenet,0.359865,fall,True,0.201419,23
+val,186,run,GR1_safety,GR1_gairat,lenet,0.467928,fall,True,0.36618,18
+val,186,run,SA1_lowFA,SA1_sat,lenet,0.278853,fall,True,0.104403,13
+val,186,run,SA1_macroF1,SA1_sat,lenet,0.404927,fall,True,0.259205,15
+val,186,run,SA1_safety,SA1_sat,lenet,0.422034,fall,True,0.310699,14
+val,186,run,ST1_lowFA,ST1_beta3p0,lenet,0.277511,fall,True,0.157616,20
+val,186,run,ST1_macroF1,ST1_beta3p0,lenet,0.268341,pickup,True,0.190872,32
+val,186,run,ST1_safety,ST1_beta3p0,lenet,0.519729,fall,True,0.422517,20
+val,186,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.307591,fall,True,0.153511,11
+val,186,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.432485,fall,True,0.289528,24
+val,186,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.500031,fall,True,0.393386,27
+val,189,run,AFAC_maxscore,AFAC_optionB,lenet,0.320289,fall,True,0.200578,15
+val,189,run,AFAC_optBminFA,AFAC_optionB,lenet,0.342437,fall,True,0.143261,2
+val,189,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.360037,fall,True,0.293561,15
+val,189,run,BLF_safety,BiLSTM_finetune,bilstm,0.288912,fall,True,0.227623,23
+val,189,run,D14B_seed43,D14_pauc_rank,lenet,0.311091,fall,True,0.200217,10
+val,189,run,D14B_seed44,D14_pauc_rank,lenet,0.308587,fall,True,0.191555,9
+val,189,run,G1_lowFA_s42,G1_hardneg,lenet,0.371371,fall,True,0.144991,7
+val,189,run,G1_maxrec_s42,G1_hardneg,lenet,0.349487,fall,True,0.306177,28
+val,189,run,G1_safety_s44,G1_hardneg,lenet,0.476429,fall,True,0.314376,10
+val,189,run,GR1_lowFA,GR1_gairat,lenet,0.377373,fall,True,0.187872,13
+val,189,run,GR1_macroF1,GR1_gairat,lenet,0.489748,fall,True,0.201419,9
+val,189,run,GR1_safety,GR1_gairat,lenet,0.461823,fall,True,0.36618,20
+val,189,run,SA1_lowFA,SA1_sat,lenet,0.31381,fall,True,0.104403,8
+val,189,run,SA1_macroF1,SA1_sat,lenet,0.482696,fall,True,0.259205,5
+val,189,run,SA1_safety,SA1_sat,lenet,0.42125,fall,True,0.310699,15
+val,189,run,ST1_lowFA,ST1_beta3p0,lenet,0.391094,fall,True,0.157616,6
+val,189,run,ST1_macroF1,ST1_beta3p0,lenet,0.455814,fall,True,0.190872,6
+val,189,run,ST1_safety,ST1_beta3p0,lenet,0.515409,fall,True,0.422517,24
+val,189,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.323174,fall,True,0.153511,8
+val,189,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.501206,fall,True,0.289528,15
+val,189,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.472199,fall,True,0.393386,31
+val,194,run,AFAC_optBminFA,AFAC_optionB,lenet,0.144847,run,True,0.143261,54
+val,194,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.30656,fall,True,0.293561,41
+val,194,run,BLF_safety,BiLSTM_finetune,bilstm,0.243477,walk,True,0.227623,51
+val,194,run,D14B_seed43,D14_pauc_rank,lenet,0.21751,run,True,0.200217,41
+val,194,run,D14B_seed44,D14_pauc_rank,lenet,0.210754,run,True,0.191555,41
+val,194,run,GR1_safety,GR1_gairat,lenet,0.378693,fall,True,0.36618,45
+val,194,run,SA1_lowFA,SA1_sat,lenet,0.132753,run,True,0.104403,42
+val,194,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.168007,run,True,0.153511,43
+val,196,run,AFAC_maxscore,AFAC_optionB,lenet,0.260264,fall,True,0.200578,31
+val,196,run,AFAC_optBminFA,AFAC_optionB,lenet,0.151347,run,True,0.143261,47
+val,196,run,D14B_seed43,D14_pauc_rank,lenet,0.234553,run,True,0.200217,34
+val,196,run,D14B_seed44,D14_pauc_rank,lenet,0.228206,run,True,0.191555,34
+val,196,run,G1_lowFA_s42,G1_hardneg,lenet,0.257185,fall,True,0.144991,21
+val,196,run,G1_safety_s44,G1_hardneg,lenet,0.31501,fall,True,0.314376,52
+val,196,run,GR1_lowFA,GR1_gairat,lenet,0.213189,run,True,0.187872,48
+val,196,run,GR1_safety,GR1_gairat,lenet,0.380847,fall,True,0.36618,44
+val,196,run,ST1_safety,ST1_beta3p0,lenet,0.444369,fall,True,0.422517,45
+val,197,run,AFAC_maxscore,AFAC_optionB,lenet,0.318609,fall,True,0.200578,16
+val,197,run,AFAC_optBminFA,AFAC_optionB,lenet,0.339455,fall,True,0.143261,3
+val,197,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.359074,fall,True,0.293561,17
+val,197,run,BLF_safety,BiLSTM_finetune,bilstm,0.285524,fall,True,0.227623,27
+val,197,run,D14B_seed43,D14_pauc_rank,lenet,0.308032,fall,True,0.200217,12
+val,197,run,D14B_seed44,D14_pauc_rank,lenet,0.305558,fall,True,0.191555,12
+val,197,run,G1_lowFA_s42,G1_hardneg,lenet,0.360615,fall,True,0.144991,11
+val,197,run,G1_maxrec_s42,G1_hardneg,lenet,0.35152,fall,True,0.306177,26
+val,197,run,G1_safety_s44,G1_hardneg,lenet,0.475229,fall,True,0.314376,11
+val,197,run,GR1_lowFA,GR1_gairat,lenet,0.370603,fall,True,0.187872,15
+val,197,run,GR1_macroF1,GR1_gairat,lenet,0.489551,fall,True,0.201419,10
+val,197,run,GR1_safety,GR1_gairat,lenet,0.469873,fall,True,0.36618,16
+val,197,run,SA1_lowFA,SA1_sat,lenet,0.323468,fall,True,0.104403,6
+val,197,run,SA1_macroF1,SA1_sat,lenet,0.479564,fall,True,0.259205,7
+val,197,run,SA1_safety,SA1_sat,lenet,0.438976,fall,True,0.310699,8
+val,197,run,ST1_lowFA,ST1_beta3p0,lenet,0.381465,fall,True,0.157616,7
+val,197,run,ST1_macroF1,ST1_beta3p0,lenet,0.450068,fall,True,0.190872,7
+val,197,run,ST1_safety,ST1_beta3p0,lenet,0.506587,fall,True,0.422517,27
+val,197,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.32137,fall,True,0.153511,9
+val,197,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.502124,fall,True,0.289528,14
+val,197,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.460187,fall,True,0.393386,34
+val,198,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.296941,fall,True,0.293561,48
+val,198,run,G1_safety_s44,G1_hardneg,lenet,0.316025,fall,True,0.314376,51
+val,198,run,GR1_lowFA,GR1_gairat,lenet,0.193147,walk,True,0.187872,50
+val,198,run,GR1_macroF1,GR1_gairat,lenet,0.202563,run,True,0.201419,54
+val,198,run,SA1_lowFA,SA1_sat,lenet,0.121368,pickup,True,0.104403,46
+val,198,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.170391,run,True,0.153511,42
+val,206,run,AFAC_optBminFA,AFAC_optionB,lenet,0.145431,sit down,True,0.143261,53
+val,206,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.258408,fall,True,0.153511,25
+val,206,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.576878,fall,True,0.289528,11
+val,206,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.632168,fall,True,0.393386,19
+val,207,run,G1_safety_s44,G1_hardneg,lenet,0.494392,fall,True,0.314376,6
+val,207,run,GR1_lowFA,GR1_gairat,lenet,0.238726,run,True,0.187872,41
+val,207,run,GR1_macroF1,GR1_gairat,lenet,0.569101,fall,True,0.201419,6
+val,207,run,GR1_safety,GR1_gairat,lenet,0.595357,fall,True,0.36618,7
+val,207,run,SA1_lowFA,SA1_sat,lenet,0.31492,run,True,0.104403,7
+val,207,run,SA1_macroF1,SA1_sat,lenet,0.339654,run,True,0.259205,31
+val,207,run,SA1_safety,SA1_sat,lenet,0.545218,fall,True,0.310699,4
+val,207,run,ST1_lowFA,ST1_beta3p0,lenet,0.182169,stand up,True,0.157616,41
+val,207,run,ST1_macroF1,ST1_beta3p0,lenet,0.23787,stand up,True,0.190872,43
+val,207,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.355425,run,True,0.289528,43
+val,207,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.767288,fall,True,0.393386,9
+val,209,run,AFAC_maxscore,AFAC_optionB,lenet,0.338817,fall,True,0.200578,10
+val,209,run,AFAC_optBminFA,AFAC_optionB,lenet,0.302413,fall,True,0.143261,8
+val,209,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.332589,fall,True,0.293561,29
+val,209,run,BLF_safety,BiLSTM_finetune,bilstm,0.278699,walk,True,0.227623,34
+val,209,run,D14B_seed43,D14_pauc_rank,lenet,0.304428,fall,True,0.200217,13
+val,209,run,D14B_seed44,D14_pauc_rank,lenet,0.292485,fall,True,0.191555,14
+val,209,run,G1_lowFA_s42,G1_hardneg,lenet,0.394438,fall,True,0.144991,3
+val,209,run,G1_maxrec_s42,G1_hardneg,lenet,0.35684,fall,True,0.306177,18
+val,209,run,G1_safety_s44,G1_hardneg,lenet,0.459866,fall,True,0.314376,13
+val,209,run,GR1_lowFA,GR1_gairat,lenet,0.35335,fall,True,0.187872,16
+val,209,run,GR1_macroF1,GR1_gairat,lenet,0.387883,fall,True,0.201419,17
+val,209,run,GR1_safety,GR1_gairat,lenet,0.491768,fall,True,0.36618,14
+val,209,run,SA1_lowFA,SA1_sat,lenet,0.290261,fall,True,0.104403,9
+val,209,run,SA1_macroF1,SA1_sat,lenet,0.44023,fall,True,0.259205,12
+val,209,run,SA1_safety,SA1_sat,lenet,0.437169,fall,True,0.310699,10
+val,209,run,ST1_lowFA,ST1_beta3p0,lenet,0.344806,fall,True,0.157616,10
+val,209,run,ST1_macroF1,ST1_beta3p0,lenet,0.377477,fall,True,0.190872,13
+val,209,run,ST1_safety,ST1_beta3p0,lenet,0.531653,fall,True,0.422517,16
+val,209,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.318817,fall,True,0.153511,10
+val,209,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.431763,fall,True,0.289528,25
+val,209,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.524528,fall,True,0.393386,22
+val,210,run,AFAC_maxscore,AFAC_optionB,lenet,0.282505,fall,True,0.200578,26
+val,210,run,AFAC_optBminFA,AFAC_optionB,lenet,0.261766,fall,True,0.143261,15
+val,210,run,D14B_seed43,D14_pauc_rank,lenet,0.245621,fall,True,0.200217,32
+val,210,run,D14B_seed44,D14_pauc_rank,lenet,0.235263,fall,True,0.191555,33
+val,210,run,G1_lowFA_s42,G1_hardneg,lenet,0.240601,fall,True,0.144991,26
+val,210,run,G1_maxrec_s42,G1_hardneg,lenet,0.338379,fall,True,0.306177,36
+val,210,run,G1_safety_s44,G1_hardneg,lenet,0.410277,fall,True,0.314376,26
+val,210,run,GR1_lowFA,GR1_gairat,lenet,0.321615,fall,True,0.187872,20
+val,210,run,GR1_macroF1,GR1_gairat,lenet,0.303954,fall,True,0.201419,32
+val,210,run,SA1_lowFA,SA1_sat,lenet,0.110762,lie down,True,0.104403,49
+val,210,run,SA1_macroF1,SA1_sat,lenet,0.330499,fall,True,0.259205,34
+val,210,run,SA1_safety,SA1_sat,lenet,0.349511,fall,True,0.310699,34
+val,210,run,ST1_lowFA,ST1_beta3p0,lenet,0.260785,fall,True,0.157616,21
+val,210,run,ST1_macroF1,ST1_beta3p0,lenet,0.339981,fall,True,0.190872,18
+val,210,run,ST1_safety,ST1_beta3p0,lenet,0.543704,fall,True,0.422517,13
+val,210,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.256065,fall,True,0.153511,26
+val,210,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.453297,fall,True,0.289528,20
+val,210,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.502525,fall,True,0.393386,26
+val,211,run,AFAC_maxscore,AFAC_optionB,lenet,0.29933,fall,True,0.200578,19
+val,211,run,AFAC_optBminFA,AFAC_optionB,lenet,0.338508,fall,True,0.143261,4
+val,211,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.356515,fall,True,0.293561,18
+val,211,run,BLF_safety,BiLSTM_finetune,bilstm,0.286826,fall,True,0.227623,25
+val,211,run,D14B_seed43,D14_pauc_rank,lenet,0.309573,fall,True,0.200217,11
+val,211,run,D14B_seed44,D14_pauc_rank,lenet,0.30561,fall,True,0.191555,11
+val,211,run,G1_lowFA_s42,G1_hardneg,lenet,0.361496,fall,True,0.144991,10
+val,211,run,G1_maxrec_s42,G1_hardneg,lenet,0.366525,fall,True,0.306177,16
+val,211,run,G1_safety_s44,G1_hardneg,lenet,0.477726,fall,True,0.314376,9
+val,211,run,GR1_lowFA,GR1_gairat,lenet,0.38054,fall,True,0.187872,12
+val,211,run,GR1_macroF1,GR1_gairat,lenet,0.488429,fall,True,0.201419,11
+val,211,run,GR1_safety,GR1_gairat,lenet,0.455976,fall,True,0.36618,21
+val,211,run,SA1_lowFA,SA1_sat,lenet,0.382598,fall,True,0.104403,3
+val,211,run,SA1_macroF1,SA1_sat,lenet,0.481011,fall,True,0.259205,6
+val,211,run,SA1_safety,SA1_sat,lenet,0.43401,fall,True,0.310699,11
+val,211,run,ST1_lowFA,ST1_beta3p0,lenet,0.398782,fall,True,0.157616,5
+val,211,run,ST1_macroF1,ST1_beta3p0,lenet,0.443715,fall,True,0.190872,8
+val,211,run,ST1_safety,ST1_beta3p0,lenet,0.514414,fall,True,0.422517,25
+val,211,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.330266,fall,True,0.153511,6
+val,211,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.497278,fall,True,0.289528,17
+val,211,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.476682,fall,True,0.393386,29
+val,212,run,AFAC_maxscore,AFAC_optionB,lenet,0.329335,fall,True,0.200578,12
+val,212,run,AFAC_optBminFA,AFAC_optionB,lenet,0.285601,fall,True,0.143261,10
+val,212,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.352443,fall,True,0.293561,21
+val,212,run,BLF_safety,BiLSTM_finetune,bilstm,0.281111,fall,True,0.227623,31
+val,212,run,D14B_seed43,D14_pauc_rank,lenet,0.289384,fall,True,0.200217,18
+val,212,run,D14B_seed44,D14_pauc_rank,lenet,0.284481,run,True,0.191555,17
+val,212,run,G1_lowFA_s42,G1_hardneg,lenet,0.366419,fall,True,0.144991,9
+val,212,run,G1_maxrec_s42,G1_hardneg,lenet,0.35202,fall,True,0.306177,22
+val,212,run,G1_safety_s44,G1_hardneg,lenet,0.457138,fall,True,0.314376,15
+val,212,run,GR1_lowFA,GR1_gairat,lenet,0.288563,fall,True,0.187872,26
+val,212,run,GR1_macroF1,GR1_gairat,lenet,0.321083,fall,True,0.201419,26
+val,212,run,GR1_safety,GR1_gairat,lenet,0.484434,fall,True,0.36618,15
+val,212,run,SA1_lowFA,SA1_sat,lenet,0.253436,fall,True,0.104403,17
+val,212,run,SA1_macroF1,SA1_sat,lenet,0.401132,fall,True,0.259205,16
+val,212,run,SA1_safety,SA1_sat,lenet,0.425433,fall,True,0.310699,13
+val,212,run,ST1_lowFA,ST1_beta3p0,lenet,0.33426,fall,True,0.157616,11
+val,212,run,ST1_macroF1,ST1_beta3p0,lenet,0.387231,fall,True,0.190872,12
+val,212,run,ST1_safety,ST1_beta3p0,lenet,0.51737,fall,True,0.422517,23
+val,212,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.301058,fall,True,0.153511,12
+val,212,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.394927,fall,True,0.289528,30
+val,212,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.521113,fall,True,0.393386,23
+val,214,run,AFAC_maxscore,AFAC_optionB,lenet,0.307822,fall,True,0.200578,17
+val,214,run,AFAC_optBminFA,AFAC_optionB,lenet,0.244239,fall,True,0.143261,22
+val,214,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.356319,fall,True,0.293561,20
+val,214,run,BLF_safety,BiLSTM_finetune,bilstm,0.307509,fall,True,0.227623,11
+val,214,run,D14B_seed43,D14_pauc_rank,lenet,0.278741,run,True,0.200217,22
+val,214,run,D14B_seed44,D14_pauc_rank,lenet,0.27298,run,True,0.191555,22
+val,214,run,G1_lowFA_s42,G1_hardneg,lenet,0.192373,pickup,True,0.144991,41
+val,214,run,G1_maxrec_s42,G1_hardneg,lenet,0.351639,fall,True,0.306177,24
+val,214,run,G1_safety_s44,G1_hardneg,lenet,0.444832,fall,True,0.314376,18
+val,214,run,GR1_lowFA,GR1_gairat,lenet,0.324236,fall,True,0.187872,19
+val,214,run,GR1_macroF1,GR1_gairat,lenet,0.368964,fall,True,0.201419,21
+val,214,run,GR1_safety,GR1_gairat,lenet,0.433448,fall,True,0.36618,25
+val,214,run,SA1_lowFA,SA1_sat,lenet,0.285996,fall,True,0.104403,10
+val,214,run,SA1_macroF1,SA1_sat,lenet,0.361845,fall,True,0.259205,22
+val,214,run,SA1_safety,SA1_sat,lenet,0.366271,fall,True,0.310699,28
+val,214,run,ST1_lowFA,ST1_beta3p0,lenet,0.228165,pickup,True,0.157616,29
+val,214,run,ST1_macroF1,ST1_beta3p0,lenet,0.195428,pickup,True,0.190872,51
+val,214,run,ST1_safety,ST1_beta3p0,lenet,0.468023,fall,True,0.422517,36
+val,214,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.27721,fall,True,0.153511,20
+val,214,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.433526,fall,True,0.289528,23
+val,214,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.455744,fall,True,0.393386,37
+val,215,run,ST1_safety,ST1_beta3p0,lenet,0.478924,fall,True,0.422517,34
+val,216,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.331139,fall,True,0.293561,31
+val,216,run,BLF_safety,BiLSTM_finetune,bilstm,0.248437,walk,True,0.227623,48
+val,217,run,G1_safety_s44,G1_hardneg,lenet,0.394334,fall,True,0.314376,31
+val,217,run,GR1_macroF1,GR1_gairat,lenet,0.517604,fall,True,0.201419,7
+val,217,run,GR1_safety,GR1_gairat,lenet,0.560595,fall,True,0.36618,11
+val,217,run,SA1_lowFA,SA1_sat,lenet,0.32598,run,True,0.104403,4
+val,217,run,SA1_macroF1,SA1_sat,lenet,0.35809,run,True,0.259205,24
+val,217,run,SA1_safety,SA1_sat,lenet,0.525464,fall,True,0.310699,6
+val,217,run,ST1_lowFA,ST1_beta3p0,lenet,0.176422,stand up,True,0.157616,42
+val,217,run,ST1_macroF1,ST1_beta3p0,lenet,0.228219,stand up,True,0.190872,44
+val,217,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.723073,fall,True,0.393386,13
+val,221,run,AFAC_optBminFA,AFAC_optionB,lenet,0.175118,run,True,0.143261,40
+val,221,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.301956,fall,True,0.293561,45
+val,221,run,D14B_seed43,D14_pauc_rank,lenet,0.237585,run,True,0.200217,33
+val,221,run,D14B_seed44,D14_pauc_rank,lenet,0.223184,run,True,0.191555,38
+val,221,run,G1_maxrec_s42,G1_hardneg,lenet,0.341529,fall,True,0.306177,32
+val,221,run,G1_safety_s44,G1_hardneg,lenet,0.407742,fall,True,0.314376,28
+val,221,run,GR1_lowFA,GR1_gairat,lenet,0.227867,walk,True,0.187872,45
+val,221,run,GR1_safety,GR1_gairat,lenet,0.37553,fall,True,0.36618,46
+val,221,run,SA1_lowFA,SA1_sat,lenet,0.179588,pickup,True,0.104403,30
+val,221,run,SA1_macroF1,SA1_sat,lenet,0.379789,fall,True,0.259205,20
+val,221,run,SA1_safety,SA1_sat,lenet,0.352345,fall,True,0.310699,32
+val,221,run,ST1_lowFA,ST1_beta3p0,lenet,0.163995,pickup,True,0.157616,46
+val,221,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.207371,run,True,0.153511,33
+val,221,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.43435,fall,True,0.289528,22
+val,221,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.394481,fall,True,0.393386,52
+val,227,run,AFAC_maxscore,AFAC_optionB,lenet,0.250122,fall,True,0.200578,35
+val,227,run,AFAC_optBminFA,AFAC_optionB,lenet,0.205917,run,True,0.143261,31
+val,227,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.332916,fall,True,0.293561,28
+val,227,run,BLF_safety,BiLSTM_finetune,bilstm,0.260662,walk,True,0.227623,43
+val,227,run,D14B_seed43,D14_pauc_rank,lenet,0.24572,run,True,0.200217,31
+val,227,run,D14B_seed44,D14_pauc_rank,lenet,0.236067,run,True,0.191555,32
+val,227,run,G1_lowFA_s42,G1_hardneg,lenet,0.223047,run,True,0.144991,32
+val,227,run,G1_maxrec_s42,G1_hardneg,lenet,0.314852,fall,True,0.306177,45
+val,227,run,G1_safety_s44,G1_hardneg,lenet,0.389898,fall,True,0.314376,32
+val,227,run,GR1_lowFA,GR1_gairat,lenet,0.248922,run,True,0.187872,35
+val,227,run,GR1_macroF1,GR1_gairat,lenet,0.31901,fall,True,0.201419,27
+val,227,run,GR1_safety,GR1_gairat,lenet,0.386453,fall,True,0.36618,41
+val,227,run,SA1_lowFA,SA1_sat,lenet,0.223302,run,True,0.104403,22
+val,227,run,SA1_macroF1,SA1_sat,lenet,0.336739,fall,True,0.259205,33
+val,227,run,SA1_safety,SA1_sat,lenet,0.365511,fall,True,0.310699,29
+val,227,run,ST1_lowFA,ST1_beta3p0,lenet,0.253013,run,True,0.157616,23
+val,227,run,ST1_macroF1,ST1_beta3p0,lenet,0.253591,run,True,0.190872,37
+val,227,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.243854,run,True,0.153511,29
+val,227,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.39066,fall,True,0.289528,32
+val,227,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.409189,fall,True,0.393386,48
+val,229,run,SA1_macroF1,SA1_sat,lenet,0.306183,fall,True,0.259205,44
+val,233,run,AFAC_maxscore,AFAC_optionB,lenet,0.295111,fall,True,0.200578,22
+val,233,run,AFAC_optBminFA,AFAC_optionB,lenet,0.289064,fall,True,0.143261,9
+val,233,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.337495,fall,True,0.293561,26
+val,233,run,BLF_safety,BiLSTM_finetune,bilstm,0.281405,walk,True,0.227623,30
+val,233,run,D14B_seed43,D14_pauc_rank,lenet,0.293857,fall,True,0.200217,16
+val,233,run,D14B_seed44,D14_pauc_rank,lenet,0.28542,run,True,0.191555,16
+val,233,run,G1_lowFA_s42,G1_hardneg,lenet,0.21729,pickup,True,0.144991,34
+val,233,run,G1_maxrec_s42,G1_hardneg,lenet,0.327909,fall,True,0.306177,41
+val,233,run,G1_safety_s44,G1_hardneg,lenet,0.416918,fall,True,0.314376,24
+val,233,run,GR1_lowFA,GR1_gairat,lenet,0.295008,run,True,0.187872,25
+val,233,run,GR1_macroF1,GR1_gairat,lenet,0.378114,fall,True,0.201419,19
+val,233,run,GR1_safety,GR1_gairat,lenet,0.437366,fall,True,0.36618,24
+val,233,run,SA1_lowFA,SA1_sat,lenet,0.276868,fall,True,0.104403,14
+val,233,run,SA1_macroF1,SA1_sat,lenet,0.350933,fall,True,0.259205,27
+val,233,run,SA1_safety,SA1_sat,lenet,0.375988,fall,True,0.310699,24
+val,233,run,ST1_lowFA,ST1_beta3p0,lenet,0.252622,run,True,0.157616,24
+val,233,run,ST1_macroF1,ST1_beta3p0,lenet,0.292006,run,True,0.190872,26
+val,233,run,ST1_safety,ST1_beta3p0,lenet,0.427623,fall,True,0.422517,50
+val,233,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.292298,fall,True,0.153511,14
+val,233,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.442473,fall,True,0.289528,21
+val,233,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.475684,fall,True,0.393386,30
+val,235,run,AFAC_maxscore,AFAC_optionB,lenet,0.322449,fall,True,0.200578,13
+val,235,run,AFAC_optBminFA,AFAC_optionB,lenet,0.345743,fall,True,0.143261,1
+val,235,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.359909,fall,True,0.293561,16
+val,235,run,BLF_safety,BiLSTM_finetune,bilstm,0.291396,fall,True,0.227623,21
+val,235,run,D14B_seed43,D14_pauc_rank,lenet,0.31291,fall,True,0.200217,8
+val,235,run,D14B_seed44,D14_pauc_rank,lenet,0.308433,fall,True,0.191555,10
+val,235,run,G1_lowFA_s42,G1_hardneg,lenet,0.381718,fall,True,0.144991,5
+val,235,run,G1_maxrec_s42,G1_hardneg,lenet,0.345284,fall,True,0.306177,30
+val,235,run,G1_safety_s44,G1_hardneg,lenet,0.462859,fall,True,0.314376,12
+val,235,run,GR1_lowFA,GR1_gairat,lenet,0.374824,fall,True,0.187872,14
+val,235,run,GR1_macroF1,GR1_gairat,lenet,0.467905,fall,True,0.201419,12
+val,235,run,GR1_safety,GR1_gairat,lenet,0.461853,fall,True,0.36618,19
+val,235,run,SA1_lowFA,SA1_sat,lenet,0.324065,fall,True,0.104403,5
+val,235,run,SA1_macroF1,SA1_sat,lenet,0.479178,fall,True,0.259205,8
+val,235,run,SA1_safety,SA1_sat,lenet,0.414694,fall,True,0.310699,18
+val,235,run,ST1_lowFA,ST1_beta3p0,lenet,0.378004,fall,True,0.157616,8
+val,235,run,ST1_macroF1,ST1_beta3p0,lenet,0.439122,fall,True,0.190872,9
+val,235,run,ST1_safety,ST1_beta3p0,lenet,0.52333,fall,True,0.422517,19
+val,235,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.324742,fall,True,0.153511,7
+val,235,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.500027,fall,True,0.289528,16
+val,235,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.477993,fall,True,0.393386,28
+val,236,run,GR1_macroF1,GR1_gairat,lenet,0.209025,run,True,0.201419,49
+val,236,run,GR1_safety,GR1_gairat,lenet,0.410835,fall,True,0.36618,28
+val,236,run,SA1_lowFA,SA1_sat,lenet,0.104934,pickup,True,0.104403,51
+val,236,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.179255,run,True,0.153511,40
+val,239,run,AFAC_maxscore,AFAC_optionB,lenet,0.225312,run,True,0.200578,45
+val,239,run,AFAC_optBminFA,AFAC_optionB,lenet,0.210607,run,True,0.143261,28
+val,239,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.303338,fall,True,0.293561,44
+val,239,run,BLF_safety,BiLSTM_finetune,bilstm,0.267996,walk,True,0.227623,40
+val,239,run,D14B_seed43,D14_pauc_rank,lenet,0.25677,run,True,0.200217,29
+val,239,run,D14B_seed44,D14_pauc_rank,lenet,0.245429,run,True,0.191555,29
+val,239,run,G1_lowFA_s42,G1_hardneg,lenet,0.247369,run,True,0.144991,24
+val,239,run,G1_safety_s44,G1_hardneg,lenet,0.326881,fall,True,0.314376,44
+val,239,run,GR1_lowFA,GR1_gairat,lenet,0.259991,run,True,0.187872,33
+val,239,run,GR1_macroF1,GR1_gairat,lenet,0.302127,fall,True,0.201419,33
+val,239,run,SA1_lowFA,SA1_sat,lenet,0.16775,run,True,0.104403,34
+val,239,run,SA1_macroF1,SA1_sat,lenet,0.31643,fall,True,0.259205,42
+val,239,run,SA1_safety,SA1_sat,lenet,0.320627,fall,True,0.310699,48
+val,239,run,ST1_lowFA,ST1_beta3p0,lenet,0.219552,run,True,0.157616,31
+val,239,run,ST1_macroF1,ST1_beta3p0,lenet,0.291082,run,True,0.190872,27
+val,239,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.24435,run,True,0.153511,28
+val,239,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.316217,run,True,0.289528,49
+val,253,run,D14B_seed43,D14_pauc_rank,lenet,0.206194,walk,True,0.200217,49
+val,253,run,D14B_seed44,D14_pauc_rank,lenet,0.198818,walk,True,0.191555,50
+val,253,run,G1_maxrec_s42,G1_hardneg,lenet,0.308428,fall,True,0.306177,50
+val,253,run,ST1_safety,ST1_beta3p0,lenet,0.427354,fall,True,0.422517,51
+val,255,run,AFAC_maxscore,AFAC_optionB,lenet,0.230714,fall,True,0.200578,44
+val,255,run,AFAC_optBminFA,AFAC_optionB,lenet,0.207,run,True,0.143261,30
+val,255,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.331595,fall,True,0.293561,30
+val,255,run,BLF_safety,BiLSTM_finetune,bilstm,0.256032,walk,True,0.227623,45
+val,255,run,D14B_seed43,D14_pauc_rank,lenet,0.281141,run,True,0.200217,19
+val,255,run,D14B_seed44,D14_pauc_rank,lenet,0.274689,run,True,0.191555,21
+val,255,run,G1_maxrec_s42,G1_hardneg,lenet,0.353345,fall,True,0.306177,21
+val,255,run,G1_safety_s44,G1_hardneg,lenet,0.454518,fall,True,0.314376,16
+val,255,run,GR1_lowFA,GR1_gairat,lenet,0.33944,fall,True,0.187872,17
+val,255,run,GR1_macroF1,GR1_gairat,lenet,0.417667,fall,True,0.201419,16
+val,255,run,GR1_safety,GR1_gairat,lenet,0.405727,fall,True,0.36618,30
+val,255,run,SA1_lowFA,SA1_sat,lenet,0.283873,fall,True,0.104403,11
+val,255,run,SA1_macroF1,SA1_sat,lenet,0.444101,fall,True,0.259205,11
+val,255,run,SA1_safety,SA1_sat,lenet,0.381886,fall,True,0.310699,19
+val,255,run,ST1_lowFA,ST1_beta3p0,lenet,0.212315,pickup,True,0.157616,34
+val,255,run,ST1_safety,ST1_beta3p0,lenet,0.450289,fall,True,0.422517,40
+val,255,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.280836,fall,True,0.153511,19
+val,255,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.489715,fall,True,0.289528,18
+val,255,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.428124,fall,True,0.393386,44
+val,257,run,ST1_safety,ST1_beta3p0,lenet,0.450032,fall,True,0.422517,41
+val,258,run,AFAC_optBminFA,AFAC_optionB,lenet,0.156235,run,True,0.143261,44
+val,258,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.308654,fall,True,0.293561,40
+val,258,run,BLF_safety,BiLSTM_finetune,bilstm,0.276296,walk,True,0.227623,35
+val,258,run,G1_lowFA_s42,G1_hardneg,lenet,0.175277,run,True,0.144991,42
+val,258,run,GR1_macroF1,GR1_gairat,lenet,0.293899,run,True,0.201419,35
+val,258,run,SA1_lowFA,SA1_sat,lenet,0.245401,run,True,0.104403,19
+val,258,run,SA1_macroF1,SA1_sat,lenet,0.322186,fall,True,0.259205,39
+val,258,run,SA1_safety,SA1_sat,lenet,0.346251,fall,True,0.310699,37
+val,258,run,ST1_lowFA,ST1_beta3p0,lenet,0.278752,run,True,0.157616,19
+val,258,run,ST1_macroF1,ST1_beta3p0,lenet,0.333613,fall,True,0.190872,20
+val,258,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.263337,run,True,0.153511,23
+val,258,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.342514,fall,True,0.289528,44
+val,259,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.316725,fall,True,0.293561,37
+val,259,run,BLF_safety,BiLSTM_finetune,bilstm,0.254642,fall,True,0.227623,46
+val,262,run,BLF_safety,BiLSTM_finetune,bilstm,0.230246,walk,True,0.227623,53
+val,262,run,SA1_macroF1,SA1_sat,lenet,0.263484,fall,True,0.259205,49
+val,264,run,AFAC_maxscore,AFAC_optionB,lenet,0.204771,run,True,0.200578,52
+val,264,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.309214,fall,True,0.293561,39
+val,264,run,BLF_safety,BiLSTM_finetune,bilstm,0.275729,fall,True,0.227623,36
+val,264,run,D14B_seed43,D14_pauc_rank,lenet,0.208312,run,True,0.200217,45
+val,264,run,D14B_seed44,D14_pauc_rank,lenet,0.19853,run,True,0.191555,51
+val,264,run,G1_lowFA_s42,G1_hardneg,lenet,0.208527,run,True,0.144991,35
+val,264,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.160528,run,True,0.153511,46
+val,269,run,AFAC_optBminFA,AFAC_optionB,lenet,0.148457,run,True,0.143261,51
+val,269,run,D14B_seed44,D14_pauc_rank,lenet,0.194509,run,True,0.191555,52
+val,269,run,G1_lowFA_s42,G1_hardneg,lenet,0.157626,pickup,True,0.144991,44
+val,269,run,G1_maxrec_s42,G1_hardneg,lenet,0.378841,fall,True,0.306177,13
+val,269,run,G1_safety_s44,G1_hardneg,lenet,0.380686,fall,True,0.314376,34
+val,269,run,GR1_lowFA,GR1_gairat,lenet,0.243354,walk,True,0.187872,39
+val,269,run,GR1_macroF1,GR1_gairat,lenet,0.318334,fall,True,0.201419,29
+val,269,run,GR1_safety,GR1_gairat,lenet,0.408178,fall,True,0.36618,29
+val,269,run,SA1_macroF1,SA1_sat,lenet,0.360326,fall,True,0.259205,23
+val,269,run,SA1_safety,SA1_sat,lenet,0.351777,fall,True,0.310699,33
+val,269,run,ST1_lowFA,ST1_beta3p0,lenet,0.204468,fall,True,0.157616,36
+val,269,run,ST1_macroF1,ST1_beta3p0,lenet,0.321491,fall,True,0.190872,21
+val,269,run,ST1_safety,ST1_beta3p0,lenet,0.440489,fall,True,0.422517,48
+val,269,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.19638,run,True,0.153511,37
+val,269,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.375722,fall,True,0.289528,36
+val,269,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.446477,fall,True,0.393386,38
+val,270,run,AFAC_optBminFA,AFAC_optionB,lenet,0.14825,run,True,0.143261,52
+val,270,run,G1_maxrec_s42,G1_hardneg,lenet,0.351688,fall,True,0.306177,23
+val,270,run,G1_safety_s44,G1_hardneg,lenet,0.417278,fall,True,0.314376,23
+val,270,run,GR1_lowFA,GR1_gairat,lenet,0.26825,run,True,0.187872,30
+val,270,run,GR1_macroF1,GR1_gairat,lenet,0.28314,fall,True,0.201419,36
+val,270,run,GR1_safety,GR1_gairat,lenet,0.400165,fall,True,0.36618,31
+val,270,run,SA1_macroF1,SA1_sat,lenet,0.343958,fall,True,0.259205,29
+val,270,run,SA1_safety,SA1_sat,lenet,0.326869,fall,True,0.310699,46
+val,270,run,ST1_lowFA,ST1_beta3p0,lenet,0.158232,lie down,True,0.157616,48
+val,270,run,ST1_macroF1,ST1_beta3p0,lenet,0.194167,pickup,True,0.190872,52
+val,272,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.349394,fall,True,0.293561,23
+val,272,run,BLF_safety,BiLSTM_finetune,bilstm,0.284772,fall,True,0.227623,28
+val,272,run,G1_maxrec_s42,G1_hardneg,lenet,0.339157,fall,True,0.306177,35
+val,272,run,G1_safety_s44,G1_hardneg,lenet,0.314685,fall,True,0.314376,53
+val,272,run,GR1_lowFA,GR1_gairat,lenet,0.234088,run,True,0.187872,43
+val,272,run,SA1_lowFA,SA1_sat,lenet,0.165676,pickup,True,0.104403,35
+val,272,run,SA1_macroF1,SA1_sat,lenet,0.319008,fall,True,0.259205,41
+val,272,run,SA1_safety,SA1_sat,lenet,0.36066,fall,True,0.310699,30
+val,272,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.174002,run,True,0.153511,41
+val,273,run,BLF_safety,BiLSTM_finetune,bilstm,0.250079,run,True,0.227623,47
+val,273,run,G1_maxrec_s42,G1_hardneg,lenet,0.310891,fall,True,0.306177,48
+val,273,run,GR1_macroF1,GR1_gairat,lenet,0.238922,run,True,0.201419,41
+val,273,run,SA1_lowFA,SA1_sat,lenet,0.182309,run,True,0.104403,29
+val,273,run,SA1_macroF1,SA1_sat,lenet,0.325635,fall,True,0.259205,37
+val,273,run,SA1_safety,SA1_sat,lenet,0.327975,fall,True,0.310699,45
+val,273,run,ST1_lowFA,ST1_beta3p0,lenet,0.189909,run,True,0.157616,39
+val,273,run,ST1_macroF1,ST1_beta3p0,lenet,0.222969,run,True,0.190872,46
+val,273,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.153695,run,True,0.153511,47
+val,273,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.307402,fall,True,0.289528,51
+val,276,run,AFAC_maxscore,AFAC_optionB,lenet,0.210332,walk,True,0.200578,50
+val,276,run,D14B_seed44,D14_pauc_rank,lenet,0.206927,run,True,0.191555,44
+val,276,run,G1_maxrec_s42,G1_hardneg,lenet,0.320096,fall,True,0.306177,43
+val,276,run,GR1_lowFA,GR1_gairat,lenet,0.265573,walk,True,0.187872,32
+val,276,run,GR1_safety,GR1_gairat,lenet,0.391049,fall,True,0.36618,37
+val,276,run,SA1_lowFA,SA1_sat,lenet,0.107231,pickup,True,0.104403,50
+val,276,run,SA1_macroF1,SA1_sat,lenet,0.327685,fall,True,0.259205,35
+val,276,run,SA1_safety,SA1_sat,lenet,0.320352,fall,True,0.310699,49
+val,276,run,ST1_safety,ST1_beta3p0,lenet,0.448534,fall,True,0.422517,43
+val,276,run,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.196612,run,True,0.153511,36
+val,276,run,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.411508,fall,True,0.289528,28
+val,276,run,ST1b6_safety,ST1b6_beta6p0,lenet,0.395409,fall,True,0.393386,51
+val,277,run,BLF_maxrec,BiLSTM_finetune,bilstm,0.293654,fall,True,0.293561,51
+val,277,run,G1_lowFA_s42,G1_hardneg,lenet,0.147702,run,True,0.144991,46
+val,277,run,G1_maxrec_s42,G1_hardneg,lenet,0.311334,fall,True,0.306177,47
+val,307,sit down,G1_lowFA_s42,G1_hardneg,lenet,0.14649,stand up,True,0.144991,47
+val,315,sit down,AFAC_optBminFA,AFAC_optionB,lenet,0.148641,stand up,True,0.143261,49
+val,315,sit down,BLF_maxrec,BiLSTM_finetune,bilstm,0.481256,fall,True,0.293561,3
+val,315,sit down,BLF_safety,BiLSTM_finetune,bilstm,0.279996,stand up,True,0.227623,32
+val,315,sit down,GR1_macroF1,GR1_gairat,lenet,0.208083,walk,True,0.201419,50
+val,315,sit down,SA1_lowFA,SA1_sat,lenet,0.157523,lie down,True,0.104403,37
+val,315,sit down,SA1_safety,SA1_sat,lenet,0.310737,fall,True,0.310699,54
+val,318,sit down,AFAC_maxscore,AFAC_optionB,lenet,0.377016,fall,True,0.200578,7
+val,318,sit down,D14B_seed43,D14_pauc_rank,lenet,0.265593,fall,True,0.200217,24
+val,318,sit down,D14B_seed44,D14_pauc_rank,lenet,0.27643,fall,True,0.191555,20
+val,318,sit down,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.372131,fall,True,0.289528,39
+val,318,sit down,ST1b6_safety,ST1b6_beta6p0,lenet,0.641573,fall,True,0.393386,17
+val,321,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.14848,run,True,0.143261,50
+val,321,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.194503,pickup,True,0.144991,40
+val,321,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.306276,fall,True,0.306177,51
+val,321,stand up,G1_safety_s44,G1_hardneg,lenet,0.318942,fall,True,0.314376,49
+val,321,stand up,SA1_lowFA,SA1_sat,lenet,0.131664,run,True,0.104403,44
+val,321,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.184287,walk,True,0.157616,40
+val,321,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.218308,walk,True,0.190872,47
+val,325,stand up,AFAC_maxscore,AFAC_optionB,lenet,0.230914,fall,True,0.200578,43
+val,325,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.239749,fall,True,0.143261,23
+val,325,stand up,D14B_seed43,D14_pauc_rank,lenet,0.210849,run,True,0.200217,44
+val,325,stand up,D14B_seed44,D14_pauc_rank,lenet,0.202249,run,True,0.191555,47
+val,325,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.265908,fall,True,0.144991,19
+val,325,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.328111,fall,True,0.306177,40
+val,325,stand up,G1_safety_s44,G1_hardneg,lenet,0.350917,fall,True,0.314376,39
+val,325,stand up,SA1_lowFA,SA1_sat,lenet,0.186881,run,True,0.104403,26
+val,325,stand up,SA1_macroF1,SA1_sat,lenet,0.299343,fall,True,0.259205,46
+val,325,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.229993,fall,True,0.157616,26
+val,325,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.277378,fall,True,0.190872,30
+val,325,stand up,ST1_safety,ST1_beta3p0,lenet,0.448543,fall,True,0.422517,42
+val,327,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.150922,stand up,True,0.143261,48
+val,327,stand up,GR1_macroF1,GR1_gairat,lenet,0.207963,fall,True,0.201419,51
+val,327,stand up,SA1_lowFA,SA1_sat,lenet,0.177231,lie down,True,0.104403,31
+val,327,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.217016,walk,True,0.157616,33
+val,327,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.290919,fall,True,0.190872,28
+val,327,stand up,ST1_safety,ST1_beta3p0,lenet,0.441518,fall,True,0.422517,47
+val,330,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.359971,fall,True,0.306177,17
+val,330,stand up,ST1_safety,ST1_beta3p0,lenet,0.517519,fall,True,0.422517,22
+val,330,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.37261,walk,True,0.289528,38
+val,330,stand up,ST1b6_safety,ST1b6_beta6p0,lenet,0.552277,fall,True,0.393386,21
+val,332,stand up,AFAC_maxscore,AFAC_optionB,lenet,0.238003,fall,True,0.200578,39
+val,332,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.264081,fall,True,0.143261,14
+val,332,stand up,D14B_seed43,D14_pauc_rank,lenet,0.206736,fall,True,0.200217,47
+val,332,stand up,D14B_seed44,D14_pauc_rank,lenet,0.202593,fall,True,0.191555,46
+val,332,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.256108,fall,True,0.144991,22
+val,332,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.31644,fall,True,0.306177,44
+val,332,stand up,G1_safety_s44,G1_hardneg,lenet,0.345223,fall,True,0.314376,40
+val,332,stand up,GR1_lowFA,GR1_gairat,lenet,0.234329,fall,True,0.187872,42
+val,332,stand up,GR1_macroF1,GR1_gairat,lenet,0.322762,fall,True,0.201419,25
+val,332,stand up,SA1_lowFA,SA1_sat,lenet,0.199113,walk,True,0.104403,25
+val,332,stand up,SA1_macroF1,SA1_sat,lenet,0.339572,fall,True,0.259205,32
+val,332,stand up,SA1_safety,SA1_sat,lenet,0.371012,fall,True,0.310699,25
+val,332,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.16776,walk,True,0.157616,45
+val,332,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.240739,walk,True,0.190872,42
+val,332,stand up,ST1_safety,ST1_beta3p0,lenet,0.468533,fall,True,0.422517,35
+val,332,stand up,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.189852,run,True,0.153511,39
+val,332,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.385368,fall,True,0.289528,33
+val,332,stand up,ST1b6_safety,ST1b6_beta6p0,lenet,0.404709,fall,True,0.393386,49
+val,335,stand up,AFAC_maxscore,AFAC_optionB,lenet,0.250523,fall,True,0.200578,34
+val,335,stand up,D14B_seed43,D14_pauc_rank,lenet,0.206356,fall,True,0.200217,48
+val,335,stand up,D14B_seed44,D14_pauc_rank,lenet,0.201413,fall,True,0.191555,48
+val,335,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.196932,lie down,True,0.144991,38
+val,335,stand up,G1_safety_s44,G1_hardneg,lenet,0.324982,fall,True,0.314376,46
+val,335,stand up,SA1_macroF1,SA1_sat,lenet,0.383091,fall,True,0.259205,19
+val,335,stand up,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.344526,fall,True,0.153511,5
+val,335,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.541376,fall,True,0.289528,12
+val,335,stand up,ST1b6_safety,ST1b6_beta6p0,lenet,0.633736,fall,True,0.393386,18
+val,337,stand up,SA1_lowFA,SA1_sat,lenet,0.130199,walk,True,0.104403,45
+val,338,stand up,BLF_safety,BiLSTM_finetune,bilstm,0.27278,run,True,0.227623,38
+val,339,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.153186,stand up,True,0.143261,46
+val,343,stand up,AFAC_maxscore,AFAC_optionB,lenet,0.275991,fall,True,0.200578,27
+val,343,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.25257,fall,True,0.143261,17
+val,343,stand up,D14B_seed43,D14_pauc_rank,lenet,0.260606,fall,True,0.200217,27
+val,343,stand up,D14B_seed44,D14_pauc_rank,lenet,0.256454,fall,True,0.191555,28
+val,343,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.27215,fall,True,0.144991,17
+val,343,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.34119,fall,True,0.306177,33
+val,343,stand up,GR1_lowFA,GR1_gairat,lenet,0.242156,fall,True,0.187872,40
+val,343,stand up,GR1_macroF1,GR1_gairat,lenet,0.242891,fall,True,0.201419,40
+val,343,stand up,SA1_lowFA,SA1_sat,lenet,0.244606,fall,True,0.104403,20
+val,343,stand up,SA1_macroF1,SA1_sat,lenet,0.300631,fall,True,0.259205,45
+val,343,stand up,SA1_safety,SA1_sat,lenet,0.376123,fall,True,0.310699,23
+val,343,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.259218,fall,True,0.157616,22
+val,343,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.267537,fall,True,0.190872,33
+val,343,stand up,ST1_safety,ST1_beta3p0,lenet,0.500002,fall,True,0.422517,30
+val,343,stand up,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.25927,fall,True,0.153511,24
+val,343,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.38087,fall,True,0.289528,34
+val,343,stand up,ST1b6_safety,ST1b6_beta6p0,lenet,0.440176,fall,True,0.393386,40
+val,346,stand up,SA1_lowFA,SA1_sat,lenet,0.145636,run,True,0.104403,39
+val,346,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.303005,fall,True,0.289528,53
+val,348,stand up,AFAC_maxscore,AFAC_optionB,lenet,0.214308,fall,True,0.200578,48
+val,348,stand up,AFAC_optBminFA,AFAC_optionB,lenet,0.208635,fall,True,0.143261,29
+val,348,stand up,D14B_seed43,D14_pauc_rank,lenet,0.216208,run,True,0.200217,42
+val,348,stand up,D14B_seed44,D14_pauc_rank,lenet,0.206792,run,True,0.191555,45
+val,348,stand up,G1_lowFA_s42,G1_hardneg,lenet,0.20348,pickup,True,0.144991,36
+val,348,stand up,G1_maxrec_s42,G1_hardneg,lenet,0.35677,fall,True,0.306177,19
+val,348,stand up,ST1_lowFA,ST1_beta3p0,lenet,0.168532,walk,True,0.157616,44
+val,348,stand up,ST1_macroF1,ST1_beta3p0,lenet,0.263821,fall,True,0.190872,34
+val,348,stand up,ST1_safety,ST1_beta3p0,lenet,0.443794,fall,True,0.422517,46
+val,348,stand up,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.163199,run,True,0.153511,44
+val,348,stand up,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.367175,fall,True,0.289528,40
+val,350,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.310825,fall,True,0.293561,38
+val,350,walk,BLF_safety,BiLSTM_finetune,bilstm,0.278767,fall,True,0.227623,33
+val,353,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.294295,run,True,0.293561,50
+val,360,walk,AFAC_maxscore,AFAC_optionB,lenet,0.234196,fall,True,0.200578,42
+val,360,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.201624,fall,True,0.143261,35
+val,360,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.510048,fall,True,0.293561,2
+val,360,walk,BLF_safety,BiLSTM_finetune,bilstm,0.369268,fall,True,0.227623,5
+val,360,walk,D14B_seed44,D14_pauc_rank,lenet,0.198862,fall,True,0.191555,49
+val,360,walk,G1_lowFA_s42,G1_hardneg,lenet,0.225861,fall,True,0.144991,31
+val,360,walk,G1_safety_s44,G1_hardneg,lenet,0.358662,fall,True,0.314376,38
+val,360,walk,SA1_lowFA,SA1_sat,lenet,0.16915,sit down,True,0.104403,32
+val,360,walk,SA1_safety,SA1_sat,lenet,0.343456,fall,True,0.310699,38
+val,360,walk,ST1_lowFA,ST1_beta3p0,lenet,0.2283,fall,True,0.157616,27
+val,360,walk,ST1_macroF1,ST1_beta3p0,lenet,0.248041,stand up,True,0.190872,39
+val,360,walk,ST1_safety,ST1_beta3p0,lenet,0.537465,fall,True,0.422517,14
+val,360,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.190908,stand up,True,0.153511,38
+val,367,walk,ST1_macroF1,ST1_beta3p0,lenet,0.270031,walk,True,0.190872,31
+val,368,walk,AFAC_maxscore,AFAC_optionB,lenet,0.520654,fall,True,0.200578,2
+val,368,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.202707,fall,True,0.143261,33
+val,368,walk,D14B_seed43,D14_pauc_rank,lenet,0.404205,fall,True,0.200217,3
+val,368,walk,D14B_seed44,D14_pauc_rank,lenet,0.36439,fall,True,0.191555,3
+val,368,walk,G1_lowFA_s42,G1_hardneg,lenet,0.40665,fall,True,0.144991,1
+val,368,walk,G1_maxrec_s42,G1_hardneg,lenet,0.649955,fall,True,0.306177,4
+val,368,walk,G1_safety_s44,G1_hardneg,lenet,0.722797,fall,True,0.314376,4
+val,368,walk,GR1_lowFA,GR1_gairat,lenet,0.547339,fall,True,0.187872,5
+val,368,walk,GR1_macroF1,GR1_gairat,lenet,0.4974,fall,True,0.201419,8
+val,368,walk,GR1_safety,GR1_gairat,lenet,0.847413,fall,True,0.36618,2
+val,368,walk,SA1_macroF1,SA1_sat,lenet,0.428287,fall,True,0.259205,13
+val,368,walk,SA1_safety,SA1_sat,lenet,0.467203,fall,True,0.310699,7
+val,368,walk,ST1_lowFA,ST1_beta3p0,lenet,0.479024,fall,True,0.157616,4
+val,368,walk,ST1_macroF1,ST1_beta3p0,lenet,0.254847,walk,True,0.190872,36
+val,368,walk,ST1_safety,ST1_beta3p0,lenet,0.854023,fall,True,0.422517,2
+val,368,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.300308,walk,True,0.153511,13
+val,368,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.762308,fall,True,0.289528,6
+val,368,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.919191,fall,True,0.393386,2
+val,373,walk,GR1_safety,GR1_gairat,lenet,0.390733,fall,True,0.36618,38
+val,375,walk,AFAC_maxscore,AFAC_optionB,lenet,0.254649,fall,True,0.200578,32
+val,375,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.173126,fall,True,0.143261,41
+val,375,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.412932,fall,True,0.293561,5
+val,375,walk,BLF_safety,BiLSTM_finetune,bilstm,0.290803,fall,True,0.227623,22
+val,375,walk,D14B_seed43,D14_pauc_rank,lenet,0.229059,fall,True,0.200217,37
+val,375,walk,D14B_seed44,D14_pauc_rank,lenet,0.224147,fall,True,0.191555,37
+val,375,walk,G1_lowFA_s42,G1_hardneg,lenet,0.156399,run,True,0.144991,45
+val,375,walk,G1_maxrec_s42,G1_hardneg,lenet,0.378473,fall,True,0.306177,14
+val,375,walk,G1_safety_s44,G1_hardneg,lenet,0.433838,fall,True,0.314376,22
+val,375,walk,GR1_macroF1,GR1_gairat,lenet,0.207538,walk,True,0.201419,52
+val,375,walk,GR1_safety,GR1_gairat,lenet,0.366338,fall,True,0.36618,48
+val,375,walk,SA1_lowFA,SA1_sat,lenet,0.168861,walk,True,0.104403,33
+val,375,walk,SA1_macroF1,SA1_sat,lenet,0.324858,fall,True,0.259205,38
+val,375,walk,SA1_safety,SA1_sat,lenet,0.335964,fall,True,0.310699,41
+val,375,walk,ST1_macroF1,ST1_beta3p0,lenet,0.296177,fall,True,0.190872,24
+val,375,walk,ST1_safety,ST1_beta3p0,lenet,0.447668,fall,True,0.422517,44
+val,375,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.230922,fall,True,0.153511,31
+val,375,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.32825,fall,True,0.289528,48
+val,375,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.422736,fall,True,0.393386,46
+val,377,walk,GR1_safety,GR1_gairat,lenet,0.399397,fall,True,0.36618,32
+val,377,walk,ST1_macroF1,ST1_beta3p0,lenet,0.193661,walk,True,0.190872,53
+val,399,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.305562,run,True,0.293561,42
+val,400,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.296882,run,True,0.293561,49
+val,400,walk,GR1_safety,GR1_gairat,lenet,0.468061,fall,True,0.36618,17
+val,401,walk,ST1_safety,ST1_beta3p0,lenet,0.462847,fall,True,0.422517,37
+val,401,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.463026,fall,True,0.393386,33
+val,406,walk,GR1_macroF1,GR1_gairat,lenet,0.205654,walk,True,0.201419,53
+val,412,walk,BLF_safety,BiLSTM_finetune,bilstm,0.247296,sit down,True,0.227623,49
+val,412,walk,GR1_lowFA,GR1_gairat,lenet,0.306083,fall,True,0.187872,23
+val,412,walk,GR1_macroF1,GR1_gairat,lenet,0.234497,stand up,True,0.201419,43
+val,412,walk,ST1_macroF1,ST1_beta3p0,lenet,0.357871,walk,True,0.190872,16
+val,412,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.377549,fall,True,0.289528,35
+val,412,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.599197,fall,True,0.393386,20
+val,415,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.16198,lie down,True,0.143261,43
+val,415,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.366557,fall,True,0.293561,13
+val,415,walk,BLF_safety,BiLSTM_finetune,bilstm,0.3312,fall,True,0.227623,9
+val,415,walk,G1_lowFA_s42,G1_hardneg,lenet,0.158498,stand up,True,0.144991,43
+val,415,walk,G1_safety_s44,G1_hardneg,lenet,0.384673,fall,True,0.314376,33
+val,415,walk,GR1_lowFA,GR1_gairat,lenet,0.250316,fall,True,0.187872,34
+val,415,walk,GR1_macroF1,GR1_gairat,lenet,0.220878,fall,True,0.201419,47
+val,415,walk,SA1_lowFA,SA1_sat,lenet,0.162705,sit down,True,0.104403,36
+val,415,walk,SA1_safety,SA1_sat,lenet,0.313771,fall,True,0.310699,52
+val,415,walk,ST1_macroF1,ST1_beta3p0,lenet,0.207407,run,True,0.190872,49
+val,415,walk,ST1_safety,ST1_beta3p0,lenet,0.560694,fall,True,0.422517,12
+val,415,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.266993,fall,True,0.153511,22
+val,415,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.332197,fall,True,0.289528,47
+val,426,walk,AFAC_maxscore,AFAC_optionB,lenet,0.236299,fall,True,0.200578,41
+val,426,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.180321,fall,True,0.143261,39
+val,426,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.305186,fall,True,0.293561,43
+val,426,walk,D14B_seed43,D14_pauc_rank,lenet,0.211092,fall,True,0.200217,43
+val,426,walk,D14B_seed44,D14_pauc_rank,lenet,0.209491,fall,True,0.191555,42
+val,426,walk,GR1_lowFA,GR1_gairat,lenet,0.269513,fall,True,0.187872,29
+val,426,walk,GR1_macroF1,GR1_gairat,lenet,0.214432,fall,True,0.201419,48
+val,426,walk,ST1_macroF1,ST1_beta3p0,lenet,0.213839,pickup,True,0.190872,48
+val,426,walk,ST1_safety,ST1_beta3p0,lenet,0.497166,fall,True,0.422517,31
+val,426,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.153529,stand up,True,0.153511,48
+val,428,walk,BLF_safety,BiLSTM_finetune,bilstm,0.305568,fall,True,0.227623,13
+val,428,walk,GR1_lowFA,GR1_gairat,lenet,0.433082,fall,True,0.187872,8
+val,428,walk,GR1_macroF1,GR1_gairat,lenet,0.430216,fall,True,0.201419,15
+val,428,walk,ST1_macroF1,ST1_beta3p0,lenet,0.421283,fall,True,0.190872,10
+val,428,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.588507,fall,True,0.289528,10
+val,428,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.729193,fall,True,0.393386,11
+val,430,walk,G1_safety_s44,G1_hardneg,lenet,0.320243,fall,True,0.314376,48
+val,440,walk,AFAC_maxscore,AFAC_optionB,lenet,0.700119,fall,True,0.200578,1
+val,440,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.455291,fall,True,0.293561,4
+val,440,walk,BLF_safety,BiLSTM_finetune,bilstm,0.475152,fall,True,0.227623,2
+val,440,walk,D14B_seed43,D14_pauc_rank,lenet,0.694308,fall,True,0.200217,1
+val,440,walk,D14B_seed44,D14_pauc_rank,lenet,0.679013,fall,True,0.191555,1
+val,440,walk,G1_lowFA_s42,G1_hardneg,lenet,0.399315,lie down,True,0.144991,2
+val,440,walk,G1_maxrec_s42,G1_hardneg,lenet,0.833707,fall,True,0.306177,1
+val,440,walk,G1_safety_s44,G1_hardneg,lenet,0.945993,fall,True,0.314376,1
+val,440,walk,GR1_lowFA,GR1_gairat,lenet,0.880015,fall,True,0.187872,1
+val,440,walk,GR1_macroF1,GR1_gairat,lenet,0.917494,fall,True,0.201419,1
+val,440,walk,GR1_safety,GR1_gairat,lenet,0.938469,fall,True,0.36618,1
+val,440,walk,SA1_lowFA,SA1_sat,lenet,0.5671,fall,True,0.104403,1
+val,440,walk,SA1_macroF1,SA1_sat,lenet,0.871752,fall,True,0.259205,1
+val,440,walk,SA1_safety,SA1_sat,lenet,0.717782,fall,True,0.310699,1
+val,440,walk,ST1_lowFA,ST1_beta3p0,lenet,0.887548,fall,True,0.157616,1
+val,440,walk,ST1_macroF1,ST1_beta3p0,lenet,0.875412,fall,True,0.190872,1
+val,440,walk,ST1_safety,ST1_beta3p0,lenet,0.947802,fall,True,0.422517,1
+val,440,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.851029,fall,True,0.153511,1
+val,440,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.955136,fall,True,0.289528,1
+val,440,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.983854,fall,True,0.393386,1
+val,440,walk,VD_seed42,variantD,lenet,0.99924,fall,True,0.99924,1
+val,440,walk,VD_seed43,variantD,lenet,0.994964,fall,True,0.994964,1
+val,441,walk,AFAC_maxscore,AFAC_optionB,lenet,0.451872,fall,True,0.200578,3
+val,441,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.335026,fall,True,0.143261,5
+val,441,walk,BLF_safety,BiLSTM_finetune,bilstm,0.295342,stand up,True,0.227623,19
+val,441,walk,D14B_seed43,D14_pauc_rank,lenet,0.366444,fall,True,0.200217,4
+val,441,walk,D14B_seed44,D14_pauc_rank,lenet,0.364151,fall,True,0.191555,4
+val,441,walk,G1_lowFA_s42,G1_hardneg,lenet,0.356911,fall,True,0.144991,12
+val,441,walk,G1_maxrec_s42,G1_hardneg,lenet,0.454814,fall,True,0.306177,7
+val,441,walk,G1_safety_s44,G1_hardneg,lenet,0.490019,fall,True,0.314376,7
+val,441,walk,GR1_lowFA,GR1_gairat,lenet,0.60701,fall,True,0.187872,4
+val,441,walk,GR1_macroF1,GR1_gairat,lenet,0.587264,fall,True,0.201419,5
+val,441,walk,GR1_safety,GR1_gairat,lenet,0.573131,fall,True,0.36618,10
+val,441,walk,SA1_lowFA,SA1_sat,lenet,0.215209,fall,True,0.104403,23
+val,441,walk,SA1_macroF1,SA1_sat,lenet,0.621888,fall,True,0.259205,3
+val,441,walk,SA1_safety,SA1_sat,lenet,0.416748,fall,True,0.310699,17
+val,441,walk,ST1_lowFA,ST1_beta3p0,lenet,0.506686,fall,True,0.157616,3
+val,441,walk,ST1_macroF1,ST1_beta3p0,lenet,0.696079,fall,True,0.190872,2
+val,441,walk,ST1_safety,ST1_beta3p0,lenet,0.72829,fall,True,0.422517,4
+val,441,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.571989,fall,True,0.153511,2
+val,441,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.869001,fall,True,0.289528,2
+val,441,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.861023,fall,True,0.393386,5
+val,443,walk,AFAC_maxscore,AFAC_optionB,lenet,0.434707,fall,True,0.200578,4
+val,443,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.204728,fall,True,0.143261,32
+val,443,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.300204,fall,True,0.293561,47
+val,443,walk,BLF_safety,BiLSTM_finetune,bilstm,0.312266,fall,True,0.227623,10
+val,443,walk,D14B_seed43,D14_pauc_rank,lenet,0.344355,fall,True,0.200217,6
+val,443,walk,D14B_seed44,D14_pauc_rank,lenet,0.338279,fall,True,0.191555,6
+val,443,walk,G1_lowFA_s42,G1_hardneg,lenet,0.376492,fall,True,0.144991,6
+val,443,walk,G1_maxrec_s42,G1_hardneg,lenet,0.40322,fall,True,0.306177,9
+val,443,walk,G1_safety_s44,G1_hardneg,lenet,0.483243,fall,True,0.314376,8
+val,443,walk,GR1_lowFA,GR1_gairat,lenet,0.670699,fall,True,0.187872,3
+val,443,walk,GR1_macroF1,GR1_gairat,lenet,0.680463,fall,True,0.201419,4
+val,443,walk,GR1_safety,GR1_gairat,lenet,0.59516,fall,True,0.36618,8
+val,443,walk,SA1_lowFA,SA1_sat,lenet,0.261052,fall,True,0.104403,15
+val,443,walk,SA1_macroF1,SA1_sat,lenet,0.623076,fall,True,0.259205,2
+val,443,walk,SA1_safety,SA1_sat,lenet,0.418812,fall,True,0.310699,16
+val,443,walk,ST1_lowFA,ST1_beta3p0,lenet,0.539895,fall,True,0.157616,2
+val,443,walk,ST1_macroF1,ST1_beta3p0,lenet,0.695435,fall,True,0.190872,3
+val,443,walk,ST1_safety,ST1_beta3p0,lenet,0.737828,fall,True,0.422517,3
+val,443,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.561954,fall,True,0.153511,3
+val,443,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.850707,fall,True,0.289528,3
+val,443,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.8626,fall,True,0.393386,4
+val,450,walk,G1_maxrec_s42,G1_hardneg,lenet,0.499155,fall,True,0.306177,6
+val,450,walk,GR1_lowFA,GR1_gairat,lenet,0.411604,fall,True,0.187872,10
+val,450,walk,GR1_safety,GR1_gairat,lenet,0.750157,fall,True,0.36618,4
+val,450,walk,ST1_safety,ST1_beta3p0,lenet,0.500413,fall,True,0.422517,29
+val,450,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.7268,fall,True,0.393386,12
+val,451,walk,AFAC_maxscore,AFAC_optionB,lenet,0.353135,fall,True,0.200578,9
+val,451,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.220058,fall,True,0.143261,25
+val,451,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.316764,fall,True,0.293561,36
+val,451,walk,BLF_safety,BiLSTM_finetune,bilstm,0.36543,fall,True,0.227623,6
+val,451,walk,D14B_seed43,D14_pauc_rank,lenet,0.312469,fall,True,0.200217,9
+val,451,walk,D14B_seed44,D14_pauc_rank,lenet,0.30908,fall,True,0.191555,8
+val,451,walk,G1_safety_s44,G1_hardneg,lenet,0.402095,fall,True,0.314376,29
+val,451,walk,GR1_lowFA,GR1_gairat,lenet,0.448701,fall,True,0.187872,7
+val,451,walk,GR1_macroF1,GR1_gairat,lenet,0.444845,fall,True,0.201419,13
+val,451,walk,GR1_safety,GR1_gairat,lenet,0.445549,fall,True,0.36618,23
+val,451,walk,ST1_lowFA,ST1_beta3p0,lenet,0.319902,fall,True,0.157616,13
+val,451,walk,ST1_macroF1,ST1_beta3p0,lenet,0.544092,fall,True,0.190872,5
+val,451,walk,ST1_safety,ST1_beta3p0,lenet,0.679509,fall,True,0.422517,5
+val,451,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.292118,fall,True,0.153511,15
+val,451,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.807612,fall,True,0.289528,4
+val,451,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.8282,fall,True,0.393386,7
+val,452,walk,D14B_seed43,D14_pauc_rank,lenet,0.206895,run,True,0.200217,46
+val,452,walk,G1_maxrec_s42,G1_hardneg,lenet,0.372532,fall,True,0.306177,15
+val,470,walk,AFAC_maxscore,AFAC_optionB,lenet,0.293107,fall,True,0.200578,23
+val,470,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.267005,fall,True,0.143261,12
+val,470,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.348223,fall,True,0.293561,24
+val,470,walk,D14B_seed43,D14_pauc_rank,lenet,0.271453,fall,True,0.200217,23
+val,470,walk,D14B_seed44,D14_pauc_rank,lenet,0.265282,fall,True,0.191555,24
+val,470,walk,G1_lowFA_s42,G1_hardneg,lenet,0.351073,fall,True,0.144991,13
+val,470,walk,G1_maxrec_s42,G1_hardneg,lenet,0.396628,fall,True,0.306177,10
+val,470,walk,G1_safety_s44,G1_hardneg,lenet,0.459346,fall,True,0.314376,14
+val,470,walk,GR1_lowFA,GR1_gairat,lenet,0.338006,fall,True,0.187872,18
+val,470,walk,GR1_macroF1,GR1_gairat,lenet,0.38445,fall,True,0.201419,18
+val,470,walk,GR1_safety,GR1_gairat,lenet,0.387451,fall,True,0.36618,40
+val,470,walk,SA1_lowFA,SA1_sat,lenet,0.231186,fall,True,0.104403,21
+val,470,walk,SA1_macroF1,SA1_sat,lenet,0.39089,fall,True,0.259205,18
+val,470,walk,SA1_safety,SA1_sat,lenet,0.377738,fall,True,0.310699,21
+val,470,walk,ST1_lowFA,ST1_beta3p0,lenet,0.228258,fall,True,0.157616,28
+val,470,walk,ST1_macroF1,ST1_beta3p0,lenet,0.317126,fall,True,0.190872,23
+val,470,walk,ST1_safety,ST1_beta3p0,lenet,0.576298,fall,True,0.422517,10
+val,470,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.21996,fall,True,0.153511,32
+val,470,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.471798,fall,True,0.289528,19
+val,470,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.457858,fall,True,0.393386,36
+val,472,walk,AFAC_maxscore,AFAC_optionB,lenet,0.201301,fall,True,0.200578,54
+val,472,walk,D14B_seed43,D14_pauc_rank,lenet,0.228465,fall,True,0.200217,38
+val,472,walk,D14B_seed44,D14_pauc_rank,lenet,0.215785,run,True,0.191555,39
+val,472,walk,GR1_safety,GR1_gairat,lenet,0.41278,fall,True,0.36618,27
+val,473,walk,AFAC_maxscore,AFAC_optionB,lenet,0.252066,fall,True,0.200578,33
+val,473,walk,D14B_seed43,D14_pauc_rank,lenet,0.205902,walk,True,0.200217,50
+val,473,walk,D14B_seed44,D14_pauc_rank,lenet,0.212475,fall,True,0.191555,40
+val,473,walk,G1_safety_s44,G1_hardneg,lenet,0.434345,fall,True,0.314376,21
+val,473,walk,GR1_lowFA,GR1_gairat,lenet,0.3996,fall,True,0.187872,11
+val,473,walk,GR1_macroF1,GR1_gairat,lenet,0.434637,fall,True,0.201419,14
+val,473,walk,GR1_safety,GR1_gairat,lenet,0.39857,fall,True,0.36618,35
+val,473,walk,SA1_macroF1,SA1_sat,lenet,0.278004,fall,True,0.259205,48
+val,473,walk,ST1_lowFA,ST1_beta3p0,lenet,0.159277,walk,True,0.157616,47
+val,473,walk,ST1_macroF1,ST1_beta3p0,lenet,0.404728,fall,True,0.190872,11
+val,473,walk,ST1_safety,ST1_beta3p0,lenet,0.526513,fall,True,0.422517,17
+val,473,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.198646,walk,True,0.153511,34
+val,473,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.767579,fall,True,0.289528,5
+val,473,walk,ST1b6_safety,ST1b6_beta6p0,lenet,0.789871,fall,True,0.393386,8
+val,476,walk,AFAC_maxscore,AFAC_optionB,lenet,0.356074,fall,True,0.200578,8
+val,476,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.256311,fall,True,0.143261,16
+val,476,walk,BLF_safety,BiLSTM_finetune,bilstm,0.265412,fall,True,0.227623,42
+val,476,walk,D14B_seed43,D14_pauc_rank,lenet,0.322032,fall,True,0.200217,7
+val,476,walk,D14B_seed44,D14_pauc_rank,lenet,0.318279,fall,True,0.191555,7
+val,476,walk,G1_lowFA_s42,G1_hardneg,lenet,0.23257,walk,True,0.144991,29
+val,476,walk,GR1_lowFA,GR1_gairat,lenet,0.228594,walk,True,0.187872,44
+val,476,walk,GR1_macroF1,GR1_gairat,lenet,0.375404,fall,True,0.201419,20
+val,476,walk,SA1_macroF1,SA1_sat,lenet,0.351099,fall,True,0.259205,26
+val,476,walk,SA1_safety,SA1_sat,lenet,0.31561,fall,True,0.310699,51
+val,476,walk,ST1_macroF1,ST1_beta3p0,lenet,0.638215,fall,True,0.190872,4
+val,476,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.344712,fall,True,0.153511,4
+val,476,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.640072,fall,True,0.289528,8
+val,484,walk,AFAC_maxscore,AFAC_optionB,lenet,0.210929,fall,True,0.200578,49
+val,484,walk,AFAC_optBminFA,AFAC_optionB,lenet,0.154659,stand up,True,0.143261,45
+val,484,walk,BLF_maxrec,BiLSTM_finetune,bilstm,0.376644,fall,True,0.293561,10
+val,484,walk,BLF_safety,BiLSTM_finetune,bilstm,0.284046,fall,True,0.227623,29
+val,484,walk,G1_safety_s44,G1_hardneg,lenet,0.362535,fall,True,0.314376,37
+val,484,walk,SA1_safety,SA1_sat,lenet,0.328883,fall,True,0.310699,44
+val,484,walk,ST1_safety,ST1_beta3p0,lenet,0.568412,fall,True,0.422517,11
+val,484,walk,ST1b6_lowFA,ST1b6_beta6p0,lenet,0.25514,fall,True,0.153511,27
+val,484,walk,ST1b6_macroF1,ST1b6_beta6p0,lenet,0.292956,fall,True,0.289528,54

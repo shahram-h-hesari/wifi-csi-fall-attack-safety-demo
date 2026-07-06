@@ -1,0 +1,10 @@
+model,n_missed,n_rescued_elsewhere,rescue_fraction
+AFAC_maxscore,18,10,0.5556
+GR1_macroF1,23,15,0.6522
+SA1_lowFA,20,12,0.6
+ST1_lowFA,22,14,0.6364
+ST1b6_lowFA,26,18,0.6923
+D14B_seed44,19,11,0.5789
+VD_seed42,44,36,0.8182
+G1_safety_s44,23,15,0.6522
+BLF_macroF1,44,36,0.8182

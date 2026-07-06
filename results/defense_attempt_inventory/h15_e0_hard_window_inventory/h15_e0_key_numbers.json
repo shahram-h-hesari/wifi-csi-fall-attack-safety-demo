@@ -1,0 +1,386 @@
+{
+  "n_models": 24,
+  "n_families": 9,
+  "primary_cap": 0.12,
+  "universal_hard_falls": [
+    [
+      69,
+      0.027591,
+      0.139084
+    ],
+    [
+      70,
+      0.100682,
+      0.264874
+    ],
+    [
+      88,
+      0.113483,
+      0.250042
+    ],
+    [
+      89,
+      0.11923,
+      0.251909
+    ],
+    [
+      94,
+      0.093397,
+      0.272377
+    ],
+    [
+      97,
+      0.131071,
+      0.231462
+    ],
+    [
+      99,
+      0.117631,
+      0.31178
+    ],
+    [
+      103,
+      0.123815,
+      0.247152
+    ],
+    [
+      71,
+      0.144882,
+      0.340779
+    ],
+    [
+      77,
+      0.151002,
+      0.275776
+    ],
+    [
+      86,
+      0.140749,
+      0.312883
+    ],
+    [
+      75,
+      0.209421,
+      0.630032
+    ],
+    [
+      78,
+      0.206203,
+      0.654505
+    ],
+    [
+      104,
+      0.148209,
+      0.325842
+    ],
+    [
+      109,
+      0.155368,
+      0.310187
+    ],
+    [
+      80,
+      0.167366,
+      0.37057
+    ],
+    [
+      72,
+      0.174498,
+      0.381662
+    ],
+    [
+      91,
+      0.182634,
+      0.403717
+    ],
+    [
+      87,
+      0.188569,
+      0.505429
+    ]
+  ],
+  "n_universal_hard_falls": 19,
+  "n_hard_falls_any_model": 44,
+  "n_universal_hard_nonfalls": 1,
+  "n_hard_nonfalls_any_model": 116,
+  "union_oracle": [
+    {
+      "model_set": "all_24_score_axes",
+      "n_models": 24,
+      "far_cap": 0.1,
+      "fp_budget_per_model": 45,
+      "best_single_model": "D14B_seed43",
+      "best_single_TP": 24,
+      "best_single_recall": 0.5455,
+      "union_oracle_TP": 33,
+      "union_oracle_recall": 0.75,
+      "falls_missed_by_every_model": 11,
+      "union_of_FP_sets_pessimistic": 93,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "all_24_score_axes",
+      "n_models": 24,
+      "far_cap": 0.12,
+      "fp_budget_per_model": 54,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 26,
+      "best_single_recall": 0.5909,
+      "union_oracle_TP": 36,
+      "union_oracle_recall": 0.8182,
+      "falls_missed_by_every_model": 8,
+      "union_of_FP_sets_pessimistic": 116,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "all_24_score_axes",
+      "n_models": 24,
+      "far_cap": 0.15,
+      "fp_budget_per_model": 67,
+      "best_single_model": "ST1_macroF1",
+      "best_single_TP": 33,
+      "best_single_recall": 0.75,
+      "union_oracle_TP": 41,
+      "union_oracle_recall": 0.9318,
+      "falls_missed_by_every_model": 3,
+      "union_of_FP_sets_pessimistic": 137,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "one_per_family_9",
+      "n_models": 9,
+      "far_cap": 0.1,
+      "fp_budget_per_model": 45,
+      "best_single_model": "SA1_lowFA",
+      "best_single_TP": 23,
+      "best_single_recall": 0.5227,
+      "union_oracle_TP": 29,
+      "union_oracle_recall": 0.6591,
+      "falls_missed_by_every_model": 15,
+      "union_of_FP_sets_pessimistic": 75,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "one_per_family_9",
+      "n_models": 9,
+      "far_cap": 0.12,
+      "fp_budget_per_model": 54,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 26,
+      "best_single_recall": 0.5909,
+      "union_oracle_TP": 33,
+      "union_oracle_recall": 0.75,
+      "falls_missed_by_every_model": 11,
+      "union_of_FP_sets_pessimistic": 83,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "one_per_family_9",
+      "n_models": 9,
+      "far_cap": 0.15,
+      "fp_budget_per_model": 67,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 31,
+      "best_single_recall": 0.7045,
+      "union_oracle_TP": 40,
+      "union_oracle_recall": 0.9091,
+      "falls_missed_by_every_model": 4,
+      "union_of_FP_sets_pessimistic": 109,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "lenet_families_only_8",
+      "n_models": 8,
+      "far_cap": 0.1,
+      "fp_budget_per_model": 45,
+      "best_single_model": "SA1_lowFA",
+      "best_single_TP": 23,
+      "best_single_recall": 0.5227,
+      "union_oracle_TP": 29,
+      "union_oracle_recall": 0.6591,
+      "falls_missed_by_every_model": 15,
+      "union_of_FP_sets_pessimistic": 74,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "lenet_families_only_8",
+      "n_models": 8,
+      "far_cap": 0.12,
+      "fp_budget_per_model": 54,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 26,
+      "best_single_recall": 0.5909,
+      "union_oracle_TP": 33,
+      "union_oracle_recall": 0.75,
+      "falls_missed_by_every_model": 11,
+      "union_of_FP_sets_pessimistic": 82,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "lenet_families_only_8",
+      "n_models": 8,
+      "far_cap": 0.15,
+      "fp_budget_per_model": 67,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 31,
+      "best_single_recall": 0.7045,
+      "union_oracle_TP": 40,
+      "union_oracle_recall": 0.9091,
+      "falls_missed_by_every_model": 4,
+      "union_of_FP_sets_pessimistic": 97,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "d13_trio_AFAC_D10_D11b",
+      "n_models": 3,
+      "far_cap": 0.1,
+      "fp_budget_per_model": 45,
+      "best_single_model": "SA1_lowFA",
+      "best_single_TP": 23,
+      "best_single_recall": 0.5227,
+      "union_oracle_TP": 27,
+      "union_oracle_recall": 0.6136,
+      "falls_missed_by_every_model": 17,
+      "union_of_FP_sets_pessimistic": 65,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "d13_trio_AFAC_D10_D11b",
+      "n_models": 3,
+      "far_cap": 0.12,
+      "fp_budget_per_model": 54,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 26,
+      "best_single_recall": 0.5909,
+      "union_oracle_TP": 32,
+      "union_oracle_recall": 0.7273,
+      "falls_missed_by_every_model": 12,
+      "union_of_FP_sets_pessimistic": 77,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    },
+    {
+      "model_set": "d13_trio_AFAC_D10_D11b",
+      "n_models": 3,
+      "far_cap": 0.15,
+      "fp_budget_per_model": 67,
+      "best_single_model": "AFAC_maxscore",
+      "best_single_TP": 31,
+      "best_single_recall": 0.7045,
+      "union_oracle_TP": 36,
+      "union_oracle_recall": 0.8182,
+      "falls_missed_by_every_model": 8,
+      "union_of_FP_sets_pessimistic": 88,
+      "h15_gate_feasible_TP_ge_40_at_cap_012": false
+    }
+  ],
+  "rescue_fractions": [
+    {
+      "model": "AFAC_maxscore",
+      "n_missed": 18,
+      "n_rescued_elsewhere": 10,
+      "rescue_fraction": 0.5556
+    },
+    {
+      "model": "GR1_macroF1",
+      "n_missed": 23,
+      "n_rescued_elsewhere": 15,
+      "rescue_fraction": 0.6522
+    },
+    {
+      "model": "SA1_lowFA",
+      "n_missed": 20,
+      "n_rescued_elsewhere": 12,
+      "rescue_fraction": 0.6
+    },
+    {
+      "model": "ST1_lowFA",
+      "n_missed": 22,
+      "n_rescued_elsewhere": 14,
+      "rescue_fraction": 0.6364
+    },
+    {
+      "model": "ST1b6_lowFA",
+      "n_missed": 26,
+      "n_rescued_elsewhere": 18,
+      "rescue_fraction": 0.6923
+    },
+    {
+      "model": "D14B_seed44",
+      "n_missed": 19,
+      "n_rescued_elsewhere": 11,
+      "rescue_fraction": 0.5789
+    },
+    {
+      "model": "VD_seed42",
+      "n_missed": 44,
+      "n_rescued_elsewhere": 36,
+      "rescue_fraction": 0.8182
+    },
+    {
+      "model": "G1_safety_s44",
+      "n_missed": 23,
+      "n_rescued_elsewhere": 15,
+      "rescue_fraction": 0.6522
+    },
+    {
+      "model": "BLF_macroF1",
+      "n_missed": 44,
+      "n_rescued_elsewhere": 36,
+      "rescue_fraction": 0.8182
+    }
+  ],
+  "hard_negative_class_summary": [
+    {
+      "true_nonfall_class": "run",
+      "n_hard_negatives_union": 44,
+      "share_of_union_hard_negatives": 0.3793,
+      "class_rate": 0.3636
+    },
+    {
+      "true_nonfall_class": "walk",
+      "n_hard_negatives_union": 28,
+      "share_of_union_hard_negatives": 0.2414,
+      "class_rate": 0.1918
+    },
+    {
+      "true_nonfall_class": "lie down",
+      "n_hard_negatives_union": 19,
+      "share_of_union_hard_negatives": 0.1638,
+      "class_rate": 0.2879
+    },
+    {
+      "true_nonfall_class": "stand up",
+      "n_hard_negatives_union": 12,
+      "share_of_union_hard_negatives": 0.1034,
+      "class_rate": 0.4
+    },
+    {
+      "true_nonfall_class": "pickup",
+      "n_hard_negatives_union": 10,
+      "share_of_union_hard_negatives": 0.0862,
+      "class_rate": 0.2041
+    },
+    {
+      "true_nonfall_class": "sit down",
+      "n_hard_negatives_union": 3,
+      "share_of_union_hard_negatives": 0.0259,
+      "class_rate": 0.075
+    }
+  ],
+  "lenet_universal_misses": [
+    69,
+    70,
+    75,
+    86,
+    87,
+    88,
+    89,
+    94,
+    97,
+    99,
+    103
+  ],
+  "lenet_universal_misses_rescued_by_bilstm": [],
+  "bilstm_fp_jaccard_vs_lenet_union": 0.0,
+  "bilstm_new_fps_not_in_lenet_union": 1
+}

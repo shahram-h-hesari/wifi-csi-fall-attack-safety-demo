@@ -1,0 +1,11 @@
+model,missing_epsilon_values,missing_split,regenerable_validation_only
+AFAC_maxscore,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+GR1_macroF1,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+SA1_lowFA,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+ST1b6_lowFA,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+ST1_lowFA,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+D14B_seed44,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+G1_safety_s44,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+VD_seed42,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+BLF_macroF1,0.005;0.010;0.015;0.020;0.025;0.040;0.050,val (per-window fall-probability export),yes - checkpoint exists; export_probability_predictions.py --split val (NOT RUN; needs approval)
+undefended converged baseline (seeds 42/43/44),ALL (0.000-0.075),val - existing sweep files are argmax-only (no fall_probability) and on short/test splits,yes - checkpoints exist; same export script

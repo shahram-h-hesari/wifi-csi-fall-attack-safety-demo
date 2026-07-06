@@ -1,0 +1,4 @@
+model,epsilon,tau_frozen_far012,val_recall,val_TP,val_FAR,h15_tau_window_width,bootstrap_joint_pass_frozen_tau,recall_ci95_lo,far_ci95_hi,tau_reselect_ci_width,clean_recall_at_tau,clean_FAR_at_tau,measured_eps0030_frozen_transfer_decay
+AFAC_maxscore,0.015,0.168754,0.9091,40,0.1084,0.0562,0.892,0.818,0.137,0.0764,0.9773,0.0619,"recall -0.018 / FAR +0.014 (D8b, best in ledger)"
+ST1b6_lowFA,0.015,0.122502,0.9545,42,0.0951,0.0785,0.996,0.886,0.124,0.0276,0.9773,0.0664,"recall -0.220 (D11a, WORST in ledger)"
+SA1_lowFA,0.015,0.112824,0.9545,42,0.1128,0.057,0.988,0.886,0.144,0.0345,0.9773,0.073,recall -0.130 (D11b)

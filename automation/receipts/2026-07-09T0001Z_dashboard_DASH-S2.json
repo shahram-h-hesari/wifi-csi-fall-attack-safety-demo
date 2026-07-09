@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-09T00:01:00Z_dashboard_DASH-S2",
+  "task_id": "DASH-S2",
+  "automation": "dashboard",
+  "actor": { "kind": "skill", "name": "dashboard-build", "session_hint": "stage1+2" },
+  "status_claimed": "done",
+  "summary": "Stage 2 YAML source-of-truth + acceptance specs + receipt convention created.",
+  "files_created": [
+    { "path": "automation/README.md", "sha256": "" },
+    { "path": "automation/roadmap.yaml", "sha256": "" },
+    { "path": "automation/tasks.yaml", "sha256": "" },
+    { "path": "automation/experiment_queue.yaml", "sha256": "" },
+    { "path": "automation/do_not_build_yet.md", "sha256": "" },
+    { "path": "automation/acceptance/", "sha256": "" }
+  ],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "b140b04", "expected_dirty": ["automation/**"] },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Proceed to Stage 3 renderer."
+}

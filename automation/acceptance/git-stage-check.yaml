@@ -1,0 +1,32 @@
+schema_version: 1
+automation: git-stage-check
+gated: false
+type: skill
+status: accepted-legacy   # base skill exists (.claude/skills/git-stage-check) and is in use
+
+# Base behaviors (already accepted): checkpoint/log/seed-isolation staging checks; never git add/commit/push.
+# Acceptance below covers ONLY the two new extensions (task AUT-GSC-EXT).
+
+extensions:
+  - id: memo-reference-completeness
+    desc: "A staged memo/summary .md must only reference result files that exist and are staged or already committed."
+  - id: frozen-protocol-edit-block
+    desc: "Block staged modifications to FROZEN_* protocol files whose status is READ-CONSUMED."
+
+design_complete:
+  - "This acceptance file approved; both extension behaviors specified."
+implementation_complete:
+  - "Both extension checks added to the skill without changing base behavior."
+test_passed:
+  staged_fixture_scenarios_all_flagged:
+    - "stage a .pt file -> flagged (base)"
+    - "stage a wrong-seed CSV -> flagged (base)"
+    - "stage a memo referencing a nonexistent CSV -> flagged (extension 1)"
+    - "stage an edit to a READ-CONSUMED protocol -> flagged (extension 2)"
+accepted:
+  - "User approval receipt exists for AUT-GSC-EXT."
+required_evidence_files:
+  - "<stage-check report showing all four fixtures flagged>"
+forbidden_actions:
+  - "never git add / commit / push (unchanged)"
+  - "never modify files"

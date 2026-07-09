@@ -1,0 +1,35 @@
+schema_version: 1
+automation: test-split-guard
+build_order: 1
+gated: false
+type: hook   # PreToolUse on Bash/PowerShell
+
+design_complete:
+  - "This acceptance file exists and is approved by the user."
+  - "Deny-pattern list + token-authorization convention documented."
+implementation_complete:
+  - "Hook registered in .claude/settings.json (PreToolUse)."
+  - "Matcher script exists and is Windows-portable (Python)."
+test_passed:
+  fixture_suite_min: 10
+  must_DENY:
+    - "--split test"
+    - "--split legacy"
+    - "export_probability_predictions.py invoked with NO --split flag (default is test)"
+    - "adaptive_gate_attack.py invoked with NO --split flag"
+    - "any novel script path that generates a *_test_* probability CSV"
+  must_ALLOW:
+    - "--split val"
+    - "reads of already-saved test CSVs (no new test inference)"
+    - "one token-authorized frozen command WHEN a matching token + frozen protocol exist (logged)"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for AUT-TSG."
+required_evidence_files:
+  - "results/test_read_guard_log.csv"      # shows fixture outcomes
+  - "<fixture file committed alongside the hook>"
+required_commands:
+  - "run matcher against fixture command strings only"
+forbidden_actions:
+  - "the acceptance test must never run a real test export"
+  - "must never create an authorization token"
+  - "must not block plain reads of existing test CSV files (only block NEW test-split generation)"

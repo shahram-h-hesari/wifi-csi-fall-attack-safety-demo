@@ -1,0 +1,36 @@
+schema_version: 1
+automation: protocol-freeze
+build_order: 5
+gated: true   # produces frozen-test protocols; EVERY output is approval-gated
+type: skill   # freeze mode + verify mode
+
+golden_master:
+  protocol_id: "H15-TEST-EPS0015-AFAC-20260705"
+  file: "results/defense_attempt_inventory/pgd_epsilon_frontier/FROZEN_H15_TEST_PROTOCOL_EPS0015_AFAC.md"
+  json_twin: "results/defense_attempt_inventory/pgd_epsilon_frontier/frozen_h15_test_protocol_eps0015_afac.json"
+  checkpoint_sha256: "b85c68a7f4834c514a06d737af167542c9139bed45dde8a40380eac78cab1146"
+
+design_complete:
+  - "This acceptance file approved; freeze + verify field lists specified."
+implementation_complete:
+  - "freeze mode: generates .md + .json twin + PROTOCOL_INTEGRITY.sha256 from gate CSVs; pulls tau/gate numbers from CSVs (never retyped); computes checkpoint sha256; embeds exact allowed command."
+  - "verify mode: re-hashes checkpoint + protocol, confirms gate evidence unchanged, confirms token match, confirms command byte-identical to frozen — then STOPS (human runs the read)."
+test_passed:
+  golden_master_test:
+    - "Regenerate the H15 ε=0.015 protocol from its gate CSVs; diff field-by-field vs the hand-built original — must match."
+  verify_modes:
+    - "verify PASSes the untouched H15 artifacts."
+    - "verify FAILs a deliberately corrupted copy (fixture in SCRATCHPAD, never in results/)."
+accepted:
+  - "User approval receipt exists for AUT-PF."
+required_evidence_files:
+  - "<field-by-field diff report vs golden master>"
+  - "<verify-mode output for untouched case (PASS)>"
+  - "<verify-mode output for corrupted case (FAIL)>"
+required_commands:
+  - "sha256 hashing; read-only CSV parsing; git rev-parse HEAD"
+forbidden_actions:
+  - "running the test read itself (skill STOPS at verification; human runs frozen command)"
+  - "creating an authorization token automatically"
+  - "editing any protocol after freeze"
+  - "writing the corrupted fixture anywhere inside results/"

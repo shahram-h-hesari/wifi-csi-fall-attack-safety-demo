@@ -1,0 +1,106 @@
+# Task registry. SOURCE-OF-TRUTH for task DEFINITIONS ONLY.
+# Deliberately NO status field: status is computed from receipts + acceptance at Stage 4+.
+# Until then, the dashboard holds hand-assessed CLAIMED status.
+schema_version: 1
+
+tasks:
+  # --- Dashboard build (meta) ---
+  - id: DASH-S1
+    title: "Dashboard Stage 1 — hand-maintained RESEARCH_DASHBOARD.md"
+    kind: dashboard
+    automation: dashboard
+    gated: false
+    acceptance: null
+    stale_after_days: 3
+  - id: DASH-S2
+    title: "Dashboard Stage 2 — automation/ YAML source-of-truth + acceptance/receipt conventions"
+    kind: dashboard
+    automation: dashboard
+    gated: false
+    acceptance: null
+    stale_after_days: 3
+  - id: DASH-S3
+    title: "Dashboard Stage 3 — update_dashboard.py (render phase only)"
+    kind: dashboard
+    automation: dashboard
+    gated: false
+    acceptance: acceptance/dashboard-refresh.yaml
+    stale_after_days: 5
+  - id: DASH-S4
+    title: "Dashboard Stage 4 — receipts + verify phase (three-fixture test)"
+    kind: dashboard
+    automation: dashboard-refresh
+    gated: false
+    acceptance: acceptance/dashboard-refresh.yaml
+    stale_after_days: 5
+  - id: DASH-S5
+    title: "Dashboard Stage 5 — /dashboard-refresh skill (+ --approve path)"
+    kind: dashboard
+    automation: dashboard-refresh
+    gated: false
+    acceptance: acceptance/dashboard-refresh.yaml
+    stale_after_days: 5
+  - id: DASH-S6
+    title: "Dashboard Stage 6 — scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section"
+    kind: dashboard
+    automation: dashboard
+    gated: false
+    acceptance: null
+    stale_after_days: 7
+  - id: DASH-S8
+    title: "Dashboard Stage 8 — static HTML view (dashboard/index.html)"
+    kind: dashboard
+    automation: dashboard
+    gated: false
+    depends_on: [DASH-S4, DASH-S6]   # needs stable status.json + artifact_manifest.csv
+    acceptance: acceptance/html-dashboard.yaml
+    stale_after_days: 7
+
+  # --- Automations ---
+  - id: AUT-TSG
+    title: "test-split-guard — PreToolUse hook blocking unauthorized test-split reads"
+    kind: automation
+    automation: test-split-guard
+    gated: false
+    build_order: 1
+    acceptance: acceptance/test-split-guard.yaml
+    stale_after_days: 3
+  - id: AUT-VPG
+    title: "val-pilot-gate — standardized validation pilot evaluator + GO/NO-GO"
+    kind: automation
+    automation: val-pilot-gate
+    gated: false
+    build_order: 2
+    acceptance: acceptance/val-pilot-gate.yaml
+    stale_after_days: 4
+  - id: AUT-LSA
+    title: "ledger-sync --audit — attempt-ledger updater + evidence re-derivation audit"
+    kind: automation
+    automation: ledger-sync
+    gated: false
+    build_order: 3
+    acceptance: acceptance/ledger-sync-audit.yaml
+    stale_after_days: 4
+  - id: AUT-EQ
+    title: "experiment-queue — sequential overnight pilot queue + morning triage"
+    kind: automation
+    automation: experiment-queue
+    gated: false
+    build_order: 4
+    acceptance: acceptance/experiment-queue.yaml
+    stale_after_days: 4
+  - id: AUT-PF
+    title: "protocol-freeze — frozen-test protocol builder + pre-read verifier"
+    kind: automation
+    automation: protocol-freeze
+    gated: true   # produces frozen-test protocols; every output is approval-gated
+    build_order: 5
+    acceptance: acceptance/protocol-freeze.yaml
+    stale_after_days: 4
+  - id: AUT-GSC-EXT
+    title: "git-stage-check extensions — memo-reference completeness + frozen-protocol edit block"
+    kind: automation
+    automation: git-stage-check
+    gated: false
+    acceptance: acceptance/git-stage-check.yaml
+    stale_after_days: 4

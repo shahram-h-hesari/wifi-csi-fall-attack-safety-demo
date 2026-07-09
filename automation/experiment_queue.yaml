@@ -1,0 +1,25 @@
+# Experiment queue. SOURCE-OF-TRUTH for enqueued pilots. You add entries; the experiment-queue
+# skill updates only run-state via receipts (never edits definitions). Every entry MUST reference
+# a pre-written pilot config (hypothesis + gates + epsilon + seed) BEFORE it can run — this
+# preserves pre-registration at pilot level and protects the 44-fall validation split.
+schema_version: 1
+
+# Rules enforced by convention now, by test-split-guard + experiment-queue later:
+#   - seed: 42 only (43-46 require a justified plan + a seed-42 frozen pass first)
+#   - split: val only for gating; test only via an authorized frozen protocol
+#   - sequential execution only (one model at a time)
+#   - no auto-enqueue: entries are added by you
+
+entries: []   # empty until val-pilot-gate + test-split-guard exist (queue opens Day 6)
+
+# Template for a future entry (do not run):
+# - entry_id: EQ-2026-07-14-J1
+#   candidate: J1_event_agg
+#   hypothesis: "Event-level aggregation over 3 windows lifts PGD recall@FAR<=10% above 0.60 (val)."
+#   pilot_config: automation/pilot_configs/J1_event_agg.yaml
+#   train_cmd: ".venv/Scripts/python.exe scripts/train_<x>.py --seed 42 ..."
+#   seed: 42
+#   epsilon: [0.015, 0.030]
+#   gate_file: automation/acceptance/val-pilot-gate.yaml
+#   wall_clock_cap_min: 240
+#   status: queued          # queued | running | done | failed  (set via receipts, not by hand)

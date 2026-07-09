@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-09T00:05:00Z_dashboard-refresh_DASH-S5",
+  "task_id": "DASH-S5",
+  "automation": "dashboard-refresh",
+  "actor": { "kind": "skill", "name": "dashboard-build", "session_hint": "stage5" },
+  "status_claimed": "done",
+  "summary": "Stage 5: /dashboard-refresh skill + --approve user-approval path + refresh deltas; evidence-first gating safety fix; approval round-trip test ALL PASS. No real approval fabricated.",
+  "files_created": [
+    { "path": ".claude/skills/dashboard-refresh/SKILL.md", "sha256": "" },
+    { "path": "scripts/automation/test_approve.py", "sha256": "" }
+  ],
+  "files_modified": [
+    { "path": "scripts/automation/update_dashboard.py", "change": "approve-path+deltas+evidence-first-gating" }
+  ],
+  "commands_run": [
+    { "cmd": "python scripts/automation/test_approve.py", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --check", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "S5-approval-roundtrip", "result": "pass", "evidence_path": "scripts/automation/test_approve.py" },
+    { "id": "S5-idempotency", "result": "pass", "evidence_path": "automation/status.json" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "b140b04", "expected_dirty": [".claude/skills/**", "scripts/automation/**", "automation/**", "RESEARCH_DASHBOARD.md"] },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Stage 6: scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section."
+}

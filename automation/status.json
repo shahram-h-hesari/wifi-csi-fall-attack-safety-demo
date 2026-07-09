@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "generated": "2026-07-09",
+  "stage": 4,
+  "verification_active": true,
+  "plan_in_effect": "roadmap-2026-07-09-v1",
+  "counters": {
+    "validation_gate_reads_consumed": 0,
+    "frozen_test_reads_consumed": 1
+  },
+  "integrity_gate": {
+    "git_available": true,
+    "staged_model_or_log": [],
+    "protected_paths_dirty": [],
+    "clean": true
+  },
+  "tasks": {
+    "DASH-S1": {
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "2/2",
+      "failed": []
+    },
+    "DASH-S2": {
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "7/7",
+      "failed": []
+    },
+    "DASH-S3": {
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "8/8",
+      "failed": []
+    },
+    "DASH-S4": {
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "10/10",
+      "failed": []
+    },
+    "DASH-S5": {
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "11/11",
+      "failed": []
+    },
+    "DASH-S6": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "DASH-S8": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-TSG": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-VPG": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-LSA": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-EQ": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-PF": {
+      "display": "not_started",
+      "checks": "0/0"
+    },
+    "AUT-GSC-EXT": {
+      "display": "not_started",
+      "checks": "0/0"
+    }
+  },
+  "verification_ledger": [
+    {
+      "task_id": "DASH-S5",
+      "automation": "dashboard-refresh",
+      "display": "VERIFIED",
+      "checks": "11/11",
+      "strength": "existence-only",
+      "failed": []
+    },
+    {
+      "task_id": "DASH-S4",
+      "automation": "dashboard-refresh",
+      "display": "VERIFIED",
+      "checks": "10/10",
+      "strength": "existence-only",
+      "failed": []
+    },
+    {
+      "task_id": "AUT-GSC-impl",
+      "automation": "git-stage-check",
+      "display": "ACCEPTED",
+      "checks": "2/2",
+      "strength": "existence-only",
+      "failed": []
+    },
+    {
+      "task_id": "DASH-S3",
+      "automation": "dashboard",
+      "display": "VERIFIED",
+      "checks": "8/8",
+      "strength": "existence-only",
+      "failed": []
+    },
+    {
+      "task_id": "DASH-S2",
+      "automation": "dashboard",
+      "display": "VERIFIED",
+      "checks": "7/7",
+      "strength": "existence-only",
+      "failed": []
+    },
+    {
+      "task_id": "DASH-S1",
+      "automation": "dashboard",
+      "display": "VERIFIED",
+      "checks": "2/2",
+      "strength": "existence-only",
+      "failed": []
+    }
+  ],
+  "automations": {
+    "test-split-guard": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "val-pilot-gate": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "ledger-sync": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "protocol-freeze": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "experiment-queue": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "git-stage-check": {
+      "design": "verified",
+      "impl": "verified",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    },
+    "dashboard-refresh": {
+      "design": "verified",
+      "impl": "todo",
+      "test": "todo",
+      "accepted": "todo",
+      "verification": "active"
+    }
+  },
+  "frozen_protocols": [
+    {
+      "protocol_id": "H15-TEST-EPS0015-AFAC-20260705",
+      "epsilon": 0.015,
+      "model": "AFAC_maxscore (LeNet)",
+      "status": "READ-CONSUMED",
+      "verdict": "PASS",
+      "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
+    }
+  ],
+  "receipts_processed": 7
+}

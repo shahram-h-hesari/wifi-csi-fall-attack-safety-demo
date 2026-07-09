@@ -1,0 +1,33 @@
+schema_version: 1
+automation: ledger-sync
+build_order: 3
+gated: false
+type: skill   # append mode + --audit mode
+
+ledger_file: "results/defense_attempt_inventory/defense_attempt_results_long.csv"
+schema_conventions:
+  - "fall-positive class = 1"
+  - "row types: 'derived_from_per_window_predictions' (argmax) and 'post_hoc_threshold_sweep_from_saved_scores'"
+  - "result_status vocabulary preserved; never invent numbers — derive from source_file or refuse"
+
+design_complete:
+  - "This acceptance file approved; append + audit behaviors specified."
+implementation_complete:
+  - "Append mode parses a run-dir's prediction CSVs + metadata JSON into normalized rows."
+  - "Audit mode re-derives each row's metrics from its source_file and flags mismatches."
+  - "Schema extended with git_commit + checkpoint_sha (append-only; no rewrite of existing rows)."
+test_passed:
+  audit_over_existing:
+    - "Runs to completion over the existing ledger."
+    - "Every reported mismatch is either a genuine pre-existing defect (reported to user) or zero."
+  round_trip:
+    - "Append mode on a sample run-dir produces rows that audit mode then re-derives cleanly."
+accepted:
+  - "User approval receipt exists for AUT-LSA."
+required_evidence_files:
+  - "results/defense_attempt_inventory/ledger_audit_<date>.md"
+  - "<round-trip diff output>"
+forbidden_actions:
+  - "editing or deleting existing ledger rows (append-only; corrections need user sign-off)"
+  - "Notion push during acceptance testing"
+  - "any edit to thesis/Overleaf files"

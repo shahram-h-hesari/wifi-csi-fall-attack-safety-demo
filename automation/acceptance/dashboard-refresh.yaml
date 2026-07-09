@@ -1,0 +1,36 @@
+schema_version: 1
+automation: dashboard-refresh
+gated: false
+type: hybrid   # Python scripts own verify+render; thin skill owns invocation + --approve
+
+# Covers dashboard Stages 3-5: update_dashboard.py (render + verify) and the /dashboard-refresh skill.
+
+roles:
+  scripts_own: "ALL verification + rendering logic (deterministic, testable, run without Claude)"
+  skill_owns: "invocation, delta summaries, and the --approve path only"
+  never: "the thing that verifies must not be the thing that claims"
+
+design_complete:
+  - "This acceptance file approved; three-state ladder + evidence checks specified."
+implementation_complete:
+  - "update_dashboard.py --render regenerates RESEARCH_DASHBOARD.md + status.json idempotently."
+  - "update_dashboard.py --verify computes VERIFIED from receipt evidence (files+sha, exit codes, acceptance parse, split_usage, forbidden-pattern scan, git-clean on protected paths, no .pt/.pth/.ckpt/.log staged)."
+  - "/dashboard-refresh skill runs verify+render, summarizes deltas, and processes --approve (writes actor.kind:user approval receipt)."
+test_passed:
+  render_idempotency:
+    - "Run --render twice -> byte-identical output."
+    - "Golden-master diff vs the Stage-1 hand-written dashboard."
+  three_fixture_verify:
+    - "(a) receipt with all evidence present -> task shows VERIFIED."
+    - "(b) receipt whose claimed file is missing -> CLAIMED-UNVERIFIED with named failed check."
+    - "(c) gated task with full evidence but no approval -> VERIFIED-AWAITING-APPROVAL, not DONE."
+accepted:
+  - "User approval receipt exists for DASH-S3/S4/S5 as each lands."
+required_evidence_files:
+  - "automation/status.json"
+  - "<three rendered dashboard snapshots from the fixture test (scratchpad)>"
+forbidden_actions:
+  - "marking ACCEPTED without a user approval receipt"
+  - "hand-editing the generated RESEARCH_DASHBOARD.md once Stage 3 lands"
+  - "rendering any metric without its evidence-level tag (hard error, not a default)"
+  - "PostToolUse hook that mutates state (a Stop-event reminder is the only allowed hook)"

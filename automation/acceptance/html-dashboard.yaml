@@ -1,0 +1,72 @@
+schema_version: 1
+automation: html-dashboard
+stage: 8
+gated: false
+type: generated-view   # peer to Notion push; a downstream VIEW, never source-of-truth
+
+purpose: >
+  Local, visual, at-a-glance rendering of the SAME verified state the Markdown dashboard shows —
+  cards, progress bars, roadmap timeline, color-coded badges — for faster scanning than Markdown.
+  Adds zero new state and zero new authority.
+
+output_file: "dashboard/index.html"   # single self-contained file: inline CSS/JS, no CDN, no network, opens via file://
+sidecar: "dashboard/README.md"        # one line: GENERATED — do not edit; run the generator
+
+reads_only:
+  primary: "automation/status.json"   # task/automation status derived ONLY from here (never recomputed)
+  others:
+    - "automation/artifact_manifest.csv"   # inventory + Overleaf-ready flags + evidence labels (Stage 6)
+    - "automation/roadmap.yaml"
+    - "automation/tasks.yaml"
+    - "automation/experiment_queue.yaml"
+    - "automation/frontier.yaml"
+  activity_feed_only:
+    - "automation/receipts/"   # recent-activity feed ONLY, never for status
+    - "automation/dashboard_changelog.md"
+
+generator_script: "scripts/automation/build_html_dashboard.py"   # SEPARATE from update_dashboard.py, by design
+generation_gate: "refuses to emit (non-zero exit) if status.json is stale relative to receipts/ (no verify -> no HTML)"
+
+must_show:
+  - "header band: plan-in-effect, HEAD, generated-timestamp, val gate-reads + frozen test-reads counters"
+  - "automation status matrix: per-automation 4-segment progress bar (design/impl/test/accepted), ladder-colored"
+  - "roadmap: 7-day timeline; superseded plans as a collapsed history strip (never deleted)"
+  - "experiment queue cards with per-entry gate verdict"
+  - "research frontier: R90F10 vs F20 vs H15@eps=0.015, each with its evidence badge"
+  - "artifact inventory counts + Overleaf-ready list (full readiness bar)"
+  - "blockers card; approval-needed card; legend for both badge families"
+
+badge_families_required:
+  status: [CLAIMED, VERIFIED, ACCEPTED, CLAIMED-UNVERIFIED]   # CLAIMED-UNVERIFIED renders LOUD, never green
+  evidence: ["val-only", "frozen-test", "thesis-safe", "research-goal"]
+
+design_complete:
+  - "This acceptance file approved."
+implementation_complete:
+  - "build_html_dashboard.py exists; consumes status.json (+ manifest + YAML) and emits dashboard/index.html."
+test_passed:
+  read_only_proof: "static scan of generator: no write outside dashboard/; no thesis/results-write/token/git path"
+  idempotency: "run twice -> byte-identical index.html"
+  staleness_gate: "receipt newer than status.json -> generator refuses, exits non-zero"
+  status_fidelity: "CLAIMED/VERIFIED/ACCEPTED/CLAIMED-UNVERIFIED counts match status.json; a fixture CLAIMED-UNVERIFIED task renders warning-styled, not green"
+  evidence_tag_fidelity: "every rendered metric carries a badge; a [val-only] number never shown without its tag; badge counts reconcile against manifest"
+  self_contained_offline: "no http(s)/CDN references; opens under file:// with no console errors"
+  no_sot_mutation: "after generation, git status shows only dashboard/index.html changed"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for DASH-S8."
+
+forbidden_actions:
+  - "become or overwrite any source-of-truth"
+  - "be hand-edited (dashboard/index.html is generated only)"
+  - "auto-edit thesis/Overleaf files"
+  - "run experiments"
+  - "create test authorization tokens"
+  - "stage, commit, or push"
+  - "read status from receipts (status comes from status.json only)"
+  - "reference any external network resource"
+
+why_wait: >
+  Depends on stable status.json (Stage 4) + artifact_manifest.csv (Stage 6). Building earlier risks
+  schema churn/rework, false confidence (a polished UI is the most tempting thing to over-trust before
+  the verifier exists), and meta-work gravity (CSS is the worst effort-to-research-value ratio in the
+  system). Build it last, when the schema has stopped moving.

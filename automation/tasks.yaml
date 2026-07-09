@@ -43,9 +43,9 @@ tasks:
   - id: DASH-S6
     title: "Dashboard Stage 6 — scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section"
     kind: dashboard
-    automation: dashboard
+    automation: scan-artifacts
     gated: false
-    acceptance: null
+    acceptance: acceptance/scan-artifacts.yaml
     stale_after_days: 7
   - id: DASH-S8
     title: "Dashboard Stage 8 — static HTML view (dashboard/index.html)"

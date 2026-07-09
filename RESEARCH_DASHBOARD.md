@@ -20,7 +20,8 @@
 | Integrity gate (no model/log staged; protected paths clean) | ✅ clean |
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
-| Receipts processed | 7 |
+| Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
+| Receipts processed | 8 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -67,6 +68,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `DASH-S6` | scan-artifacts | ✅ VERIFIED | 16/16 | existence-only | — |
 | `DASH-S5` | dashboard-refresh | ✅ VERIFIED | 11/11 | existence-only | — |
 | `DASH-S4` | dashboard-refresh | ✅ VERIFIED | 10/10 | existence-only | — |
 | `AUT-GSC-impl` | git-stage-check | ✅ ACCEPTED | 2/2 | existence-only | — |
@@ -113,10 +115,28 @@ _(none enqueued)_ — queue opens after `val-pilot-gate` + `test-split-guard` ex
 
 ## 8-9. Artifact inventory & Overleaf-ready
 
-Artifact inventory + Overleaf-ready auto-flagging land at **Stage 6** (`scan_artifacts.py`). Authoritative inventories today: `EXPERIMENT_EVIDENCE_INDEX.md`, `LOCAL_PROJECT_MAP.md`, `results/defense_attempt_inventory/defense_attempt_artifact_inventory.md`.
+From `automation/artifact_manifest.csv` — **2512 artifacts**, last scan 2026-07-09 (2512 artifacts).
 
-**Frozen-test-grade eligible now:**
-- `[frozen-test]` H15@eps=0.015 frozen PASS (with disclosures: eps chosen by validation-only search; Gate-5 argmax caveat clean-acc 0.694; window-level/digital/white-box/seed-42)
+- **By kind:** csv 1028, figure 150, json 20, ledger 1, metadata 234, predictions 848, protocol 2, report 190, table_csv 27, table_tex 12
+- **By evidence level:** `[diagnostic-internal]` 951, `[frozen-test]` 5, `[test-descriptive]` 1296, `[test-post-hoc]` 120, `[validation-only]` 140
+- **Overleaf-ready:** candidate 2, no 2468, yes 42
+
+**Overleaf-ready = yes (42)** — `[thesis-safe]`, committed, admissible evidence:
+- figures/converged_ch04_artifacts/ch04_figure_4_2_attack_severity_dose_response.png
+- figures/converged_ch04_artifacts/ch04_figure_4_3_attack_severity_zoom.png
+- figures/converged_ch04_artifacts/ch04_figure_4_4_multiclass_fall_error_pathways.png
+- figures/converged_ch04_artifacts/ch04_figure_4_5_seven_class_confusion_matrices.png
+- figures/converged_ch05_artifacts/ch05_figure_5_1_failure_threshold_plot.png
+- figures/converged_ch05_artifacts/ch05_figure_5_3_safety_error_burden_composition.png
+- figures/converged_ch05_artifacts/ch05_figure_5_4_paired_safety_state_transition.png
+- figures/converged_ch05_artifacts/ch05_figure_5_5_missed_fall_destination_heatmap.png
+- …and 34 more (see manifest)
+
+**Overleaf-ready = candidate (2)** — usable but awaiting your thesis-claim approval:
+- results/safety_guided_defense/variantE_motion_hard_negative/selection_v2/diagnostic_audit/figures/fig_val_vs_test_false_alarms.png
+- results/safety_guided_defense/variantE_motion_hard_negative/selection_v2/diagnostic_audit/figures/fig_val_vs_test_recall.png
+
+> Evidence labels are conservative: **frozen-test** is protocol-allowlist only; validation-only never shown as frozen; default is diagnostic-internal.
 
 ## 10. Claim boundaries (thesis-safe vs research-goal-only)
 
@@ -140,6 +160,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-09 — Stage 6 scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section built
 - 2026-07-09 — Stage 5 /dashboard-refresh skill + approval path built
 - 2026-07-09 — Stage 4 receipts + verify phase built
 - 2026-07-09 — Stage 3 render phase built

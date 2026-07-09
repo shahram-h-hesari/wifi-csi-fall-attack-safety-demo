@@ -46,8 +46,10 @@
       "failed": []
     },
     "DASH-S6": {
-      "display": "not_started",
-      "checks": "0/0"
+      "display": "VERIFIED",
+      "strength": "existence-only",
+      "checks": "16/16",
+      "failed": []
     },
     "DASH-S8": {
       "display": "not_started",
@@ -79,6 +81,14 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "DASH-S6",
+      "automation": "scan-artifacts",
+      "display": "VERIFIED",
+      "checks": "16/16",
+      "strength": "existence-only",
+      "failed": []
+    },
     {
       "task_id": "DASH-S5",
       "automation": "dashboard-refresh",
@@ -189,5 +199,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 7
+  "receipts_processed": 8
 }

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-09T00:06:00Z_scan-artifacts_DASH-S6",
+  "task_id": "DASH-S6",
+  "automation": "scan-artifacts",
+  "actor": { "kind": "skill", "name": "dashboard-build", "session_hint": "stage6" },
+  "status_claimed": "done",
+  "summary": "Stage 6: read-only scan_artifacts.py (dry-run default) + artifact_manifest.csv (2512 rows) + manifest-driven dashboard inventory/Overleaf-ready sections; conservative evidence labeling (frozen=allowlist-only); acceptance ALL PASS; no Stage 4/5 logic changed.",
+  "files_created": [
+    { "path": "scripts/automation/scan_artifacts.py", "sha256": "" },
+    { "path": "scripts/automation/test_scan_artifacts.py", "sha256": "" },
+    { "path": "automation/acceptance/scan-artifacts.yaml", "sha256": "" },
+    { "path": "automation/artifact_manifest.csv", "sha256": "" },
+    { "path": "automation/artifact_manifest.meta.json", "sha256": "" }
+  ],
+  "files_modified": [
+    { "path": "scripts/automation/update_dashboard.py", "change": "manifest-driven-§8-§9+staleness (no verify/approve change)" },
+    { "path": "automation/tasks.yaml", "change": "DASH-S6-acceptance-ref" },
+    { "path": "automation/frontier.yaml", "change": "overleaf-block-superseded" },
+    { "path": "RESEARCH_DASHBOARD.md", "change": "regenerated" },
+    { "path": "automation/status.json", "change": "regenerated" }
+  ],
+  "commands_run": [
+    { "cmd": "python scripts/automation/scan_artifacts.py", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_scan_artifacts.py", "exit_code": 0 },
+    { "cmd": "python scripts/automation/scan_artifacts.py --write --manifest-out automation/artifact_manifest.csv", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --check", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "automation/artifact_manifest.csv", "kind": "csv", "split": "none", "evidence_level": "n/a" }
+  ],
+  "acceptance_tests": [
+    { "id": "S6-acceptance-suite", "result": "pass", "evidence_path": "scripts/automation/test_scan_artifacts.py" },
+    { "id": "S6-15-spot-check", "result": "pass", "evidence_path": "automation/artifact_manifest.csv" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "b140b04", "expected_dirty": ["scripts/automation/**", "automation/**", "RESEARCH_DASHBOARD.md"] },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "User review of Stage 6; then Stage 7 (Notion one-way push) or Stage 8 (HTML view) on approval."
+}

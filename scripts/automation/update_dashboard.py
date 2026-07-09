@@ -24,12 +24,14 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as _dt
 import hashlib
 import json
 import re
 import subprocess
 import sys
+from collections import Counter
 from pathlib import Path
 
 try:
@@ -124,6 +126,53 @@ def run_git(args):
 def git_head():
     h = run_git(["rev-parse", "--short", "HEAD"])
     return h.strip() if h else "unknown"
+
+
+# ------------------------------------------------ artifact manifest (Stage 6, read-only)
+MANIFEST = AUT / "artifact_manifest.csv"
+MANIFEST_META = AUT / "artifact_manifest.meta.json"
+_SCAN_ROOTS = ["results", "figures", "tables", "notes"]
+_SCAN_EXTS = {".csv", ".png", ".pdf", ".tex", ".md", ".json"}
+_SCAN_EXCL = {".git", ".venv", "__pycache__", "checkpoints", ".codex", "thesis_artifacts", "automation"}
+
+
+def load_manifest():
+    if not MANIFEST.exists():
+        return None, {}
+    rows = list(csv.DictReader(MANIFEST.open(encoding="utf-8")))
+    meta = {}
+    if MANIFEST_META.exists():
+        try:
+            meta = json.loads(MANIFEST_META.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            meta = {}
+    return rows, meta
+
+
+def _current_artifact_count():
+    n = 0
+    for root in _SCAN_ROOTS:
+        base = REPO / root
+        if not base.exists():
+            continue
+        for p in base.rglob("*"):
+            if p.is_dir() or any(part in _SCAN_EXCL for part in p.relative_to(REPO).parts):
+                continue
+            if p.suffix.lower() in _SCAN_EXTS:
+                n += 1
+    return n
+
+
+def manifest_status():
+    rows, meta = load_manifest()
+    if rows is None:
+        return "not generated (run scan_artifacts.py --write)"
+    scanned = meta.get("artifact_count", len(rows))
+    cur = _current_artifact_count()
+    s = f"last scan {str(meta.get('scan_ts','?'))[:10]} ({scanned} artifacts)"
+    if cur != scanned:
+        s += f" · ⚠️ STALE: {cur} on disk now — re-scan"
+    return s
 
 
 # ------------------------------------------------------------- verification (Stage 4)
@@ -371,6 +420,7 @@ def r_banner(status):
         f"| Integrity gate (no model/log staged; protected paths clean) | {ig_line} |\n"
         f"| Validation gate-reads consumed | **{c.get('validation_gate_reads_consumed', 'n/a')} logged** |\n"
         f"| Frozen test reads consumed | **{c.get('frozen_test_reads_consumed', 'n/a')}** |\n"
+        f"| Artifact manifest | {manifest_status()} |\n"
         f"| Receipts processed | {status['receipts_processed']} |\n"
     )
 
@@ -492,14 +542,36 @@ def r_safety(frontier):
 
 def r_overleaf_claims(frontier):
     out = ["## 8-9. Artifact inventory & Overleaf-ready\n"]
-    out.append("Artifact inventory + Overleaf-ready auto-flagging land at **Stage 6** (`scan_artifacts.py`). "
-               "Authoritative inventories today: `EXPERIMENT_EVIDENCE_INDEX.md`, `LOCAL_PROJECT_MAP.md`, "
-               "`results/defense_attempt_inventory/defense_attempt_artifact_inventory.md`.")
-    orl = frontier.get("overleaf_ready", {})
-    if orl.get("eligible_now"):
-        out.append("\n**Frozen-test-grade eligible now:**")
-        for x in orl["eligible_now"]:
+    rows, meta = load_manifest()
+    if rows is None:
+        out.append("Manifest not generated yet — run `scan_artifacts.py --write`. Interim inventories: "
+                   "`EXPERIMENT_EVIDENCE_INDEX.md`, `LOCAL_PROJECT_MAP.md`, "
+                   "`results/defense_attempt_inventory/defense_attempt_artifact_inventory.md`.")
+        orl = frontier.get("overleaf_ready", {})
+        for x in orl.get("eligible_now", []):
             out.append(f"- `[frozen-test]` {x}")
+    else:
+        byk = Counter(r["kind"] for r in rows)
+        bye = Counter(r["evidence_level"] for r in rows)
+        byo = Counter(r["overleaf_ready"] for r in rows)
+        out.append(f"From `automation/artifact_manifest.csv` — **{len(rows)} artifacts**, "
+                   f"{manifest_status()}.")
+        out.append("\n- **By kind:** " + ", ".join(f"{k} {v}" for k, v in sorted(byk.items())))
+        out.append("- **By evidence level:** " + ", ".join(f"`[{k}]` {v}" for k, v in sorted(bye.items())))
+        out.append("- **Overleaf-ready:** " + ", ".join(f"{k} {v}" for k, v in sorted(byo.items())))
+        yes = [r["path"] for r in rows if r["overleaf_ready"] == "yes"]
+        cand = [r["path"] for r in rows if r["overleaf_ready"] == "candidate"]
+        out.append(f"\n**Overleaf-ready = yes ({len(yes)})** — `[thesis-safe]`, committed, admissible evidence:")
+        for p in yes[:8]:
+            out.append(f"- {p}")
+        if len(yes) > 8:
+            out.append(f"- …and {len(yes) - 8} more (see manifest)")
+        if cand:
+            out.append(f"\n**Overleaf-ready = candidate ({len(cand)})** — usable but awaiting your thesis-claim approval:")
+            for p in cand[:8]:
+                out.append(f"- {p}")
+        out.append("\n> Evidence labels are conservative: **frozen-test** is protocol-allowlist only; "
+                   "validation-only never shown as frozen; default is diagnostic-internal.")
     cb = frontier.get("claim_boundaries", {})
     out.append("\n## 10. Claim boundaries (thesis-safe vs research-goal-only)\n")
     out.append(f"Sourced from `{cb.get('source','')}` — referenced, not duplicated.")

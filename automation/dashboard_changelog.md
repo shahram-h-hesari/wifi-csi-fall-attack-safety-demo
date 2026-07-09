@@ -5,6 +5,29 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-09 — Stage 6 scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section built
+
+- **actor:** skill/dashboard-build (Claude); **HEAD** `b140b04`.
+- **Created:** `scripts/automation/scan_artifacts.py` (read-only; dry-run default; `--write`,
+  `--manifest-out`), `scripts/automation/test_scan_artifacts.py`, `automation/acceptance/scan-artifacts.yaml`,
+  and (via `--write`) `automation/artifact_manifest.csv` + `automation/artifact_manifest.meta.json`.
+- **Edited (minimal, additive):** `update_dashboard.py` renders §8 inventory + §9 Overleaf-ready from
+  the manifest and adds a staleness banner line. **No change to Stage 4/5 verify/approve logic.**
+  `tasks.yaml` (DASH-S6 acceptance ref), `frontier.yaml` (overleaf block marked superseded).
+- **Manifest:** 2512 artifacts. Evidence levels — frozen-test 5, validation-only 140,
+  test-descriptive 1296, test-post-hoc 120, diagnostic-internal 951. Overleaf-ready — yes 42,
+  candidate 2, no 2468.
+- **Conservative labeling:** frozen-test is protocol-allowlist only (size 5); post-hoc read from the
+  ledger `result_status` column; validation wins over any 'test'-in-filename signal; default
+  diagnostic-internal.
+- **Tests:** acceptance ALL PASS — dry-run writes nothing; `--write` writes only manifest+meta; two
+  writes byte-identical; fabricated `FROZEN_TEST` name is NOT frozen-test; val file named with 'test'
+  stays validation-only; 15/15 spot-check labels; every frozen-test row in the allowlist. Dashboard
+  idempotency PASS; Stage 4/5 regression PASS.
+- **Bug fixed mid-build:** initial ledger join read `source_type` instead of `result_status`, so
+  post-hoc rows were mislabeled test-descriptive; corrected (120 test-post-hoc now).
+- **Not built (later):** Notion push (S7), HTML view (S8), Stop-event reminder hook.
+
 ## 2026-07-09 — Stage 5 /dashboard-refresh skill + approval path built
 
 - **actor:** skill/dashboard-build (Claude); **HEAD** `b140b04`.

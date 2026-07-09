@@ -74,6 +74,6 @@ claim_boundaries:
     - "cross-dataset generalization"
 
 overleaf_ready:
-  note: "Not auto-flagged until Stage 6 (zero-tolerance on evidence-level labels)."
+  note: "SUPERSEDED at Stage 6 by automation/artifact_manifest.csv (scan_artifacts.py). The dashboard §8-9 now renders from the manifest; this block is the fallback only when the manifest is absent."
   eligible_now:
     - "H15@eps=0.015 frozen PASS (with disclosures: eps chosen by validation-only search; Gate-5 argmax caveat clean-acc 0.694; window-level/digital/white-box/seed-42)"

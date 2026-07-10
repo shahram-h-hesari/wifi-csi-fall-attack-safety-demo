@@ -5,6 +5,27 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-09 — test-split-guard built (WARN-ONLY phase)
+
+- **actor:** skill/dashboard-build (Claude); **HEAD** `77280f0`.
+- **Created:** `scripts/automation/test_split_guard.py` (PreToolUse matcher, pure stdlib, read-only,
+  ALWAYS exits 0), `scripts/automation/test_split_guard_cases.py` (fixture/acceptance test).
+- **Created:** `.claude/settings.json` with a PreToolUse hook (matcher `Bash|PowerShell`).
+  `.claude/settings.local.json` was NOT touched.
+- **Edited:** `automation/acceptance/test-split-guard.yaml` (two-phase: warn-only current, blocking
+  future), `automation/frontier.yaml` (`test_split_guard.status` unguarded → **warn-only**).
+- **Behavior:** WARNS on `--split test`, `--split legacy`, and export/gate scripts invoked without
+  `--split`; ALLOWS `--split val`, reading existing test CSVs, dashboard/scan/git/pytest. Never
+  blocks; writes no guard log (disabled this phase); creates no tokens.
+- **Tests:** fixture suite ALL PASS (14 classification cases + never-block + --split val silent +
+  empty-command + static no-write check). Manual stdin: `--split test` warns exit 0; `--split val`
+  silent exit 0; export-without-split warns; non-Bash tool ignored.
+- **Activation note:** hooks load at session start; the hook activates on the next Claude Code
+  session (the matcher itself was verified directly via the exact stdin path a hook uses).
+- **Correction:** the earlier design's guard-log path `results/test_read_guard_log.csv` violated the
+  no-write-results rule; relocated the (future, Phase-B-only) log to `automation/test_split_guard_log.csv`.
+- **Not built:** blocking mode, guard log, authorization tokens (all Phase B / future).
+
 ## 2026-07-09 — Stage 6 scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section built
 
 - **actor:** skill/dashboard-build (Claude); **HEAD** `b140b04`.

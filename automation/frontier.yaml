@@ -50,8 +50,8 @@ frozen_protocol_registry:
     detail: "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
 
 test_split_guard:
-  status: "unguarded"
-  note: "test-split-guard not yet built. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 default to --split test."
+  status: "warn-only"
+  note: "PreToolUse hook active (.claude/settings.json), WARN-ONLY: warns on --split test/legacy and export/gate scripts invoked without --split, but does NOT block. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 still default to --split test. Blocking mode is a future upgrade."
 
 validation_read_log:
   status: "not_instrumented"

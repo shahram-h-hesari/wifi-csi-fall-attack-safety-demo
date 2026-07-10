@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 8 |
+| Receipts processed | 10 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -53,7 +53,7 @@ Plan `roadmap-2026-07-09-v1` (created 2026-07-09).
 
 | Automation | Design | Impl | Test | Accepted |
 |---|---|---|---|---|
-| `test-split-guard` | ✅ | ⬜ | ⬜ | ⬜ |
+| `test-split-guard` | ✅ | ✅ | ⬜ | ⬜ |
 | `val-pilot-gate` | ✅ | ⬜ | ⬜ | ⬜ |
 | `ledger-sync` | ✅ | ⬜ | ⬜ | ⬜ |
 | `protocol-freeze` | ✅ | ⬜ | ⬜ | ⬜ |
@@ -68,6 +68,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `AUT-TSG-impl` | test-split-guard | ✅ ACCEPTED | 12/12 | existence-only | — |
 | `DASH-S6` | scan-artifacts | ✅ VERIFIED | 16/16 | existence-only | — |
 | `DASH-S5` | dashboard-refresh | ✅ VERIFIED | 11/11 | existence-only | — |
 | `DASH-S4` | dashboard-refresh | ✅ VERIFIED | 10/10 | existence-only | — |
@@ -102,7 +103,7 @@ _(none enqueued)_ — queue opens after `val-pilot-gate` + `test-split-guard` ex
 
 ## 7. Safety, integrity & frozen protocols
 
-- **Test-split safety:** unguarded — test-split-guard not yet built. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 default to --split test.
+- **Test-split safety:** warn-only — PreToolUse hook active (.claude/settings.json), WARN-ONLY: warns on --split test/legacy and export/gate scripts invoked without --split, but does NOT block. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 still default to --split test. Blocking mode is a future upgrade.
 - **Validation-read log:** not_instrumented — 0 logged; created with val-pilot-gate.
 - **Ledger / audit:** hand_maintained — ledger-sync --audit not yet built; no automated re-derivation check.
 
@@ -160,6 +161,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-09 — test-split-guard built (WARN-ONLY phase)
 - 2026-07-09 — Stage 6 scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section built
 - 2026-07-09 — Stage 5 /dashboard-refresh skill + approval path built
 - 2026-07-09 — Stage 4 receipts + verify phase built

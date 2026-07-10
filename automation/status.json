@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated": "2026-07-09",
+  "generated": "2026-07-10",
   "stage": 4,
   "verification_active": true,
-  "plan_in_effect": "roadmap-2026-07-09-v1",
+  "plan_in_effect": "roadmap-2026-07-10-v2",
   "counters": {
     "validation_gate_reads_consumed": 0,
     "frozen_test_reads_consumed": 1
@@ -81,6 +81,14 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "ROADMAP-V2",
+      "automation": "dashboard",
+      "display": "ACCEPTED",
+      "checks": "3/3",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "DASH-S8-design",
       "automation": "dashboard",
@@ -223,5 +231,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 15
+  "receipts_processed": 17
 }

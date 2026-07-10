@@ -5,6 +5,20 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
+
+- **actor:** user-approved plan change (draft reviewed with revisions); recorded by Claude. **HEAD** `f628b3e`.
+- **Why:** v1 assumed serial build-out; Stages 3–6 + test-split-guard landed on day 1, and the TSG
+  auditable-warning fix (`dbf658a`/`5fb2e06`), val-pilot-gate design memo (`3d8e5b2`, ACCEPTED), and
+  HTML visual-design spec rev 2 (`427dacc`, ACCEPTED) completed ahead of plan (reconciled `f628b3e`).
+  v1 left §1 Now/Next and §3 rendering already-finished work as future — the last stale SoT surface.
+- **v2 shape:** Markdown-dashboard soak days 1–4 (with untracked-backlog triage as secondary work);
+  val-pilot-gate design→fixtures→scanner ladder on days 3/5/7, **each CONDITIONAL on separate future
+  user approval (none authorized yet)**; ledger-sync --audit day 6 (also conditional). DASH-S8 HTML
+  stays parked: **eligible for review after the soak condition** — a user decision, never automatic.
+- **Immutability:** v1 plan block untouched (superseded, never deleted).
+  Receipt: `ROADMAP-V2` (requires user approval).
+
 ## 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
 
 - **actor:** session sot-reconciliation (Claude), user-approved commits; **commits** `dbf658a` (behavior) + `5fb2e06` (spec truth-up); **HEAD** `5fb2e06`.

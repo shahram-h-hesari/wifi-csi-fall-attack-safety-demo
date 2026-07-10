@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T065955Z_user-approval_ROADMAP-V2",
+  "task_id": "ROADMAP-V2",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "summary": "User approved ROADMAP-V2 (evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "f628b3e",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

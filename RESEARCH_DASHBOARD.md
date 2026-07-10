@@ -14,37 +14,37 @@
 
 | | |
 |---|---|
-| Generated | 2026-07-09 |
-| Plan in effect | `roadmap-2026-07-09-v1` |
+| Generated | 2026-07-10 |
+| Plan in effect | `roadmap-2026-07-10-v2` |
 | Verification | **active** (Stage 4) |
 | Integrity gate (no model/log staged; protected paths clean) | ✅ clean |
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 15 |
+| Receipts processed | 17 |
 ---
 
 ## 1. Now / Next / Blocked
 
-- **Today (2026-07-09):** Dashboard Stage 1+2 (RESEARCH_DASHBOARD.md + automation/ YAML SoT + conventions) · _secondary:_ Scaffold test-split-guard acceptance fixtures
-- **Next (2026-07-10):** Build + fixture-test test-split-guard (PreToolUse hook)
+- **Today (2026-07-10):** SoT reconciliation complete + roadmap v2 in effect; soak day 1 (verify + render + idempotency)
+- **Next (2026-07-11):** Soak day 2 (daily refresh; observe [delta], staleness, counters)
 - **Blockers:** none
 - **Awaiting your approval:** none
 ---
 
 ## 3. 7-day roadmap
 
-Plan `roadmap-2026-07-09-v1` (created 2026-07-09).
+Plan `roadmap-2026-07-10-v2` (created 2026-07-09).
 
 | Day | Date | Primary | Secondary |
 |---|---|---|---|
-| 1 | 2026-07-09 | Dashboard Stage 1+2 (RESEARCH_DASHBOARD.md + automation/ YAML SoT + conventions) | Scaffold test-split-guard acceptance fixtures |
-| 2 | 2026-07-10 | Build + fixture-test test-split-guard (PreToolUse hook) | Design note for dashboard Stage 3 render phase |
-| 3 | 2026-07-11 | Build val-pilot-gate (reproduction test vs AFAC_maxscore val ledger rows) | — |
-| 4 | 2026-07-12 | Dashboard Stage 3: update_dashboard.py (render phase only) | Design note for ledger-sync --audit |
-| 5 | 2026-07-13 | Build ledger-sync + --audit (round-trip test) | Start dashboard Stage 4 (receipts + verify) |
-| 6 | 2026-07-14 | Build experiment-queue (2-entry dummy, crash-isolation test) | — |
-| 7 | 2026-07-15 | Build protocol-freeze (H15 golden-master); /dashboard-refresh skill | Extend git-stage-check; write automation usage notes |
+| 1 | 2026-07-10 | SoT reconciliation complete + roadmap v2 in effect; soak day 1 (verify + render + idempotency) | — |
+| 2 | 2026-07-11 | Soak day 2 (daily refresh; observe [delta], staleness, counters) | Untracked backlog triage batch 1 (inventory + commit/ignore proposal) |
+| 3 | 2026-07-12 | val-pilot-gate acceptance-spec design (reconcile acceptance/val-pilot-gate.yaml with the memo) - CONDITIONAL: design-only, requires explicit user go-ahead | Soak day 3 refresh |
+| 4 | 2026-07-13 | Soak day 4 refresh + soak-condition assessment (DASH-S8 eligible for review after soak condition; user decision, not an automatic build) | Untracked backlog triage batch 2 |
+| 5 | 2026-07-14 | val-pilot-gate fixture tests (memo section 10 step 2) - CONDITIONAL: NOT authorized yet; requires separate future user approval | Design note for ledger-sync --audit |
+| 6 | 2026-07-15 | ledger-sync --audit build (round-trip test) - CONDITIONAL: NOT authorized yet; requires separate future user approval | — |
+| 7 | 2026-07-16 | val-pilot-gate read-only scanner (memo section 10 step 3; zero writes) - CONDITIONAL: NOT authorized yet; requires separate future user approval | experiment-queue design review |
 
 - **Future:** `DASH-S8` — Stage 8 — static HTML dashboard view (dashboard/index.html) (depends on: DASH-S4, DASH-S6)
 ---
@@ -68,6 +68,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `ROADMAP-V2` | dashboard | ✅ ACCEPTED | 3/3 | hash-verified | — |
 | `DASH-S8-design` | dashboard | ✅ ACCEPTED | 3/3 | hash-verified | — |
 | `AUT-VPG-design` | val-pilot-gate | ✅ ACCEPTED | 3/3 | hash-verified | — |
 | `AUT-TSG-impl` | test-split-guard | ✅ ACCEPTED | 8/8 | hash-verified | — |
@@ -163,6 +164,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
 - 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
 - 2026-07-09 — HTML dashboard visual design spec revision 2
 - 2026-07-09 — val-pilot-gate design memo committed (v0.2, user-calibrated)
@@ -172,6 +174,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-09 — Stage 4 receipts + verify phase built
 - 2026-07-09 — Stage 3 render phase built
 - 2026-07-09 — Plan change: added Stage 8 (static HTML dashboard view)
-- 2026-07-09 — Stage 1+2 scaffolded
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

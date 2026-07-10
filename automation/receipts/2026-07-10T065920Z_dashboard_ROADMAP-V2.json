@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T065920Z_dashboard_ROADMAP-V2",
+  "task_id": "ROADMAP-V2",
+  "automation": "dashboard",
+  "actor": { "kind": "skill", "name": "sot-reconciliation", "session_hint": "roadmap-v2" },
+  "status_claimed": "done",
+  "summary": "Plan change: roadmap-2026-07-10-v2 appended to automation/roadmap.yaml with supersedes: roadmap-2026-07-09-v1 (v1 block byte-untouched, never deleted). Rationale: Stages 3-6 + test-split-guard landed on day 1; TSG auditable-warning fix (dbf658a/5fb2e06), val-pilot-gate design memo (3d8e5b2, ACCEPTED), and HTML visual-design spec rev 2 (427dacc, ACCEPTED) completed ahead of plan (reconciled f628b3e), leaving section 1 Now/Next and section 3 roadmap as the last stale SoT surface. v2 shape: soak days 1-4 with untracked-backlog triage secondary; val-pilot-gate design->fixtures->scanner ladder on days 3/5/7, each CONDITIONAL on separate future user approval (none authorized yet); ledger-sync --audit day 6 (conditional); DASH-S8 HTML stays parked and becomes eligible for REVIEW (user decision, never automatic build) after the soak condition. One changelog entry appended.",
+  "files_created": [],
+  "files_modified": [
+    { "path": "automation/roadmap.yaml", "sha256": "7103af84dc6267f2bd7b517031f758d1543eac81921495ce62869de01faaf730" },
+    { "path": "automation/dashboard_changelog.md", "sha256": "af7a041a34c9170d3773f241542d16fe3839f97b75e7e7b4b78ee90053d7d7b3" }
+  ],
+  "commands_run": [
+    { "cmd": "read-only YAML parse + renderer plan-selection check (plans[-1] = plan-in-effect)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "f628b3e", "expected_dirty": ["automation/roadmap.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "User approval via update_dashboard.py --approve ROADMAP-V2; then regenerate and run idempotency check; stage as one Commit C unit."
+}

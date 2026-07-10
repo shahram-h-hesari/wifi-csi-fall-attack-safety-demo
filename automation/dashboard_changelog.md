@@ -5,6 +5,25 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
+
+- **actor:** user-approved design (Commit D plan, refined schema); recorded by Claude. **HEAD** `309e507`.
+- **Created:** `automation/registry/goals.yaml` (5 goals: fall_detection ACTIVE_THESIS_PRIMARY;
+  walking_detection DATA_AVAILABLE_NOT_EVALUATED; walking_pattern_recognition +
+  gait_or_mobility_change_detection NO_DATA; future_fall_risk_prediction NO_DATA_ASPIRATIONAL),
+  `automation/registry/datasets.yaml` (SenseFi/UT-HAR capabilities), `automation/registry/README.md`,
+  acceptance specs `goal-registry.yaml` + `dataset-registry.yaml`; task defs REG-GOALS + REG-DATASETS.
+- **Key rules encoded:** validation-first defaults (`default_query_fields.split: val` everywhere;
+  known test/frozen evidence preserved only as named `reference_evidence_queries`); missing data is
+  first-class information; `frozen-test` allowed only for fall_detection (only goal with a frozen
+  protocol); supported/unsupported goal split per dataset = integrity gate for the future Result
+  Explorer; no clinical claims (binding `clinical_claim_boundary.forbidden`).
+- **Label-map provenance:** UT-HAR indices read (read-only) from `scripts/analyze_safety_guided_seed.py:39`,
+  cross-checked against 3 sibling scripts — fall=1, walk=2; recorded in the registry, never guessed.
+- **NOT built (later, separate approvals):** Result Explorer v1 (D2: result_explorer.py + fixtures +
+  acceptance), dashboard rendering of goals/tracks (D3), any evaluation of walking_detection.
+  Receipts: `REG-GOALS`, `REG-DATASETS` (require user approval).
+
 ## 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
 
 - **actor:** user-approved plan change (draft reviewed with revisions); recorded by Claude. **HEAD** `f628b3e`.

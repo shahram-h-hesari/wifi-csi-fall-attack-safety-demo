@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 17 |
+| Receipts processed | 21 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -68,6 +68,8 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `REG-DATASETS` | dataset-registry | ✅ ACCEPTED | 10/10 | hash-verified | — |
+| `REG-GOALS` | goal-registry | ✅ ACCEPTED | 12/12 | hash-verified | — |
 | `ROADMAP-V2` | dashboard | ✅ ACCEPTED | 3/3 | hash-verified | — |
 | `DASH-S8-design` | dashboard | ✅ ACCEPTED | 3/3 | hash-verified | — |
 | `AUT-VPG-design` | val-pilot-gate | ✅ ACCEPTED | 3/3 | hash-verified | — |
@@ -164,6 +166,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
 - 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
 - 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
 - 2026-07-09 — HTML dashboard visual design spec revision 2
@@ -173,6 +176,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-09 — Stage 5 /dashboard-refresh skill + approval path built
 - 2026-07-09 — Stage 4 receipts + verify phase built
 - 2026-07-09 — Stage 3 render phase built
-- 2026-07-09 — Plan change: added Stage 8 (static HTML dashboard view)
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

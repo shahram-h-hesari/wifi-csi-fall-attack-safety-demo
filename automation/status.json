@@ -78,9 +78,37 @@
     "AUT-GSC-EXT": {
       "display": "not_started",
       "checks": "0/0"
+    },
+    "REG-GOALS": {
+      "display": "APPROVED",
+      "strength": "hash-verified",
+      "checks": "1/1",
+      "failed": []
+    },
+    "REG-DATASETS": {
+      "display": "APPROVED",
+      "strength": "hash-verified",
+      "checks": "1/1",
+      "failed": []
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "REG-DATASETS",
+      "automation": "dataset-registry",
+      "display": "ACCEPTED",
+      "checks": "10/10",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
+      "task_id": "REG-GOALS",
+      "automation": "goal-registry",
+      "display": "ACCEPTED",
+      "checks": "12/12",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "ROADMAP-V2",
       "automation": "dashboard",
@@ -231,5 +259,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 17
+  "receipts_processed": 21
 }

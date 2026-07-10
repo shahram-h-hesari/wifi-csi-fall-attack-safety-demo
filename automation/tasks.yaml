@@ -104,3 +104,19 @@ tasks:
     gated: false
     acceptance: acceptance/git-stage-check.yaml
     stale_after_days: 4
+
+  # --- Research OS layer (registries; Commit D1) ---
+  - id: REG-GOALS
+    title: "Goal Registry — automation/registry/goals.yaml (5 WiFi-sensing goals, evidence + clinical boundaries)"
+    kind: registry
+    automation: goal-registry
+    gated: false
+    acceptance: acceptance/goal-registry.yaml
+    stale_after_days: 30
+  - id: REG-DATASETS
+    title: "Dataset Capability Registry — automation/registry/datasets.yaml (SenseFi/UT-HAR capabilities + integrity gate)"
+    kind: registry
+    automation: dataset-registry
+    gated: false
+    acceptance: acceptance/dataset-registry.yaml
+    stale_after_days: 30

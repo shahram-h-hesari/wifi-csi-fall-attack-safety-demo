@@ -1,0 +1,56 @@
+schema_version: 1
+automation: dataset-registry
+stage: research-os-1
+gated: false
+type: registry   # SOURCE-OF-TRUTH data file; no executable behavior
+
+purpose: >
+  Machine-readable registry of dataset capabilities: what each local/known dataset can and cannot
+  support. The supported_goals/unsupported_goals split is the integrity gate that stops any tool
+  from synthesizing metrics for unsupported (goal, dataset) pairs.
+
+registry_file: "automation/registry/datasets.yaml"
+
+required_fields_per_dataset:
+  - id
+  - family
+  - name
+  - signal_type
+  - classes
+  - label_map              # must record its provenance (source file/line) — never guessed
+  - supported_goals
+  - unsupported_goals
+  - split_policy
+  - known_limitations
+  - exists_locally
+  - local_data_status
+  - local_paths_known
+  - supported_attack_families
+  - supported_defense_families
+  - recommended_first_query
+
+content_rules:
+  - "label_map is read from repo source (recorded provenance), never invented"
+  - "every goal id referenced must exist in automation/registry/goals.yaml"
+  - "recommended_first_query.split is val — validation-first bias, never test"
+  - "split_policy must reference the frozen-protocol / guard machinery, not ad-hoc practice"
+  - "known_limitations must include the no-real-clinical-falls caveat for UT-HAR"
+
+design_complete:
+  - "This acceptance file approved; field set + content rules fixed."
+implementation_complete:
+  - "automation/registry/datasets.yaml exists with the SenseFi/UT-HAR entry fully populated."
+test_passed:
+  - "YAML parses; every dataset carries every required field."
+  - "label_map matches the recorded source (scripts/analyze_safety_guided_seed.py:39: fall=1, walk=2)."
+  - "supported_goals + unsupported_goals together cover all five registered goals exactly once."
+  - "recommended_first_query.split == val."
+accepted:
+  - "User approval receipt (actor.kind: user) exists for REG-DATASETS."
+
+forbidden_actions:
+  - "mark a goal supported without label/data backing"
+  - "hardcode local data paths into the registry"
+  - "set recommended_first_query to the held-out test split"
+  - "run experiments / validation / test reads (this is a data file)"
+  - "stage, commit, or push"

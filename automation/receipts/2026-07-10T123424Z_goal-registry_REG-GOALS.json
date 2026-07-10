@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T123424Z_goal-registry_REG-GOALS",
+  "task_id": "REG-GOALS",
+  "automation": "goal-registry",
+  "actor": { "kind": "skill", "name": "research-os-d1", "session_hint": "goal-registry" },
+  "status_claimed": "done",
+  "summary": "Goal Registry created: automation/registry/goals.yaml with 5 WiFi-sensing goals — fall_detection (ACTIVE_THESIS_PRIMARY; ledger-bound metric keys; R90F10/F20/H15 success targets; named reference_evidence_queries for the H15 eps=0.015 frozen PASS and the eps=0.030 F20 post-hoc analysis), walking_detection (DATA_AVAILABLE_NOT_EVALUATED; UT-HAR walk class exists, no evaluation run or authorized), walking_pattern_recognition (NO_DATA), gait_or_mobility_change_detection (NO_DATA), future_fall_risk_prediction (NO_DATA_ASPIRATIONAL; empty allowed_evidence_levels). Validation-first defaults everywhere (default_query_fields.split=val or null); frozen-test allowed only for fall_detection; clinical_claim_boundary.forbidden binding for all goals; missing data encoded as first-class data_needs. Acceptance spec + REG-GOALS/REG-DATASETS task defs + changelog entry included. Content rules machine-checked: all required fields present, splits val/null, frozen-test restricted, goal coverage exact.",
+  "files_created": [
+    { "path": "automation/registry/goals.yaml", "sha256": "a94405ce6c4dbc2d1e6d596042f144d6f236356a68ad53d3ecf18e35873120cb" },
+    { "path": "automation/registry/README.md", "sha256": "67a73241cd5cee8ce22aa4e8a8cd1eb210bb652cbdc49249617a537262670f4e" },
+    { "path": "automation/acceptance/goal-registry.yaml", "sha256": "88df7452079a2f20d10c6db4ac5520238fffbe66b869e3284d12faf0e4e79ed8" }
+  ],
+  "files_modified": [
+    { "path": "automation/tasks.yaml", "sha256": "cf06aaa21c2e22db4dd6db937d1c69e8e5a9243c270e08fcabc3f39bd1b9d3fb" },
+    { "path": "automation/dashboard_changelog.md", "sha256": "86278d342730d8d2b90152b951775e01572524bfbb45e3d284a7a5513993d5b5" }
+  ],
+  "commands_run": [
+    { "cmd": "read-only YAML parse + content-rule check (required fields, val/null default splits, frozen-test restricted to fall_detection, goal coverage exact)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "GOALS-parse-and-required-fields", "result": "pass", "evidence_path": "automation/registry/goals.yaml" },
+    { "id": "GOALS-validation-first-defaults", "result": "pass", "evidence_path": "automation/acceptance/goal-registry.yaml" },
+    { "id": "GOALS-frozen-test-restricted", "result": "pass", "evidence_path": "automation/registry/goals.yaml" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "309e507", "expected_dirty": ["automation/registry/**", "automation/acceptance/**", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "User review + approval of REG-GOALS; Result Explorer v1 (D2) awaits separate approval."
+}

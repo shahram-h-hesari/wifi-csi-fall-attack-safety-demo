@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T123425Z_dataset-registry_REG-DATASETS",
+  "task_id": "REG-DATASETS",
+  "automation": "dataset-registry",
+  "actor": { "kind": "skill", "name": "research-os-d1", "session_hint": "dataset-registry" },
+  "status_claimed": "done",
+  "summary": "Dataset Capability Registry created: automation/registry/datasets.yaml with the SenseFi/UT-HAR entry — WiFi CSI amplitude, 7 classes with label map read (read-only) from scripts/analyze_safety_guided_seed.py:39 and cross-checked against analyze_variantE.py:35, analyze_variantF.py:32, analysis/h15_e0_hard_window_inventory.py:127 (fall=1, walk=2; provenance recorded in the registry and README, never guessed). supported_goals=[fall_detection, walking_detection]; unsupported_goals=[walking_pattern_recognition, gait_or_mobility_change_detection, future_fall_risk_prediction] — the integrity gate for the future Result Explorer. Split policy references the frozen-protocol registry + test-split-guard + val-pilot-gate memo; known limitations include no-real-clinical-falls; recommended_first_query uses split=val (validation-first). No local data paths hardcoded. Content rules machine-checked: goal coverage exact, label map matches source, recommended split=val.",
+  "files_created": [
+    { "path": "automation/registry/datasets.yaml", "sha256": "da0d3e5f4507a263b182f088edffe992b51a01c3346fa1f0219d8d7b3deb0935" },
+    { "path": "automation/acceptance/dataset-registry.yaml", "sha256": "40a3a9a7623c58309cd86c4f6402e51455ab3982ffa5772f673d7191b7cbadd7" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": "read-only YAML parse + content-rule check (label map vs source, goal coverage exact, recommended_first_query split=val)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "DATASETS-parse-and-required-fields", "result": "pass", "evidence_path": "automation/registry/datasets.yaml" },
+    { "id": "DATASETS-label-map-provenance", "result": "pass", "evidence_path": "automation/registry/README.md" },
+    { "id": "DATASETS-goal-coverage-exact", "result": "pass", "evidence_path": "automation/acceptance/dataset-registry.yaml" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "309e507", "expected_dirty": ["automation/registry/**", "automation/acceptance/**", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "User review + approval of REG-DATASETS; Result Explorer v1 (D2) awaits separate approval."
+}

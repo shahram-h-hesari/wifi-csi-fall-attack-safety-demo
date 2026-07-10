@@ -1,0 +1,61 @@
+schema_version: 1
+automation: goal-registry
+stage: research-os-1
+gated: false
+type: registry   # SOURCE-OF-TRUTH data file; no executable behavior
+
+purpose: >
+  Machine-readable registry of every WiFi-sensing goal (fall_detection through
+  future_fall_risk_prediction) with task-aware metrics, success targets, allowed evidence levels,
+  data needs, grant relevance, and clinical-claim boundaries. Encodes missing data as first-class
+  information and prevents any goal from claiming results without verified evidence.
+
+registry_file: "automation/registry/goals.yaml"
+
+required_fields_per_goal:
+  - id
+  - display_name
+  - aliases
+  - task_type
+  - status
+  - metrics
+  - primary_metric_keys
+  - success_targets        # may be null for goals without pre-registered targets
+  - datasets_available
+  - data_needs
+  - evidence_rules
+  - allowed_evidence_levels
+  - default_query_fields
+  - grant_relevance
+  - clinical_caution
+  - clinical_claim_boundary
+optional_fields_per_goal:
+  - reference_evidence_queries   # named read-only lookups of KNOWN existing evidence
+
+content_rules:
+  - "fall_detection is ACTIVE_THESIS_PRIMARY; its primary_metric_keys are exact ledger columns"
+  - "walking_detection is DATA_AVAILABLE_NOT_EVALUATED (UT-HAR walk class exists; no evaluation authorized/run)"
+  - "walking_pattern_recognition, gait_or_mobility_change_detection, future_fall_risk_prediction are NO_DATA / data-needed"
+  - "allowed_evidence_levels may include frozen-test ONLY for goals with an existing frozen protocol"
+  - "default_query_fields.split is val (or null) for EVERY goal — validation-first bias; test appears only inside reference_evidence_queries"
+  - "no clinical claims: clinical_claim_boundary.forbidden is binding on all views"
+  - "no goal claims results without verified ledger/manifest evidence"
+
+design_complete:
+  - "This acceptance file approved; field set + content rules fixed."
+implementation_complete:
+  - "automation/registry/goals.yaml exists with all five goals and all required fields."
+test_passed:
+  - "YAML parses; every goal carries every required field."
+  - "Every default_query_fields.split is val or null (never test/legacy)."
+  - "frozen-test appears in allowed_evidence_levels only for fall_detection."
+  - "NO_DATA goals have empty datasets_available and non-empty data_needs."
+accepted:
+  - "User approval receipt (actor.kind: user) exists for REG-GOALS."
+
+forbidden_actions:
+  - "claim a result for a goal without verified evidence"
+  - "set a default query to the held-out test split"
+  - "make or imply a clinical claim"
+  - "run experiments / validation / test reads (this is a data file)"
+  - "stage, commit, or push"

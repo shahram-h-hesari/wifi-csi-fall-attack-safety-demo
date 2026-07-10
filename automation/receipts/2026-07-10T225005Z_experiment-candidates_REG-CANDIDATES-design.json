@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T225005Z_experiment-candidates_REG-CANDIDATES-design",
+  "task_id": "REG-CANDIDATES-design",
+  "automation": "experiment-candidates",
+  "actor": { "kind": "skill", "name": "research-os-4b-design", "session_hint": "experiment-candidate-registry-contract" },
+  "status_claimed": "done",
+  "summary": "Design-only acceptance specification for the future experiment-candidate registry, automation/acceptance/experiment-candidates.yaml, following the AUT-VPG-design / DASH-S8-design precedent (a design memo/spec commit with no implementation, no registry file, no validator, no test). Defines: (1) purpose -- the record fields a future candidate must answer (gap targeted, why it may be worth considering, current verified-result support/opposition, accepted-paper support, required dataset, allowed split, risks/blockers, whether a checker should derive GO/REVIEW/NO-GO); (2) a read-only authoritative-inputs list (paper_registry.yaml, frontier.yaml, goals.yaml, datasets.yaml, reference_evidence.yaml, experiment_identity.yaml, artifact_manifest.csv, Result Explorer outputs) with an explicit authority_rule forbidding duplication/re-derivation of their content; (3) a full candidate_record_schema (candidate_id, title, hypothesis, target_gap, direction_tags, literature_support[{paper_id,relationship}], literature_gap_ids, current_evidence_refs, current_evidence_summary, prior_negative_evidence_refs, our_rationale, required_dataset_ids, target_goal_ids, dataset_readiness, allowed_split, frozen_protocol_requirement, test_read_risk, other_risks, evidence_strength, status, claim_boundaries, supersedes, superseded_by) plus ID/reference integrity rules; (4) six controlled vocabularies (literature_relationship, dataset_readiness, allowed_split, test_read_risk, evidence_strength, candidate_status) with the exact enumerated values specified; (5) a derived_verdict_policy stating GO/REVIEW/NO-GO are never manually entered and must be computed by a future Brainstorm Checker from structured fields, with minimum_rules covering unavailable/aspirational datasets->NO-GO, no_experiment_allowed->NO-GO, new-frozen-protocol/blocked test-read risk->NO-GO-or-REVIEW-never-GO, validation-only+available-data+strong-or-indirect-support->may-be-GO, literature-gap/indirect-only->normally REVIEW, unchanged-hypothesis local-negative-evidence->REVIEW-or-NO-GO, never auto-enters the queue, and GO means human-planning-review-only, never execution/test-read/queue-entry authorization; (6) current project-specific constraints (H15's one consumed frozen-test read, AFAC/F20 post-hoc fragility, D10/D11 transfer-failure precedent, D13/D14 closed F20 chase, UT-HAR's supported/unsupported goal split, R90F10 aspirational status, held-out-test-never-for-casual-tuning) stated as REFERENCES to their authoritative source files, with an explicit no_transient_metrics_here declaration that zero current metric values are encoded in the spec itself; (7) explicit separation from later layers (not an experiment queue, does not launch commands, does not authorize test reads, does not promote literature records, does not update thesis claims; Brainstorm Checker / validation-pilot gate / queue integration / dashboard rendering are all later, separately-approved tasks); (8) the expected-but-not-created future files (automation/registry/experiment_candidates.yaml, scripts/automation/validate_experiment_candidates.py, scripts/automation/test_experiment_candidates.py, automation/acceptance/next-experiment-review.yaml, a future Brainstorm Checker script); (9) dependencies (likely_task_id REG-CANDIDATES, depends_on REG-PAPERS/REG-GOALS/REG-DATASETS/REG-EXPERIMENT-ID/REF-EVID) and an explicit registration_note that automation/tasks.yaml is intentionally NOT touched by this design step -- confirmed by inspecting the two accepted precedents (AUT-VPG-design receipt 2026-07-10T064710Z + approval 2026-07-10T065209Z; DASH-S8-design receipt 2026-07-10T064711Z + approval 2026-07-10T065228Z), neither of which has a corresponding automation/tasks.yaml entry, and by grepping automation/tasks.yaml for REG-CANDIDATES (zero matches) -- update_dashboard.py's verification ledger processes any done-receipt's task_id whether or not it is registered in tasks.yaml ('incl. tasks not in tasks.yaml, e.g. legacy'), so a tasks.yaml entry is expected only at REG-CANDIDATES implementation time, mirroring how TOOL-REXP/DASH-D3/REG-PAPERS were each registered together with their real registry/tool files, not at this design-only step. YAML parsing verified (python yaml.safe_load succeeds; 22 top-level keys). No experiment, training, validation, model evaluation, test read, threshold selection, or queue operation occurred. No experiment recommendation was made anywhere in the spec (it defines a contract for a future layer only). No existing registry, validator, test, acceptance spec, task registry, changelog, roadmap, or dashboard file was modified -- confirmed via git status --short showing exactly one new untracked file and zero modified tracked files.",
+  "status_flags": {
+    "design_complete": true,
+    "implementation_complete": false,
+    "validator_complete": false,
+    "tests_complete": false,
+    "registry_created": false,
+    "brainstorm_checker_created": false,
+    "experiment_queue_integration": false
+  },
+  "files_created": [
+    { "path": "automation/acceptance/experiment-candidates.yaml", "sha256": "fc5b8940a36b341c6846575ec1a2421b702ae49a01268e7f5c8fc7fa8025b6df" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": "python -c \"import yaml; yaml.safe_load(open('automation/acceptance/experiment-candidates.yaml', encoding='utf-8'))\" -> YAML parses OK, 22 top-level keys", "exit_code": 0 },
+    { "cmd": "grep -c REG-CANDIDATES automation/tasks.yaml -> 0 (confirms no tasks.yaml entry exists or is required for this design-only step)", "exit_code": 0 },
+    { "cmd": "git status --short -> exactly one new untracked file (automation/acceptance/experiment-candidates.yaml); zero modified tracked files", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "f6a357d", "expected_dirty": ["automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Use the corrected --approve CLI to approve REG-CANDIDATES-design (it will bind to this exact claim). Implementation (automation/registry/experiment_candidates.yaml + validator + tests + tasks.yaml registration) is a separate, later, explicitly-approved step."
+}

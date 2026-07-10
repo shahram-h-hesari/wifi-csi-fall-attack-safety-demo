@@ -4,9 +4,11 @@ stage: research-os-2
 gated: false
 type: tool   # read-only lookup CLI; NO experiment execution, ever
 
-status: IMPLEMENTED_D2_PENDING_D2D2   # D2a-c implemented + ACCEPTED (TOOL-REXP). D2d-1 (this revision)
-  # adds the curated-reference-evidence CONTRACT only; result_explorer.py resolution code for it
-  # (D2d-2, separate approval) is NOT yet implemented — F12-F15 are not yet passing.
+status: IMPLEMENTED_D2D2_PENDING_D3   # D2a-c implemented (TOOL-REXP). D2d-1 added the curated-
+  # reference-evidence CONTRACT. D2d-2 (this revision) implements curated-first resolution +
+  # manifest cross-check in result_explorer.py; F12-F15 pass (24/24 total suite). Real-data smoke
+  # queries confirmed exact H15/AFAC curated rows with manifest_cross_check: pass. D3 (Markdown
+  # dashboard rendering of Result Explorer output) is NOT yet implemented -- separate approval.
 
 purpose: >
   Result Explorer v1 — read-only lookup over EXISTING, already-committed results (defense-attempt

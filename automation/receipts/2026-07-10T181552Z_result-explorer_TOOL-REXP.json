@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T181552Z_result-explorer_TOOL-REXP",
+  "task_id": "TOOL-REXP",
+  "automation": "result-explorer",
+  "actor": { "kind": "skill", "name": "research-os-d2d2", "session_hint": "curated-resolution" },
+  "status_claimed": "done",
+  "summary": "Superseding TOOL-REXP claim (D2d-2): adds curated-first exact reference resolution and manifest provenance cross-check refusal to scripts/automation/result_explorer.py, on top of the D2c implementation. New behavior: a named reference_evidence_query now resolves FIRST against an optional sources['reference_evidence_yaml'] curated registry (automation/registry/reference_evidence.yaml in production, untouched by this claim); an exact-key hit returns exactly one row after cross-checking its provenance paths (explicit allowlist: confusion_csv, result_report, source_file) against the manifest -- every path must exist there and the manifest evidence_level must agree with the curated entry's declared evidence_level (and required_manifest_evidence_level, when present); duplicate keys refuse (duplicate_curated_key); any missing path or evidence-level disagreement refuses (provenance_mismatch) and returns zero metrics, never a fabricated or manifest-only row. If no curated source is configured, or the key isn't curated, resolution falls through UNCHANGED to the pre-existing (D2c) goals.yaml reference_evidence_queries + ledger-filter path -- proven by F15 and 3 additional fallback-focused tests, and by all 12 pre-existing F1-F11 tests continuing to pass unmodified against the unchanged base 'sources' fixture. Real-data read-only smoke queries against the committed repository (automation/registry/reference_evidence.yaml, automation/artifact_manifest.csv, results/defense_attempt_inventory/defense_attempt_results_long.csv) confirmed exactly one curated result each for H15_eps0015_frozen (TP/FN/FP/TN 41/4/60/395, Rfall 0.911111, FAR 0.131868, eps 0.015, evidence_level frozen-test, protocol_id H15-TEST-EPS0015-AFAC-20260705, clean_disclosure_companion present, manifest_cross_check: pass on both confusion_csv and result_report paths) and AFAC_eps0030_F20_posthoc (TP/FN/FP/TN 36/9/91/364, Rfall 0.8, FAR 0.2, eps 0.030, evidence_level test-post-hoc, method optionB_AFAC, manifest_cross_check: pass) -- no provenance mismatch, no fabricated ledger row, no --split command, no experiment/training/validation/export/threshold-selection script invoked. Test suite: scripts/automation/test_result_explorer.py extended with F12 (curated H15), F13/F13b/F13c (provenance mismatch: wrong evidence level, missing manifest path, no-fabrication proof), F14 (curated AFAC), F15 (fallback path unaffected) plus 6 extra focused tests (duplicate key, missing curated registry, missing curated file path, malformed entry, exact-key no-fuzzy-matching, ordinary queries unchanged) -- 24/24 pass total, all pre-existing F1-F11 unmodified and still passing. Regression checks: scripts/automation/test_approve.py and test_verify.py re-run, unaffected, both ALL PASS. automation/acceptance/result-explorer.yaml status marker updated (IMPLEMENTED_D2_PENDING_D2D2 -> IMPLEMENTED_D2D2_PENDING_D3); the curated-first rule, manifest cross-check rule, provenance_mismatch state, and F12-F15 descriptions were already accurate from D2d-1 and required no rewrite. No results/, ledger, manifest, or registry files (goals.yaml, datasets.yaml, reference_evidence.yaml) were modified. H15, AFAC, D8, G1, A1, optionB_AFAC and all other historical experiment names/paths/protocol IDs are unchanged.",
+  "files_created": [],
+  "files_modified": [
+    { "path": "scripts/automation/result_explorer.py", "sha256": "48e7824f461277fbe816cbe5bd845a435b04d5f5765cdbf449a051f5b4f5da29" },
+    { "path": "scripts/automation/test_result_explorer.py", "sha256": "cd957222828a97c879f825d43b770cdb530b481099428510b02e5feb596e13eb" },
+    { "path": "automation/acceptance/result-explorer.yaml", "sha256": "894fd21c5ce17e8de403f0ddaf1bbb9d769f6a19d05d454877490c1586689409" }
+  ],
+  "commands_run": [
+    { "cmd": "python -c \"import ast; ast.parse(open('scripts/automation/result_explorer.py').read())\" -> syntax OK", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_result_explorer.py -v -> 24 passed (12 pre-existing F1-F11 + 12 new D2d-2)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_approve.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/result_explorer.py goals=... datasets=... ledger=... manifest=... reference-evidence=automation/registry/reference_evidence.yaml goal=fall_detection reference_evidence_query=H15_eps0015_frozen -> 1 curated result row, manifest_cross_check: pass", "exit_code": 0 },
+    { "cmd": "python scripts/automation/result_explorer.py goals=... datasets=... ledger=... manifest=... reference-evidence=automation/registry/reference_evidence.yaml goal=fall_detection reference_evidence_query=AFAC_eps0030_F20_posthoc -> 1 curated result row, manifest_cross_check: pass", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "REXP-F12-curated-h15-frozen", "result": "pass", "evidence_path": "scripts/automation/test_result_explorer.py" },
+    { "id": "REXP-F13-provenance-mismatch", "result": "pass", "evidence_path": "scripts/automation/test_result_explorer.py" },
+    { "id": "REXP-F14-curated-afac-posthoc", "result": "pass", "evidence_path": "scripts/automation/test_result_explorer.py" },
+    { "id": "REXP-F15-fallback-unaffected", "result": "pass", "evidence_path": "scripts/automation/test_result_explorer.py" },
+    { "id": "REXP-F1-F11-preexisting-unmodified", "result": "pass", "evidence_path": "scripts/automation/test_result_explorer.py" },
+    { "id": "REXP-real-data-h15-smoke-query", "result": "pass", "evidence_path": "automation/registry/reference_evidence.yaml" },
+    { "id": "REXP-real-data-afac-smoke-query", "result": "pass", "evidence_path": "automation/registry/reference_evidence.yaml" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "eb0c6f6", "expected_dirty": ["scripts/automation/result_explorer.py", "scripts/automation/test_result_explorer.py", "automation/acceptance/result-explorer.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-10T133420Z_result-explorer_TOOL-REXP",
+  "next_action": "Use the corrected --approve CLI to approve TOOL-REXP (it will bind to this exact claim)."
+}

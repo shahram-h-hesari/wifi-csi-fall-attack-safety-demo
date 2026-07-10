@@ -1,13 +1,25 @@
 #!/usr/bin/env python
-"""Result Explorer v1 — read-only lookup over EXISTING committed results (D2c).
+"""Result Explorer v1 — read-only lookup over EXISTING committed results (D2c + D2d-2).
 
 Spec: automation/acceptance/result-explorer.yaml. Contract: run_query(query, sources) -> dict.
 
 Reads ONLY the paths given in `sources` (goals/datasets registries, ledger CSV, manifest CSV,
-receipts dir). The manifest is the evidence-level authority: ledger.source_file joins to
-manifest.path; evidence levels pass through verbatim — never derived from filenames, never
-upgraded. Metrics are copied from source rows only — never fabricated; a goal metric with no
-populated column reports as defined-but-not-evaluated via honest empty states.
+receipts dir, and — D2d-2 — an optional curated reference-evidence YAML). The manifest is the
+evidence-level authority: ledger.source_file joins to manifest.path; evidence levels pass through
+verbatim — never derived from filenames, never upgraded. Metrics are copied from source rows only
+— never fabricated; a goal metric with no populated column reports as defined-but-not-evaluated via
+honest empty states.
+
+D2d-2 curated-first resolution: a named reference_evidence_query is resolved FIRST against
+sources['reference_evidence_yaml'] (automation/registry/reference_evidence.yaml in production) —
+a hand-curated, user-approved registry of pointers to already-committed evidence. A curated hit
+returns EXACTLY ONE row after its provenance paths are cross-checked against the manifest (paths
+must exist there and the manifest evidence_level must agree with the curated entry's declared
+level); any disagreement, missing path, or ambiguity REFUSES with provenance_mismatch and returns
+no metrics — the curated file may point at evidence, it may never overrule what the manifest says
+that evidence is. If sources has no curated source configured, or the named key isn't in it, this
+falls through unchanged to the pre-existing goals.yaml-driven reference_evidence_queries + ledger-
+filter path (D2c), so ordinary and legacy-reference queries are completely unaffected.
 
 Safety: pure read-only stdlib+yaml. Never launches other processes, never builds commands with
 split flags, never calls training/evaluation/export scripts, never opens a file for writing —
@@ -82,6 +94,107 @@ def _result(status, state_id, message, rows):
     return {"status": status, "state_id": state_id, "message": message, "rows": rows}
 
 
+# D2d-2: explicit, minimal allowlist of automation/registry/reference_evidence.yaml `provenance`
+# sub-fields that name a real repo-relative artifact path to cross-check against the manifest.
+# Deliberately NOT a heuristic (e.g. "starts with results/"): other provenance sub-fields
+# (required_manifest_evidence_level, frontier_registry_ref, selector, selector_note,
+# threshold_rule) are metadata strings, not manifest-checkable paths, and a heuristic could
+# silently mis-cross-check them (e.g. frontier_registry_ref's value looks path-like but isn't one).
+# Extend this tuple explicitly if a future curated entry introduces a new path-bearing field name.
+CURATED_PROVENANCE_PATH_FIELDS = ("confusion_csv", "result_report", "source_file")
+
+
+def _normalize_path(p):
+    return str(p).replace("\\", "/").strip() if p else p
+
+
+def _curated_reference_lookup(ref_name, gid, sources):
+    """Exact-key curated lookup against sources['reference_evidence_yaml']. Returns
+    (row_or_None, refusal_result_or_None); exactly one is non-None, or BOTH are None when no
+    curated source is configured or the key isn't curated (caller falls back to the legacy path).
+    Never fabricates a row: a manifest disagreement REFUSES with provenance_mismatch rather than
+    returning trusted metrics."""
+    ref_path = sources.get("reference_evidence_yaml")
+    if not ref_path or not Path(ref_path).exists():
+        return None, None
+
+    doc = _load_yaml(ref_path) or {}
+    entries = doc.get("reference_results") or []
+    matches = [e for e in entries if e.get("key") == ref_name]
+    if not matches:
+        return None, None
+    if len(matches) > 1:
+        return None, _result(
+            "refused", "duplicate_curated_key",
+            f"REFUSED — curated key {ref_name!r} appears {len(matches)} times in the "
+            f"reference-evidence registry; the registry must be fixed by hand", [])
+    entry = matches[0]
+
+    if entry.get("goal") != gid:
+        return None, _result(
+            "refused", "curated_goal_mismatch",
+            f"REFUSED — curated key {ref_name!r} belongs to goal {entry.get('goal')!r}, "
+            f"not the requested {gid!r}", [])
+
+    manifest_rows = {_normalize_path(m.get("path")): m for m in _load_csv(sources["manifest_csv"])}
+    provenance = entry.get("provenance") or {}
+    declared_level = entry.get("evidence_level")
+    required_level = provenance.get("required_manifest_evidence_level")
+
+    checked_paths = []
+    for field in CURATED_PROVENANCE_PATH_FIELDS:
+        raw = provenance.get(field)
+        if not raw:
+            continue
+        norm = _normalize_path(raw)
+        man = manifest_rows.get(norm)
+        if man is None:
+            return None, _result(
+                "refused", "provenance_mismatch",
+                f"REFUSED — curated key {ref_name!r}: provenance path {raw!r} ({field}) "
+                f"not found in the artifact manifest", [])
+        man_level = man.get("evidence_level")
+        if man_level != declared_level or (required_level and man_level != required_level):
+            return None, _result(
+                "refused", "provenance_mismatch",
+                f"REFUSED — curated key {ref_name!r}: manifest evidence_level {man_level!r} "
+                f"for {raw!r} disagrees with the curated entry (declared {declared_level!r}"
+                + (f", required {required_level!r}" if required_level else "") + ")", [])
+        checked_paths.append((field, raw, man))
+
+    if not checked_paths:
+        return None, _result(
+            "refused", "provenance_mismatch",
+            f"REFUSED — curated key {ref_name!r} has no cross-checkable provenance path "
+            f"(expected one of {CURATED_PROVENANCE_PATH_FIELDS})", [])
+
+    primary_field, primary_path, primary_man = checked_paths[0]
+    row = {
+        "goal": gid,
+        "dataset": entry.get("dataset"),
+        "attack": entry.get("attack"),
+        "epsilon": entry.get("epsilon"),
+        "defense_or_method_name": entry.get("method"),
+        "approach_group": None,
+        "split": entry.get("split"),
+        "evidence_level": declared_level,          # curated value, cross-checked; never derived/upgraded
+        "threshold": entry.get("threshold"),
+        "protocol_id": entry.get("protocol_id"),
+        "metrics": dict(entry.get("metrics") or {}),   # copied verbatim from the approved entry
+        "clean_disclosure_companion": entry.get("clean_disclosure_companion"),
+        "source_file": primary_path,
+        "provenance": {
+            "sha256": primary_man.get("sha256") or None,
+            "committed": primary_man.get("committed") or None,
+            "curated_key": ref_name,
+            "manifest_cross_check": "pass",
+            "checked_paths": [{"field": f, "path": p} for f, p, _ in checked_paths],
+        },
+        "warning_band": list(entry.get("disclosures") or []),
+    }
+    return row, None
+
+
 def _receipt_id_for(source_file, receipts_dir):
     """Provenance enrichment only: surface a receipt id when one mentions the source file."""
     try:
@@ -113,6 +226,16 @@ def run_query(query, sources):
     filters = dict(query)
     ref_name = filters.pop("reference_evidence_query", None)
     if ref_name:
+        # D2d-2: curated registry resolved FIRST, exact-key only, never a filtered pool.
+        curated_row, curated_refusal = _curated_reference_lookup(ref_name, gid, sources)
+        if curated_refusal is not None:
+            return curated_refusal
+        if curated_row is not None:
+            ds_c = _resolve_dataset(datasets, curated_row.get("dataset"), None)
+            if ds_c:
+                curated_row["dataset"] = ds_c.get("name") or curated_row["dataset"]
+            return _result("ok", None, "1 curated result row", [curated_row])
+        # no curated entry for this key -> fall back to the pre-existing (D2c) path, unchanged
         ref = (goal.get("reference_evidence_queries") or {}).get(ref_name)
         if ref is None:
             have = ", ".join((goal.get("reference_evidence_queries") or {}).keys()) or "(none)"
@@ -246,11 +369,13 @@ def run_query(query, sources):
 # ---------------------------------------------------------------------------- tiny stdout-only CLI
 def main(argv):
     """Usage: result_explorer.py goals=<goals.yaml> datasets=<datasets.yaml> ledger=<ledger.csv> \
-manifest=<manifest.csv> [receipts=<dir>] goal=<id> [attack=..] [epsilon=..] [split=..] \
-[defense=..] [evidence_level=..] [reference_evidence_query=..]  (key=value only; prints JSON)"""
+manifest=<manifest.csv> [receipts=<dir>] [reference-evidence=<reference_evidence.yaml>] \
+goal=<id> [attack=..] [epsilon=..] [split=..] [defense=..] [evidence_level=..] \
+[reference_evidence_query=..]  (key=value only; prints JSON)"""
     kv = dict(a.partition("=")[::2] for a in argv if "=" in a)
     src_keys = {"goals": "goals_yaml", "datasets": "datasets_yaml",
-                "ledger": "ledger_csv", "manifest": "manifest_csv", "receipts": "receipts_dir"}
+                "ledger": "ledger_csv", "manifest": "manifest_csv", "receipts": "receipts_dir",
+                "reference-evidence": "reference_evidence_yaml"}
     sources = {dest: kv.pop(k) for k, dest in src_keys.items() if k in kv}
     missing = [k for k in ("goals_yaml", "datasets_yaml", "ledger_csv", "manifest_csv")
                if k not in sources]

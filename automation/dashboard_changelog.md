@@ -5,6 +5,35 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `eb0c6f6`.
+- **Added to `scripts/automation/result_explorer.py`:** a named `reference_evidence_query` now
+  resolves FIRST against an optional `sources['reference_evidence_yaml']` curated registry
+  (`automation/registry/reference_evidence.yaml` in production, byte-unchanged by this step). An
+  exact-key hit returns exactly one row after cross-checking its provenance paths (explicit
+  allowlist: `confusion_csv`, `result_report`, `source_file`) against the manifest -- every path
+  must exist there and the manifest `evidence_level` must agree with the curated entry's declared
+  level (and `required_manifest_evidence_level`, when present). Duplicate keys refuse
+  (`duplicate_curated_key`); any missing path or evidence-level disagreement refuses
+  (`provenance_mismatch`) with zero metrics returned -- never a fabricated or manifest-only row.
+  No curated source configured, or key not curated -> falls through UNCHANGED to the pre-existing
+  (D2c) goals.yaml-driven ledger-filter path.
+- **Real-data smoke queries (read-only):** `H15_eps0015_frozen` and `AFAC_eps0030_F20_posthoc`
+  each returned exactly one curated result with `manifest_cross_check: pass` against the real
+  committed manifest and results -- no fabrication, no `--split`, no experiment/eval script run.
+- **Tests:** `scripts/automation/test_result_explorer.py` gained F12-F15 + 6 extra focused cases;
+  24/24 pass, all 12 pre-existing F1-F11 unmodified and still green (proves the fallback path is
+  untouched). `test_approve.py` + `test_verify.py` re-run unaffected.
+- **Acceptance spec:** `automation/acceptance/result-explorer.yaml` status marker updated
+  (`IMPLEMENTED_D2_PENDING_D2D2` -> `IMPLEMENTED_D2D2_PENDING_D3`); the contract itself (curated-
+  first rule, cross-check rule, `provenance_mismatch`, F12-F15) was already accurate from D2d-1.
+- **Receipt impact:** `TOOL-REXP` regressed to CLAIMED-UNVERIFIED (its two hashed files changed) --
+  superseding claim + re-approval via the corrected CLI. `REF-EVID` unaffected (its only hashed
+  artifact, `reference_evidence.yaml`, is byte-unchanged) -- no new receipt needed.
+- **Not done this step:** D3 (dashboard rendering), experiment/H15 naming standard. No
+  `results/`, ledger, manifest, `goals.yaml`, or `reference_evidence.yaml` file was modified.
+
 ## 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
 
 - **actor:** user-approved safety task; recorded by Claude. **HEAD** `3251764`.

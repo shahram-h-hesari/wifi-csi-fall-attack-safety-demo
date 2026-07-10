@@ -121,6 +121,12 @@
       "checks": "39/39",
       "failed": []
     },
+    "REG-CANDIDATES": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "36/36",
+      "failed": []
+    },
     "REG-EXPERIMENT-ID": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
@@ -129,6 +135,22 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "REG-CANDIDATES",
+      "automation": "experiment-candidates",
+      "display": "ACCEPTED",
+      "checks": "36/36",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
+      "task_id": "REG-CANDIDATES-design",
+      "automation": "experiment-candidates",
+      "display": "ACCEPTED",
+      "checks": "9/9",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "REG-PAPERS",
       "automation": "paper-registry",
@@ -343,5 +365,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 40
+  "receipts_processed": 44
 }

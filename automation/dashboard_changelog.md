@@ -5,6 +5,44 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — REG-CANDIDATES: Evidence-grounded experiment-candidate registry created
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `d09937f`.
+- New `automation/registry/experiment_candidates.yaml` implements the accepted design contract
+  (`automation/acceptance/experiment-candidates.yaml`, hash-bound, not modified): **8 candidate
+  records** covering AFAC low-FAR calibration, Neyman-Pearson FAR control, low-FAR partial-AUC
+  objective, temporal/event-level FAR reduction, ensemble/gating, walking-detection baseline,
+  gait/mobility data acquisition, and future fall-risk data acquisition.
+- **No manually asserted verdict anywhere** — GO/REVIEW/NO-GO remains exclusively a future,
+  separately-implemented Brainstorm Checker's computed output; the validator rejects any
+  verdict-named field or unexpected schema field (which is also how queue auto-promotion is
+  blocked).
+- **Prior negative evidence is structurally required, not optional**, for directly related
+  candidates: the partial-AUC candidate cites D14's failed validation gate (all 3 primary
+  conditions failed across 6 pre-registered runs); the ensemble/gating candidate cites D13's
+  narrowly-failed shared-input transfer veto (short by 0.0022). The validator enforces this
+  (rejects a candidate in either direction that omits the corresponding negative-evidence
+  reference).
+- **AFAC F20 is never presented as frozen evidence** — the validator cross-checks every AFAC
+  reference against `reference_evidence.yaml`'s actual `test-post-hoc` level and scans note text
+  for an unqualified "frozen" claim.
+- **2 candidates are dataset-blocked** (`no_experiment_allowed`): gait/mobility data acquisition
+  (targets `walking_pattern_recognition` + `gait_or_mobility_change_detection`, both `NO_DATA`)
+  and future fall-risk data acquisition (`NO_DATA_ASPIRATIONAL`, empty `allowed_evidence_levels`).
+  Dataset readiness is validator-enforced to agree with each target goal's own registry status.
+- **No candidate authorizes a test read**: every candidate's `allowed_split` is either
+  `validation_only` or `no_experiment_allowed`; the validator enforces split/frozen-protocol/
+  test-read-risk coherence so a `validation_only` candidate cannot smuggle in a frozen-protocol
+  reference, and a hypothetical `requires_new_frozen_protocol` candidate can never claim low risk.
+- Validator `validate_experiment_candidates.py` (read-only, no network, no PDF/checkpoint
+  requirement, deterministic): real registry **PASS, zero errors** (candidates=8,
+  literature_support_entries=27, literature_gap_refs=4, prior_negative_evidence_candidates=2,
+  dataset_blocked=2). Tests `test_experiment_candidates.py`: **33/33 ALL PASS**.
+- **Task REG-CANDIDATES registered** in `automation/tasks.yaml` (gated, depends on REG-PAPERS,
+  REG-GOALS, REG-DATASETS, REG-EXPERIMENT-ID, REF-EVID). **No later layer implemented**: the
+  Brainstorm Checker, validation-pilot gate, experiment-queue integration, and dashboard rendering
+  of candidates all remain separate, later, explicitly-approved tasks.
+
 ## 2026-07-10 — D4a-1: Local-source academic paper registry created
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `131bcea`.

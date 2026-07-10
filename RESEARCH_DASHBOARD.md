@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 40 |
+| Receipts processed | 44 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -159,6 +159,8 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `REG-CANDIDATES` | experiment-candidates | ✅ ACCEPTED | 36/36 | hash-verified | — |
+| `REG-CANDIDATES-design` | experiment-candidates | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `REG-PAPERS` | paper-registry | ✅ ACCEPTED | 39/39 | hash-verified | — |
 | `DASH-D3` | dashboard-research-summary | ✅ ACCEPTED | 45/45 | hash-verified | — |
 | `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 33/33 | hash-verified | — |
@@ -263,6 +265,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-10 — REG-CANDIDATES: Evidence-grounded experiment-candidate registry created
 - 2026-07-10 — D4a-1: Local-source academic paper registry created
 - 2026-07-10 — D3: Markdown research-evidence rendering added
 - 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
@@ -272,6 +275,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
 - 2026-07-10 — Research OS layer D2: Result Explorer v1 (read-only lookup tool)
 - 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
-- 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

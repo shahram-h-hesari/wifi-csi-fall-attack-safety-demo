@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T230518Z_experiment-candidates_REG-CANDIDATES",
+  "task_id": "REG-CANDIDATES",
+  "automation": "experiment-candidates",
+  "actor": { "kind": "skill", "name": "research-os-4c-implementation", "session_hint": "experiment-candidate-registry-backfill" },
+  "status_claimed": "done",
+  "summary": "REG-CANDIDATES: structured experiment-candidate registry foundation implementing the accepted design contract (automation/acceptance/experiment-candidates.yaml, hash-bound by REG-CANDIDATES-design, NOT modified -- confirmed byte-identical: sha256 fc5b8940a36b341c6846575ec1a2421b702ae49a01268e7f5c8fc7fa8025b6df matches the design claim's files_created entry exactly). New automation/registry/experiment_candidates.yaml: 8 candidate records (candidate_afac_low_far_calibration_v1, candidate_neyman_pearson_far_control_v1, candidate_partial_auc_low_far_ranking_v1, candidate_temporal_event_far_reduction_v1, candidate_ensemble_gating_score_fusion_v1, candidate_walking_detection_baseline_v1, candidate_gait_mobility_data_acquisition_v1, candidate_future_fall_risk_data_acquisition_v1), one per required direction, no forced splitting/consolidation needed. 27 literature_support entries total across all candidates, each paper_id verified to exist in automation/literature/paper_registry.yaml with a relationship that never exceeds that paper's own accepted candidate_direction_tags relationship for the matching direction (validator rule 8). 4 literature_gap_ids cited (gap_probability_calibration_low_far, gap_wifi_csi_temporal_false_alarm_reduction, gap_walking_pattern_labeled_csi_dataset, gap_longitudinal_csi_fall_risk_cohort), all verified to exist in paper_registry.yaml literature_gaps. 2 candidates carry prior_negative_evidence_refs: the partial-AUC candidate cites D14 (results/d14_partial_auc_low_far_ranking/D14_FAIL_VALIDATION_GATE.md -- config B seed 44 failed all 3 primary pre-registered conditions: median-seed recall 32/44 vs required >=38/44, bootstrap recall achieved in only 0.117 of resamples vs required >=0.75, paired bootstrap TP-gain achieved in only 0.062 of resamples vs required >=0.70; only the clean-condition guard passed; no held-out test read spent); the ensemble/gating candidate cites D13 (results/d13_score_fusion/stage0_validation_complementarity_audit/D13_STAGE0_COMPLEMENTARITY_AUDIT.md -- Step 0A saved-score complementarity was favorable, but Step 0B's shared-input PGD transfer veto failed by 0.0022, short of the required 0.1500 gap; no Stage 1 fusion authorized, no held-out test read spent). The validator STRUCTURALLY REQUIRES this: any candidate tagging direction ensemble_or_gating or low_far_partial_auc_objective must cite the corresponding D13/D14 identity in prior_negative_evidence_refs or validation fails (rule 23) -- this negative evidence cannot be silently omitted from a directly related future candidate either, since the same rule applies to any future addition. 2 candidates are dataset_blocked with allowed_split: no_experiment_allowed (gait/mobility data acquisition targeting walking_pattern_recognition + gait_or_mobility_change_detection, both goals.yaml NO_DATA; future fall-risk data acquisition targeting future_fall_risk_prediction, goals.yaml NO_DATA_ASPIRATIONAL with an empty allowed_evidence_levels list) -- dataset_readiness is validator-cross-checked against each target goal's own registry status (rule 12), and future_fall_risk_prediction can never be marked available/available_not_evaluated regardless (rule 13). Zero candidates authorize a test read: every allowed_split is validation_only or no_experiment_allowed; the validator enforces split/frozen_protocol_requirement/test_read_risk coherence (rules 19/20/21/25) so validation_only candidates must have frozen_protocol_requirement null and test_read_risk none, a hypothetical requires_new_frozen_protocol candidate can never claim test_read_risk none/low, and an existing_frozen_protocol_only candidate must cite a REAL protocol_id from automation/frontier.yaml (never a fabricated one). AFAC F20 evidence is never presented as frozen (rule 24: cross-checked against reference_evidence.yaml's actual test-post-hoc evidence_level plus a note-text scan for an unqualified 'frozen' claim); H15 remains tied to its existing protocol_id H15-TEST-EPS0015-AFAC-20260705 wherever cited (rule 25). NO manually asserted verdict anywhere: the validator rejects any candidate field literally named/containing 'verdict' and, more generally, rejects ANY field outside the exact approved 23-field schema (rule 17) -- this is also how a queue-auto-promotion field (e.g. a smuggled queue_entry_id) is blocked (rule 18), verified by synthetic tests. Every current_evidence_refs/prior_negative_evidence_refs identity resolves to a real reference_evidence_key, evaluation_id, protocol_id, dataset id, or an existing repository-relative research_os path (rule 14) -- no invented identity. prior_negative_evidence_refs and current_evidence_refs never share the same evidence identity for one candidate (rule 15); our_rationale is required to be prefixed 'OUR INTERPRETATION' and never byte-identical to current_evidence_summary (rule 16). All string fields scanned for clinical/deployment overclaim (rule 26, negation-aware), absolute local filesystem paths (rule 27), embedded experiment commands/configurations (rule 29, e.g. '--split', 'python ', 'train_*.py'), and a 900-char-per-field ceiling plus a markdown-table-row heuristic to block copying full paper summaries or metric tables from the authoritative sources (rule 30). Validator scripts/automation/validate_experiment_candidates.py: read-only, no network imports, no PDF/checkpoint requirement, deterministic output (confirmed by two identical --check-equivalent runs). Real-registry validation: PASS, zero errors (candidates=8, literature_support_entries=27, literature_gap_refs=4, prior_negative_evidence_candidates=2, dataset_blocked=2). Tests scripts/automation/test_experiment_candidates.py: 33/33 ALL PASS covering every enumerated validator rule (duplicate ID, invalid paper/gap/dataset/goal reference, exaggerated literature relationship, readiness disagreement, future-risk overclaim, missing D13/D14 negative evidence, AFAC-mislabelled-frozen, manual verdict rejected, queue-link rejected, unauthorized-test-read paths rejected, missing/fabricated frozen-protocol requirement, absolute path, clinical claim, embedded command, excessive text/table, rationale/summary separation, evidence-identity overlap, no network/PDF requirement, deterministic ordering, purity). Task REG-CANDIDATES registered in automation/tasks.yaml (gated: true, depends_on REG-PAPERS/REG-GOALS/REG-DATASETS/REG-EXPERIMENT-ID/REF-EVID, acceptance acceptance/experiment-candidates.yaml). Next Experiment Brainstorm Checker, validation-pilot gate, experiment-queue integration, and dashboard rendering of candidates were NOT implemented -- all remain separate, later, explicitly-approved tasks. automation/experiment_queue.yaml was NOT modified. No experiment, training, validation, model evaluation, export, or threshold-selection command ran; no command contained --split; no web access or download occurred; the external Codex literature workbench was not accessed. Thesis/experiment repositories, results/, checkpoints/, Result Explorer code, and dashboard rendering code were NOT modified.",
+  "files_created": [
+    { "path": "automation/registry/experiment_candidates.yaml", "sha256": "3bb1144610c0f49611a85aa7c931826275dfaa16756454285f26d8ed037d4207" },
+    { "path": "scripts/automation/validate_experiment_candidates.py", "sha256": "dff97d0c37c605ae1666ef1fc39624b942d71726310830039eee10c0b7eec7de" },
+    { "path": "scripts/automation/test_experiment_candidates.py", "sha256": "c44b5cfdc7cdc3ec6c82ed0b89a9e802c899b35e54d37ddb130ef4d04032527a" }
+  ],
+  "files_modified": [
+    { "path": "automation/acceptance/experiment-candidates.yaml", "sha256": "fc5b8940a36b341c6846575ec1a2421b702ae49a01268e7f5c8fc7fa8025b6df", "note": "READ-ONLY implementation contract; hash confirmed byte-identical to the REG-CANDIDATES-design claim's recorded hash -- not edited by this claim, listed here only for provenance completeness" },
+    { "path": "automation/tasks.yaml" },
+    { "path": "automation/dashboard_changelog.md" },
+    { "path": "RESEARCH_DASHBOARD.md" },
+    { "path": "automation/status.json" }
+  ],
+  "status_flags": {
+    "no_manually_asserted_verdict": true,
+    "no_experiment_queue_integration": true,
+    "no_test_read_authorization": true,
+    "brainstorm_checker_implemented": false,
+    "candidate_count": 8,
+    "literature_support_entries": 27,
+    "literature_gap_refs": 4,
+    "dataset_blocked_count": 2,
+    "prior_negative_evidence_candidates": 2
+  },
+  "commands_run": [
+    { "cmd": "python scripts/automation/validate_experiment_candidates.py -> candidates=8 literature_support_entries=27 literature_gap_refs=4 prior_negative_evidence_candidates=2 dataset_blocked=2; PASS, no errors", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_candidates.py -> RESULT: ALL PASS (33/33)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_paper_registry.py -> RESULT: ALL PASS (28/28; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_paper_registry.py -> PASS, zero errors (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_dashboard_research_summary.py -q -> 18 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_result_explorer.py -q -> 40 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_identity.py -> ALL PASS (32/32; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_identity.py -> PASS, zero errors (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_approve.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py -> ALL PASS (unaffected)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "CAND-real-registry-valid", "result": "pass", "evidence_path": "automation/registry/experiment_candidates.yaml" },
+    { "id": "CAND-literature-reference-integrity", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-readiness-agreement", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-prior-negative-evidence-required", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-no-manual-verdict-no-queue-link", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-no-unauthorized-test-read", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-afac-not-frozen-h15-protocol-tied", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-no-overclaim-no-command-no-table", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" },
+    { "id": "CAND-deterministic-and-network-free", "result": "pass", "evidence_path": "scripts/automation/test_experiment_candidates.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "d09937f", "expected_dirty": ["automation/registry/experiment_candidates.yaml", "scripts/automation/validate_experiment_candidates.py", "scripts/automation/test_experiment_candidates.py", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Use the corrected --approve CLI to approve REG-CANDIDATES (it will bind to this exact claim)."
+}

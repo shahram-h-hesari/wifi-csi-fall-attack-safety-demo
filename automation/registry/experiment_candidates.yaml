@@ -1,0 +1,484 @@
+# Experiment-Candidate Registry — SOURCE-OF-TRUTH (Research OS layer, REG-CANDIDATES).
+# Implementation contract: automation/acceptance/experiment-candidates.yaml (hash-bound by the
+# accepted REG-CANDIDATES-design receipts -- read that first, and never edit it here).
+# Records possible research directions BEFORE any execution decision. Every field here either
+# points at an authoritative read-only source (never copies its content) or is explicit Research-OS
+# interpretation, clearly labeled as such. NO manually asserted verdict exists anywhere in this
+# file -- GO/REVIEW/NO-GO is exclusively a future, separately-implemented Brainstorm Checker's
+# computed output, never a stored fact. This registry has ZERO execution authority: it does not
+# launch commands, does not authorize a test read, and does not link itself into
+# automation/experiment_queue.yaml.
+schema_version: 1
+
+registry_scope:
+  purpose: >
+    Record possible research directions and their evidence basis before any execution decision,
+    distinguishing accepted literature evidence, verified local experimental evidence, our own
+    interpretation/rationale, prior negative evidence, dataset readiness, split restrictions,
+    frozen-test-read risk, literature/data gaps, and explicit claim boundaries.
+  verdict_policy: >
+    No candidate record stores a GO/REVIEW/NO-GO verdict. A future Brainstorm Checker (not
+    implemented here) computes a verdict deterministically from this registry's structured fields.
+    A candidate with no computed verdict is simply unverdicted, never defaulted to GO.
+  execution_authority: >
+    This registry never launches a command, training run, evaluation, export, or threshold
+    selection; never authorizes a frozen-test read; never auto-populates or otherwise links into
+    automation/experiment_queue.yaml. Promotion to execution is a separate, later, human-gated step.
+  source_policy: local_cited_sources_only
+  clinical_claims_allowed: false
+
+# --------------------------------------------------------------------- controlled vocabularies
+controlled_vocabularies:
+  direction_tags:
+    - low_far_afac_calibration
+    - neyman_pearson_far_control
+    - low_far_partial_auc_objective
+    - temporal_false_alarm_reduction
+    - ensemble_or_gating
+    - walking_detection_baseline
+    - gait_or_fall_risk_data_acquisition
+  literature_relationship: [direct, indirect, background, not_established]
+  dataset_readiness: [available, available_not_evaluated, unavailable, aspirational_only]
+  allowed_split:
+    - validation_only
+    - training_and_validation
+    - requires_new_frozen_protocol
+    - existing_frozen_protocol_only
+    - no_experiment_allowed
+  test_read_risk: [none, low, requires_review, blocked_without_protocol]
+  evidence_strength:
+    - strong_local_and_literature
+    - local_supported_literature_indirect
+    - literature_only
+    - local_negative_evidence
+    - literature_gap
+    - dataset_blocked
+  candidate_status: [proposed, under_review, approved_for_planning, rejected, superseded]
+
+# --------------------------------------------------------------------------------- candidates
+candidates:
+  # ================================================================ 1. AFAC low-FAR calibration
+  - candidate_id: candidate_afac_low_far_calibration_v1
+    title: "Low-FAR probability calibration / threshold stability for the AFAC operating point"
+    hypothesis: "A calibration method applied to AFAC's saved fall-probability scores would produce a low-FAR (<=0.20) operating threshold that stays stable across seeds and score distributions, unlike the current single-point post-hoc sweep."
+    target_gap: >
+      No dedicated local or literature-established probability-calibration method exists for
+      stabilizing the AFAC post-hoc low-FAR operating point across seeds/conditions
+      (automation/literature/paper_registry.yaml literature_gaps.gap_probability_calibration_low_far).
+    direction_tags: [low_far_afac_calibration]
+    literature_support:
+      - paper_id: paper_tong_2013_plugin_np
+        relationship: indirect
+      - paper_id: paper_fawcett_2006_roc_analysis
+        relationship: indirect
+      - paper_id: paper_tong_2018_np_classification
+        relationship: indirect
+    literature_gap_ids: [gap_probability_calibration_low_far]
+    current_evidence_refs:
+      - source: research_os
+        identity: "H15_eps0015_frozen"
+        relationship: background
+        note: "frozen-test PASS for the same AFAC checkpoint, but at eps=0.015 under a different protocol -- not evidence of calibration at eps=0.030"
+      - source: research_os
+        identity: "AFAC_eps0030_F20_posthoc"
+        relationship: direct
+        note: "the exact post-hoc F20 boundary point this direction would need to stabilize -- test-post-hoc evidence, not a frozen read"
+    current_evidence_summary: >
+      AFAC's F20 boundary at eps=0.030 is a single post-hoc threshold sweep result (test-post-hoc),
+      previously characterized as a narrow (~0.00028-wide) knife edge. H15 is a genuine frozen-test
+      pass but at a different epsilon under a separately authorized protocol. Neither result speaks
+      to whether a calibrated threshold would be stable across seeds or score distributions.
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: the AFAC F20 point's documented fragility (a very narrow qualifying
+      threshold band) is exactly the kind of instability a calibration method targets, but no local
+      or cited work has evaluated calibration stability for this checkpoint -- this is a plausible,
+      currently unevidenced direction, not a demonstrated one.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [fall_detection]
+    dataset_readiness: available
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+      - "calibration work must not be used as a pretext to re-open the already-consumed H15 frozen-test read for a different claim"
+    evidence_strength: local_supported_literature_indirect
+    status: proposed
+    claim_boundaries:
+      - "current evidence does not establish threshold stability across seeds or distributions"
+      - "AFAC F20 remains post-hoc, test-post-hoc evidence, never frozen-test evidence"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ============================================================ 2. Neyman-Pearson FAR control
+  - candidate_id: candidate_neyman_pearson_far_control_v1
+    title: "Explicit Neyman-Pearson-style false-alarm-rate control in place of heuristic threshold sweeps"
+    hypothesis: "Framing the fall/non-fall decision as a Neyman-Pearson problem (control FAR at a pre-specified level, maximize recall) would replace the current heuristic post-hoc threshold sweeps with a principled, generalizable procedure."
+    target_gap: >
+      Current FAR handling across every defense line (D1-D12, AFAC) is heuristic or post-hoc
+      threshold selection, never a Neyman-Pearson-controlled decision procedure with an explicit
+      false-positive-rate guarantee.
+    direction_tags: [neyman_pearson_far_control]
+    literature_support:
+      - paper_id: paper_tong_2013_plugin_np
+        relationship: direct
+      - paper_id: paper_tong_2018_np_classification
+        relationship: direct
+      - paper_id: paper_cotter_2019_constrained_training
+        relationship: indirect
+    literature_gap_ids: []
+    current_evidence_refs:
+      - source: research_os
+        identity: "AFAC_eps0030_F20_posthoc"
+        relationship: background
+        note: "the current FAR handling is a manual post-hoc sweep capped at FAR<=0.20 -- exactly the kind of ad hoc procedure an NP-formal method would replace"
+      - source: research_os
+        identity: "results/safety_guided_defense/final_defense_synthesis/REPRESENTATION_CEILING_CAPSTONE.md"
+        relationship: background
+        note: "documents that training-objective/architecture variation alone (BASAT: TRADES/GAIRAT/SAT, plus a BiLSTM representation pivot) plateaued at a shared validation ceiling without directly addressing FAR control -- motivates trying a differently-structured (decision-procedure-level) approach rather than another architecture/objective tweak"
+    current_evidence_summary: >
+      No local experiment has ever framed fall/non-fall decisioning as an explicit
+      Neyman-Pearson-controlled procedure; every current FAR number (H15, AFAC F20) comes from
+      manual post-hoc threshold selection on saved scores.
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: because multiple training-objective variants already plateaued at a
+      shared representation ceiling (per the capstone), a method operating at the decision-rule
+      level rather than the training-objective level may be worth considering -- this is a
+      plausibility argument, not evidence that NP framing would work on WiFi CSI.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [fall_detection]
+    dataset_readiness: available
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+    evidence_strength: literature_only
+    status: proposed
+    claim_boundaries:
+      - "direct literature support for Neyman-Pearson classification does not mean the method has already worked on WiFi CSI -- it has never been locally attempted"
+      - "any pilot must remain validation-only unless separately frozen and approved via protocol-freeze"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ============================================================ 3. Low-FAR partial-AUC objective
+  - candidate_id: candidate_partial_auc_low_far_ranking_v1
+    title: "Low-FAR partial-AUC / ranking-loss training objective (post-D14)"
+    hypothesis: "A materially different low-FAR ranking or partial-AUC training objective (not D14's specific hinge-ranking formulation) could improve the FAR<=0.20 operating region where D14's formulation failed."
+    target_gap: >
+      Direct partial-AUC optimization for the FAR<=0.20 operating region was pre-registered and
+      attempted once (D14: full-batch PGD-adversarial fine-tune with a low-FAR hinge ranking term,
+      six pre-registered runs across two loss-weight configs and three seeds) and failed its
+      pre-registered validation gate on all three primary conditions. The underlying gap -- a
+      working low-FAR ranking/partial-AUC training objective for this checkpoint -- remains open.
+    direction_tags: [low_far_partial_auc_objective]
+    literature_support:
+      - paper_id: paper_narasimhan_2013_partial_auc
+        relationship: direct
+    literature_gap_ids: []
+    current_evidence_refs:
+      - source: research_os
+        identity: "AFAC_eps0030_F20_posthoc"
+        relationship: background
+        note: "the AFAC-score checkpoint D14 fine-tuned from; F20 boundary is post-hoc/fragile evidence, not a target already met by ranking-loss fine-tuning"
+    current_evidence_summary: >
+      AFAC's F20 point remains a fragile post-hoc boundary; D14's attempt to directly improve the
+      low-FAR region via a ranking objective failed validation, so no locally trained model has yet
+      improved on the AFAC-score baseline in this region.
+    prior_negative_evidence_refs:
+      - source: research_os
+        identity: "results/d14_partial_auc_low_far_ranking/D14_FAIL_VALIDATION_GATE.md"
+        relationship: direct
+        note: "D14 (config B, seed 44, the validation-gate-selected candidate) failed all three primary pre-registered conditions: median-seed recall 32/44 (required >=38/44) at FAR cap 0.17; bootstrap recall >=0.80 achieved in only 0.117 of resamples (required >=0.75); paired bootstrap TP-gain-over-AFAC-reference achieved in only 0.062 of resamples (required >=0.70, the primary Gate-3 criterion). Only the clean-condition guard passed. No held-out test read was spent because the gate failed."
+    our_rationale: >
+      OUR INTERPRETATION: D14's failure rules out its specific hinge-ranking-term formulation at
+      the two loss weights and three seeds actually tried; it does not by itself rule out every
+      possible partial-AUC or ranking-style objective. A future candidate in this direction is only
+      warranted if it states a materially different formulation, loss structure, or training
+      procedure than D14's -- a simple repetition would not be a fresh case.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [fall_detection]
+    dataset_readiness: available
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+      - "repeating D14's exact formulation without a materially different hypothesis is not a justified re-attempt"
+    evidence_strength: local_negative_evidence
+    status: proposed
+    claim_boundaries:
+      - "a simple repetition of D14's specific hinge-ranking formulation is not justified without a materially different hypothesis"
+      - "D14's failure does not preclude every partial-AUC/ranking approach, only the exact formulation tested"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ==================================================== 4. Temporal / event-level FAR reduction
+  - candidate_id: candidate_temporal_event_far_reduction_v1
+    title: "Temporal or event-level aggregation to reduce window-level false alarms"
+    hypothesis: "Aggregating decisions over multiple consecutive CSI windows (event-level, not single-window) would reduce the false-alarm rate relative to the current window-level-only evaluation."
+    target_gap: >
+      No WiFi-CSI-specific temporal or event-level false-alarm-reduction method has been tried
+      locally; all current evaluation (H15, AFAC, D1-D12) is single-window, never event-aggregated
+      (automation/literature/paper_registry.yaml literature_gaps.gap_wifi_csi_temporal_false_alarm_reduction).
+    direction_tags: [temporal_false_alarm_reduction]
+    literature_support:
+      - paper_id: paper_abbate_2011_false_alarms_fall
+        relationship: indirect
+      - paper_id: paper_kangas_2014_fall_sensor_far
+        relationship: background
+    literature_gap_ids: [gap_wifi_csi_temporal_false_alarm_reduction]
+    current_evidence_refs:
+      - source: research_os
+        identity: "H15_eps0015_frozen"
+        relationship: background
+        note: "frozen-test evidence is itself single-window; no local event-level aggregation exists to compare against"
+    current_evidence_summary: >
+      All current committed evidence (H15 frozen-test, AFAC post-hoc) is reported at the
+      single-window level per automation/registry/datasets.yaml's documented known_limitations
+      ("window-level evaluation (no event-level aggregation)").
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: the locally cited false-alarm-reduction anchors are wearable/accelerometer
+      -domain, not WiFi CSI, so they motivate the general idea (temporal aggregation reduces false
+      alarms) without establishing it would work for CSI. This is a plausible direction resting on a
+      documented literature gap, not an evidenced one.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [fall_detection]
+    dataset_readiness: available
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "window-level UT-HAR data may not establish event-level deployment behavior even if a validation-only aggregation pilot looks promising"
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+    evidence_strength: literature_gap
+    status: proposed
+    claim_boundaries:
+      - "existing literature support for this direction is indirect or from a different (wearable/accelerometer) sensing modality"
+      - "window-level UT-HAR data does not itself establish event-level or deployment behavior"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ======================================================================= 5. Ensemble / gating
+  - candidate_id: candidate_ensemble_gating_score_fusion_v1
+    title: "Score-fusion / gating across specialist models (post-D13)"
+    hypothesis: "A materially different combination or gating rule across specialist model scores (not D13's tested three-model equal-weight fusion) could pass a shared-input transfer-robustness check that D13 narrowly failed."
+    target_gap: >
+      A single validation-only score-fusion attempt (D13, combining AFAC-score/D10/D11b) failed its
+      pre-specified shared-input transfer veto by a narrow margin (observed gap 0.1478 against a
+      required 0.1500 -- short by 0.0022, about one fall window of 44), even though the underlying
+      score-complementarity signal was favorable on its own. Whether a materially different
+      fusion/gating formulation could pass remains open.
+    direction_tags: [ensemble_or_gating]
+    literature_support:
+      - paper_id: paper_jacobs_1991_mixtures_of_experts
+        relationship: direct
+      - paper_id: paper_hinton_2015_distillation
+        relationship: indirect
+      - paper_id: paper_shazeer_2017_sparse_moe
+        relationship: indirect
+    literature_gap_ids: []
+    current_evidence_refs:
+      - source: research_os
+        identity: "AFAC_eps0030_F20_posthoc"
+        relationship: background
+        note: "one of the three models D13 fused; test-post-hoc evidence for the base model, not fusion"
+    current_evidence_summary: >
+      D13's Step 0A saved-score complementarity signal was favorable (a stratified bootstrap showed
+      a gain over the best single model in most resamples), but its Step 0B shared-input transfer
+      veto -- required as a necessary condition before any Stage 1 fusion experiment -- failed by a
+      narrow margin, so no Stage 1 fusion experiment and no held-out test read were authorized.
+    prior_negative_evidence_refs:
+      - source: research_os
+        identity: "results/d13_score_fusion/stage0_validation_complementarity_audit/D13_STAGE0_COMPLEMENTARITY_AUDIT.md"
+        relationship: direct
+        note: "D13 Step 0A (saved-score complementarity: +4 TP over the best single model, favorable bootstrap gain) vs. Step 0B (shared-input PGD transfer matrix veto: required gap >=0.1500, observed 0.1478, FAIL); a diagonal validity check confirmed the transfer audit itself was not the source of the shortfall (exact match to Step 0A's saved-score confusion counts). Final gate: FAIL -- no Stage 1 fusion authorized, no F20 claim made."
+    our_rationale: >
+      OUR INTERPRETATION: D13's near-miss on the transfer veto (short by only 0.0022) is a
+      genuinely close result, but a near-miss is still a documented failure of the pre-registered
+      gate, not evidence that a rerun of the same formulation would pass. Any future candidate here
+      must identify what would be materially different (different specialist set, different
+      combination rule, different veto threshold justification), not simply retry D13's formulation.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [fall_detection]
+    dataset_readiness: available
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+      - "a near-miss result invites overconfidence; the pre-specified veto failing must be treated as a real gate failure, not rounded to a pass"
+    evidence_strength: local_negative_evidence
+    status: proposed
+    claim_boundaries:
+      - "a simple score-fusion retry of D13's formulation is not justified as novel without a materially different hypothesis"
+      - "D13's near-miss (short by 0.0022) does not itself justify assuming a rerun would pass"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ================================================================= 6. Walking detection baseline
+  - candidate_id: candidate_walking_detection_baseline_v1
+    title: "First evaluated baseline for walking_detection on UT-HAR"
+    hypothesis: "A standard classifier trained on UT-HAR's existing walk-vs-rest labels would produce the first evaluated walking-detection baseline result for this goal."
+    target_gap: >
+      walking_detection is dataset-supported (UT-HAR has a walk class at index 2) but has zero
+      evaluated baseline results (automation/registry/goals.yaml status DATA_AVAILABLE_NOT_EVALUATED,
+      primary_metric_keys walking_recall/precision/F1 all currently unpopulated).
+    direction_tags: [walking_detection_baseline]
+    literature_support:
+      - paper_id: paper_wang_2016_wifi_gait
+        relationship: indirect
+      - paper_id: paper_xu_2022_attention_gait
+        relationship: indirect
+      - paper_id: paper_lin_2022_wifi_walking_tracking
+        relationship: indirect
+    literature_gap_ids: []
+    current_evidence_refs:
+      - source: research_os
+        identity: "automation/registry/datasets.yaml"
+        relationship: direct
+        note: "sensefi_ut_har.supported_goals includes walking_detection; label_map documents walk_class_index: 2"
+    current_evidence_summary: >
+      The dataset registry confirms UT-HAR supports walking_detection and documents the walk class
+      index; the goal registry confirms no evaluated result yet exists for this goal.
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: this is the most immediately reachable new-goal baseline given already
+      -available data, and the cited WiFi gait/walking-sensing papers establish general feasibility
+      of walking-related sensing from WiFi signals -- but none of them evaluate UT-HAR's specific
+      walk-vs-rest binary task, so this remains an untried baseline, not a replicated result.
+    required_dataset_ids: [sensefi_ut_har]
+    target_goal_ids: [walking_detection]
+    dataset_readiness: available_not_evaluated
+    allowed_split: validation_only
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "any pilot must respect the seed-42-only and sequential-execution constraints in automation/acceptance/experiment-queue.yaml hard_rules"
+    evidence_strength: local_supported_literature_indirect
+    status: proposed
+    claim_boundaries:
+      - "a walking-detection baseline is not evidence of fall-risk prediction"
+      - "it is a baseline/mobility-track candidate, not a gait-pathology or mobility-decline claim"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ============================================================ 7. Gait / mobility data acquisition
+  - candidate_id: candidate_gait_mobility_data_acquisition_v1
+    title: "Acquire gait-pattern-labeled or longitudinal CSI data for gait/mobility goals"
+    hypothesis: "Acquiring a gait-pattern-labeled or longitudinal per-subject CSI dataset would unblock walking_pattern_recognition and/or gait_or_mobility_change_detection, which currently have no supporting data."
+    target_gap: >
+      No locally available dataset supports walking_pattern_recognition or
+      gait_or_mobility_change_detection (both automation/registry/goals.yaml status NO_DATA);
+      automation/literature/paper_registry.yaml literature_gaps.gap_walking_pattern_labeled_csi_dataset
+      records the missing dataset explicitly.
+    direction_tags: [gait_or_fall_risk_data_acquisition]
+    literature_support:
+      - paper_id: paper_beattie_2020_cart_platform
+        relationship: direct
+      - paper_id: paper_piau_2019_walking_speed_future_falls
+        relationship: indirect
+      - paper_id: paper_verghese_2009_gait_markers_fall_risk
+        relationship: background
+      - paper_id: paper_hausdorff_2001_gait_variability_falls
+        relationship: background
+      - paper_id: paper_vanschooten_2016_gait_quality_falls
+        relationship: background
+      - paper_id: paper_chan_2023_digital_gait_biomarkers
+        relationship: background
+    literature_gap_ids: [gap_walking_pattern_labeled_csi_dataset]
+    current_evidence_refs: []
+    current_evidence_summary: >
+      No current evidence exists for these goals; automation/registry/datasets.yaml explicitly
+      lists both goals under sensefi_ut_har.unsupported_goals.
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: the CART platform (a technology-agnostic longitudinal in-home research
+      platform) is the most concrete locally cited model for how such data acquisition could be
+      organized; none of the cited papers themselves supply WiFi-CSI gait-pattern or longitudinal
+      data, so citing them motivates acquisition without making the current dataset adequate.
+    required_dataset_ids: []
+    target_goal_ids: [walking_pattern_recognition, gait_or_mobility_change_detection]
+    dataset_readiness: unavailable
+    allowed_split: no_experiment_allowed
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "this is a data-acquisition proposal, not a model-training candidate; no compute/seed/queue constraints apply until data exists"
+    evidence_strength: dataset_blocked
+    status: proposed
+    claim_boundaries:
+      - "accepted literature may motivate acquiring gait-pattern or longitudinal CSI data but does not make the current UT-HAR dataset adequate for these goals"
+      - "no current model experiment is authorized for this direction"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null
+
+  # ======================================================= 8. Future fall-risk data acquisition
+  - candidate_id: candidate_future_fall_risk_data_acquisition_v1
+    title: "Acquire a longitudinal WiFi-CSI cohort for future fall-risk prediction"
+    hypothesis: "A prospective, longitudinal WiFi-CSI cohort with adjudicated fall outcomes would be required before any future_fall_risk_prediction evidence could exist."
+    target_gap: >
+      future_fall_risk_prediction is NO_DATA_ASPIRATIONAL with an empty allowed_evidence_levels
+      list in automation/registry/goals.yaml; automation/literature/paper_registry.yaml
+      literature_gaps.gap_longitudinal_csi_fall_risk_cohort records the missing longitudinal
+      WiFi-CSI cohort explicitly.
+    direction_tags: [gait_or_fall_risk_data_acquisition]
+    literature_support:
+      - paper_id: paper_beattie_2020_cart_platform
+        relationship: direct
+      - paper_id: paper_piau_2019_walking_speed_future_falls
+        relationship: indirect
+      - paper_id: paper_verghese_2009_gait_markers_fall_risk
+        relationship: background
+      - paper_id: paper_hausdorff_2001_gait_variability_falls
+        relationship: background
+      - paper_id: paper_vanschooten_2016_gait_quality_falls
+        relationship: background
+      - paper_id: paper_chan_2023_digital_gait_biomarkers
+        relationship: background
+    literature_gap_ids: [gap_longitudinal_csi_fall_risk_cohort]
+    current_evidence_refs: []
+    current_evidence_summary: >
+      No current evidence exists for this goal; automation/registry/goals.yaml explicitly sets
+      allowed_evidence_levels to an empty list for future_fall_risk_prediction, meaning nothing may
+      render as evidence for it under the current Result Explorer rules.
+    prior_negative_evidence_refs: []
+    our_rationale: >
+      OUR INTERPRETATION: all locally cited prognostic fall-risk anchors use non-CSI modalities
+      (wearable, PIR/in-home sensor, wrist); this is aspirational background motivating why a future
+      cohort would be valuable, not evidence that any current or planned model meets it.
+    required_dataset_ids: []
+    target_goal_ids: [future_fall_risk_prediction]
+    dataset_readiness: aspirational_only
+    allowed_split: no_experiment_allowed
+    frozen_protocol_requirement: null
+    test_read_risk: none
+    other_risks:
+      - "this is a data-acquisition proposal, not a model-training candidate; no compute/seed/queue constraints apply until data exists"
+    evidence_strength: dataset_blocked
+    status: proposed
+    claim_boundaries:
+      - "this direction is aspirational only -- no clinical or predictive claim is permitted"
+      - "UT-HAR cannot support longitudinal future-risk claims"
+      - "goals.yaml allowed_evidence_levels for future_fall_risk_prediction is empty: nothing may render as evidence for this goal under the current rules"
+      - "this record is not a GO/REVIEW/NO-GO verdict and does not authorize any experiment"
+    supersedes: null
+    superseded_by: null
+    notes: null

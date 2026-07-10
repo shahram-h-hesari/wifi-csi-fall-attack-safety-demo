@@ -188,6 +188,25 @@ tasks:
     depends_on: [REG-GOALS, REG-DATASETS]
     acceptance: acceptance/paper-registry.yaml
     stale_after_days: 30
+  - id: REG-CANDIDATES
+    title: >-
+      Experiment-Candidate Registry — automation/registry/experiment_candidates.yaml. Structured,
+      evidence-grounded record of 8 possible research directions (AFAC low-FAR calibration,
+      Neyman-Pearson FAR control, low-FAR partial-AUC objective, temporal/event-level FAR
+      reduction, ensemble/gating, walking-detection baseline, gait/mobility data acquisition,
+      future fall-risk data acquisition), each separating accepted literature support, verified
+      local evidence, our interpretation, prior negative evidence (D13/D14), dataset readiness,
+      split restrictions, and frozen-test-read risk. NO manually asserted GO/REVIEW/NO-GO verdict
+      anywhere — verdicts are exclusively a future, separately-implemented Brainstorm Checker's
+      computed output. NO experiment-queue integration, NO test-read authorization, NO experiment
+      recommendation. Implements the accepted design contract acceptance/experiment-candidates.yaml
+      (hash-bound by the REG-CANDIDATES-design receipts, not modified here).
+    kind: registry
+    automation: experiment-candidates
+    gated: true
+    depends_on: [REG-PAPERS, REG-GOALS, REG-DATASETS, REG-EXPERIMENT-ID, REF-EVID]
+    acceptance: acceptance/experiment-candidates.yaml
+    stale_after_days: 30
   - id: REG-EXPERIMENT-ID
     title: >-
       Experiment Identity & Naming Standard — automation/registry/experiment_identity.yaml (run

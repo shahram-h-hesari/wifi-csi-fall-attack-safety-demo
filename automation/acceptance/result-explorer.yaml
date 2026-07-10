@@ -4,7 +4,9 @@ stage: research-os-2
 gated: false
 type: tool   # read-only lookup CLI; NO experiment execution, ever
 
-status: DESIGN-DRAFT   # D2a: spec only. No executable code exists yet; result_explorer.py is NOT created.
+status: IMPLEMENTED_D2_PENDING_D2D2   # D2a-c implemented + ACCEPTED (TOOL-REXP). D2d-1 (this revision)
+  # adds the curated-reference-evidence CONTRACT only; result_explorer.py resolution code for it
+  # (D2d-2, separate approval) is NOT yet implemented — F12-F15 are not yet passing.
 
 purpose: >
   Result Explorer v1 — read-only lookup over EXISTING, already-committed results (defense-attempt
@@ -24,6 +26,12 @@ reads_only:
   registries:
     - "automation/registry/goals.yaml"
     - "automation/registry/datasets.yaml"
+  curated_reference_source:
+    - "automation/registry/reference_evidence.yaml"   # D2d-1: hand-curated pointers to ALREADY-
+      # committed evidence artifacts. Records frozen numbers already published elsewhere; does NOT
+      # generate/derive/infer any metric; NEVER overrides the manifest evidence_level (cross-check
+      # rule below). Backfilling results/defense_attempt_inventory/defense_attempt_results_long.csv
+      # by hand was explicitly rejected (Option A) as a protected-path / provenance violation.
   results_sources:
     - "results/defense_attempt_inventory/defense_attempt_results_long.csv"   # ledger (committed)
     - "automation/artifact_manifest.csv"                                     # manifest (committed)
@@ -53,6 +61,11 @@ query_contract:
     - "omitted filters fill from the goal's default_query_fields — which are validation-first by registry rule"
     - "default exploration NEVER lands on split=test: test/frozen evidence appears ONLY when the user passes an explicit split/evidence_level filter or invokes a named reference_evidence_query"
     - "evidence_level filters are validated against the goal's allowed_evidence_levels; requesting a level the goal does not allow -> refuse (e.g. frozen-test for walking_detection)"
+    - "CURATED-FIRST resolution: a named reference_evidence_query resolves against automation/registry/reference_evidence.yaml BEFORE falling back to ledger-filter resolution"
+    - "curated resolution returns EXACTLY the one curated entry (never a filtered pool) — this is what collapses the 71-row AFAC_eps0030_F20_posthoc pool to the single canonical F20 row"
+    - "MANIFEST CROSS-CHECK (mandatory): every curated entry's provenance paths must exist in the manifest with evidence_level == the entry's declared evidence_level; on mismatch, disagreement, or a missing manifest path -> REFUSE with state_id provenance_mismatch, never render the curated numbers"
+    - "the curated source may ONLY be reached via reference_evidence_query; it is never consulted for filter-based queries, so it cannot leak into default validation-first exploration"
+    - "fallback rule: a named reference_evidence_query with NO curated entry falls back to today's goals.yaml reference_evidence_queries + ledger-filter resolution unchanged"
 
 # ---------------------------------------------------------------- 2. output contract
 output_contract:
@@ -108,6 +121,10 @@ honest_empty_states:
     - id: no_matching_artifact
       when: "filters are valid but nothing matches"
       message: "NO MATCH — valid query, zero rows under these filters"
+    - id: provenance_mismatch
+      when: "a curated reference_evidence.yaml entry's provenance path is missing from the manifest, or the manifest's evidence_level for that path disagrees with the entry's declared evidence_level"
+      message: "REFUSED — curated entry <key> provenance mismatch against manifest; numbers withheld"
+      rule: "the curated file may point at evidence; it may never overrule what the manifest says that evidence is"
   rule: "empty states are OUTPUTS, not errors; each names the reason and the registry field that explains it"
 
 # ---------------------------------------------------------------- 4. read-only safety contract
@@ -160,6 +177,18 @@ fixture_plan:
       expect: "REFUSED — frozen-test not in walking_detection allowed_evidence_levels"
     - id: F11_read_only_static_check
       expect: "static scan of result_explorer.py: no subprocess with --split, no export/gate script call, no write outside stdout, no results/ write path"
+    - id: F12_curated_h15_frozen_reference
+      query: "fall_detection + reference_evidence_query H15_eps0015_frozen (curated entry present)"
+      expect: "exactly 1 row: frozen-test, eps 0.015, TP/FN/FP/TN 41/4/60/395, Rfall 0.911111, FAR 0.131868, protocol_id present, all disclosures present incl. 'not R90F10' and eps=0.015-not-0.030"
+    - id: F13_provenance_mismatch_refused
+      setup: "curated entry cites a manifest path whose evidence_level differs from the entry's declared evidence_level (or the path is absent from the manifest)"
+      expect: "REFUSED, state_id provenance_mismatch; numbers NEVER rendered, even though the curated file has them"
+    - id: F14_curated_afac_posthoc_reference
+      query: "fall_detection + reference_evidence_query AFAC_eps0030_F20_posthoc (curated entry present)"
+      expect: "exactly 1 row (not the 71-row pool): test-post-hoc, eps 0.030, TP/FN/FP/TN 36/9/91/364, Rfall 0.8, FAR 0.2, disclosures incl. 'post-hoc only', 'F20 knife-edge', 'not R90F10'"
+    - id: F15_fallback_no_curated_entry
+      query: "a reference_evidence_query name with NO entry in reference_evidence.yaml"
+      expect: "falls back to today's goals.yaml-driven filter resolution unchanged (proves curated-first does not break the pre-D2d-1 path)"
 
 # ---------------------------------------------------------------- 6. acceptance criteria (what D2 must prove)
 design_complete:
@@ -175,6 +204,7 @@ test_passed:
   read_only: "F11 static check + runtime proof: after any query, git status shows no tracked change"
   provenance: "every row shows source_file; sha256/hash, commit, receipt_id, and committed/accepted status shown whenever manifest/receipts provide them"
   no_test_leakage: "default (filterless) queries can never return split=test rows; test evidence requires explicit filter or named reference query (F1 vs F2)"
+  curated_reference_integrity: "curated entries (D2d-1: reference_evidence.yaml) resolve to exactly one row each, never a filtered pool (F12/F14); a curated entry never renders unless its manifest cross-check passes (F13); named queries with no curated entry fall back unchanged (F15)"
 accepted:
   - "User approval receipt (actor.kind: user) exists for TOOL-REXP."
 

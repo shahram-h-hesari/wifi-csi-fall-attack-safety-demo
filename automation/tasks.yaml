@@ -120,6 +120,18 @@ tasks:
     gated: false
     acceptance: acceptance/dataset-registry.yaml
     stale_after_days: 30
+  - id: REF-EVID
+    title: >-
+      Curated Reference Evidence registry — automation/registry/reference_evidence.yaml. Hand-
+      curated, user-approved pointers (H15_eps0015_frozen, AFAC_eps0030_F20_posthoc) to ALREADY-
+      committed evidence artifacts; records published numbers without deriving/inferring any
+      metric; must never override manifest evidence_level (cross-check enforced at resolution).
+      Does NOT edit results/defense_attempt_inventory/defense_attempt_results_long.csv.
+    kind: registry
+    automation: reference-evidence
+    gated: false
+    acceptance: acceptance/result-explorer.yaml
+    stale_after_days: 30
   - id: TOOL-REXP
     title: >-
       Result Explorer v1 — read-only lookup tool over committed registries, ledger/manifest result

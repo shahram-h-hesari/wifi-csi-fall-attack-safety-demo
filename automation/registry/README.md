@@ -35,6 +35,23 @@ identical in all four locations checked:
 
 `{0: lie down, 1: fall, 2: walk, 3: pickup, 4: run, 5: sit down, 6: stand up}` — fall = 1, walk = 2.
 
+## Curated reference evidence (`reference_evidence.yaml`, D2d-1)
+
+`automation/registry/reference_evidence.yaml` is a **hand-curated, user-approved source-of-truth**
+that makes a small number of important, already-known results queryable by name (today: the H15
+frozen-test PASS and the canonical AFAC post-hoc F20 operating point).
+
+- **It must never override manifest evidence levels.** Every entry points at committed artifacts;
+  a resolver must cross-check those paths against `automation/artifact_manifest.csv` and refuse
+  (never render) if the manifest disagrees with the entry's declared `evidence_level`.
+- **It points to committed artifacts and receipts** — it records numbers already published
+  elsewhere (frozen-test confusion CSVs, post-hoc analysis reports); it does not generate, derive,
+  or infer any metric itself.
+- **It exists specifically to avoid backfilling `results/defense_attempt_inventory/
+  defense_attempt_results_long.csv` by hand** — editing that ledger was evaluated (D2d design memo,
+  "Option A") and rejected: the ledger is a derived, protected-path file, and a hand-inserted row
+  would have no derivation trail and would trip the dashboard's protected-path integrity gate.
+
 ## Consumers
 
 - **Result Explorer v1** (`scripts/automation/result_explorer.py`, D2 — future): read-only lookup of

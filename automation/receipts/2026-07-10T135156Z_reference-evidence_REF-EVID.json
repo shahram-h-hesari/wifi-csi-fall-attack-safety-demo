@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T135156Z_reference-evidence_REF-EVID",
+  "task_id": "REF-EVID",
+  "automation": "reference-evidence",
+  "actor": { "kind": "skill", "name": "research-os-d2d1", "session_hint": "curated-reference-evidence" },
+  "status_claimed": "done",
+  "summary": "Curated Reference Evidence registry created (D2d-1, contract only): automation/registry/reference_evidence.yaml with two entries recording numbers already published in committed artifacts. H15_eps0015_frozen: frozen-test, eps=0.015, split=test, attack=pgd, threshold=0.168754, TP/FN/FP/TN=41/4/60/395, Rfall=0.911111, FAR=0.131868, protocol_id=H15-TEST-EPS0015-AFAC-20260705, clean-disclosure companion (TP44/FN1/FP41/TN414, Rfall 0.977778, FAR 0.09011), provenance pointing at frozen_h15_test_confusion.csv and FROZEN_H15_TEST_RESULT.md, required_manifest_evidence_level=frozen-test. AFAC_eps0030_F20_posthoc: test-post-hoc, eps=0.030, split=test, attack=pgd, method=optionB_AFAC, threshold=0.153246, TP/FN/FP/TN=36/9/91/364, Rfall=0.8, FAR=0.2 — selected via the unique F20_reached=True row in the ledger's 158-row test/pgd/eps=0.03 pool (read-only verified, not a hand choice), source_file pointing at the canonical optionB_maxscore probability CSV, required_manifest_evidence_level=test-post-hoc. Option A (backfilling results/defense_attempt_inventory/defense_attempt_results_long.csv by hand) was evaluated and rejected as a protected-path/provenance violation; no results/ file was touched. automation/acceptance/result-explorer.yaml updated with curated-first resolution rule, mandatory manifest cross-check (provenance_mismatch refusal on disagreement), fallback-unchanged rule, and fixtures F12-F15. automation/registry/README.md gained a curated-source section. REF-EVID registered in tasks.yaml. SCOPE-LIMITED: scripts/automation/result_explorer.py and test_result_explorer.py were NOT touched this step; F12-F15 are contract-only and not yet passing pytest. Resolution code lands in D2d-2 under separate approval.",
+  "files_created": [
+    { "path": "automation/registry/reference_evidence.yaml", "sha256": "6929376457d96073981349a249b35c5bb3392230c82b16faeaf9d64d5326b40e" }
+  ],
+  "files_modified": [
+    { "path": "automation/acceptance/result-explorer.yaml", "sha256": "94f54e6ad4ea27645ef9ed94560ad6eea1c93ca2cab669280cda946a55c288b3" },
+    { "path": "automation/registry/README.md", "sha256": "0dfd3ec7d000ecd907293be9064eb5e26d220442b94c5f413a7d37ad160c8f6a" },
+    { "path": "automation/tasks.yaml", "sha256": "12eb4c127a46f24bbdbd7ff5cf69c2de1e989c8a9148741974584bf34e2df03e" },
+    { "path": "automation/dashboard_changelog.md", "sha256": "c162dcb7d9845eb88730adfdd8e336afb7724194a54138d258b01dcda2bf9518" }
+  ],
+  "commands_run": [
+    { "cmd": "read-only YAML parse check of reference_evidence.yaml, result-explorer.yaml, tasks.yaml (attack/epsilon/split confirmed as separate scalar fields, not combined strings)", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/frozen_test_read/frozen_h15_test_confusion.csv", "note": "provenance source for H15 entry, read-only, not modified" }
+  ],
+  "acceptance_tests": [
+    { "id": "REFEVID-parse-and-separate-fields", "result": "pass", "evidence_path": "automation/registry/reference_evidence.yaml" },
+    { "id": "REFEVID-no-ledger-backfill", "result": "pass", "evidence_path": "automation/registry/README.md" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "4bdf5db", "expected_dirty": ["automation/registry/reference_evidence.yaml", "automation/acceptance/result-explorer.yaml", "automation/registry/README.md", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "User review + approval of REF-EVID; D2d-2 (result_explorer.py curated-source resolution code + F12-F15) awaits separate approval."
+}

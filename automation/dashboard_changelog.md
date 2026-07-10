@@ -5,6 +5,30 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
+
+- **actor:** user-approved design (D2d memo, Option B chosen over Option A ledger-backfill);
+  recorded by Claude. **HEAD** `4bdf5db`.
+- **Why:** real-data smoke tests (post-D2) found `H15_eps0015_frozen` returned no_matching_artifact
+  (the frozen H15 artifacts exist in the manifest but have no ledger row) and
+  `AFAC_eps0030_F20_posthoc` matched 71 rows instead of the one canonical F20 point. Backfilling
+  `results/defense_attempt_inventory/defense_attempt_results_long.csv` by hand (Option A) was
+  rejected: that ledger is a derived, protected-path file — a hand row would have no derivation
+  trail and would trip the dashboard's protected-path integrity gate.
+- **Created:** `automation/registry/reference_evidence.yaml` — two curated entries recording
+  numbers already published in committed artifacts: H15_eps0015_frozen (frozen-test, eps 0.015,
+  TP/FN/FP/TN 41/4/60/395, Rfall 0.911111, FAR 0.131868, protocol_id
+  H15-TEST-EPS0015-AFAC-20260705, clean-disclosure companion) and AFAC_eps0030_F20_posthoc
+  (test-post-hoc, eps 0.030, TP/FN/FP/TN 36/9/91/364, Rfall 0.8, FAR 0.2 — selected as the UNIQUE
+  F20_reached=True row in the ledger's 158-row test/pgd/eps=0.03 pool, not a hand choice).
+- **Edited:** `automation/acceptance/result-explorer.yaml` — curated-first named-reference
+  resolution, mandatory manifest cross-check (mismatch -> `provenance_mismatch` refusal, numbers
+  never rendered), fallback-unchanged rule, fixtures F12-F15. `automation/registry/README.md` gained
+  a curated-source section. Registered `REF-EVID` in tasks.yaml.
+- **Scope: CONTRACT ONLY.** `result_explorer.py` / `test_result_explorer.py` NOT touched this step —
+  F12-F15 are not yet passing; the resolution code lands in D2d-2 (separate approval). No
+  results/ file was created, edited, or backfilled. Receipt: `REF-EVID` (requires user approval).
+
 ## 2026-07-10 — Research OS layer D2: Result Explorer v1 (read-only lookup tool)
 
 - **actor:** user-approved D2a spec (`f49a58b`) → D2b test-first fixtures → D2c implementation;

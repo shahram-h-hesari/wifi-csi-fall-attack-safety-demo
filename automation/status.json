@@ -91,6 +91,12 @@
       "checks": "1/1",
       "failed": []
     },
+    "REF-EVID": {
+      "display": "APPROVED",
+      "strength": "hash-verified",
+      "checks": "1/1",
+      "failed": []
+    },
     "TOOL-REXP": {
       "display": "APPROVED",
       "strength": "hash-verified",
@@ -99,6 +105,22 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "REG-GOALS",
+      "automation": "goal-registry",
+      "display": "ACCEPTED",
+      "checks": "15/15",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
+      "task_id": "REF-EVID",
+      "automation": "reference-evidence",
+      "display": "ACCEPTED",
+      "checks": "7/7",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "TOOL-REXP",
       "automation": "result-explorer",
@@ -112,14 +134,6 @@
       "automation": "dataset-registry",
       "display": "ACCEPTED",
       "checks": "10/10",
-      "strength": "hash-verified",
-      "failed": []
-    },
-    {
-      "task_id": "REG-GOALS",
-      "automation": "goal-registry",
-      "display": "ACCEPTED",
-      "checks": "12/12",
       "strength": "hash-verified",
       "failed": []
     },
@@ -273,5 +287,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 23
+  "receipts_processed": 27
 }

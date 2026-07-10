@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python \"$CLAUDE_PROJECT_DIR/scripts/automation/test_split_guard.py\""
+            "command": ".venv/Scripts/python.exe scripts/automation/test_split_guard.py"
           }
         ]
       }

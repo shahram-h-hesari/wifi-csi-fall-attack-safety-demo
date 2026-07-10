@@ -2,9 +2,13 @@
 """test-split-guard (WARN-ONLY phase). PreToolUse hook matcher for the Bash (and PowerShell) tools.
 
 Reads the tool-call JSON on stdin, inspects the command string, and WARNS (never blocks) when the
-command would generate/consume held-out TEST-split data. Warn-only contract: ALWAYS exits 0 (allow).
-Pure stdlib, read-only: writes NOTHING (the guard log is intentionally disabled in this phase),
-creates no authorization tokens, runs no experiments.
+command would generate/consume held-out TEST-split data. Warn-only contract: on a risky command it
+writes ONE WARN-ONLY line to stderr and exits 1 -- per Claude Code hook rules a PreToolUse exit code
+other than 0/2 shows stderr to the USER and CONTINUES the tool call (only exit 2 blocks). Safe
+commands exit 0 with no output. No stdout, no JSON, and no permission decision of any kind, so the
+normal Claude permission flow is left untouched (no ask, no allow/auto-approve, no block). Pure
+stdlib, read-only: writes NO files (no guard log is written in this phase), creates no authorization
+tokens, runs no experiments.
 
 Detection (WARN):
   R1  --split test
@@ -64,11 +68,19 @@ def main():
     if warns:
         ids = ",".join(r for r, _ in warns)
         msgs = "; ".join(m for _, m in warns)
-        sys.stderr.write(
-            f"\n[test-split-guard WARN-ONLY] {ids}: {msgs}\n"
-            f"  This command may generate/consume HELD-OUT TEST data. Allowed (warn-only mode).\n"
-            f"  If intended, confirm it is an authorized frozen-protocol read; otherwise prefer --split val.\n\n")
-    return 0  # WARN-ONLY: never block
+        message = (
+            f"[test-split-guard WARN-ONLY] {ids}: {msgs}. "
+            f"This command may generate/consume HELD-OUT TEST data. Allowed (warn-only mode). "
+            f"If intended, confirm it is an authorized frozen-protocol read; otherwise prefer --split val."
+        )
+        # Visible NON-BLOCKING warning: write to stderr, exit 1. Per Claude Code hook rules a
+        # PreToolUse exit code other than 0/2 shows stderr to the USER and CONTINUES the tool call.
+        # Exit 2 would BLOCK, so we deliberately use 1. No stdout, no JSON, and no permission
+        # decision field of any kind, so Claude's normal permission flow is untouched (no ask,
+        # no allow/auto-approve, no block).
+        sys.stderr.write(message + "\n")
+        return 1
+    return 0  # safe command: silent, allow
 
 
 if __name__ == "__main__":

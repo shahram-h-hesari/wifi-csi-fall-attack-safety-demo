@@ -4,10 +4,24 @@ stage: 8
 gated: false
 type: generated-view   # peer to Notion push; a downstream VIEW, never source-of-truth
 
+design_revision: 2
+design_revision_date: "2026-07-09"
+design_revision_source: >
+  Dashboard design recommendation reviewed and approved by user 2026-07-09 (evidence-gated
+  research cockpit). Cross-references automation/designs/VAL_PILOT_GATE_DESIGN.md (verdict
+  badges, val-pilot panel, receipts). Spec/design change only — no implementation.
+
 purpose: >
   Local, visual, at-a-glance rendering of the SAME verified state the Markdown dashboard shows —
-  cards, progress bars, roadmap timeline, color-coded badges — for faster scanning than Markdown.
+  cards, progress bars, color-coded badges — for faster scanning than Markdown.
   Adds zero new state and zero new authority.
+
+identity:
+  is: "evidence-gated research cockpit — lab control panel crossed with thesis evidence tracker"
+  is_not: "startup KPI dashboard (metrics-going-up styling is the overclaim failure mode)"
+  prime_rule: >
+    Evidence TYPE must be visually shown before (and inseparably from) any performance number.
+    The dominant visual language is badges and gates, not metrics and sparklines.
 
 output_file: "dashboard/index.html"   # single self-contained file: inline CSS/JS, no CDN, no network, opens via file://
 sidecar: "dashboard/README.md"        # one line: GENERATED — do not edit; run the generator
@@ -23,22 +37,134 @@ reads_only:
   activity_feed_only:
     - "automation/receipts/"   # recent-activity feed ONLY, never for status
     - "automation/dashboard_changelog.md"
+  future_status_bearing:
+    - "automation/val_pilot_receipts/"   # ONLY once val-pilot-gate exists (its Stage 4); until then
+                                         # the val-pilot panel renders the design-only placeholder.
+                                         # Directory is NOT created by this spec revision.
 
-generator_script: "scripts/automation/build_html_dashboard.py"   # SEPARATE from update_dashboard.py, by design
+generator_script: "scripts/automation/build_html_dashboard.py"   # SEPARATE from update_dashboard.py, by design; NOT created yet
 generation_gate: "refuses to emit (non-zero exit) if status.json is stale relative to receipts/ (no verify -> no HTML)"
 
-must_show:
-  - "header band: plan-in-effect, HEAD, generated-timestamp, val gate-reads + frozen test-reads counters"
-  - "automation status matrix: per-automation 4-segment progress bar (design/impl/test/accepted), ladder-colored"
-  - "roadmap: 7-day timeline; superseded plans as a collapsed history strip (never deleted)"
-  - "experiment queue cards with per-entry gate verdict"
-  - "research frontier: R90F10 vs F20 vs H15@eps=0.015, each with its evidence badge"
-  - "artifact inventory counts + Overleaf-ready list (full readiness bar)"
-  - "blockers card; approval-needed card; legend for both badge families"
+# ---------------------------------------------------------------------------
+# V1 layout (top to bottom). V1 = first useful visual dashboard, not the perfect one.
+# ---------------------------------------------------------------------------
+layout_v1:
+  - header_band: "plan-in-effect, HEAD, generated-timestamp, verification status, integrity status, validation-read count, frozen-test-read count (both counters as prominent chips)"
+  - alert_strip: "conditional, loud, only when non-empty: awaiting-your-approval, CLAIMED-UNVERIFIED items, integrity failures"
+  - row_1: "Now / Next / Blocked card (left) · automation status matrix with 4-segment design/impl/test/accepted bars (right)"
+  - row_2_two_lane_frontier:
+      lane_1: "thesis-safe / frozen / ACCEPTED evidence (H15@eps=0.015 PASS card with mandatory permanent disclosure chip: eps=0.015, clears recall>90% but not FAR<10%, NOT R90F10)"
+      lane_2: "research-goal / validation-only / post-hoc evidence (R90F10 goal card, F20 post-hoc card, best-val-frontier strip)"
+      divider: "hard visual wall between lanes; evidence class is spatial, not a table column"
+  - row_3: "safety & frozen-protocol registry (left, incl. READ-CONSUMED verdicts) · val-pilot panel placeholder (right): renders 'gate: design-only — no pilots verified' until val_pilot_receipts exist; honest empty states are part of the design"
+  - row_4: "experiment queue cards with per-entry gate verdict (or honest empty state)"
+  - collapsed_audit_sections:
+      - "claim boundaries (thesis-safe-now vs research-goal-only)"
+      - "artifact inventory counts + Overleaf-ready tray (yes / candidate / no)"
+      - "verification ledger (per-task CLAIMED -> VERIFIED -> ACCEPTED detail)"
+      - "recent changes / receipts activity feed"
+      - "do-not-build-yet parking lot"
+      - "roadmap: 7-day timeline; superseded plans as collapsed history strip (never deleted)"
+  - footer: "provenance: generator script + version, source files read, staleness-gate result, 'GENERATED — do not hand-edit', badge legend for all three badge families"
+
+# ---------------------------------------------------------------------------
+# Color law (global, testable)
+# ---------------------------------------------------------------------------
+color_law:
+  green: "ONLY frozen-test evidence + ACCEPTED status. Nothing else may render green."
+  amber: "validation-only, post-hoc, REVIEW-GO, and caution states"
+  red_loud: "integrity failures and CLAIMED-UNVERIFIED (never green, never muted)"
+  gray_outline: "goals not yet met (e.g. R90F10 [research-goal])"
+  screenshot_rule: >
+    No screenshot of the dashboard, captionless, may make R90F10 look achieved unless it truly is.
+    Colors alone must encode the evidence wall.
 
 badge_families_required:
-  status: [CLAIMED, VERIFIED, ACCEPTED, CLAIMED-UNVERIFIED]   # CLAIMED-UNVERIFIED renders LOUD, never green
-  evidence: ["val-only", "frozen-test", "thesis-safe", "research-goal"]
+  evidence: ["validation-only", "frozen-test", "test-post-hoc", "diagnostic-internal", "claimed-unverified"]
+  # manifest also carries test-descriptive / thesis-safe / research-goal labels; these render as
+  # evidence chips too, mapped through the color law (thesis-safe is NOT auto-green; research-goal = gray).
+  automation_status: ["CLAIMED", "VERIFIED", "VERIFIED-AWAITING-APPROVAL", "ACCEPTED"]
+  val_pilot_verdict: ["STRONG-GO", "REVIEW-GO", "NO-GO", "NEEDS-REVIEW"]
+  # verdict color mapping: only ACCEPTED + STRONG-GO may render green; REVIEW-GO amber with its
+  # 'needs >=1 more validation seed' annotation inline; NO-GO integrity failures render loud like
+  # CLAIMED-UNVERIFIED. A STRONG-GO badge is a proposal marker, never a test-read authorization.
+
+# ---------------------------------------------------------------------------
+# Figure rules
+# ---------------------------------------------------------------------------
+figure_rules:
+  no_code_execution: "the dashboard never executes code to produce a figure; figures are static/generated artifacts only"
+  gallery: "OPTIONAL, later-only: clickable gallery = thumbnails -> provenance cards; default ordering/filtering by evidence level, not by chapter"
+  every_figure_must_show:
+    - "evidence level badge"
+    - "Overleaf-ready status (yes / candidate / no)"
+    - "source CSV"
+    - "generating script"
+    - "commit / provenance where available"
+    - "protocol ID when frozen-test"
+  unbadged_rule: "never render an unbadged figure — a figure without its evidence badge must not appear at all"
+
+# ---------------------------------------------------------------------------
+# Python / interactivity rules
+# ---------------------------------------------------------------------------
+interactivity_rules:
+  no_python_run_area: "no Python execution surface inside the dashboard, ever"
+  no_callbacks: "no Streamlit-style callbacks, no server-side handlers"
+  no_notebook_surface: "no notebook-style cell execution"
+  rationale: >
+    Any run surface in the dashboard is a second execution path around the guards: test-split-guard
+    watches Bash/PowerShell tool calls, not dashboard buttons; interactive re-evaluation also corrupts
+    the validation-read budget (evaluations must leave receipts; buttons don't).
+  exploration_lives: "in scripts/notebooks OUTSIDE the dashboard, where guards and receipts see it"
+  display_only: "dashboard displays generated outputs only"
+  interactivity_ceiling: "client-side display-only behavior (collapse/expand, filtering of embedded data, image lightbox); no computation, no execution, no state mutation"
+
+# ---------------------------------------------------------------------------
+# Claude Desktop preview rules
+# ---------------------------------------------------------------------------
+claude_desktop_preview_rules:
+  display_only: "the preview is a third renderer of status.json (after Markdown and HTML); if the preview disagrees with status.json, the preview is wrong"
+  downstream_view: "HTML is a generated downstream view only — never source-of-truth"
+  no_browser_editing: "no editing from the browser; dashboard/index.html is generated-only"
+  no_dev_server_now: "no dev server now; do not click 'Set up dev server' before the generator exists"
+  server_ceiling: "if the preview later requires a server at all, use only a trivial static server serving dashboard/ read-only — no framework, no build step, no API routes, no hot-reload workflow"
+  not_created_now:
+    - "dashboard/index.html is NOT created by this spec revision"
+    - "build_html_dashboard.py is NOT created by this spec revision"
+
+# ---------------------------------------------------------------------------
+# Website / public version rules
+# ---------------------------------------------------------------------------
+public_website_rules:
+  internal_stays_private: "the internal dashboard remains private; never expose it publicly and never make 'public' a flag on the internal generator"
+  public_is_separate_export: "any public version is a separately generated, curated, allowlist-based export — a different artifact"
+  must_remove_before_public:
+    - "internal file paths and repo structure"
+    - "receipts and verification ledger"
+    - "experiment queues and blockers"
+    - "unpublished results and figures"
+    - "validation-only and post-hoc claims"
+    - "operational details (counters, gates, verdicts, candid strategy notes)"
+  public_shape: "simplified story/evidence page (problem, method overview, defended claim set with disclosures, published figures) — not the internal control panel"
+
+# ---------------------------------------------------------------------------
+# V1 / later split
+# ---------------------------------------------------------------------------
+v1_must_have:
+  - "header/status banner"
+  - "alert strip"
+  - "now/next/blocked"
+  - "automation status matrix"
+  - "two-lane research frontier"
+  - "safety & frozen-protocol registry"
+  - "minimal claim boundaries (two static lists)"
+later_only:
+  - "val-pilot receipts table (placeholder until val-pilot-gate exists)"
+  - "clickable figure gallery"
+  - "public website export"
+  - "advisor-facing export"
+  - "startup-facing export"
+  - "any static-server preview"
 
 design_complete:
   - "This acceptance file approved."
@@ -50,6 +176,9 @@ test_passed:
   staleness_gate: "receipt newer than status.json -> generator refuses, exits non-zero"
   status_fidelity: "CLAIMED/VERIFIED/ACCEPTED/CLAIMED-UNVERIFIED counts match status.json; a fixture CLAIMED-UNVERIFIED task renders warning-styled, not green"
   evidence_tag_fidelity: "every rendered metric carries a badge; a [val-only] number never shown without its tag; badge counts reconcile against manifest"
+  color_law_fidelity: "fixture with R90F10 not met must contain zero green styling on the R90F10 card; only frozen-test+ACCEPTED elements may resolve to green"
+  verdict_fidelity: "when val_pilot_receipts exist: rendered verdict counts reconcile against receipts; until then the panel renders the design-only placeholder"
+  never_authorizes: "no rendering path may present a STRONG-GO (or any verdict) as a test-read authorization"
   self_contained_offline: "no http(s)/CDN references; opens under file:// with no console errors"
   no_sot_mutation: "after generation, git status shows only dashboard/index.html changed"
 accepted:
@@ -58,15 +187,20 @@ accepted:
 forbidden_actions:
   - "become or overwrite any source-of-truth"
   - "be hand-edited (dashboard/index.html is generated only)"
+  - "execute code or provide any run surface (Python, callbacks, notebook cells)"
+  - "render a figure or metric without its evidence badge"
+  - "render green for anything other than frozen-test + ACCEPTED"
   - "auto-edit thesis/Overleaf files"
   - "run experiments"
   - "create test authorization tokens"
   - "stage, commit, or push"
   - "read status from receipts (status comes from status.json only)"
   - "reference any external network resource"
+  - "expose the internal dashboard publicly (public version is a separate curated export)"
 
 why_wait: >
   Depends on stable status.json (Stage 4) + artifact_manifest.csv (Stage 6). Building earlier risks
   schema churn/rework, false confidence (a polished UI is the most tempting thing to over-trust before
   the verifier exists), and meta-work gravity (CSS is the worst effort-to-research-value ratio in the
-  system). Build it last, when the schema has stopped moving.
+  system). Build it last, when the schema has stopped moving, AND only after the Markdown dashboard
+  has run generated (not hand-maintained) for >= a few days (do_not_build_yet.md revisit condition).

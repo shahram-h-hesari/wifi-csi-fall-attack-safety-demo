@@ -120,3 +120,15 @@ tasks:
     gated: false
     acceptance: acceptance/dataset-registry.yaml
     stale_after_days: 30
+  - id: TOOL-REXP
+    title: >-
+      Result Explorer v1 — read-only lookup tool over committed registries, ledger/manifest result
+      summaries, and accepted receipts. Explicitly: NO experiment running; NO validation running;
+      NO held-out test access through commands (already-saved committed summaries only); NO result
+      file writes (stdout-only); evidence level comes from manifest/accepted provenance, never
+      filename inference.
+    kind: tool
+    automation: result-explorer
+    gated: false
+    acceptance: acceptance/result-explorer.yaml
+    stale_after_days: 30

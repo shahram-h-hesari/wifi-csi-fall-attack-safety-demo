@@ -5,6 +5,26 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — Research OS layer D2: Result Explorer v1 (read-only lookup tool)
+
+- **actor:** user-approved D2a spec (`f49a58b`) → D2b test-first fixtures → D2c implementation;
+  recorded by Claude. **HEAD** `f49a58b`.
+- **Created:** `scripts/automation/test_result_explorer.py` (D2b: 12 fixtures F1–F11 + no-test-leakage
+  bonus, fully synthetic temp-dir data mirroring real ledger/manifest/registry schemas) then
+  `scripts/automation/result_explorer.py` (D2c). Suite green: **12 passed**; zero test edits were
+  needed after implementation.
+- **Safety properties (spec-enforced + fixture-proven):** manifest is the evidence-level authority
+  (ledger source_file → manifest path join; never filename inference, never upgrades);
+  registry-resolved goals/datasets with unsupported-pair + disallowed-evidence refusals;
+  validation-first defaults (filterless queries can never surface held-out-test rows); saved
+  test/frozen/post-hoc summaries reachable only via named reference_evidence_queries or explicit
+  filters; mandatory warning bands (incl. "not R90F10" on every fall row); honest empty states
+  (data-needed / supported-not-evaluated / no-match / too-broad, cap 25); read-only by construction
+  (no process spawning, no split-flag command strings, no file writes — stdout only; runtime
+  snapshot proof in F1); no real results/ access during tests.
+- **Registered:** `TOOL-REXP` in tasks.yaml. Receipt: `TOOL-REXP` (requires user approval).
+- **NOT built (later, separate approvals):** dashboard rendering of goals/tracks/explorer summary (D3).
+
 ## 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
 
 - **actor:** user-approved design (Commit D plan, refined schema); recorded by Claude. **HEAD** `309e507`.

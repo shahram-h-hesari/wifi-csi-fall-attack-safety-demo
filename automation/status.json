@@ -90,9 +90,23 @@
       "strength": "hash-verified",
       "checks": "1/1",
       "failed": []
+    },
+    "TOOL-REXP": {
+      "display": "APPROVED",
+      "strength": "hash-verified",
+      "checks": "1/1",
+      "failed": []
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "TOOL-REXP",
+      "automation": "result-explorer",
+      "display": "ACCEPTED",
+      "checks": "10/10",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "REG-DATASETS",
       "automation": "dataset-registry",
@@ -259,5 +273,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 21
+  "receipts_processed": 23
 }

@@ -5,6 +5,45 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
+
+- **actor:** session sot-reconciliation (Claude), user-approved commits; **commits** `dbf658a` (behavior) + `5fb2e06` (spec truth-up); **HEAD** `5fb2e06`.
+- **Change:** warn-only mechanism replaced — risky commands now print ONE WARN-ONLY line to **stderr and exit 1**
+  (non-blocking under Claude Code hook rules: stderr is shown to the user and the tool call continues; **only
+  exit 2 blocks**). Safe commands exit 0 silently. Supersedes the original exit-0/stdout-JSON design.
+- **Why:** two visibility mechanisms (stdout systemMessage, then stderr) executed correctly but were not rendered
+  in the Claude Code Desktop main view; diagnosis via session-transcript JSONL proved the hook fires and each
+  warning is durably recorded as a `hook_non_blocking_error` attachment — the **transcript is the audit trail**.
+- **Spec truth-up (`5fb2e06`):** `acceptance/test-split-guard.yaml` gained a `warn_contract` block and corrected
+  `phase_A test_passed` (obsolete exit-0 expectation removed); `frontier.yaml` test_split_guard note updated.
+- **Unchanged:** warn-only (never blocks), no guard log, no tokens, no permission-decision output; fixture suite
+  ALL PASS under the new contract. Receipt: `2026-07-10T064709Z_test-split-guard_AUT-TSG-impl` (supersedes the
+  exit-0 receipt; requires re-approval).
+
+## 2026-07-09 — HTML dashboard visual design spec revision 2
+
+- **actor:** user-approved design/spec update; **commit** `427dacc`.
+- **Edited:** `automation/acceptance/html-dashboard.yaml` — evidence-gated research cockpit identity (NOT a
+  startup KPI dashboard; evidence type before performance numbers), `layout_v1` (header band with val/frozen
+  read counters, alert strip, two-lane frontier with hard evidence wall, val-pilot placeholder, collapsed audit
+  sections, provenance footer), color law (green ONLY for frozen-test + ACCEPTED), three badge families
+  (evidence / automation_status / val_pilot_verdict), figure provenance rules (never render unbadged),
+  no-code-execution interactivity rules, Desktop-preview + public-website rules, V1/later split.
+- **Not built:** no `dashboard/index.html`, no `build_html_dashboard.py`, no dev server. Stage-8 parking-lot
+  soak condition unchanged. Receipt: `2026-07-10T064711Z_dashboard_DASH-S8-design`.
+
+## 2026-07-09 — val-pilot-gate design memo committed (v0.2, user-calibrated)
+
+- **actor:** user-approved design memo; **commit** `3d8e5b2`.
+- **Created:** `automation/designs/VAL_PILOT_GATE_DESIGN.md` — completed-validation-pilot definition, evidence
+  rules, strict matching rule (checkpoint path + SHA-256, run_name, seed, epsilon, threshold source), and the
+  user-calibrated verdict scheme **STRONG-GO / REVIEW-GO / NO-GO / NEEDS-REVIEW** with three accepted edge-case
+  defaults (no-category -> NEEDS-REVIEW; operational dominance; operational low-FAR improvement, novelty stays
+  human-judged). Gate never authorizes a test read; test-split-guard stays warn-only; no blocking mode.
+- **Design only:** no implementation, no scanner, no receipts directory, no guard integration.
+  `acceptance/val-pilot-gate.yaml` reconciliation deferred (memo §10 step 1, awaits explicit go-ahead).
+  Receipt: `2026-07-10T064710Z_val-pilot-gate_AUT-VPG-design`.
+
 ## 2026-07-09 — test-split-guard built (WARN-ONLY phase)
 
 - **actor:** skill/dashboard-build (Claude); **HEAD** `77280f0`.

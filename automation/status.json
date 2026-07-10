@@ -82,11 +82,27 @@
   },
   "verification_ledger": [
     {
+      "task_id": "DASH-S8-design",
+      "automation": "dashboard",
+      "display": "ACCEPTED",
+      "checks": "3/3",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
+      "task_id": "AUT-VPG-design",
+      "automation": "val-pilot-gate",
+      "display": "ACCEPTED",
+      "checks": "3/3",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
       "task_id": "AUT-TSG-impl",
       "automation": "test-split-guard",
       "display": "ACCEPTED",
-      "checks": "12/12",
-      "strength": "existence-only",
+      "checks": "8/8",
+      "strength": "hash-verified",
       "failed": []
     },
     {
@@ -207,5 +223,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 10
+  "receipts_processed": 15
 }

@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T064709Z_test-split-guard_AUT-TSG-impl",
+  "task_id": "AUT-TSG-impl",
+  "automation": "test-split-guard",
+  "actor": { "kind": "skill", "name": "sot-reconciliation", "session_hint": "auditable-warning" },
+  "status_claimed": "done",
+  "summary": "test-split-guard warn-only contract made VISIBLE and AUDITABLE (commit dbf658a; spec truth-up 5fb2e06). Supersedes the original exit-0/stdout receipt: risky commands now print ONE WARN-ONLY line to stderr and exit 1 — non-blocking under Claude Code hook rules (only exit 2 blocks; the tool call continues); safe commands exit 0 silently. Each warning is transcript-auditable as a hook_non_blocking_error attachment. Unchanged guarantees: no blocking mode, no tokens, no permission-decision output of any kind. Fixture suite ALL PASS under the new contract.",
+  "files_created": [],
+  "files_modified": [
+    { "path": "scripts/automation/test_split_guard.py", "sha256": "5b254d19ffc5fee91eacd5ff5e55d05699ecb2330d3a4f24933184e6acc1f16b" },
+    { "path": "scripts/automation/test_split_guard_cases.py", "sha256": "168c2b63451d2f995af74d1a97e5c4626e123fc171bb864d5b6cd4c7161141ee" },
+    { "path": ".claude/settings.json", "sha256": "84e4c67127ce9a2d197c7c582655deb47b5f90d720e0191423e6aeaa4a7d2cae" },
+    { "path": "automation/acceptance/test-split-guard.yaml", "sha256": "1f042c878b2cc931f143234fa5b072c145605d72f5deebb897f6df263fcf51b9" },
+    { "path": "automation/frontier.yaml", "sha256": "487736e3053ca1c30daa4202147993f99bbe245ce023d38f9a93695a0a4ec481" }
+  ],
+  "commands_run": [
+    { "cmd": "fixture suite (scripts/automation/test_split_guard_cases.py) — ALL PASS; asserts risky sentinel => WARN-ONLY on stderr + non-blocking exit 1 with empty stdout, and safe validation sentinel => silent exit 0", "exit_code": 0 },
+    { "cmd": "safe validation split sentinel probe via stdin — silent", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "TSG-warn-only-fixtures", "result": "pass", "evidence_path": "scripts/automation/test_split_guard_cases.py" },
+    { "id": "TSG-never-blocks", "result": "pass", "evidence_path": "scripts/automation/test_split_guard.py" },
+    { "id": "TSG-transcript-auditable", "result": "pass", "evidence_path": "automation/acceptance/test-split-guard.yaml" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "5fb2e06", "expected_dirty": ["automation/receipts/**", "automation/dashboard_changelog.md", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-09T00:07:00Z_test-split-guard_AUT-TSG",
+  "next_action": "User review; re-approve AUT-TSG-impl under the auditable-warning contract (update_dashboard.py --approve AUT-TSG-impl)."
+}

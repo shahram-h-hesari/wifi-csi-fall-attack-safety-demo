@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T064710Z_val-pilot-gate_AUT-VPG-design",
+  "task_id": "AUT-VPG-design",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "sot-reconciliation", "session_hint": "design-memo" },
+  "status_claimed": "done",
+  "summary": "val-pilot-gate design memo v0.2 committed (3d8e5b2) at automation/designs/VAL_PILOT_GATE_DESIGN.md. User-calibrated verdict scheme: STRONG-GO (complete pilot; val PGD Rfall@FAR<=0.10 >= 0.70; AUROC >= 0.90; clean recall degradation <= 5pp; human approval still required before any frozen protocol) / REVIEW-GO (Rfall band [0.50,0.70) OR AUROC band [0.88,0.90); novel or improves low-FAR; requires >=1 additional validation seed) / NO-GO (integrity contamination, missing metadata, checkpoint mismatch, wrong split; or AUROC clearly < 0.88 without low-FAR improvement; or dominated) / NEEDS-REVIEW (default bucket for anything matching no category). Three accepted edge-case defaults recorded in memo section 5.4. Design only: no implementation, no receipts directory, no scanner, no guard integration, no blocking.",
+  "files_created": [
+    { "path": "automation/designs/VAL_PILOT_GATE_DESIGN.md", "sha256": "8184e886736c847e27473a73c6d7c89d06fdd4af6c2fbb912c2f944e3e7bd9bd" }
+  ],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "5fb2e06", "expected_dirty": ["automation/receipts/**", "automation/dashboard_changelog.md", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Optional user approval of the design milestone; implementation order per memo section 10 (acceptance spec first) awaits separate explicit user go-ahead."
+}

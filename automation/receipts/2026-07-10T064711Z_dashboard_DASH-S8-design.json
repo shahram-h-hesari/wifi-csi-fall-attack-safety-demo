@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T064711Z_dashboard_DASH-S8-design",
+  "task_id": "DASH-S8-design",
+  "automation": "dashboard",
+  "actor": { "kind": "skill", "name": "sot-reconciliation", "session_hint": "html-spec-rev2" },
+  "status_claimed": "done",
+  "summary": "HTML dashboard acceptance spec design revision 2 committed (427dacc) at automation/acceptance/html-dashboard.yaml. Adds: evidence-gated research cockpit identity (not a startup KPI dashboard; evidence type renders before performance numbers), layout_v1 (header band with read counters, alert strip, two-lane frontier with hard evidence wall, safety/frozen registry, val-pilot placeholder, collapsed audit sections, provenance footer), color law (green only for frozen-test + ACCEPTED), three badge families (evidence / automation_status / val_pilot_verdict incl. STRONG-GO/REVIEW-GO/NO-GO/NEEDS-REVIEW), figure provenance rules (never render unbadged), no-code-execution interactivity rules, Claude Desktop preview rules (display-only, no dev server), public-website rules (separate curated export only), V1/later split, three new test_passed fixtures (color_law_fidelity, verdict_fidelity, never_authorizes). HTML implementation remains not_started: no dashboard/index.html, no build_html_dashboard.py, no dev server; do_not_build_yet soak condition unchanged.",
+  "files_created": [],
+  "files_modified": [
+    { "path": "automation/acceptance/html-dashboard.yaml", "sha256": "eb11249c1e96c5b46f2d40af61300b2f91f65592d7b68105fa01ca38ced0c5d4" }
+  ],
+  "commands_run": [
+    { "cmd": "read-only YAML parse check of automation/acceptance/html-dashboard.yaml — PARSE OK, 30 top-level keys", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "5fb2e06", "expected_dirty": ["automation/receipts/**", "automation/dashboard_changelog.md", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Optional user approval of the design revision; DASH-S8 build stays parked behind the do_not_build_yet soak condition (Markdown dashboard generated for >= a few days)."
+}

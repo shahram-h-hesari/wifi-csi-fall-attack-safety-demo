@@ -1,0 +1,187 @@
+schema_version: 1
+automation: result-explorer
+stage: research-os-2
+gated: false
+type: tool   # read-only lookup CLI; NO experiment execution, ever
+
+status: DESIGN-DRAFT   # D2a: spec only. No executable code exists yet; result_explorer.py is NOT created.
+
+purpose: >
+  Result Explorer v1 — read-only lookup over EXISTING, already-committed results (defense-attempt
+  ledger + artifact manifest), joined through the goal and dataset registries. Answers "what
+  evidence do we already have for goal X under conditions Y?" with task-aware metric names,
+  evidence badges, provenance, and mandatory warnings. Makes missing data/evaluation visible as
+  first-class honest empty states. Never runs, schedules, or authorizes any experiment,
+  validation run, or test read.
+
+tool_script: "scripts/automation/result_explorer.py"        # FUTURE (D2c) — not created in D2a
+fixture_test: "scripts/automation/test_result_explorer.py"  # FUTURE (D2b) — not created in D2a
+proposed_task_id: TOOL-REXP                                  # to be added to tasks.yaml at implementation time
+proposed_receipt_name: "<UTC>_result-explorer_TOOL-REXP.json"
+
+# ---------------------------------------------------------------- inputs (read-only, committed)
+reads_only:
+  registries:
+    - "automation/registry/goals.yaml"
+    - "automation/registry/datasets.yaml"
+  results_sources:
+    - "results/defense_attempt_inventory/defense_attempt_results_long.csv"   # ledger (committed)
+    - "automation/artifact_manifest.csv"                                     # manifest (committed)
+  provenance_sources:
+    - "automation/receipts/"          # accepted receipts, provenance enrichment only
+  never_reads:
+    - "checkpoints (any .pt/.pth/.ckpt)"
+    - "raw prediction CSVs requiring new inference to interpret"
+    - "held-out test data through any command or loader"
+
+# ---------------------------------------------------------------- 1. query contract
+query_contract:
+  fields:
+    goal: "required unless a named reference query is used; resolved via registry aliases"
+    dataset_family: "optional filter (e.g. SenseFi)"
+    dataset: "optional filter (e.g. UT-HAR); resolved via automation/registry/datasets.yaml"
+    attack: "optional (fgsm | pgd | none)"
+    epsilon: "optional numeric; exact match"
+    defense: "optional (ledger approach_group / method name)"
+    split: "optional (val | test); see evidence access rules"
+    evidence_level: "optional (validation-only | frozen-test | test-descriptive | test-post-hoc | diagnostic-internal)"
+    reference_evidence_query: "optional NAMED key from goals.yaml reference_evidence_queries (e.g. H15_eps0015_frozen)"
+  resolution_rules:
+    - "goal resolves through automation/registry/goals.yaml (id or aliases); unknown goal -> refuse with the registered goal list"
+    - "dataset resolves through automation/registry/datasets.yaml; unknown dataset -> refuse"
+    - "REFUSE any (goal, dataset) pair the dataset registry marks unsupported (integrity gate)"
+    - "omitted filters fill from the goal's default_query_fields — which are validation-first by registry rule"
+    - "default exploration NEVER lands on split=test: test/frozen evidence appears ONLY when the user passes an explicit split/evidence_level filter or invokes a named reference_evidence_query"
+    - "evidence_level filters are validated against the goal's allowed_evidence_levels; requesting a level the goal does not allow -> refuse (e.g. frozen-test for walking_detection)"
+
+# ---------------------------------------------------------------- 2. output contract
+output_contract:
+  per_result_row:
+    - goal
+    - dataset_family
+    - dataset
+    - attack
+    - epsilon
+    - defense_or_method_name        # ledger method_internal_name / method_thesis_name + approach_group
+    - split
+    - evidence_level
+    - task_aware_metrics            # named from the goal's primary_metric_keys (e.g. fall_recall from Rfall), never generic
+    - recall_or_task_metric         # Rfall/FAR for fall_detection; task-specific false-alert metric otherwise
+    - confusion_counts              # TP/FN/FP/TN when available in the source row
+    - auroc                         # when available
+    - source_file                   # ledger source_file / manifest path
+    - provenance                    # REQUIRED sub-fields, each shown when available: source_file,
+                                    # sha256/hash, commit, receipt_id, committed/accepted status
+                                    # (from manifest + accepted receipts)
+    - warning_band                  # ALWAYS present; may be 'none' only for frozen-test rows that also meet the stated target
+  default_display_cap: 25          # max rows rendered before the query_too_broad empty state fires
+  mandatory_warning_bands:
+    - "validation-only — selection evidence, not a thesis result"
+    - "test-post-hoc — descriptive only; not a frozen read"
+    - "diagnostic-internal — internal diagnostics; no claim"
+    - "not R90F10 — displayed on EVERY fall_detection row until R90F10 is met at eps=0.030"
+    - "no verified result — row exists but is not backed by verified evidence"
+    - "data needed — goal has no supporting dataset/labels locally"
+  rendering_rules:
+    - "never print a metric without its evidence badge and warning band"
+    - "never rename or upgrade an evidence level; ledger/manifest values are authoritative"
+    - "metric keys with no ledger column render as 'defined, not evaluated' — NEVER as 0, blank, or fabricated"
+
+# ---------------------------------------------------------------- 3. honest empty states
+honest_empty_states:
+  distinguish:
+    - id: supported_not_evaluated
+      when: "goal is in the dataset's supported_goals but no ledger/manifest row exists"
+      message: "NO RESULTS — goal supported by <dataset> but not yet evaluated"
+    - id: unsupported_pair
+      when: "goal is in the dataset's unsupported_goals"
+      message: "REFUSED — <dataset> cannot support <goal> (see registry unsupported_goals)"
+    - id: metric_not_populated
+      when: "goal metric key has no ledger column / no populated value"
+      message: "metric defined (<key>), not evaluated — no result column exists"
+    - id: data_needed
+      when: "goal has empty datasets_available (walking_pattern_recognition, gait_or_mobility_change_detection, future_fall_risk_prediction)"
+      message: "NO RESULTS — data needed: <goals.yaml data_needs list>"
+    - id: query_too_broad
+      when: "result set exceeds output_contract.default_display_cap (25) without narrowing filters"
+      message: "QUERY TOO BROAD — <n> rows exceeds cap 25; add filters (attack/epsilon/defense/split)"
+    - id: no_matching_artifact
+      when: "filters are valid but nothing matches"
+      message: "NO MATCH — valid query, zero rows under these filters"
+  rule: "empty states are OUTPUTS, not errors; each names the reason and the registry field that explains it"
+
+# ---------------------------------------------------------------- 4. read-only safety contract
+read_only_safety_contract:
+  must:
+    - "read ONLY committed registries, ledger CSVs, manifest CSVs, and accepted receipts"
+    - "treat already-saved committed result summaries as the ONLY window onto test evidence"
+  must_never:
+    - "call any training or evaluation script"
+    - "invoke export_probability_predictions.py or adaptive_gate_attack.py"
+    - "run any subprocess whose command contains a --split argument"
+    - "create or modify any file under results/"
+    - "modify RESEARCH_DASHBOARD.md or automation/status.json"
+    - "write outside stdout (a report-file flag may be proposed LATER as its own approved change)"
+    - "access held-out test data through commands, loaders, or checkpoints"
+    - "fabricate, interpolate, or aggregate metrics not present in the source row"
+    - "stage, commit, or push"
+
+# ---------------------------------------------------------------- 5. fixture / test plan (D2b)
+fixture_plan:
+  harness: "synthetic ledger+manifest+registries in a temp dir; no real results/ access during tests"
+  cases:
+    - id: F1_val_hit
+      query: "fall_detection + UT-HAR + pgd + epsilon 0.030 + evidence_level validation-only"
+      expect: "row with fall-named metrics, [validation-only] badge, warning band incl. 'not R90F10'"
+    - id: F2_named_frozen_reference
+      query: "fall_detection + reference_evidence_query H15_eps0015_frozen"
+      expect: "frozen-test row (eps 0.015, protocol id), reachable ONLY via the named query or explicit filter"
+    - id: F3_named_posthoc_reference
+      query: "fall_detection + reference_evidence_query AFAC_eps0030_F20_posthoc"
+      expect: "test-post-hoc row with mandatory post-hoc warning"
+    - id: F4_val_warning_mandatory
+      expect: "any validation-only row carries its warning; asserting absence fails the test"
+    - id: F5_posthoc_warning_mandatory
+      expect: "any test-post-hoc row carries its warning; asserting absence fails the test"
+    - id: F6_walking_supported_not_evaluated
+      query: "walking_detection + UT-HAR"
+      expect: "honest empty state supported_not_evaluated (never a fabricated metric)"
+    - id: F7_gait_pattern_data_needed
+      query: "walking_pattern_recognition"
+      expect: "honest empty state data_needed listing registry data_needs"
+    - id: F8_fall_risk_data_needed
+      query: "future_fall_risk_prediction"
+      expect: "honest empty state data_needed / unsupported; empty allowed_evidence_levels honored"
+    - id: F9_unsupported_pair_refused
+      query: "gait_or_mobility_change_detection + UT-HAR"
+      expect: "REFUSED via dataset unsupported_goals (integrity gate)"
+    - id: F10_disallowed_evidence_refused
+      query: "walking_detection + evidence_level frozen-test"
+      expect: "REFUSED — frozen-test not in walking_detection allowed_evidence_levels"
+    - id: F11_read_only_static_check
+      expect: "static scan of result_explorer.py: no subprocess with --split, no export/gate script call, no write outside stdout, no results/ write path"
+
+# ---------------------------------------------------------------- 6. acceptance criteria (what D2 must prove)
+design_complete:
+  - "This acceptance file approved by the user (D2a)."
+implementation_complete:
+  - "test_result_explorer.py exists implementing the fixture plan (D2b, test-first)."
+  - "result_explorer.py exists and passes all fixtures (D2c)."
+test_passed:
+  honest_metrics: "every displayed number traces to a source row; F6-F8 prove no fabrication"
+  no_evidence_upgrade: "evidence levels pass through verbatim; no rename, no promotion (F2/F3/F10)"
+  mandatory_warnings: "F4/F5 + 'not R90F10' on all fall rows"
+  registry_resolution: "goals/datasets resolved only through the registries; aliases work; unknowns refused (F9/F10)"
+  read_only: "F11 static check + runtime proof: after any query, git status shows no tracked change"
+  provenance: "every row shows source_file; sha256/hash, commit, receipt_id, and committed/accepted status shown whenever manifest/receipts provide them"
+  no_test_leakage: "default (filterless) queries can never return split=test rows; test evidence requires explicit filter or named reference query (F1 vs F2)"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for TOOL-REXP."
+
+forbidden_actions:
+  - "run experiments, validation runs, or test reads"
+  - "invoke any script that generates predictions"
+  - "fabricate a number or upgrade an evidence level"
+  - "print a metric without its badge and warning band"
+  - "write anywhere except stdout"
+  - "stage, commit, or push"

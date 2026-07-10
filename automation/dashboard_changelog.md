@@ -5,6 +5,31 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
+
+- **actor:** user-approved safety task; recorded by Claude. **HEAD** `3251764`.
+- **Root cause:** `has_user_approval(task_id, receipts)` checked ANY user-kind receipt for a
+  task_id, ignoring which claim it approved -- a newer claim silently inherited ACCEPTED from an
+  older approval that had never seen it. Found live during REG-GOALS reconciliation; a read-only
+  historical inventory then showed it also affected `AUT-TSG-impl` (its only approval predates the
+  auditable-warning-contract claim that superseded the original claim it approved).
+- **Fix (`scripts/automation/update_dashboard.py`):** new `active_claim_for_task()` (claims only,
+  never an approval receipt, also fixing a latent bug where a same-day-later approval could be
+  mistaken for the newest claim) + `claim_approved_by()` (exact `approved_claim_receipt_id` [+
+  `approved_claim_sha256`] match, or a deterministic legacy rule for pre-fix approvals: applies
+  only to the claim active at the approval's own timestamp, never to a later one).
+  `write_approval()` now always stamps the binding; `do_approve()` resolves and binds to the
+  current active claim; the `[Awaiting your approval]` count now dedupes by active claim per task.
+- **Tests (`scripts/automation/test_approve.py`):** rewritten — original R1-R4 fixed (fixtures
+  gained `receipt_id`) + new suite A-H (exact/old/new/wrong-task/hash-mismatch/legacy-format/CLI
+  mechanism) + a synthetic reproduction of the real incident. All pass; `test_verify.py` unaffected.
+- **Historical migration (read-only inventory, no receipts fabricated or edited):** applying the
+  rule to real repo receipts regresses exactly one task, `AUT-TSG-impl`, from ACCEPTED to
+  VERIFIED-AWAITING-APPROVAL -- correctly so; user may re-approve via `--approve AUT-TSG-impl`.
+  `REG-GOALS` and all other single-claim/single-approval gated tasks are unaffected.
+- **Not done this step:** D2d-2, experiment/H15 naming standard, any real re-approval of
+  `AUT-TSG-impl`. Receipt: `AUT-APPROVAL-BIND` (requires user approval via the corrected CLI).
+
 ## 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
 
 - **actor:** user-approved design (D2d memo, Option B chosen over Option A ledger-backfill);

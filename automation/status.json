@@ -79,32 +79,46 @@
       "display": "not_started",
       "checks": "0/0"
     },
-    "REG-GOALS": {
-      "display": "APPROVED",
+    "AUT-APPROVAL-BIND": {
+      "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "1/1",
+      "checks": "18/18",
+      "failed": []
+    },
+    "REG-GOALS": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "15/15",
       "failed": []
     },
     "REG-DATASETS": {
-      "display": "APPROVED",
+      "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "1/1",
+      "checks": "10/10",
       "failed": []
     },
     "REF-EVID": {
-      "display": "APPROVED",
+      "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "1/1",
+      "checks": "7/7",
       "failed": []
     },
     "TOOL-REXP": {
-      "display": "APPROVED",
+      "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "1/1",
+      "checks": "10/10",
       "failed": []
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "AUT-APPROVAL-BIND",
+      "automation": "dashboard-refresh",
+      "display": "ACCEPTED",
+      "checks": "18/18",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "REG-GOALS",
       "automation": "goal-registry",
@@ -287,5 +301,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 27
+  "receipts_processed": 30
 }

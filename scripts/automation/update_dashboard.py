@@ -277,14 +277,73 @@ def compute_display(claimed, verification, gated, has_user_approval):
     return "VERIFIED-AWAITING-APPROVAL" if gated else "VERIFIED"
 
 
-def latest_done_receipt(task_id, receipts):
-    rs = [r for r in receipts if r.get("task_id") == task_id]
-    return sorted(rs, key=lambda r: r.get("receipt_id", ""))[-1] if rs else None
+def _claims_for_task(task_id, receipts):
+    """CLAIM receipts (status_claimed == 'done') for task_id, oldest -> newest. Approval receipts
+    are never included here -- this is what fixes 'the latest receipt happened to be an approval'
+    from ever being mistaken for the active claim."""
+    return sorted(
+        [r for r in receipts if r.get("task_id") == task_id and r.get("status_claimed") == "done"],
+        key=lambda r: r.get("receipt_id", ""))
 
 
-def has_user_approval(task_id, receipts):
-    return any(r.get("task_id") == task_id and r.get("actor", {}).get("kind") == "user"
-               for r in receipts)
+def _approvals_for_task(task_id, receipts):
+    """actor.kind == 'user' receipts for task_id, oldest -> newest."""
+    return sorted(
+        [r for r in receipts if r.get("task_id") == task_id and r.get("actor", {}).get("kind") == "user"],
+        key=lambda r: r.get("receipt_id", ""))
+
+
+def active_claim_for_task(task_id, receipts):
+    """The single active claim for task_id: the newest status_claimed=='done' receipt. A prior
+    (superseded) claim remains historically valid but is never the active one."""
+    claims = _claims_for_task(task_id, receipts)
+    return claims[-1] if claims else None
+
+
+def claim_approved_by(claim, receipts, base: Path = REPO):
+    """Return the approval receipt that explicitly and correctly approves `claim`, or None.
+
+    Exact match (current receipts, schema_version>=... carrying approved_claim_receipt_id):
+      approval.task_id == claim.task_id AND
+      approval.approved_claim_receipt_id == claim.receipt_id
+      (+ if approval.approved_claim_sha256 is present, it must match sha256 of the claim's own
+      receipt file on disk -- tamper-evidence beyond the append-only convention).
+
+    Legacy match (older approvals with no approved_claim_receipt_id field): the approval is
+    accepted for `claim` ONLY if `claim` was genuinely the active claim at the moment the approval
+    was written -- i.e. no OTHER claim for the same task exists with a receipt_id between claim's
+    and the approval's. This is deterministic (there is at most one such claim) and conservative:
+    an approval written before a later superseding claim existed can NEVER cover that later claim.
+    """
+    if not claim:
+        return None
+    task_id = claim.get("task_id")
+    claim_id = claim.get("receipt_id")
+    claims = _claims_for_task(task_id, receipts)
+    for a in _approvals_for_task(task_id, receipts):
+        bound = a.get("approved_claim_receipt_id")
+        if bound:
+            if bound != claim_id:
+                continue
+            sha = a.get("approved_claim_sha256")
+            if sha:
+                p = base / "automation" / "receipts" / f"{claim_id}.json"
+                if not (p.exists() and sha256_file(p) == sha):
+                    continue  # tamper/mismatch -> not a valid approval of this claim
+            return a
+        else:
+            # legacy: the claim active strictly before this approval's timestamp, if unique.
+            prior = [c for c in claims if c.get("receipt_id", "") < a.get("receipt_id", "")]
+            if prior and prior[-1].get("receipt_id") == claim_id:
+                return a
+    return None
+
+
+def has_user_approval(task_id, receipts, base: Path = REPO):
+    """Whether the ACTIVE (latest) claim for task_id is approved -- exact-claim or deterministic-
+    legacy match only (see claim_approved_by). An approval for an older, superseded claim never
+    silently covers a newer one."""
+    return claim_approved_by(active_claim_for_task(task_id, receipts), receipts, base=base) is not None
 
 
 # ---------------------------------------------------------------- status model
@@ -295,15 +354,14 @@ def build_status(roadmap, tasks, frontier, receipts):
     task_states = {}
     for t in tasks.get("tasks", []):
         tid = t["id"]
-        rs = [r for r in receipts if r.get("task_id") == tid]
-        if not rs:
+        latest = active_claim_for_task(tid, receipts)   # CLAIMS only -- never an approval receipt
+        if latest is None:
             task_states[tid] = {"display": "not_started", "checks": "0/0"}
             continue
-        latest = sorted(rs, key=lambda r: r.get("receipt_id", ""))[-1]
         v = verify_receipt(latest)
         gated_eff = is_gated(tid, tasks) or bool(latest.get("requires_user_approval"))
         disp = compute_display(latest.get("status_claimed"), v,
-                               gated_eff, has_user_approval(tid, receipts))
+                               gated_eff, claim_approved_by(latest, receipts) is not None)
         npass = sum(1 for c in v["checks"] if c["ok"])
         task_states[tid] = {
             "display": disp, "strength": v["strength"],
@@ -322,7 +380,8 @@ def build_status(roadmap, tasks, frontier, receipts):
         seen.add(tid)
         v = verify_receipt(r)
         gated_eff = is_gated(tid, tasks) or bool(r.get("requires_user_approval"))
-        disp = compute_display("done", v, gated_eff, has_user_approval(tid, receipts))
+        # `r` IS the active claim by construction of this reverse-sorted, first-hit-per-task loop.
+        disp = compute_display("done", v, gated_eff, claim_approved_by(r, receipts) is not None)
         npass = sum(1 for c in v["checks"] if c["ok"])
         ledger.append({
             "task_id": tid, "automation": r.get("automation"),
@@ -438,9 +497,14 @@ def r_now_next(roadmap, receipts):
     if nxt:
         lines.append(f"- **Next ({nxt['date']}):** {nxt.get('primary','')}")
     blocked = [r for r in receipts if r.get("status_claimed") == "blocked"]
-    approvals = [r for r in receipts
-                 if r.get("requires_user_approval") and r.get("actor", {}).get("kind") != "user"
-                 and not has_user_approval(r.get("task_id"), receipts)]
+    # Only the ACTIVE claim per task can be "awaiting approval" -- a superseded claim is historical
+    # and must never be counted a second time alongside the claim that replaced it.
+    task_ids = {r.get("task_id") for r in receipts if r.get("status_claimed") == "done"}
+    approvals = []
+    for tid in task_ids:
+        claim = active_claim_for_task(tid, receipts)
+        if claim and claim.get("requires_user_approval") and claim_approved_by(claim, receipts) is None:
+            approvals.append(claim)
     lines.append(f"- **Blockers:** {len(blocked) or 'none'}")
     lines.append(f"- **Awaiting your approval:** {len(approvals) or 'none'}"
                  + (" — " + ", ".join(sorted({r.get('task_id','?') for r in approvals})) if approvals else ""))
@@ -677,17 +741,35 @@ def ledger_display(status, task_id):
     return None
 
 
-def write_approval(task_id, receipts_dir=None, dry_run=False, note=None):
-    """Write a user approval receipt (actor.kind == user). The ONLY way a task reaches ACCEPTED.
-    Must only ever be invoked by an explicit human `--approve` request — never autonomously."""
+def write_approval(task_id, receipts_dir=None, dry_run=False, note=None,
+                    active_claim=None, receipts=None):
+    """Write a user approval receipt (actor.kind == user), BOUND to the exact active claim receipt
+    for task_id via approved_claim_receipt_id (+ approved_claim_sha256 when the claim file can be
+    hashed). The ONLY way a task reaches ACCEPTED. Must only ever be invoked by an explicit human
+    `--approve` request — never autonomously.
+
+    `active_claim` may be supplied directly (tests, or a caller that already resolved it); otherwise
+    it is looked up via active_claim_for_task(task_id, receipts or load_receipts()). Refuses (returns
+    (None, None)) if no claim exists to bind to -- an approval can never float free of a claim."""
     receipts_dir = Path(receipts_dir) if receipts_dir else (AUT / "receipts")
+    if active_claim is None:
+        active_claim = active_claim_for_task(task_id, receipts if receipts is not None else load_receipts())
+    if active_claim is None:
+        return None, None
+    claim_rid = active_claim.get("receipt_id")
+    claim_path = receipts_dir / f"{claim_rid}.json"
+    claim_sha = sha256_file(claim_path) if claim_path.exists() else None
+
     ts = _dt.datetime.now(_dt.timezone.utc).strftime("%Y-%m-%dT%H%M%SZ")
     rid = f"{ts}_user-approval_{task_id}"
     receipt = {
         "schema_version": 1, "receipt_id": rid, "task_id": task_id,
         "automation": "(user-approval)", "actor": {"kind": "user", "name": "user"},
         "status_claimed": "approved",
-        "summary": note or f"User approved {task_id} (evidence was VERIFIED-AWAITING-APPROVAL).",
+        "approved_claim_receipt_id": claim_rid,
+        "approved_claim_path": f"automation/receipts/{claim_rid}.json",
+        "approved_claim_sha256": claim_sha,
+        "summary": note or f"User approved {task_id} (claim {claim_rid}; evidence was VERIFIED-AWAITING-APPROVAL).",
         "files_created": [], "files_modified": [], "commands_run": [], "artifacts": [],
         "acceptance_tests": [],
         "split_usage": {"splits_touched": [], "test_read": False, "authorization_token": None},
@@ -703,19 +785,27 @@ def write_approval(task_id, receipts_dir=None, dry_run=False, note=None):
 
 def do_approve(task_id):
     _, _, status = do_render(write=False)
+    receipts = load_receipts()
+    active_claim = active_claim_for_task(task_id, receipts)
     disp = (status["tasks"].get(task_id) or {}).get("display") or ledger_display(status, task_id)
     if disp is None:
         print(f"[approve] REFUSED: unknown task '{task_id}'.")
         return 1
     if disp == "ACCEPTED":
-        print(f"[approve] {task_id} is already ACCEPTED; nothing to do.")
+        approving = claim_approved_by(active_claim, receipts) if active_claim else None
+        detail = (f" (claim {active_claim['receipt_id']}, approval {approving['receipt_id']})"
+                  if active_claim and approving else "")
+        print(f"[approve] {task_id} is already ACCEPTED{detail}; nothing to do.")
         return 0
     if disp != "VERIFIED-AWAITING-APPROVAL":
         print(f"[approve] REFUSED: {task_id} is '{disp}', not VERIFIED-AWAITING-APPROVAL. "
               "Only evidence-verified tasks awaiting approval can be accepted.")
         return 1
-    rid, _ = write_approval(task_id)
-    print(f"[approve] wrote user approval receipt: {rid}")
+    if active_claim is None:
+        print(f"[approve] REFUSED: no claim receipt found for '{task_id}' to bind approval to.")
+        return 1
+    rid, _ = write_approval(task_id, active_claim=active_claim, receipts=receipts)
+    print(f"[approve] wrote user approval receipt: {rid} (bound to claim {active_claim['receipt_id']})")
     do_render(write=True)
     return 0
 

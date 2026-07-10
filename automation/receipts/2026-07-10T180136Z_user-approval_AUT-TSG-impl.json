@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T180136Z_user-approval_AUT-TSG-impl",
+  "task_id": "AUT-TSG-impl",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-10T064709Z_test-split-guard_AUT-TSG-impl",
+  "approved_claim_path": "automation/receipts/2026-07-10T064709Z_test-split-guard_AUT-TSG-impl.json",
+  "approved_claim_sha256": "6b53db8424571e6cfdddb98a1e7229fe7e9e425b3e109914b631922936b23475",
+  "summary": "User approved AUT-TSG-impl (claim 2026-07-10T064709Z_test-split-guard_AUT-TSG-impl; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "3251764",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

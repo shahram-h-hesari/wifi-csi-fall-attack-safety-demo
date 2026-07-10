@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 27 |
+| Receipts processed | 30 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -68,6 +68,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `AUT-APPROVAL-BIND` | dashboard-refresh | ✅ ACCEPTED | 18/18 | hash-verified | — |
 | `REG-GOALS` | goal-registry | ✅ ACCEPTED | 15/15 | hash-verified | — |
 | `REF-EVID` | reference-evidence | ✅ ACCEPTED | 7/7 | hash-verified | — |
 | `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 10/10 | hash-verified | — |
@@ -168,6 +169,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
 - 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
 - 2026-07-10 — Research OS layer D2: Result Explorer v1 (read-only lookup tool)
 - 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
@@ -177,6 +179,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-09 — val-pilot-gate design memo committed (v0.2, user-calibrated)
 - 2026-07-09 — test-split-guard built (WARN-ONLY phase)
 - 2026-07-09 — Stage 6 scan_artifacts.py + artifact_manifest.csv + Overleaf-ready section built
-- 2026-07-09 — Stage 5 /dashboard-refresh skill + approval path built
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

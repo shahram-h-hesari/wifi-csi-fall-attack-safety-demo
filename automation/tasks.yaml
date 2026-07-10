@@ -104,6 +104,18 @@ tasks:
     gated: false
     acceptance: acceptance/git-stage-check.yaml
     stale_after_days: 4
+  - id: AUT-APPROVAL-BIND
+    title: >-
+      Approval-binding safety fix — user approvals bind to the exact claim receipt_id they
+      approve (approved_claim_receipt_id [+ approved_claim_sha256]), never merely to a task_id.
+      Fixes: a newer claim inheriting ACCEPTED from an older approval that never saw it (found in
+      AUT-TSG-impl and REG-GOALS). Legacy approvals honored only via a deterministic
+      claim-active-at-approval-time rule; never carried forward to a later superseding claim.
+    kind: automation
+    automation: dashboard-refresh
+    gated: false
+    acceptance: acceptance/dashboard-refresh.yaml
+    stale_after_days: 4
 
   # --- Research OS layer (registries; Commit D1) ---
   - id: REG-GOALS

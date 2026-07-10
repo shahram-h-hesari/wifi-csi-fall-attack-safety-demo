@@ -171,6 +171,23 @@ tasks:
     gated: false
     acceptance: acceptance/result-explorer.yaml
     stale_after_days: 30
+  - id: REG-PAPERS
+    title: >-
+      Academic Paper Registry (D4a-1) — automation/literature/paper_registry.yaml. Local-source
+      backfill of papers already cited in the thesis/experiment documentation: D1--D12 literature
+      anchors, dataset/attack/defense foundations (SenseFi, FGSM, PGD, adversarial training,
+      TRADES/GAIRAT/SAT), and locally cited candidate-direction anchors, deduplicated to canonical
+      paper IDs with citation-key aliasing. Bibliographic fields copied verbatim from the local
+      bibliography (verification_status local_bib_only; external verification deferred to D4a-2);
+      paper claims kept strictly separate from Research-OS interpretation; missing directions
+      recorded as literature_gaps, never invented. NO web access, NO PDFs/full text, NO experiment
+      recommendation, NO thesis-repository modification.
+    kind: registry
+    automation: paper-registry
+    gated: true
+    depends_on: [REG-GOALS, REG-DATASETS]
+    acceptance: acceptance/paper-registry.yaml
+    stale_after_days: 30
   - id: REG-EXPERIMENT-ID
     title: >-
       Experiment Identity & Naming Standard — automation/registry/experiment_identity.yaml (run

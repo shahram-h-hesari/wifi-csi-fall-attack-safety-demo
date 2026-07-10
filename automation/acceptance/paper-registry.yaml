@@ -1,0 +1,122 @@
+schema_version: 1
+automation: paper-registry
+stage: research-os-4a-1
+gated: true    # a literature source-of-truth; every claim over it is approval-gated
+type: registry
+
+status: IMPLEMENTED_D4A1_PENDING_APPROVAL
+
+purpose: >
+  D4a-1 — structured, validated registry of academic papers already cited or discussed in the
+  thesis, experiment documentation, and Research OS (automation/literature/paper_registry.yaml).
+  Future consumers (experiment-candidate registry, Next Experiment Brainstorm Checker,
+  literature-backed gap analysis, dashboard literature summaries) resolve literature support
+  against this file read-only. None of those layers is implemented in D4a-1 and the registry
+  makes no experiment recommendation.
+
+registry_file: "automation/literature/paper_registry.yaml"
+policy_doc: "automation/literature/README.md"
+validator: "scripts/automation/validate_paper_registry.py"
+fixture_test: "scripts/automation/test_paper_registry.py"
+proposed_task_id: REG-PAPERS
+
+# ------------------------------------------------------------------ source scope (D4a-1)
+source_scope:
+  policy: local_cited_sources_only
+  sources_read_read_only:
+    - "thesis repository references.bib (bibliographic authority)"
+    - "thesis repository appendices/internal_defense_experiment_ledger.md (D1--D12 literature framing)"
+    - "thesis repository chapter .tex citations (usage context)"
+    - "this repository's registries/changelog (no paper schema pre-existed)"
+  forbidden_in_d4a1:
+    - "web search, Crossref, Semantic Scholar, Google Scholar, any API, any download"
+    - "copying PDFs or copyrighted full text into the repository"
+    - "storing long verbatim quotations (validator enforces a text-length ceiling)"
+    - "modifying the thesis/Overleaf repository or references.bib"
+  external_verification_boundary: >
+    D4a-2 (separate approval) may verify/enrich metadata externally and flip
+    verification_status to externally_verified; until then registry_scope.
+    external_metadata_verification stays 'pending' and the validator rejects any record
+    claiming external verification or a verified DOI.
+
+# ------------------------------------------------------------------ integrity rules
+no_invented_metadata: >
+  Every bibliographic field is copied verbatim from the local bibliography. Missing fields stay
+  null (partial_local requires a notes entry naming what is missing). Locally conflicting fields
+  are recorded under metadata_conflicts (conflicting_local), never silently resolved. DOIs are
+  never inferred.
+
+canonical_identity:
+  id_pattern: "paper_<first-author-token>_<year>_<short-title-token> (from local metadata only)"
+  rules:
+    - "paper_id unique; citation key owned by exactly one paper"
+    - "one paper cited in many chapters/keys = ONE record with multiple citation_keys"
+    - "documented alias narasimhan2013pauc -> narasimhan2013partialauc lives on one record"
+    - "duplicate detection: paper_id, citation keys, locally recorded DOI, normalized title
+       (normalization for detection only; display title preserved verbatim)"
+    - "internal experiment labels (AFAC, BASAT, H15, D1..D14, G1, A1, ...) are never paper titles
+       or IDs; similarly named methods are never assumed to be the same publication"
+
+claim_vs_interpretation_separation: >
+  paper_contribution_summary paraphrases what the LOCAL framing text says the paper reports;
+  relevance_to_current_results is Research-OS interpretation, prefixed "OUR INTERPRETATION:" with
+  interpretation_status local_interpretation; the validator rejects identical claim/interpretation
+  text and interpretation text leaking into the contribution summary.
+  paper_limitations_summary stays null unless locally documented.
+
+source_provenance:
+  - "every paper has >= 1 source_records entry"
+  - "repository alias must be in registry_scope.allowed_repositories (research_os, thesis_overleaf)"
+  - "paths are repository-relative; absolute local filesystem paths are rejected"
+
+literature_gap_behavior: >
+  A direction lacking a locally cited supporting paper becomes a literature_gaps record (unique
+  gap_id, direction, current_status, reason, required_future_action) — never an invented paper.
+
+candidate_direction_mappings: >
+  Every candidate_direction_tags entry is {direction, relationship} with relationship in
+  direct | indirect | background | not_established; a bare direction with no strength is rejected.
+
+no_clinical_overclaiming: >
+  registry_scope.clinical_claims_allowed is false; the validator rejects assertive
+  clinical/deployment claims anywhere in the registry (negated boundary phrasing is allowed —
+  that is what claim_boundaries contain). Dataset tags must not imply unsupported capability
+  (e.g., sensefi_ut_har never co-occurs with future_fall_risk_prediction task tags, mirroring
+  the dataset registry's unsupported_goals gate).
+
+# ------------------------------------------------------------------ validator + tests
+validator_requirements:
+  - "read-only; no network imports; no PDF existence requirement; deterministic output"
+  - "checks 1-25 of the D4a-1 specification: YAML parse, schema version, unique paper_id, unique
+     citation-key ownership, duplicate DOI, normalized duplicate title, status-dependent required
+     fields, year format, valid statuses, allowed repository aliases, repo-relative paths,
+     claim/interpretation separation, >=1 source record, no verified-DOI claims, no premature
+     external verification, no internal-label papers, relationship strength required, unique gap
+     IDs, goal-registry task tags, no unsupported dataset-capability implication, text-length
+     ceiling (no long extracts), no assertive clinical claims, valid defense-line labels (D1-D14),
+     alias consolidation, no absolute paths"
+test_requirements:
+  - "P1-P25 as specified (real-registry pass, every rejection case, alias dedup, honest conflict,
+     gap validation, determinism) plus defensive extras; synthetic fixtures only for failures"
+
+future_integration_boundaries:
+  experiment_candidates: >
+    A future experiment-candidate registry may reference paper_id values as literature support;
+    it must consume this registry read-only and respect relationship strengths and
+    claim_boundaries. Not implemented in D4a-1; no experiment recommendation is made here.
+  dashboard: >
+    No literature section is added to the generated research-evidence dashboard in D4a-1.
+
+accepted:
+  - "User approval receipt (actor.kind: user) exists for REG-PAPERS."
+
+forbidden_actions:
+  - "invent or infer bibliographic metadata, DOIs, titles, authors, venues, methods, or results"
+  - "present Research-OS interpretation as a paper's claim"
+  - "merge similarly named but distinct publications"
+  - "store full text, PDFs, or long verbatim quotations"
+  - "use web access or downloads (D4a-1)"
+  - "modify the thesis/Overleaf or experiment repositories"
+  - "assert clinical or deployment claims"
+  - "recommend, schedule, or run experiments"
+  - "stage, commit, or push"

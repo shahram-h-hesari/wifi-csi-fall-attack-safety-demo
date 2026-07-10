@@ -1,0 +1,1710 @@
+# Academic Paper Registry — SOURCE-OF-TRUTH (Research OS layer, D4a-1).
+# Policy document: automation/literature/README.md (read that first).
+# LOCAL CITED SOURCES ONLY: every record below was backfilled read-only from the thesis
+# repository's references.bib and the D1--D12 literature-framing appendix
+# (appendices/internal_defense_experiment_ledger.md). NO external lookup (web, Crossref,
+# Semantic Scholar) was performed -- bibliographic fields are copied verbatim from the local
+# bibliography and are pending external verification (D4a-2, separate step). Nothing here is
+# invented: a missing field stays null; a locally conflicting field is recorded as a conflict;
+# a direction with no locally cited paper is a literature_gaps entry, never a fabricated record.
+# paper_contribution_summary paraphrases what the LOCAL framing text says the paper reports;
+# relevance_to_current_results is OUR Research-OS interpretation and is never a paper's claim.
+schema_version: 1
+
+registry_scope:
+  source_policy: local_cited_sources_only
+  external_metadata_verification: pending
+  clinical_claims_allowed: false
+  allowed_repositories: [research_os, thesis_overleaf]
+  note: >
+    thesis_overleaf = C-drive-local clone of the Overleaf-linked proposal repository (read-only
+    source; path aliases below are relative to that repository's root, never absolute).
+    research_os = this repository. Internal labels (AFAC, BASAT, H15, D1..D14, G1, A1) are
+    experiment/ledger identities, NOT papers, and must never appear as paper titles or IDs.
+
+papers:
+  # ================================================== core attack / robust-optimization / dataset
+  - paper_id: paper_goodfellow_2015_adversarial_examples
+    display_citation: "Goodfellow, Shlens & Szegedy (2015), Explaining and Harnessing Adversarial Examples, ICLR"
+    title: "Explaining and Harnessing Adversarial Examples"
+    authors: ["Goodfellow, Ian J.", "Shlens, Jonathon", "Szegedy, Christian"]
+    year: 2015
+    venue: "International Conference on Learning Representations"
+    citation_keys: [goodfellow2015explaining]
+    identifiers: { doi: null, arxiv: "1412.6572", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: goodfellow2015explaining, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: goodfellow2015explaining, note: "D1 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [fgsm, adversarial_training]
+    dataset_tags: []
+    defense_line_tags: [D1]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D1 framing: introduces FGSM as a fast sign-gradient attack and shows
+      adversarial examples can be used during training to improve robustness.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivated the D1 FGSM adversarial-training baseline for the LeNet
+      WiFi-CSI classifier; D1 recovered attack-specific recall but not PGD robustness.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "An image-domain adversarial-examples paper does not prove effectiveness on WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_kurakin_2017_adversarial_ml_at_scale
+    display_citation: "Kurakin, Goodfellow & Bengio (2017), Adversarial Machine Learning at Scale, ICLR"
+    title: "Adversarial Machine Learning at Scale"
+    authors: ["Kurakin, Alexey", "Goodfellow, Ian", "Bengio, Samy"]
+    year: 2017
+    venue: "International Conference on Learning Representations"
+    citation_keys: [kurakin2017adversarial]
+    identifiers: { doi: null, arxiv: "1611.01236", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: kurakin2017adversarial, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: kurakin2017adversarial, note: "D1 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [fgsm, adversarial_training]
+    dataset_tags: []
+    defense_line_tags: [D1]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D1 framing: studies adversarial training at scale, reports robustness gains
+      against single-step attacks, and warns about label leaking when adversarial-example
+      construction uses the true label.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D1 observed the same qualitative pattern (FGSM recovery larger than PGD
+      recovery); no label-leaking ablation was run locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Image-domain scaling results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_wong_2020_fast_adversarial_training
+    display_citation: "Wong, Rice & Kolter (2020), Fast is Better than Free: Revisiting Adversarial Training, ICLR"
+    title: "Fast is Better than Free: Revisiting Adversarial Training"
+    authors: ["Wong, Eric", "Rice, Leslie", "Kolter, J. Zico"]
+    year: 2020
+    venue: "International Conference on Learning Representations"
+    citation_keys: [wong2020fast]
+    identifiers: { doi: null, arxiv: "2001.03994", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: wong2020fast, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: wong2020fast, note: "D1 literature anchor, rank 3" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [fgsm, adversarial_training]
+    dataset_tags: []
+    defense_line_tags: [D1]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D1 framing: revisits fast adversarial training, shows FGSM training can be much
+      stronger with random initialization, and identifies catastrophic overfitting as a failure mode.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivated the CPU-feasible fast-training direction; the full random-start
+      recipe and catastrophic-overfitting monitoring were NOT implemented locally, so D1 is a simple
+      FGSM baseline, not the full modern method.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Image-domain fast-training results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_madry_2018_towards_resistant_models
+    display_citation: "Madry et al. (2018), Towards Deep Learning Models Resistant to Adversarial Attacks, ICLR"
+    title: "Towards Deep Learning Models Resistant to Adversarial Attacks"
+    authors: ["Madry, Aleksander", "Makelov, Aleksandar", "Schmidt, Ludwig", "Tsipras, Dimitris", "Vladu, Adrian"]
+    year: 2018
+    venue: "International Conference on Learning Representations"
+    citation_keys: [madry2018towards]
+    identifiers: { doi: null, arxiv: "1706.06083", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: madry2018towards, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: madry2018towards, note: "cited in the D1--D12 framing introduction as the robust-optimization basis for treating PGD as the stronger first-order stress test" }
+      - { repository: thesis_overleaf, path: ch04_adversarial_attack_methodology.tex, source_type: chapter_citation, citation_key: madry2018towards, note: "attack-methodology background" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [pgd, adversarial_training]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local framing introduction: provides the robust-optimization formulation of
+      adversarial training and establishes PGD as a strong first-order adversary.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the reason all thesis defense lines treat PGD epsilon=0.030 as the
+      primary stress test; the paper itself reports nothing about WiFi-CSI fall detection.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Image-domain robust-optimization results do not prove effectiveness on WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_yang_2023_sensefi
+    display_citation: "Yang et al. (2023), SenseFi: A Library and Benchmark on Deep-Learning-Empowered WiFi Human Sensing, Patterns"
+    title: "SenseFi: A Library and Benchmark on Deep-Learning-Empowered WiFi Human Sensing"
+    authors: ["Yang, Jianfei", "Chen, Xinyan", "Zou, Han", "Wang, Dazhuo", "Lu, Chris Xiaoxuan"]
+    year: 2023
+    venue: "Patterns"
+    citation_keys: [yang2022sensefi]
+    identifiers: { doi: "10.1016/j.patter.2023.100703", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: yang2022sensefi, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch02_background.tex, source_type: chapter_citation, citation_key: yang2022sensefi, note: "dataset/benchmark framework context (also cited in ch01/ch03/ch04/ch07)" }
+    paper_type: dataset_or_benchmark
+    task_tags: [activity_recognition, fall_detection]
+    method_tags: [wifi_csi]
+    dataset_tags: [sensefi_ut_har]
+    defense_line_tags: []
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per its local citation context: provides the SenseFi library and benchmark for
+      deep-learning-based WiFi human sensing, including the UT-HAR benchmark setting used by
+      this thesis's experiments.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the benchmark framework through which UT-HAR data and the LeNet-family
+      models are used locally; the paper does not evaluate adversarial robustness of our defenses.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A benchmark-library paper does not establish clinical fall detection or fall-risk prediction."
+      - "The benchmark does not establish longitudinal fall-risk support (no such labels exist in UT-HAR)."
+      - "The paper's reported benchmark results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: >
+      Citation-key label says 2022 while the local bibliography's year field says 2023; the year
+      FIELD is treated as the local bibliographic assertion. Key label kept verbatim as the alias.
+
+  # ============================================================ D2: fall-weighted / cost-sensitive
+  - paper_id: paper_khan_2018_cost_sensitive_deep
+    display_citation: "Khan et al. (2018), Cost-Sensitive Learning of Deep Feature Representations from Imbalanced Data, IEEE TNNLS"
+    title: "Cost-Sensitive Learning of Deep Feature Representations from Imbalanced Data"
+    authors: ["Khan, Salman H.", "Hayat, Munawar", "Bennamoun, Mohammed", "Sohel, Ferdous A.", "Togneri, Roberto"]
+    year: 2018
+    venue: "IEEE Transactions on Neural Networks and Learning Systems"
+    citation_keys: [khan2018cost]
+    identifiers: { doi: "10.1109/TNNLS.2017.2732482", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: khan2018cost, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: khan2018cost, note: "D2 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [cost_sensitive_learning]
+    dataset_tags: []
+    defense_line_tags: [D2]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D2 framing: argues imbalanced data produces weak minority-class boundaries and
+      proposes a cost-sensitive deep network learning class-dependent costs jointly with parameters.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivated fall-weighted training (D2); the local variant was a simpler
+      manual fall weight, not the full jointly-learned cost-sensitive objective, and raised FAR sharply.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A cost-sensitive-learning paper does not prove adversarially robust fall detection on WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_cui_2019_class_balanced_loss
+    display_citation: "Cui et al. (2019), Class-Balanced Loss Based on Effective Number of Samples, CVPR"
+    title: "Class-Balanced Loss Based on Effective Number of Samples"
+    authors: ["Cui, Yin", "Jia, Menglin", "Lin, Tsung-Yi", "Song, Yang", "Belongie, Serge"]
+    year: 2019
+    venue: "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition"
+    citation_keys: [cui2019classbalanced]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: cui2019classbalanced, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: cui2019classbalanced, note: "D2 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [class_balancing]
+    dataset_tags: []
+    defense_line_tags: [D2]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D2 framing: proposes a class-balanced loss reweighting classes by the effective
+      number of samples rather than inverse frequency or manual weights.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: contrast point for D2 -- the local run used a simpler manual fall weight;
+      the effective-number formula was not used or tuned locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "An image-domain class-balancing loss does not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_lin_2017_focal_loss
+    display_citation: "Lin et al. (2017), Focal Loss for Dense Object Detection, ICCV"
+    title: "Focal Loss for Dense Object Detection"
+    authors: ["Lin, Tsung-Yi", "Goyal, Priya", "Girshick, Ross", "He, Kaiming", "Dollár, Piotr"]
+    year: 2017
+    venue: "Proceedings of the IEEE International Conference on Computer Vision"
+    citation_keys: [lin2017focal]
+    identifiers: { doi: "10.1109/ICCV.2017.324", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: lin2017focal, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: lin2017focal, note: "D2 literature anchor, rank 3" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [class_balancing, hard_example_mining]
+    dataset_tags: []
+    defense_line_tags: [D2]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D2 framing: introduces focal loss, reshaping cross-entropy to down-weight easy
+      examples and focus learning on harder examples under severe class imbalance.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D2's high FAR suggested future variants should be hard-example-aware
+      rather than only fall-weighted; focal loss itself was not implemented locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "An object-detection loss does not automatically transfer to WiFi CSI fall detection."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ================================================================== D3: multi-budget training
+  - paper_id: paper_song_2017_mat_multistrength
+    display_citation: "Song et al. (2017), MAT: A Multi-strength Adversarial Training Method to Mitigate Adversarial Attacks, arXiv"
+    title: "MAT: A Multi-strength Adversarial Training Method to Mitigate Adversarial Attacks"
+    authors: ["Song, Chang", "Cheng, Hsin-Pai", "Yang, Huanrui", "Li, Sicheng", "Wu, Chunpeng", "Wu, Qing", "Li, Hai", "Chen, Yiran"]
+    year: 2017
+    venue: "arXiv preprint arXiv:1705.09764"
+    citation_keys: [song2018mat]
+    identifiers: { doi: null, arxiv: "1705.09764", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: song2018mat, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: song2018mat, note: "D3 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, curriculum_or_multi_budget]
+    dataset_tags: []
+    defense_line_tags: [D3]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D3 framing: argues adversarial examples at different perturbation strengths have
+      different useful operating zones and proposes multi-strength adversarial training with mixed
+      and parallel MAT structures.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivated exposing the WiFi-CSI classifier to multiple attack budgets
+      (D3); the full mixed/parallel MAT design was not implemented locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Multi-strength training results in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: >
+      Citation-key label says 2018 while the local bibliography's year field says 2017; the year
+      FIELD is treated as the local bibliographic assertion. Key label kept verbatim as the alias.
+
+  - paper_id: paper_cai_2018_curriculum_adversarial
+    display_citation: "Cai et al. (2018), Curriculum Adversarial Training, arXiv"
+    title: "Curriculum Adversarial Training"
+    authors: ["Cai, Qi-Zhi", "Du, Min", "Liu, Chang", "Song, Dawn"]
+    year: 2018
+    venue: "arXiv preprint arXiv:1805.04807"
+    citation_keys: [cai2018curriculum]
+    identifiers: { doi: null, arxiv: "1805.04807", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: cai2018curriculum, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: cai2018curriculum, note: "D3 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, curriculum_or_multi_budget]
+    dataset_tags: []
+    defense_line_tags: [D3]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D3 framing: proposes a curriculum of adversarial examples across a wide range of
+      attack strengths, with mechanisms to reduce forgetting and improve generalization.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D3 used multi-budget exposure but no staged curriculum or
+      forgetting-mitigation mechanisms.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Curriculum-training results in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_sridhar_2022_perturbation_spectrum
+    display_citation: "Sridhar et al. (2022), Towards Alternative Techniques for Improving Adversarial Robustness: Analysis of Adversarial Training at a Spectrum of Perturbations, arXiv"
+    title: "Towards Alternative Techniques for Improving Adversarial Robustness: Analysis of Adversarial Training at a Spectrum of Perturbations"
+    authors: ["Sridhar, Kaustubh", "Dutta, Souradeep", "Kaur, Ramneet", "Weimer, James", "Sokolsky, Oleg", "Lee, Insup"]
+    year: 2022
+    venue: "arXiv preprint arXiv:2206.06496"
+    citation_keys: [sridhar2022spectrum]
+    identifiers: { doi: null, arxiv: "2206.06496", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: sridhar2022spectrum, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: sridhar2022spectrum, note: "D3 literature anchor, rank 3" }
+    paper_type: theory_or_analysis
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, curriculum_or_multi_budget]
+    dataset_tags: []
+    defense_line_tags: [D3]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D3 framing: studies models trained across a spectrum of epsilon values, reports
+      that training at slightly larger strength can generalize best to a target strength, and
+      analyzes feature precision and convolution-filter sensitivity.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D3 tested multiple budgets but not a dense epsilon spectrum or the
+      "slightly larger than target" overdesign rule; constrained score separation stayed weak.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Spectrum-analysis findings in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ================================================================ D4: motion/margin objective
+  - paper_id: paper_elsayed_2018_large_margin
+    display_citation: "Elsayed et al. (2018), Large Margin Deep Networks for Classification, NeurIPS"
+    title: "Large Margin Deep Networks for Classification"
+    authors: ["Elsayed, Gamaleldin F.", "Krishnan, Dilip", "Mobahi, Hossein", "Regan, Kevin", "Bengio, Samy"]
+    year: 2018
+    venue: "Advances in Neural Information Processing Systems"
+    citation_keys: [elsayed2018large]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: elsayed2018large, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: elsayed2018large, note: "D4 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [margin_objectives]
+    dataset_tags: []
+    defense_line_tags: [D4]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D4 framing: derives margin-based losses for deep networks and connects larger
+      margins with improved classification behavior, generalization, and robustness.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D4 used a task-specific margin intuition (fall vs. competing non-fall
+      regions) without the paper's full layer-wise margin formulation.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Margin-objective results in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_ding_2020_mma_training
+    display_citation: "Ding et al. (2020), MMA Training: Direct Input Space Margin Maximization through Adversarial Training, ICLR"
+    title: "MMA Training: Direct Input Space Margin Maximization through Adversarial Training"
+    authors: ["Ding, Gavin Weiguang", "Sharma, Yash", "Lui, Kry Yik Chau", "Huang, Ruitong"]
+    year: 2020
+    venue: "International Conference on Learning Representations"
+    citation_keys: [ding2020mma]
+    identifiers: { doi: null, arxiv: "1812.02637", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: ding2020mma, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: ding2020mma, note: "D4 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [margin_objectives, adversarial_training]
+    dataset_tags: []
+    defense_line_tags: [D4]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D4 framing: frames adversarial robustness through input-space margin
+      maximization, directly increasing each input's distance to the decision boundary.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: shares D4's motivation (attacked fall windows sit too close to decision
+      boundaries), but full MMA was not implemented locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Input-space margin results in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_kannan_2018_adversarial_logit_pairing
+    display_citation: "Kannan, Kurakin & Goodfellow (2018), Adversarial Logit Pairing, arXiv"
+    title: "Adversarial Logit Pairing"
+    authors: ["Kannan, Harini", "Kurakin, Alexey", "Goodfellow, Ian"]
+    year: 2018
+    venue: "arXiv preprint arXiv:1803.06373"
+    citation_keys: [kannan2018adversarial]
+    identifiers: { doi: null, arxiv: "1803.06373", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: kannan2018adversarial, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: kannan2018adversarial, note: "D4 literature anchor rank 3 AND D9 literature anchor rank 3 (one paper, two defense lines)" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, consistency_regularization]
+    dataset_tags: []
+    defense_line_tags: [D4, D9]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D4/D9 framing: adds a regularizer encouraging clean and adversarial versions of
+      an example to have similar logits, shaping clean/adversarial score geometry.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: idea-level anchor for D4's score-geometry shaping and D9's planned
+      fall-probability consistency; logit pairing itself was never implemented locally and D9 has
+      no usable local result artifact.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Logit-pairing results in the image domain do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ==================================================== D5: hard-negative / source-aware margin
+  - paper_id: paper_shrivastava_2016_ohem
+    display_citation: "Shrivastava, Gupta & Girshick (2016), Training Region-Based Object Detectors with Online Hard Example Mining, CVPR"
+    title: "Training Region-Based Object Detectors with Online Hard Example Mining"
+    authors: ["Shrivastava, Abhinav", "Gupta, Abhinav", "Girshick, Ross"]
+    year: 2016
+    venue: "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition"
+    citation_keys: [shrivastava2016ohem]
+    identifiers: { doi: "10.1109/CVPR.2016.89", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: shrivastava2016ohem, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: shrivastava2016ohem, note: "D5 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [hard_example_mining]
+    dataset_tags: []
+    defense_line_tags: [D5]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D5 framing: proposes online hard example mining (OHEM), selecting high-loss
+      examples during training so optimization focuses on difficult cases.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D5 adapted the principle to hard non-fall sources likely to become
+      false-fall alarms under PGD; full per-batch loss-ranking OHEM was not implemented.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Object-detection mining results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_schroff_2015_facenet
+    display_citation: "Schroff, Kalenichenko & Philbin (2015), FaceNet: A Unified Embedding for Face Recognition and Clustering, CVPR"
+    title: "FaceNet: A Unified Embedding for Face Recognition and Clustering"
+    authors: ["Schroff, Florian", "Kalenichenko, Dmitry", "Philbin, James"]
+    year: 2015
+    venue: "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition"
+    citation_keys: [schroff2015facenet]
+    identifiers: { doi: "10.1109/CVPR.2015.7298682", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: schroff2015facenet, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: schroff2015facenet, note: "D5 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [margin_objectives, hard_example_mining]
+    dataset_tags: []
+    defense_line_tags: [D5]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D5 framing: uses triplet loss with online triplet mining to learn embeddings
+      separating difficult positive and negative examples with a margin.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: margin intuition only -- D5 stayed a classifier-level source-aware margin
+      variant; no metric embedding or triplet mining was built locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Face-recognition embedding results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_wang_2020_mart
+    display_citation: "Wang et al. (2020), Improving Adversarial Robustness Requires Revisiting Misclassified Examples, ICLR"
+    title: "Improving Adversarial Robustness Requires Revisiting Misclassified Examples"
+    authors: ["Wang, Yisen", "Zou, Difan", "Yi, Jinfeng", "Bailey, James", "Ma, Xingjun", "Gu, Quanquan"]
+    year: 2020
+    venue: "International Conference on Learning Representations"
+    citation_keys: [wang2020mart]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: wang2020mart, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: wang2020mart, note: "D5 literature anchor, rank 3; also named in the internal next-move note as the D9 TRADES/MART baseline-completeness rerun option" }
+      - { repository: thesis_overleaf, path: ch02_background.tex, source_type: chapter_citation, citation_key: wang2020mart, note: "defense background" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, instance_reweighting]
+    dataset_tags: []
+    defense_line_tags: [D5, D9]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D5 framing: shows adversarial training should treat misclassified and correctly
+      classified examples differently (MART), giving special treatment to misclassified examples.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D5 used the failure-mode-aware philosophy specialized to safety-proxy
+      errors; the full MART loss was not implemented and remains a named baseline-completeness option.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "MART's image-domain results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ============================================== D6: dual-tail rescue/budget (constrained ops)
+  - paper_id: paper_tong_2013_plugin_np
+    display_citation: "Tong (2013), A Plug-in Approach to Neyman-Pearson Classification, JMLR"
+    title: "A Plug-in Approach to Neyman-Pearson Classification"
+    authors: ["Tong, Xin"]
+    year: 2013
+    venue: "Journal of Machine Learning Research"
+    citation_keys: [tong2013pluginnp]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: tong2013pluginnp, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: tong2013pluginnp, note: "D6 literature anchor, rank 1" }
+    paper_type: theory_or_analysis
+    task_tags: [adversarial_robustness]
+    method_tags: [neyman_pearson, threshold_selection]
+    dataset_tags: []
+    defense_line_tags: [D6]
+    candidate_direction_tags:
+      - { direction: neyman_pearson_far_control, relationship: direct }
+      - { direction: low_far_afac_calibration, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D6 framing: frames classification under the Neyman--Pearson paradigm, where one
+      error type (e.g., false-positive rate) is controlled while maximizing detection power.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the thesis FAR budget plays the role of the controlled false-positive
+      side; local work is a heuristic objective and post-hoc analysis, NOT a formal NP procedure
+      with statistical type-I-error guarantees.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A formal NP-classification method does not validate the thesis's heuristic FAR budgeting."
+      - "The paper's guarantees were not reproduced locally; no NP guarantee may be claimed."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_cotter_2019_constrained_training
+    display_citation: "Cotter et al. (2019), Training Well-Generalizing Classifiers for Fairness Metrics and Other Data-Dependent Constraints, ICML"
+    title: "Training Well-Generalizing Classifiers for Fairness Metrics and Other Data-Dependent Constraints"
+    authors: ["Cotter, Andrew", "Gupta, Maya", "Jiang, Heinrich", "Srebro, Nathan", "Sridharan, Karthik", "Wang, Serena", "Woodworth, Blake", "You, Seungil"]
+    year: 2019
+    venue: "Proceedings of the 36th International Conference on Machine Learning"
+    citation_keys: [cotter2019constrained]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: cotter2019constrained, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: cotter2019constrained, note: "D6 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [threshold_selection, constrained_optimization]
+    dataset_tags: []
+    defense_line_tags: [D6]
+    candidate_direction_tags:
+      - { direction: neyman_pearson_far_control, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D6 framing: shows classifiers can be trained with data-dependent constraints
+      (including targeted false-positive rates) and studies how such constraints generalize.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: D6's rescue/budget loss is conceptually related constrained training;
+      the paper's two-player optimization and constraint-generalization bounds were not used locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Constrained-training guarantees do not apply to the local heuristic budget loss."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_narasimhan_2013_partial_auc
+    display_citation: "Narasimhan & Agarwal (2013), A Structural SVM Based Approach for Optimizing Partial AUC, ICML"
+    title: "A Structural SVM Based Approach for Optimizing Partial AUC"
+    authors: ["Narasimhan, Harikrishna", "Agarwal, Shivani"]
+    year: 2013
+    venue: "Proceedings of the 30th International Conference on Machine Learning"
+    citation_keys: [narasimhan2013partialauc, narasimhan2013pauc]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: narasimhan2013partialauc, note: "canonical BibTeX record; the bib header documents the required key replacement narasimhan2013pauc -> narasimhan2013partialauc, so the old key is recorded here as a deduplicated alias of this ONE paper" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: narasimhan2013partialauc, note: "D6 literature anchor rank 3 AND D8 literature anchor rank 3 (one paper, two defense lines); also the literature basis named by the D14 partial-AUC/low-FAR pre-registration direction" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [partial_auc, threshold_selection]
+    dataset_tags: []
+    defense_line_tags: [D6, D8, D14]
+    candidate_direction_tags:
+      - { direction: low_far_partial_auc_objective, relationship: direct }
+    paper_contribution_summary: >
+      Per the local D6/D8 framing: argues that in many applications only the partial AUC over a
+      specified false-positive-rate range matters, and develops a method to optimize that low-FPR
+      region directly.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivates evaluating the FAR<=0.20 operating region; no differentiable or
+      structural pAUC objective was ever used in local training (D14's pre-registered low-FAR
+      ranking-loss gate subsequently failed validation and the F20 chase is closed).
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A pAUC optimization method paper does not validate the thesis's post-hoc FAR-capped sweeps."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ======================================================= D7: dual-specialist gate / ensembles
+  - paper_id: paper_jacobs_1991_mixtures_of_experts
+    display_citation: "Jacobs et al. (1991), Adaptive Mixtures of Local Experts, Neural Computation"
+    title: "Adaptive Mixtures of Local Experts"
+    authors: ["Jacobs, Robert A.", "Jordan, Michael I.", "Nowlan, Steven J.", "Hinton, Geoffrey E."]
+    year: 1991
+    venue: "Neural Computation"
+    citation_keys: [jacobs1991adaptive]
+    identifiers: { doi: "10.1162/neco.1991.3.1.79", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: jacobs1991adaptive, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: jacobs1991adaptive, note: "D7 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [ensemble, gating]
+    dataset_tags: []
+    defense_line_tags: [D7]
+    candidate_direction_tags:
+      - { direction: ensemble_or_gating, relationship: direct }
+    paper_contribution_summary: >
+      Per the local D7 framing: introduces the supervised mixture-of-experts framework where expert
+      networks handle subsets of cases and a gating network learns to combine or route among them.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: high-level basis for the D7 dual-specialist gate; the full end-to-end
+      MoE training procedure was never implemented locally (the DS-SGE Stage A finding was that
+      the local specialists were nested, an informative negative).
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "The MoE framework does not validate the local two-specialist gate design."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_hinton_2015_distillation
+    display_citation: "Hinton, Vinyals & Dean (2015), Distilling the Knowledge in a Neural Network, arXiv"
+    title: "Distilling the Knowledge in a Neural Network"
+    authors: ["Hinton, Geoffrey", "Vinyals, Oriol", "Dean, Jeff"]
+    year: 2015
+    venue: "arXiv preprint arXiv:1503.02531"
+    citation_keys: [hinton2015distilling]
+    identifiers: { doi: null, arxiv: "1503.02531", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: hinton2015distilling, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: hinton2015distilling, note: "D7 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [ensemble, knowledge_distillation]
+    dataset_tags: []
+    defense_line_tags: [D7]
+    candidate_direction_tags:
+      - { direction: ensemble_or_gating, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D7 framing: discusses generalist-plus-specialist ensembles where specialists
+      focus on fine-grained confusions, and compressing ensemble knowledge via distillation.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: specialist-model idea applied to the safety-proxy gate; no
+      generalist-plus-many-specialists ensemble or distillation was built locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Distillation results do not automatically transfer to WiFi-CSI safety gating."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_shazeer_2017_sparse_moe
+    display_citation: "Shazeer et al. (2017), Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer, arXiv"
+    title: "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer"
+    authors: ["Shazeer, Noam", "Mirhoseini, Azalia", "Maziarz, Krzysztof", "Davis, Andy", "Le, Quoc", "Hinton, Geoffrey", "Dean, Jeff"]
+    year: 2017
+    venue: "arXiv preprint arXiv:1701.06538"
+    citation_keys: [shazeer2017outrageously]
+    identifiers: { doi: null, arxiv: "1701.06538", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: shazeer2017outrageously, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: shazeer2017outrageously, note: "D7 literature anchor, rank 3" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [ensemble, gating]
+    dataset_tags: []
+    defense_line_tags: [D7]
+    candidate_direction_tags:
+      - { direction: ensemble_or_gating, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D7 framing: introduces a sparsely gated mixture-of-experts layer where a
+      trainable gate selects a small expert subset per input, enabling conditional computation.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: conceptually related conditional expert selection; the local gate was a
+      much smaller output-combination gate, not an internal sparsely-gated MoE layer.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Large-scale conditional-computation results do not automatically transfer to CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ============================================================ D8: AFAC operating-point anchors
+  - paper_id: paper_fawcett_2006_roc_analysis
+    display_citation: "Fawcett (2006), An Introduction to ROC Analysis, Pattern Recognition Letters"
+    title: "An Introduction to ROC Analysis"
+    authors: ["Fawcett, Tom"]
+    year: 2006
+    venue: "Pattern Recognition Letters"
+    citation_keys: [fawcett2006roc]
+    identifiers: { doi: "10.1016/j.patrec.2005.10.010", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: fawcett2006roc, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: fawcett2006roc, note: "D8 (AFAC) literature anchor, rank 1" }
+    paper_type: evaluation_or_metrics
+    task_tags: [adversarial_robustness]
+    method_tags: [threshold_selection]
+    dataset_tags: []
+    defense_line_tags: [D8]
+    candidate_direction_tags:
+      - { direction: low_far_afac_calibration, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D8 framing: explains ROC analysis for visualizing, organizing, and selecting
+      classifiers or operating points by the hit-rate/false-alarm trade-off.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the operating-point logic behind the AFAC fall-score sweeps under a fixed
+      FAR cap; the local D8b point is a post-hoc test characterization, not an independently
+      calibrated threshold selection.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "ROC methodology does not certify the post-hoc AFAC operating point as frozen-test evidence."
+      - "The internal AFAC/D8b labels are ours, not this paper's."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_tong_2018_np_classification
+    display_citation: "Tong, Feng & Li (2018), Neyman–Pearson Classification Algorithms and NP Receiver Operating Characteristics, Science Advances"
+    title: "Neyman–Pearson Classification Algorithms and NP Receiver Operating Characteristics"
+    authors: ["Tong, Xin", "Feng, Yang", "Li, Jingyi Jessica"]
+    year: 2018
+    venue: "Science Advances"
+    citation_keys: [tong2018np]
+    identifiers: { doi: "10.1126/sciadv.aao1659", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: tong2018np, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: tong2018np, note: "D8 (AFAC) literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [neyman_pearson, threshold_selection]
+    dataset_tags: []
+    defense_line_tags: [D8]
+    candidate_direction_tags:
+      - { direction: neyman_pearson_far_control, relationship: direct }
+      - { direction: low_far_afac_calibration, relationship: indirect }
+    paper_contribution_summary: >
+      Per the local D8 framing: develops NP-paradigm classification controlling one error type at a
+      pre-specified level while minimizing the other, and introduces NP-ROC analysis.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: matches the safety intuition of capping FAR while reducing missed falls;
+      the local FAR cap is empirical on saved test scores, NOT a formal NP guarantee.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "NP guarantees do not attach to the local empirical FAR<=0.20 sweep."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ================================================ D9: TRADES-style consistency (missing artifact)
+  - paper_id: paper_zhang_2019_trades
+    display_citation: "Zhang et al. (2019), Theoretically Principled Trade-off between Robustness and Accuracy, ICML"
+    title: "Theoretically Principled Trade-off between Robustness and Accuracy"
+    authors: ["Zhang, Hongyang", "Yu, Yaodong", "Jiao, Jiantao", "Xing, Eric P.", "El Ghaoui, Laurent", "Jordan, Michael I."]
+    year: 2019
+    venue: "Proceedings of the 36th International Conference on Machine Learning"
+    citation_keys: [zhang2019trades]
+    identifiers: { doi: null, arxiv: "1901.08573", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: zhang2019trades, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: zhang2019trades, note: "D9 literature anchor, rank 1" }
+      - { repository: thesis_overleaf, path: ch06_robustness_enhancement.tex, source_type: chapter_citation, citation_key: zhang2019trades, note: "defense-method background (BASAT Stage 1 TRADES line)" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [trades, adversarial_training, consistency_regularization]
+    dataset_tags: []
+    defense_line_tags: [D9]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D9 framing: introduces TRADES, decomposing robust error into natural and
+      boundary error and training with a classification loss plus a clean/adversarial
+      prediction-discrepancy regularizer.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: conceptual label for the D9 fall-probability-consistency artifact class
+      (no usable local D9 artifact exists) and for the BASAT Stage 1 TRADES line, which plateaued
+      near the local PGD-AUROC ceiling on validation.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "TRADES' theoretical trade-off results do not prove effectiveness on WiFi CSI."
+      - "Internal D9/BASAT labels are ours, not this paper's."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_miyato_2018_vat
+    display_citation: "Miyato et al. (2018), Virtual Adversarial Training: A Regularization Method for Supervised and Semi-Supervised Learning, IEEE TPAMI"
+    title: "Virtual Adversarial Training: A Regularization Method for Supervised and Semi-Supervised Learning"
+    authors: ["Miyato, Takeru", "Maeda, Shin-ichi", "Koyama, Masanori", "Ishii, Shin"]
+    year: 2018
+    venue: "IEEE Transactions on Pattern Analysis and Machine Intelligence"
+    citation_keys: [miyato2018vat]
+    identifiers: { doi: "10.1109/TPAMI.2018.2858821", arxiv: "1507.00677", other: null }
+    metadata_status: conflicting_local
+    metadata_conflicts:
+      - "Title disagreement between two local sources for the same citation key: references.bib
+        records 'Virtual Adversarial Training: A Regularization Method for Supervised and
+        Semi-Supervised Learning' (TPAMI 2018), while the D9 framing table in
+        appendices/internal_defense_experiment_ledger.md cites the same key under the title
+        'Distributional Smoothing with Virtual Adversarial Training'. Recorded as a conflict;
+        NOT silently resolved locally. External verification deferred to D4a-2."
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: miyato2018vat, note: "canonical BibTeX record (bibliography title used for display)" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: miyato2018vat, note: "D9 literature anchor, rank 2 -- cited there under a DIFFERENT title (see metadata_conflicts)" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, consistency_regularization]
+    dataset_tags: []
+    defense_line_tags: [D9]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D9 framing: proposes virtual adversarial training, encouraging local
+      distributional smoothness by penalizing KL-divergence changes in the output distribution
+      under local adversarial perturbations.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: idea-level anchor for D9's intended fall-probability consistency; VAT was
+      never implemented locally and D9 has no usable local result artifact.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "VAT's results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ================================================== D10: GAIRAT-style boundary reweighting
+  - paper_id: paper_zhang_2021_gairat
+    display_citation: "Zhang et al. (2021), Geometry-aware Instance-reweighted Adversarial Training, ICLR"
+    title: "Geometry-aware Instance-reweighted Adversarial Training"
+    authors: ["Zhang, Jingfeng", "Zhu, Jiangchao", "Niu, Gang", "Han, Bo", "Sugiyama, Masashi", "Kankanhalli, Mohan"]
+    year: 2021
+    venue: "International Conference on Learning Representations"
+    citation_keys: [zhang2021gairat]
+    identifiers: { doi: null, arxiv: "2010.01736", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: zhang2021gairat, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: zhang2021gairat, note: "D10 literature anchor, rank 1" }
+      - { repository: thesis_overleaf, path: ch06_robustness_enhancement.tex, source_type: chapter_citation, citation_key: zhang2021gairat, note: "defense-method background (BASAT Stage 1 GAIRAT line)" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [gairat, adversarial_training, instance_reweighting]
+    dataset_tags: []
+    defense_line_tags: [D10]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D10 framing: proposes GAIRAT, reweighting adversarial-training examples by a
+      geometry-aware estimate of attack difficulty, emphasizing examples near the decision boundary.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivated the D10 boundary-reweighting pilot; D10 remained
+      validation-only, its locked-test follow-up did not reach F20, and no full GAIRAT
+      reproduction is claimed.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "GAIRAT's image-classification results do not prove effectiveness on WiFi CSI."
+      - "Internal D10 labels are ours, not this paper's."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_liu_2021_probabilistic_margins
+    display_citation: "Liu et al. (2021), Probabilistic Margins for Instance Reweighting in Adversarial Training, NeurIPS"
+    title: "Probabilistic Margins for Instance Reweighting in Adversarial Training"
+    authors: ["Liu, Feng", "Han, Bo", "Liu, Tongliang", "Niu, Gang", "Sugiyama, Masashi", "Cheng, James"]
+    year: 2021
+    venue: "Advances in Neural Information Processing Systems"
+    citation_keys: [liu2021probabilisticmargins]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: liu2021probabilisticmargins, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: liu2021probabilisticmargins, note: "D10 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, instance_reweighting, margin_objectives]
+    dataset_tags: []
+    defense_line_tags: [D10]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D10 framing: argues adversarial data near the decision boundary are more
+      critical for robustness and proposes probabilistic-margin-based instance reweighting.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: shares D10's boundary-proximity intuition; probabilistic margins and the
+      paper's exact weighting rule were not computed locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Probabilistic-margin results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_hitaj_2021_evaluating_gairat
+    display_citation: "Hitaj et al. (2021), Evaluating the Robustness of Geometry-Aware Instance-Reweighted Adversarial Training, arXiv"
+    title: "Evaluating the Robustness of Geometry-Aware Instance-Reweighted Adversarial Training"
+    authors: ["Hitaj, Dorjan", "Pagnotta, Giulio", "Masi, Iacopo", "Mancini, Luigi V."]
+    year: 2021
+    venue: "arXiv preprint arXiv:2103.01914"
+    citation_keys: [hitaj2021evaluatinggairat]
+    identifiers: { doi: null, arxiv: "2103.01914", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: hitaj2021evaluatinggairat, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: hitaj2021evaluatinggairat, note: "D10 literature anchor, rank 3" }
+    paper_type: evaluation_or_metrics
+    task_tags: [adversarial_robustness]
+    method_tags: [gairat, robustness_evaluation]
+    dataset_tags: []
+    defense_line_tags: [D10]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D10 framing: critically evaluates GAIRAT, reporting that reweighting can bias
+      the model toward certain samples and that additional robustness checks (e.g.,
+      logit-scaling-style attacks) can reveal vulnerabilities standard evaluation misses.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: supports keeping D10 as a conservative validation-only pilot; the
+      paper's extra stress tests (AutoAttack, logit scaling) were not run locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A critique of GAIRAT in the image domain does not characterize the local D10 pilot."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ==================================================== D11: SAT-style selective filtering
+  - paper_id: paper_pan_2024_sat_selective
+    display_citation: "Pan, Zhou, Gong & Fang (2024), SAT: A Selective Adversarial Training Approach for WiFi-Based Human Activity Recognition, IEEE TMC"
+    title: "SAT: A Selective Adversarial Training Approach for WiFi-Based Human Activity Recognition"
+    authors: ["Pan, Yuhan", "Zhou, Zhipeng", "Gong, Wei", "Fang, Yuguang"]
+    year: 2024
+    venue: "IEEE Transactions on Mobile Computing"
+    citation_keys: [pan2024sat]
+    identifiers: { doi: "10.1109/TMC.2024.3420405", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: pan2024sat, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: pan2024sat, note: "D11 literature anchor, rank 1" }
+      - { repository: thesis_overleaf, path: ch06_robustness_enhancement.tex, source_type: chapter_citation, citation_key: pan2024sat, note: "defense-method background (BASAT Stage 1 SAT line)" }
+    paper_type: method
+    task_tags: [adversarial_robustness, activity_recognition]
+    method_tags: [sat, adversarial_training, wifi_csi]
+    dataset_tags: []
+    defense_line_tags: [D11]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D11 framing: proposes a two-stage selective adversarial-training approach for
+      WiFi-based HAR -- not all adversarial examples are equally useful; calibration and sample
+      selection choose more desirable ones.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the published basis for the D11/SAT (and internal BASAT-labeled) pilots;
+      the full published pipeline was not reimplemented, the pilots were validation-only, and the
+      locked-test follow-up did not reach F20. BASAT is an internal label, not this paper's term.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "The paper's WiFi-HAR results are not this thesis's fall-safety results."
+      - "Internal D11/BASAT labels are ours, not this paper's."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_ye_2025_scaling_data_selection
+    display_citation: "Ye, Wang & Bhandare (2025), Scaling Adversarial Training via Data Selection, arXiv"
+    title: "Scaling Adversarial Training via Data Selection"
+    authors: ["Ye, Youran", "Wang, Dejin", "Bhandare, Ajinkya"]
+    year: 2025
+    venue: "arXiv preprint arXiv:2512.22069"
+    citation_keys: [ye2025scaling]
+    identifiers: { doi: null, arxiv: "2512.22069", other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: ye2025scaling, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: ye2025scaling, note: "D11 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, data_selection]
+    dataset_tags: []
+    defense_line_tags: [D11]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D11 framing: argues adversarial training can be more efficient by perturbing
+      only critical samples per minibatch, studying margin-based and gradient-matching selection.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: supports the selective-training intuition behind D11; minibatch selection
+      criteria and compute-savings measurements were not implemented locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Selection-efficiency results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_rasheed_2023_rsda
+    display_citation: "Rasheed et al. (2023), Boosting Adversarial Training Using Robust Selective Data Augmentation, IJCIS"
+    title: "Boosting Adversarial Training Using Robust Selective Data Augmentation"
+    authors: ["Rasheed, Bader", "Masood Khattak, Asad", "Khan, Adil", "Protasov, Stanislav", "Kazmi, Syed", "Ahmad, Muhammad"]
+    year: 2023
+    venue: "International Journal of Computational Intelligence Systems"
+    citation_keys: [rasheed2023rsda]
+    identifiers: { doi: "10.1007/s44196-023-00266-x", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: rasheed2023rsda, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: rasheed2023rsda, note: "D11 literature anchor, rank 3" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [adversarial_training, data_selection]
+    dataset_tags: []
+    defense_line_tags: [D11]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D11 framing: proposes robust selective data augmentation (RSDA) -- inspect data
+      quality from a robustness perspective, find latent-space neighbors, and apply targeted
+      transformations complementing adversarial training.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: supports the broader selected-examples idea behind D11; RSDA's
+      latent-space machinery was not implemented locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "RSDA's results do not automatically transfer to WiFi CSI."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ==================================================== D12: BiLSTM representation pivot
+  - paper_id: paper_hochreiter_1997_lstm
+    display_citation: "Hochreiter & Schmidhuber (1997), Long Short-Term Memory, Neural Computation"
+    title: "Long Short-Term Memory"
+    authors: ["Hochreiter, Sepp", "Schmidhuber, Jürgen"]
+    year: 1997
+    venue: "Neural Computation"
+    citation_keys: [hochreiter1997lstm]
+    identifiers: { doi: "10.1162/neco.1997.9.8.1735", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: hochreiter1997lstm, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: hochreiter1997lstm, note: "D12 literature anchor, rank 1" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [recurrent_representation]
+    dataset_tags: []
+    defense_line_tags: [D12]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D12 framing: introduces LSTM, a recurrent architecture for long-term
+      dependencies that mitigates the vanishing-gradient problem in sequence learning.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: basis for the D12 temporal representation pivot; the pivot was a
+      validation-only diagnostic whose PGD frontier was WORSE than the convolutional line locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "LSTM's sequence-learning results do not establish adversarially robust CSI fall detection."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_schuster_1997_bidirectional_rnn
+    display_citation: "Schuster & Paliwal (1997), Bidirectional Recurrent Neural Networks, IEEE TSP"
+    title: "Bidirectional Recurrent Neural Networks"
+    authors: ["Schuster, Mike", "Paliwal, Kuldip K."]
+    year: 1997
+    venue: "IEEE Transactions on Signal Processing"
+    citation_keys: [schuster1997brnn]
+    identifiers: { doi: "10.1109/78.650093", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: schuster1997brnn, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: schuster1997brnn, note: "D12 literature anchor, rank 2" }
+    paper_type: method
+    task_tags: [adversarial_robustness]
+    method_tags: [recurrent_representation]
+    dataset_tags: []
+    defense_line_tags: [D12]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D12 framing: extends recurrent networks to process sequences in both directions,
+      letting predictions depend on past and future context within a sequence.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivation for testing bidirectional context in CSI windows; no
+      unidirectional-vs-BiLSTM comparison was run locally under the adversarial protocol.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Bidirectional-RNN results do not establish adversarially robust CSI fall detection."
+      - "The paper's reported results are not this thesis's experiment results."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_elkelany_2023_attention_bilstm_wifi
+    display_citation: "Elkelany, Ross & McKeever (2023), WiFi-Based Human Activity Recognition Using Attention-Based BiLSTM, Springer CCIS"
+    title: "WiFi-Based Human Activity Recognition Using Attention-Based BiLSTM"
+    authors: ["Elkelany, Amany", "Ross, Robert", "McKeever, Susan"]
+    year: 2023
+    venue: "Artificial Intelligence and Cognitive Science (Communications in Computer and Information Science)"
+    citation_keys: [elkelany2023wifi]
+    identifiers: { doi: "10.1007/978-3-031-26438-2_10", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: elkelany2023wifi, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: appendices/internal_defense_experiment_ledger.md, source_type: literature_framing, citation_key: elkelany2023wifi, note: "D12 literature anchor, rank 3" }
+    paper_type: method
+    task_tags: [activity_recognition, adversarial_robustness]
+    method_tags: [recurrent_representation, wifi_csi]
+    dataset_tags: []
+    defense_line_tags: [D12]
+    candidate_direction_tags: []
+    paper_contribution_summary: >
+      Per the local D12 framing: applies attention-based BiLSTM and CNN--BiLSTM models to CSI-based
+      human activity recognition, showing recurrent/attention temporal modeling can help WiFi sensing.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: WiFi-domain support for trying a BiLSTM pivot; the full attention pipeline
+      and cross-environment experiments were not reproduced locally.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "The paper's HAR results are not adversarial-robustness results and are not ours."
+      - "Does not establish clinical fall detection."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ========================================== candidate direction: temporal false-alarm reduction
+  - paper_id: paper_abbate_2011_false_alarms_fall
+    display_citation: "Abbate et al. (2011), Recognition of False Alarms in Fall Detection Systems, IEEE CCNC"
+    title: "Recognition of False Alarms in Fall Detection Systems"
+    authors: ["Abbate, Stefano", "Avvenuti, Marco", "Cola, Guglielmo", "Corsini, Paolo", "Light, Janet", "Vecchio, Alessio"]
+    year: 2011
+    venue: "Proceedings of the 2011 IEEE Consumer Communications and Networking Conference"
+    citation_keys: [abbate2011false_alarms]
+    identifiers: { doi: "10.1109/CCNC.2011.5766464", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: abbate2011false_alarms, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch03_threat_model.tex, source_type: chapter_citation, citation_key: abbate2011false_alarms, note: "false-alarm framing (also cited in ch05)" }
+    paper_type: method
+    task_tags: [fall_detection]
+    method_tags: [temporal_filtering, event_level_detection]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: temporal_false_alarm_reduction, relationship: indirect }
+    paper_contribution_summary: >
+      Per its local citation context: addresses recognizing and reducing false alarms in
+      (wearable/accelerometer-based) fall detection systems.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: locally cited false-alarm-reduction anchor; it is wearable-domain, so it
+      supports the temporal-false-alarm direction only indirectly for WiFi CSI.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Wearable-domain false-alarm methods do not automatically transfer to WiFi CSI."
+      - "Does not establish that temporal filtering would meet F20 or R90F10 locally."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_kangas_2014_fall_sensor_far
+    display_citation: "Kangas et al. (2014), Sensitivity and False Alarm Rate of a Fall Sensor in Long-Term Fall Detection in the Elderly, Gerontology"
+    title: "Sensitivity and False Alarm Rate of a Fall Sensor in Long-Term Fall Detection in the Elderly"
+    authors: ["Kangas, M.", "Korpelainen, R.", "Vikman, I.", "Nyberg, L.", "Jaemsae, T."]
+    year: 2014
+    venue: "Gerontology"
+    citation_keys: [kangas2014fall_sensor]
+    identifiers: { doi: null, arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: kangas2014fall_sensor, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch03_threat_model.tex, source_type: chapter_citation, citation_key: kangas2014fall_sensor, note: "real-world false-alarm-rate framing" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [fall_detection]
+    method_tags: [event_level_detection]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: temporal_false_alarm_reduction, relationship: background }
+    paper_contribution_summary: >
+      Per its local citation context: reports sensitivity and false-alarm-rate behavior of a
+      (wearable) fall sensor in long-term elderly fall detection.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: background evidence that real-world FAR burden is a first-class safety
+      concern; it involves no WiFi CSI and no adversarial setting.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Wearable-sensor field results do not characterize WiFi-CSI systems."
+      - "Does not establish clinical readiness of any local model."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ========================================== candidate direction: walking detection baselines
+  - paper_id: paper_wang_2016_wifi_gait
+    display_citation: "Wang, Liu & Shahzad (2016), Gait Recognition Using WiFi Signals, UbiComp"
+    title: "Gait Recognition Using WiFi Signals"
+    authors: ["Wang, Wei", "Liu, Alex X.", "Shahzad, Muhammad"]
+    year: 2016
+    venue: "Proceedings of the 2016 ACM International Joint Conference on Pervasive and Ubiquitous Computing"
+    citation_keys: [wang2016gait]
+    identifiers: { doi: "10.1145/2971648.2971670", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: wang2016gait, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: wang2016gait, note: "WiFi gait-sensing background" }
+    paper_type: method
+    task_tags: [walking_detection, activity_recognition]
+    method_tags: [wifi_csi, gait_analysis]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: walking_detection_baseline, relationship: indirect }
+    paper_contribution_summary: >
+      Per its local citation context: demonstrates gait recognition from WiFi signals, supporting
+      the feasibility of WiFi-based walking-related sensing.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: feasibility background for a future UT-HAR walking-detection baseline;
+      it is person-identification-oriented gait recognition, not the local binary walk-vs-rest task.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Gait recognition does not establish walking-detection results on UT-HAR (none exist yet)."
+      - "Does not establish gait-pathology or mobility-decline claims."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_xu_2022_attention_gait
+    display_citation: "Xu et al. (2022), Attention-Based Gait Recognition and Walking Direction Estimation in Wi-Fi Networks, IEEE TMC"
+    title: "Attention-Based Gait Recognition and Walking Direction Estimation in Wi-Fi Networks"
+    authors: ["Xu, Y.", "Yang, W.", "Chen, M.", "Chen, S.", "Huang, L."]
+    year: 2022
+    venue: "IEEE Transactions on Mobile Computing"
+    citation_keys: [xu2022attention]
+    identifiers: { doi: "10.1109/TMC.2020.3007194", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: xu2022attention, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: xu2022attention, note: "WiFi gait-sensing background" }
+    paper_type: method
+    task_tags: [walking_detection, activity_recognition]
+    method_tags: [wifi_csi, gait_analysis]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: walking_detection_baseline, relationship: indirect }
+    paper_contribution_summary: >
+      Per its local citation context: applies attention-based models to gait recognition and
+      walking-direction estimation in Wi-Fi networks.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: further WiFi-domain feasibility background for walking-related sensing;
+      no local walking-detection evaluation exists yet.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Does not establish walking-detection results on UT-HAR (none exist yet)."
+      - "Does not establish clinical mobility claims."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_lin_2022_wifi_walking_tracking
+    display_citation: "Lin, Chang & Tu (2022), Wi-Fi-Based Tracking of Human Walking for Home Health Monitoring, IEEE IoT Journal"
+    title: "Wi-Fi-Based Tracking of Human Walking for Home Health Monitoring"
+    authors: ["Lin, C.-L.", "Chang, W.-J.", "Tu, G.-H."]
+    year: 2022
+    venue: "IEEE Internet of Things Journal"
+    citation_keys: [lin2022wifi]
+    identifiers: { doi: "10.1109/JIOT.2021.3114391", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: lin2022wifi, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: lin2022wifi, note: "WiFi walking-monitoring background" }
+    paper_type: method
+    task_tags: [walking_detection]
+    method_tags: [wifi_csi, gait_analysis]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: walking_detection_baseline, relationship: indirect }
+    paper_contribution_summary: >
+      Per its local citation context: tracks human walking with Wi-Fi for home health monitoring.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: home-monitoring feasibility background for the walking-detection
+      direction; no local walking-detection evaluation exists yet.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Does not establish walking-detection results on UT-HAR (none exist yet)."
+      - "Home-monitoring feasibility is not a clinical monitoring claim for our system."
+    full_text_status: not_stored_locally
+    notes: null
+
+  # ================================ candidate direction: gait / fall-risk data acquisition
+  - paper_id: paper_verghese_2009_gait_markers_fall_risk
+    display_citation: "Verghese et al. (2009), Quantitative Gait Markers and Incident Fall Risk in Older Adults, J Gerontology A"
+    title: "Quantitative Gait Markers and Incident Fall Risk in Older Adults"
+    authors: ["Verghese, Joe", "Holtzer, Roee", "Lipton, Richard B.", "Wang, Cuiling"]
+    year: 2009
+    venue: "The Journals of Gerontology Series A: Biological Sciences and Medical Sciences"
+    citation_keys: [verghese2009quantitative]
+    identifiers: { doi: "10.1093/gerona/glp033", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: verghese2009quantitative, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch04_adversarial_attack_methodology.tex, source_type: chapter_citation, citation_key: verghese2009quantitative, note: "gait/fall-risk motivation (also cited in ch05)" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [future_fall_risk_prediction, gait_or_mobility_change_detection]
+    method_tags: [gait_analysis, fall_risk_epidemiology]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: background }
+    paper_contribution_summary: >
+      Per its local citation context: epidemiological evidence linking quantitative gait markers to
+      incident fall risk in older adults.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: motivates the aspirational fall-risk goal and the kind of longitudinal
+      ground truth a future data-acquisition effort would need; it involves no WiFi sensing.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Epidemiological gait-risk evidence does not establish WiFi-CSI fall-risk prediction."
+      - "No local dataset supports this goal (see goals.yaml future_fall_risk_prediction: NO_DATA_ASPIRATIONAL)."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_hausdorff_2001_gait_variability_falls
+    display_citation: "Hausdorff, Rios & Edelberg (2001), Gait Variability and Fall Risk in Community-Living Older Adults, Arch Phys Med Rehabil"
+    title: "Gait Variability and Fall Risk in Community-Living Older Adults: A 1-Year Prospective Study"
+    authors: ["Hausdorff, Jeffrey M.", "Rios, David A.", "Edelberg, Helen K."]
+    year: 2001
+    venue: "Archives of Physical Medicine and Rehabilitation"
+    citation_keys: [hausdorff2001gait]
+    identifiers: { doi: "10.1053/apmr.2001.24893", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: hausdorff2001gait, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch04_adversarial_attack_methodology.tex, source_type: chapter_citation, citation_key: hausdorff2001gait, note: "gait/fall-risk motivation (also cited in ch05)" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [future_fall_risk_prediction, gait_or_mobility_change_detection]
+    method_tags: [gait_analysis, fall_risk_epidemiology]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: background }
+    paper_contribution_summary: >
+      Per its local citation context: prospective evidence that gait variability predicts fall risk
+      in community-living older adults.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: background for why longitudinal gait sensing is a promising future data
+      target; unrelated to WiFi CSI or adversarial robustness.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Does not establish WiFi-CSI fall-risk prediction."
+      - "No local dataset supports this goal."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_piau_2019_walking_speed_future_falls
+    display_citation: "Piau et al. (2019), When Will My Patient Fall? Sensor-Based In-Home Walking Speed Identifies Future Falls in Older Adults, J Gerontology A"
+    title: "When Will My Patient Fall? Sensor-Based In-Home Walking Speed Identifies Future Falls in Older Adults"
+    authors: ["Piau, Antoine", "Mattek, Nora", "Crissey, Rachel", "Beattie, Zachary", "Dodge, Hiroko H.", "Kaye, Jeffrey"]
+    year: 2019
+    venue: "The Journals of Gerontology: Series A"
+    citation_keys: [piau2019when]
+    identifiers: { doi: "10.1093/gerona/glz128", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: piau2019when, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: piau2019when, note: "in-home sensing fall-risk motivation (also cited in ch04)" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [future_fall_risk_prediction]
+    method_tags: [gait_analysis, in_home_sensing]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: indirect }
+    paper_contribution_summary: >
+      Per its local citation context: shows sensor-based in-home walking speed can identify future
+      falls in older adults.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: closest local anchor for passive in-home sensing feeding fall-risk
+      prediction; its sensors are not WiFi CSI, so it supports the data-acquisition direction
+      indirectly.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "In-home PIR/sensor-line results do not establish WiFi-CSI fall-risk prediction."
+      - "No local dataset supports this goal."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_vanschooten_2016_gait_quality_falls
+    display_citation: "van Schooten et al. (2016), Daily-Life Gait Quality as Predictor of Falls in Older People, PLOS ONE"
+    title: "Daily-Life Gait Quality as Predictor of Falls in Older People: A 1-Year Prospective Cohort Study"
+    authors: ["van Schooten, Kimberley S.", "Pijnappels, Mirjam", "Rispens, Sietse M.", "Elders, Petra J. M.", "Lips, Paul", "van Dieën, Jaap H."]
+    year: 2016
+    venue: "PLOS ONE"
+    citation_keys: [vanschooten2016daily]
+    identifiers: { doi: "10.1371/journal.pone.0158623", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: vanschooten2016daily, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: vanschooten2016daily, note: "daily-life gait fall-risk motivation (also cited in ch04)" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [future_fall_risk_prediction]
+    method_tags: [gait_analysis, fall_risk_epidemiology]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: background }
+    paper_contribution_summary: >
+      Per its local citation context: prospective cohort evidence that daily-life gait quality
+      predicts falls in older people.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: strengthens the case that longitudinal daily-life gait data is the right
+      future acquisition target; wearable-based, not WiFi CSI.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Does not establish WiFi-CSI fall-risk prediction."
+      - "No local dataset supports this goal."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_chan_2023_digital_gait_biomarkers
+    display_citation: "Chan et al. (2023), Prediction of Injurious Falls in Older Adults Using Digital Gait Biomarkers Extracted from Large-Scale Wrist Sensor Data, Age and Ageing"
+    title: "Prediction of Injurious Falls in Older Adults Using Digital Gait Biomarkers Extracted from Large-Scale Wrist Sensor Data"
+    authors: ["Chan, Lloyd L. Y.", "Herrera Arbona, Carmen", "Brodie, Matthew A.", "Lord, Stephen R."]
+    year: 2023
+    venue: "Age and Ageing"
+    citation_keys: [chan2023prediction]
+    identifiers: { doi: "10.1093/ageing/afad179", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: chan2023prediction, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: chan2023prediction, note: "digital gait biomarker fall-risk motivation (also cited in ch04)" }
+    paper_type: clinical_or_epidemiology
+    task_tags: [future_fall_risk_prediction]
+    method_tags: [gait_analysis, fall_risk_epidemiology]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: background }
+    paper_contribution_summary: >
+      Per its local citation context: predicts injurious falls in older adults using digital gait
+      biomarkers from large-scale wrist sensor data.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: shows large-scale digital gait biomarkers can be prognostic; wrist-sensor
+      modality, so background only for a WiFi-CSI acquisition plan.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "Wrist-sensor prognostic results do not establish WiFi-CSI fall-risk prediction."
+      - "No local dataset supports this goal."
+    full_text_status: not_stored_locally
+    notes: null
+
+  - paper_id: paper_beattie_2020_cart_platform
+    display_citation: "Beattie et al. (2020), The Collaborative Aging Research Using Technology Initiative, Digital Biomarkers"
+    title: "The Collaborative Aging Research Using Technology Initiative: An Open, Sharable, Technology-Agnostic Platform for the Research Community"
+    authors: ["Beattie, Zachary", "Miller, Lyndsey M.", "Almirola, Carlos", "Au-Yeung, Wan-Tai M.", "Bernard, H. Russell", "Cosgrove, Katherine E.", "Dodge, Hiroko H.", "Gamboa, Cristopher J.", "Golonka, Olga", "Gothard, Sarah", "Barnes, Lisa L.", "Silbert, Lisa C.", "Kaye, Jeffrey"]
+    year: 2020
+    venue: "Digital Biomarkers"
+    citation_keys: [beattie2020cart]
+    identifiers: { doi: "10.1159/000512208", arxiv: null, other: null }
+    metadata_status: complete_local
+    verification_status: local_bib_only
+    source_records:
+      - { repository: thesis_overleaf, path: references.bib, source_type: bibliography, citation_key: beattie2020cart, note: "canonical BibTeX record" }
+      - { repository: thesis_overleaf, path: ch05_clinical_safety_evaluation.tex, source_type: chapter_citation, citation_key: beattie2020cart, note: "longitudinal in-home research-platform context" }
+    paper_type: data_platform
+    task_tags: [gait_or_mobility_change_detection, future_fall_risk_prediction]
+    method_tags: [in_home_sensing]
+    dataset_tags: []
+    defense_line_tags: []
+    candidate_direction_tags:
+      - { direction: gait_or_fall_risk_data_acquisition, relationship: direct }
+    paper_contribution_summary: >
+      Per its local citation context: describes the CART initiative, an open, sharable,
+      technology-agnostic platform for longitudinal in-home aging research.
+    paper_limitations_summary: null
+    relevance_to_current_results: >
+      OUR INTERPRETATION: the most concrete locally cited model for how longitudinal in-home
+      sensing data acquisition can be organized; it does not itself provide WiFi-CSI fall-risk data.
+    interpretation_status: local_interpretation
+    claim_boundaries:
+      - "A research-platform paper does not supply the longitudinal WiFi-CSI cohort our aspirational goal needs."
+      - "Does not establish any prognostic claim for local models."
+    full_text_status: not_stored_locally
+    notes: null
+
+# ------------------------------------------------------------------- literature gaps (honest)
+# Directions the Research OS currently tracks that have NO locally cited supporting paper (or
+# whose local anchors are in the wrong modality). A gap is first-class information: it must be
+# closed by finding/citing a real publication (D4a-2+), never by inventing a record here.
+literature_gaps:
+  - gap_id: gap_ut_har_source_publication
+    direction: dataset_provenance
+    current_status: not_locally_cited
+    reason: >
+      UT-HAR is used throughout the experiments, but no UT-HAR-origin dataset publication is
+      separately cited in the local bibliography; local coverage is only through the SenseFi
+      benchmark-library paper.
+    required_future_action: >
+      D4a-2: locate the authoritative UT-HAR dataset publication, verify metadata externally, and
+      add it as a cited record (also cite it in the thesis where the dataset is introduced).
+
+  - gap_id: gap_probability_calibration_low_far
+    direction: low_far_afac_calibration
+    current_status: partially_supported_locally
+    reason: >
+      The AFAC low-FAR calibration direction currently leans on ROC/Neyman-Pearson/partial-AUC
+      operating-point anchors (fawcett2006roc, tong2013pluginnp, tong2018np,
+      narasimhan2013partialauc); no dedicated post-hoc probability-calibration publication
+      (e.g., modern neural-network calibration literature) is locally cited.
+    required_future_action: >
+      D4a-2+: identify and cite a real probability-calibration publication before any
+      calibration-based experiment candidate claims literature support.
+
+  - gap_id: gap_wifi_csi_temporal_false_alarm_reduction
+    direction: temporal_false_alarm_reduction
+    current_status: wrong_modality_anchors_only
+    reason: >
+      The locally cited false-alarm-reduction anchors (abbate2011false_alarms,
+      kangas2014fall_sensor) are wearable/accelerometer-domain; no WiFi-CSI-specific temporal or
+      event-level false-alarm-reduction publication is locally cited.
+    required_future_action: >
+      D4a-2+: find and cite WiFi-CSI (or at least RF-sensing) temporal/event-level false-alarm
+      reduction work before treating this direction as literature-backed for CSI.
+
+  - gap_id: gap_walking_pattern_labeled_csi_dataset
+    direction: walking_pattern_recognition
+    current_status: not_locally_cited
+    reason: >
+      goals.yaml marks walking_pattern_recognition as NO_DATA; no gait-pattern-labeled CSI dataset
+      publication is locally cited that could support fine-grained walking-pattern recognition.
+    required_future_action: >
+      D4a-2+: locate a gait-pattern-labeled CSI dataset publication (or record that none exists)
+      before this goal can leave NO_DATA status.
+
+  - gap_id: gap_longitudinal_csi_fall_risk_cohort
+    direction: gait_or_fall_risk_data_acquisition
+    current_status: wrong_modality_anchors_only
+    reason: >
+      All locally cited prognostic fall-risk anchors use wearable, PIR/in-home-sensor, wrist, or
+      other non-CSI modalities (verghese2009quantitative, hausdorff2001gait, piau2019when,
+      vanschooten2016daily, chan2023prediction, beattie2020cart); no longitudinal WiFi-CSI
+      fall-risk cohort publication is locally cited.
+    required_future_action: >
+      D4a-2+: search for longitudinal WiFi-CSI fall-risk cohort work; if none exists, this remains
+      a data-acquisition gap (consistent with goals.yaml NO_DATA_ASPIRATIONAL), never a claim.

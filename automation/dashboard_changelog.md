@@ -5,6 +5,40 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — D4a-1: Local-source academic paper registry created
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `131bcea`.
+- New `automation/literature/paper_registry.yaml` (+ policy `automation/literature/README.md`):
+  **47 canonical papers, 48 citation keys**, backfilled READ-ONLY from local cited sources only —
+  the thesis repository's `references.bib`, the D1--D12 literature-framing appendix, and chapter
+  citations. **No web access, API lookup, or download occurred**; every record is
+  `verification_status: local_bib_only` with external metadata verification explicitly deferred
+  to D4a-2.
+- **D1--D12 and foundational literature deduplicated:** all 36 D1--D12 anchor citations (34 unique
+  papers; `kannan2018adversarial` spans D4+D9, `narasimhan2013partialauc` spans D6+D8) plus
+  robust-optimization/PGD (`madry2018towards`), FGSM/adversarial-training foundations, SenseFi,
+  TRADES/GAIRAT/SAT, NP/partial-AUC/ROC operating-point anchors, ensemble/gating,
+  temporal-false-alarm, walking-detection, and gait/fall-risk anchors. The bib-header-documented
+  alias `narasimhan2013pauc` → `narasimhan2013partialauc` is consolidated onto ONE record;
+  WiCAM vs WiCAM2.0 deliberately NOT merged. Internal labels (AFAC, BASAT, H15, D-codes) are
+  never papers.
+- **Paper claims separated from Research OS interpretation:** `paper_contribution_summary`
+  restates only what the local framing says a paper reports; `relevance_to_current_results` is
+  prefixed "OUR INTERPRETATION:"; per-paper `claim_boundaries` forbid image-domain→CSI transfer
+  claims, paper-benchmark-as-our-result claims, and any clinical/deployment claim. One genuine
+  local metadata conflict recorded honestly (`miyato2018vat` title differs between the bib and
+  the D9 framing table) — represented as `conflicting_local`, not silently resolved.
+- **Literature gaps recorded honestly (5):** UT-HAR-origin publication not separately cited;
+  probability-calibration literature missing for the low-FAR AFAC direction; temporal
+  false-alarm anchors are wearable-domain only; no gait-pattern-labeled CSI dataset; no
+  longitudinal WiFi-CSI fall-risk cohort. Gaps are first-class records — no paper was invented.
+- Validator `validate_paper_registry.py` (read-only, no network, no PDF requirement,
+  deterministic): real registry **PASS, zero errors**. Tests `test_paper_registry.py`:
+  **28/28 ALL PASS** (P1--P25 + 3 defensive extras).
+- **Experiment recommendations are NOT implemented** — no experiment-candidate registry, no
+  Brainstorm Checker, no dashboard literature section (D3 rendering untouched). Receipt:
+  `REG-PAPERS` claim (requires user approval).
+
 ## 2026-07-10 — D3: Markdown research-evidence rendering added
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `73b3aca`.

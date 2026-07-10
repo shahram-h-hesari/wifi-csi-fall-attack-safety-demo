@@ -5,6 +5,46 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — D3: Markdown research-evidence rendering added
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `73b3aca`.
+- New `scripts/automation/dashboard_research_summary.py` renders a generated
+  `## 2. Research Evidence & Canonical Identity` section into `RESEARCH_DASHBOARD.md` (BEGIN/END
+  `AUTO:RESEARCH-EVIDENCE` markers): a research-evidence snapshot, one entry per curated reference-
+  evidence key, an F20/R90F10 target-assessment table, goal/dataset readiness, and a safety/
+  evidence legend. This is still the Markdown dashboard -- the HTML dashboard (DASH-S8) remains
+  untouched and deferred.
+- **Canonical display names are the primary label** for every rendered reference evaluation;
+  historical codes (`H15`, `D8b`, `D8`) appear only as secondary structured legacy aliases, sourced
+  verbatim from Result Explorer's own `experiment_identity` block -- never re-matched or
+  independently inferred by the renderer.
+- **Architectural authority rule enforced and tested:** the renderer calls
+  `result_explorer.run_query()` in-process for every scientific metric and identity value; it reads
+  `reference_evidence.yaml` only for `(key, goal)` routing pairs (never metrics/thresholds/
+  aliases); F20/R90F10 comparator operators and thresholds are parsed from `goals.yaml`
+  `success_targets[*].rule` text, never hardcoded. A static test (`D3-13`) proves the production
+  module contains no hardcoded canonical ID, display name, or H15/AFAC metric literal.
+- **H15 preserved as an unverified legacy alias** (`meaning: null, meaning_status: unverified`);
+  **F20 and R90F10 status are always evidence-qualified** (e.g. "F20 boundary, test-post-hoc";
+  "R90 recall component reached, FAR component not reached; frozen-test at ε=0.015") -- never a
+  bare pass/fail badge, and H15 never receives an R90F10 pass.
+- **Mobility/fall-risk data gaps shown honestly** -- `walking_detection` renders "dataset-supported
+  but not yet evaluated"; `walking_pattern_recognition`, `gait_or_mobility_change_detection`, and
+  `future_fall_risk_prediction` render "data needed" (`walking_pattern_recognition` and
+  `gait_or_mobility_change_detection` additionally note "no supporting dataset locally"), all
+  derived from each goal's own registry `status` field -- never hand-written per goal.
+- **Safe degradation states implemented and tested:** identity `unavailable`/`mismatch` always
+  keep the scientific evidence visible while suppressing only the canonical identity; a
+  provenance-mismatch/refused reference withholds metrics entirely; a missing reference renders an
+  honest empty state with no stale metrics retained (the section rebuilds fresh every render).
+- Tests: `scripts/automation/test_dashboard_research_summary.py` new, 18/18 pass (D3-1..D3-15 +
+  2 extra checks), plus a real-committed-registry smoke render. Regression: Result Explorer 40/40,
+  identity suite 32/32, approval/verifier suites ALL PASS -- all unaffected. Receipt-impact
+  analysis (read-only, before this claim) confirmed no existing task's hash-checked evidence
+  references `scripts/automation/update_dashboard.py`'s content, and an empirical post-edit
+  `--verify` confirmed zero drift across every previously-ACCEPTED task; no superseding claim was
+  required for any existing task. **HTML remains deferred** (DASH-S8 not started).
+
 ## 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `894e786`.

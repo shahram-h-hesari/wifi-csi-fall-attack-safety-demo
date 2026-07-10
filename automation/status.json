@@ -55,6 +55,12 @@
       "display": "not_started",
       "checks": "0/0"
     },
+    "DASH-D3": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "45/45",
+      "failed": []
+    },
     "AUT-TSG": {
       "display": "not_started",
       "checks": "0/0"
@@ -117,6 +123,14 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "DASH-D3",
+      "automation": "dashboard-research-summary",
+      "display": "ACCEPTED",
+      "checks": "45/45",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "TOOL-REXP",
       "automation": "result-explorer",
@@ -315,5 +329,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 36
+  "receipts_processed": 38
 }

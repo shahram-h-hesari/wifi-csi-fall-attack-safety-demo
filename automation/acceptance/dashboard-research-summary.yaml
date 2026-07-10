@@ -1,0 +1,120 @@
+schema_version: 1
+automation: dashboard-research-summary
+stage: research-os-3
+gated: true   # renders scientific evidence + canonical identity into the Markdown dashboard; requires user approval
+type: view    # a downstream renderer of Result Explorer + registries, never a new source-of-truth
+
+status: PROPOSED_PENDING_APPROVAL   # D3 implemented + tested; awaiting DASH-D3 user approval
+
+purpose: >
+  D3 — generate the "## 2. Research Evidence & Canonical Identity" section of
+  RESEARCH_DASHBOARD.md: verified scientific evidence, canonical experiment identity, goal/dataset
+  readiness, and safety warnings. This is still the repository Markdown dashboard; the HTML
+  dashboard (DASH-S8, acceptance/html-dashboard.yaml) remains separately deferred and untouched.
+
+renderer_module: "scripts/automation/dashboard_research_summary.py"
+fixture_test: "scripts/automation/test_dashboard_research_summary.py"
+proposed_task_id: DASH-D3
+proposed_receipt_name: "<UTC>_dashboard-research-summary_DASH-D3.json"
+
+# ---------------------------------------------------------------- architectural authority rule
+authority_rule: >
+  This module is a VIEW, never a second scientific ledger. It must not maintain an independent
+  copy of scientific metrics or experiment naming. Required information flow: reference_evidence
+  .yaml supplies the exact reference key (routing only) -> Result Explorer resolves scientific
+  evidence -> manifest provenance is checked (inside Result Explorer, unchanged) -> Result Explorer
+  attaches canonical identity (inside Result Explorer, unchanged) -> this module renders the
+  returned result verbatim. The renderer never reads the curated registry to reconstruct metrics,
+  and never reads the identity registry to independently rematch aliases.
+authorities:
+  scientific_result_and_provenance: "scripts/automation/result_explorer.py (run_query, in-process, no subprocess)"
+  canonical_evaluation_identity: "the experiment_identity block Result Explorer attaches to a curated row"
+  reference_keys_to_render: "automation/registry/reference_evidence.yaml — read ONLY for (key, goal) routing pairs, never metrics/thresholds/aliases"
+  goal_and_dataset_readiness: ["automation/registry/goals.yaml", "automation/registry/datasets.yaml"]
+  target_comparator_rules: "goals.yaml success_targets[*].rule text, parsed for (metric, operator, threshold) — never a silently hardcoded/changed operator"
+  task_integrity_approval_state: "existing scripts/automation/update_dashboard.py verify/receipt system (unchanged)"
+
+reads_only:
+  - "automation/registry/goals.yaml"
+  - "automation/registry/datasets.yaml"
+  - "automation/registry/reference_evidence.yaml   # (key, goal) routing pairs only"
+  - "scripts/automation/result_explorer.py (in-process function call: run_query)"
+never_reads_for_display:
+  - "reference_evidence.yaml metrics/thresholds/aliases fields (Result Explorer's returned row is authoritative, not this file's raw content)"
+  - "experiment_identity.yaml directly (only via the experiment_identity block Result Explorer already attached)"
+  - "checkpoints (any .pt/.pth/.ckpt)"
+  - "held-out test data through any command or loader"
+never_writes:
+  - "anything except its return string (the caller, update_dashboard.py, is the only writer of RESEARCH_DASHBOARD.md/status.json)"
+  - "any HTML file (dashboard/index.html is a separate, still-deferred DASH-S8 deliverable)"
+
+# ---------------------------------------------------------------- required sections
+required_sections:
+  marker: "<!-- BEGIN AUTO:RESEARCH-EVIDENCE --> ... <!-- END AUTO:RESEARCH-EVIDENCE -->"
+  A_research_evidence_snapshot: "active primary goal, dataset(s), F20 proposal target text, R90F10 aspirational target text, per-reference evidence-qualified honest-state bullets, explicit no-clinical-claim line"
+  B_canonical_reference_evaluations: "one rendered entry per curated reference_evidence.yaml key, in registry order; canonical display_name is the primary (### header) label; historical codes (H15, D8b, D8) appear only as secondary structured legacy aliases; full scientific block (goal/dataset/attack/epsilon/split/evidence_level/TP/FN/FP/TN/Rfall/FAR/threshold/manifest_cross_check/source/warnings) always shown when a scientific result was resolved"
+  C_target_assessment: "one table row per (reference, target) pair the reference's goal registers (F20, R90F10); status text is always evidence-qualified, never a bare pass/fail badge"
+  D_goal_and_dataset_readiness: "one row per registered goal; readiness phrase derived from the goal's own registry `status` field, never hand-written per goal"
+  E_safety_and_evidence_legend: "validation-only, test-post-hoc, diagnostic-internal, frozen-test, provenance mismatch, identity unavailable, identity mismatch, not R90F10, research-only/not-clinical — validation-only/test-post-hoc/diagnostic-internal/not-R90F10 text reused verbatim from result_explorer.WARN_TEXT"
+
+# ---------------------------------------------------------------- safe states (Part 4)
+safe_states:
+  matched: "full scientific + canonical identity details rendered"
+  identity_unavailable: "scientific evidence rendered in full; 'Identity unavailable: <reason>' shown; no canonical ID/display name fabricated"
+  identity_mismatch: "scientific evidence rendered in full; prominent 'Identity mismatch — canonical identity suppressed: <reason>' shown; no canonical ID/display name from the mismatched record ever shown"
+  provenance_mismatch_or_refused: "no metrics rendered; a visible REFUSED/provenance-mismatch state shown for that reference key; never falls back to a hardcoded value"
+  missing_reference: "an honest no-result state naming the query's own message; never retains metrics from a previous dashboard generation (the whole section is rebuilt fresh every render, never merged with prior output)"
+
+# ---------------------------------------------------------------- target comparator behavior
+target_comparator_contract:
+  source: "goals.yaml success_targets[F20|R90F10].rule free-text, parsed via a fixed (Rfall|FAR)(op)(threshold) pattern -- operators/thresholds are read from this text, never silently changed by the renderer"
+  boundary_rule: "a target counted 'reached' where at least one inclusive comparator (>=, <=) sits exactly at its threshold (within 1e-9) is labeled '<target> boundary' instead of '<target> reached'; a strict comparator (>, <) can never itself produce a boundary label"
+  partial_rule: "when not fully reached, the status text breaks down each component ('R<threshold*100> recall component reached/not reached', 'FAR component reached/not reached') rather than a single fail badge"
+  evidence_qualifier: "every status text always names the row's own evidence_level (and, for a partial result, its epsilon) -- a target status is never shown evidence-agnostic"
+
+# ---------------------------------------------------------------- test requirements (D3-1..D3-15)
+fixture_plan:
+  harness: "synthetic tmp_path goals/datasets/reference_evidence/manifest/identity registries; drives the renderer through the REAL, unmodified result_explorer.run_query -- never reimplements resolution/identity matching in the test file"
+  cases:
+    - { id: D3-1, expect: "two curated references render; canonical display names are the primary (###) labels, never bare H15/D8b" }
+    - { id: D3-2, expect: "H15: canonical evaluation_id + run_id shown; H15 shown only as an unverified legacy alias; frozen-test evidence; eps=0.015 never confused with eps=0.030" }
+    - { id: D3-3, expect: "AFAC: canonical display name shown; D8b (verified) and D8 (unverified broader-family) stay separate structured aliases; test-post-hoc evidence, never frozen-test; F20 boundary qualification visible" }
+    - { id: D3-4, expect: "rendered metrics equal the exact values in Result Explorer's own returned row; no recomputation" }
+    - { id: D3-5, expect: "F20/R90F10 comparator logic matches the exact registry rule text; H15 never receives an R90F10 pass; AFAC receives only a qualified post-hoc F20 boundary status" }
+    - { id: D3-6, expect: "identity_yaml unset -> scientific metrics remain visible; no canonical ID/display name fabricated" }
+    - { id: D3-7, expect: "identity registry conflict (wrong epsilon) -> scientific metrics remain visible; mismatch warning visible; mismatched canonical identity suppressed" }
+    - { id: D3-8, expect: "curated entry's manifest evidence_level disagrees with its declared level -> metrics suppressed; REFUSED/provenance_mismatch reason shown" }
+    - { id: D3-9, expect: "an empty-status Result Explorer response renders an honest no-result state; no stale metrics retained" }
+    - { id: D3-10, expect: "walking_detection renders 'dataset-supported but not yet evaluated'; gait/future-risk goals render 'data needed'" }
+    - { id: D3-11, expect: "identical sources -> byte-identical render_research_evidence() output" }
+    - { id: D3-12, expect: "second full update_dashboard.py do_render(write=False) pass produces byte-identical md+status.json" }
+    - { id: D3-13, expect: "static scan: dashboard_research_summary.py contains no hardcoded canonical evaluation ID, display name, or H15/AFAC confusion-count/threshold literal; no independent H15/D8b alias-to-evaluation mapping" }
+    - { id: D3-14, expect: "no .html reference anywhere in the production renderer module" }
+    - { id: D3-15, expect: "result_explorer.run_query behavior for a known query is unchanged by this module's existence" }
+  real_data_smoke: "a read-only smoke test also renders against the REAL committed registries (no results/ mutation, no --split) to prove production behavior, separate from the synthetic suite"
+
+# ---------------------------------------------------------------- acceptance criteria
+design_complete:
+  - "This acceptance file approved by the user (Part 9 of the D3 task)."
+implementation_complete:
+  - "scripts/automation/dashboard_research_summary.py exists and implements the required_sections + safe_states + target_comparator_contract above."
+  - "scripts/automation/update_dashboard.py integrates the renderer into its normal render() path (## 2. section) with no other behavioral change."
+test_passed:
+  no_duplicate_source_of_truth: "D3-4/D3-13 prove the renderer receives metrics/identity from Result Explorer and hardcodes none of it"
+  honest_degradation: "D3-6/D3-7/D3-8/D3-9 prove unavailable/mismatch/refused/missing states never fabricate or suppress the wrong thing"
+  target_fidelity: "D3-5 proves F20/R90F10 comparators match the registry's own rule text, never silently changed"
+  determinism: "D3-11/D3-12 prove byte-identical output across repeated renders with identical sources"
+  no_html: "D3-14 + real-render smoke prove dashboard/index.html is never touched"
+  regression: "D3-15 + the full scripts/automation/test_result_explorer.py suite (40/40) prove Result Explorer itself is unaffected"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for DASH-D3."
+
+forbidden_actions:
+  - "reconstruct scientific metrics independently of Result Explorer's returned row"
+  - "independently re-match H15/D8/D8b/A1/H1 (or any alias) to a canonical evaluation"
+  - "rename or edit any historical alias, reference key, protocol ID, or result path"
+  - "implement experiment launching, experiment queues, paper registries, or the Next Experiment Brainstorm Checker"
+  - "begin dashboard/index.html (DASH-S8) implementation"
+  - "run experiments, training, validation, model evaluation, exports, or threshold selection"
+  - "invoke any command containing --split"
+  - "stage, commit, or push"

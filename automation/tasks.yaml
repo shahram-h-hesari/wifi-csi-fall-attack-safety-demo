@@ -55,6 +55,21 @@ tasks:
     depends_on: [DASH-S4, DASH-S6]   # needs stable status.json + artifact_manifest.csv
     acceptance: acceptance/html-dashboard.yaml
     stale_after_days: 7
+  - id: DASH-D3
+    title: >-
+      Dashboard D3 — Markdown research-evidence rendering (scripts/automation/dashboard_research_
+      summary.py). Renders verified scientific evidence, canonical experiment identity, goal/
+      dataset readiness, and safety warnings into RESEARCH_DASHBOARD.md's generated
+      "## 2. Research Evidence & Canonical Identity" section. A VIEW only: reads Result Explorer's
+      run_query() output in-process for all metrics/identity and reference_evidence.yaml only for
+      (key, goal) routing pairs; never reconstructs a metric or re-matches an alias independently.
+      Still the Markdown dashboard — dashboard/index.html (DASH-S8) remains untouched/deferred.
+    kind: dashboard
+    automation: dashboard-research-summary
+    gated: true
+    depends_on: [TOOL-REXP, REG-EXPERIMENT-ID]
+    acceptance: acceptance/dashboard-research-summary.yaml
+    stale_after_days: 5
 
   # --- Automations ---
   - id: AUT-TSG

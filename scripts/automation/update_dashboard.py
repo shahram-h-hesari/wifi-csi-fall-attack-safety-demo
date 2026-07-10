@@ -39,6 +39,11 @@ try:
 except ImportError:  # pragma: no cover
     sys.exit("PyYAML required: pip install pyyaml")
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import dashboard_research_summary as drs  # noqa: E402 -- D3: research-evidence section renderer
+
 REPO = Path(__file__).resolve().parents[2]
 AUT = REPO / "automation"
 DASHBOARD_MD = REPO / "RESEARCH_DASHBOARD.md"
@@ -673,10 +678,29 @@ def r_recent_changes(n=10):
     return "\n".join(out) + "\n"
 
 
+def _research_sources():
+    """D3: source paths for dashboard_research_summary's in-process Result Explorer calls. Mirrors
+    what the Result Explorer CLI wires up itself -- no subprocess, no --split, read-only."""
+    return {
+        "goals_yaml": str(AUT / "registry" / "goals.yaml"),
+        "datasets_yaml": str(AUT / "registry" / "datasets.yaml"),
+        "ledger_csv": str(REPO / "results" / "defense_attempt_inventory" / "defense_attempt_results_long.csv"),
+        "manifest_csv": str(AUT / "artifact_manifest.csv"),
+        "receipts_dir": str(AUT / "receipts"),
+        "reference_evidence_yaml": str(AUT / "registry" / "reference_evidence.yaml"),
+        "identity_yaml": str(AUT / "registry" / "experiment_identity.yaml"),
+    }
+
+
+def r_research_evidence():
+    return drs.render_research_evidence(_research_sources())
+
+
 def render(status, roadmap, queue, frontier, receipts):
     parts = [
         r_banner(status),
         r_now_next(roadmap, receipts),
+        r_research_evidence(),
         r_roadmap(roadmap),
         r_automation_table(status),
         r_verification_ledger(status),

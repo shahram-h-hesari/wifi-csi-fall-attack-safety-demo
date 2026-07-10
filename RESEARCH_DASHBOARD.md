@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 36 |
+| Receipts processed | 38 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -30,6 +30,97 @@
 - **Next (2026-07-11):** Soak day 2 (daily refresh; observe [delta], staleness, counters)
 - **Blockers:** none
 - **Awaiting your approval:** none
+---
+
+<!-- BEGIN AUTO:RESEARCH-EVIDENCE -->
+
+## 2. Research Evidence & Canonical Identity
+
+### A. Research Evidence Snapshot
+
+- **Active primary goal:** `fall_detection` — Fall Detection
+- **Datasets:** sensefi_ut_har
+- **Proposal target (F20):** Rfall >= 0.80 AND FAR <= 0.20 @ PGD eps=0.030
+- **Aspirational final target (R90F10):** Rfall > 0.90 AND FAR < 0.10 @ PGD eps=0.030
+
+**Current honest state:**
+- `H15_eps0015_frozen` — F20 reached, frozen-test
+- `H15_eps0015_frozen` — R90 recall component reached, FAR component not reached; frozen-test at ε=0.015
+- `AFAC_eps0030_F20_posthoc` — F20 boundary, test-post-hoc
+- `AFAC_eps0030_F20_posthoc` — R90 recall component not reached, FAR component not reached; test-post-hoc at ε=0.03
+- No clinical or deployment claim is made by this dashboard.
+
+### B. Canonical Reference Evaluations
+
+### AFAC frozen-test evaluation under PGD epsilon=0.015
+
+- Canonical evaluation: `eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p015_frozen_test_v1`
+- Canonical run: `run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1` — AFAC optionB seed-42 (maxscore-selected) checkpoint
+- Legacy aliases:
+  - `H15` — unverified (expansion unverified) _( Used throughout the repo as a target/milestone label (defined operationally as "recall > 0.85 AND FAR < 0.15", see H15_PHASED_EXPERIMENT_ROADMAP.md line ~9-10) and, by extension, the frozen-test protocol event that evaluated a checkpoint against that target. The letter "H" has NO authoritative expansion anywhere in the repository -- searched exhaustively (Part 1 audit, 2026-07-10). Historical internal label; expansion not asserted. )_
+
+Goal `fall_detection` · dataset `UT-HAR` · attack `pgd` · epsilon `0.015` · split `test` · evidence `frozen-test`
+
+Metrics: TP 41 / FN 4 / FP 60 / TN 395 · Rfall 0.911111 · FAR 0.131868 · threshold 0.168754
+Manifest cross-check: `pass` · source `results/defense_attempt_inventory/pgd_epsilon_frontier/frozen_test_read/frozen_h15_test_confusion.csv`
+
+Warnings:
+- eps=0.015, NOT eps=0.030 — this is not the R90F10 operating point
+- not R90F10 — FAR (0.131868) remains above the 0.10 R90F10 ceiling
+- frozen-test evidence — a one-shot protocol read, not clinical or deployment evidence
+- clean-condition disclosure recorded at the same threshold (see clean_disclosure_companion)
+
+### AFAC post-hoc F20 operating point under PGD epsilon=0.030
+
+- Canonical evaluation: `eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p030_test_posthoc_v1`
+- Canonical run: `run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1` — AFAC optionB seed-42 (maxscore-selected) checkpoint
+- Legacy aliases:
+  - `D8b` — verified: AFAC-score post-hoc FAR<=0.20 operating point -- one specific Target() entry in the D1-D12 appendix recall/FAR frontier plot script _( Verified field-for-field match against the D8b Target() entry (TP 36/FN 9/FP 91/TN 364, Rfall 0.80, FAR 91/455, threshold~0.1532, identical source_file). This is a positive identity match, not an inference from proximity. )_
+  - `D8` — unverified (expansion unverified) _( Refers to the broader D8a (x3 fixed/argmax sub-variants) + D8b (post-hoc sweep) appendix family, not uniquely to this evaluation. Deliberately recorded SEPARATELY from D8b above, per the rule that bare "D8" must not be asserted as equivalent to one specific evaluation merely because it belongs to that broader family. )_
+
+Goal `fall_detection` · dataset `UT-HAR` · attack `pgd` · epsilon `0.03` · split `test` · evidence `test-post-hoc`
+
+Metrics: TP 36 / FN 9 / FP 91 / TN 364 · Rfall 0.8 · FAR 0.2 · threshold 0.153246
+Manifest cross-check: `pass` · source `results/safety_guided_defense/variantH_dual_tail_budget/adaptive_lagrangian_far_constrained/optionB/seed42/test_eval/optionB_maxscore_pgd_probabilities_test_epsilon_0_03.csv`
+
+Warnings:
+- post-hoc only — a satisfying threshold exists on saved scores, not a frozen read
+- not a frozen read — no frozen protocol was executed at eps=0.030 for this method
+- F20 knife-edge caveat — the D8b analysis found F20-qualifying thresholds can be as narrow as ~0.00028 wide; treat as fragile, not robust
+- not R90F10 — FAR (0.200000) is well above the 0.10 R90F10 ceiling
+
+### C. Target Assessment
+
+| Reference | Target | Status |
+|---|---|---|
+| `H15_eps0015_frozen` | F20 | F20 reached, frozen-test |
+| `H15_eps0015_frozen` | R90F10 | R90 recall component reached, FAR component not reached; frozen-test at ε=0.015 |
+| `AFAC_eps0030_F20_posthoc` | F20 | F20 boundary, test-post-hoc |
+| `AFAC_eps0030_F20_posthoc` | R90F10 | R90 recall component not reached, FAR component not reached; test-post-hoc at ε=0.03 |
+
+### D. Goal and Dataset Readiness
+
+| Goal | Readiness |
+|---|---|
+| `fall_detection` | supported and evaluated (dataset: UT-HAR) |
+| `walking_detection` | dataset-supported but not yet evaluated (dataset: UT-HAR) |
+| `walking_pattern_recognition` | data needed — no supporting dataset locally — needs: gait-pattern-labelled CSI dataset (multiple walking styles/speeds per subject) |
+| `gait_or_mobility_change_detection` | data needed — no supporting dataset locally — needs: longitudinal per-subject CSI (weeks-months), ground-truth mobility assessments (e.g. TUG/gait speed) |
+| `future_fall_risk_prediction` | data needed / aspirational — no current longitudinal support — needs: prospective cohort with adjudicated fall outcomes, IRB-approved longitudinal sensing |
+
+### E. Safety and Evidence Legend
+
+- **validation-only** — validation-only — selection evidence, not a thesis result
+- **test-post-hoc** — test-post-hoc — descriptive only; not a frozen read
+- **diagnostic-internal** — diagnostic-internal — internal diagnostics; no claim
+- **frozen-test** — a one-shot, protocol-gated held-out test read — the strongest evidence level this repo produces
+- **provenance mismatch** — a curated reference entry's provenance path disagreed with (or was missing from) the artifact manifest — metrics withheld entirely
+- **identity unavailable** — no canonical identity mapping could be resolved for this result — the scientific evidence stands on its own; no canonical ID/display name is shown
+- **identity mismatch** — a canonical identity mapping exists but conflicts with (or is ambiguous against) the scientific result — the scientific evidence stands on its own; no canonical ID/display name is shown
+- **not R90F10** — not R90F10 — R90F10 target not met
+- **research-only / not clinical evidence** — descriptive / internal finding — not a clinical, deployment, or certified claim
+
+<!-- END AUTO:RESEARCH-EVIDENCE -->
 ---
 
 ## 3. 7-day roadmap
@@ -68,6 +159,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `DASH-D3` | dashboard-research-summary | ✅ ACCEPTED | 45/45 | hash-verified | — |
 | `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 33/33 | hash-verified | — |
 | `REG-EXPERIMENT-ID` | experiment-identity | ✅ ACCEPTED | 33/33 | hash-verified | — |
 | `AUT-APPROVAL-BIND` | dashboard-refresh | ✅ ACCEPTED | 18/18 | hash-verified | — |
@@ -170,6 +262,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-10 — D3: Markdown research-evidence rendering added
 - 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
 - 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
 - 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
@@ -179,6 +272,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — Research OS layer D1: Goal Registry + Dataset Capability Registry
 - 2026-07-09 — Plan change: roadmap-2026-07-10-v2 supersedes roadmap-2026-07-09-v1
 - 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
-- 2026-07-09 — HTML dashboard visual design spec revision 2
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

@@ -108,9 +108,23 @@
       "strength": "hash-verified",
       "checks": "20/20",
       "failed": []
+    },
+    "REG-EXPERIMENT-ID": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "33/33",
+      "failed": []
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "REG-EXPERIMENT-ID",
+      "automation": "experiment-identity",
+      "display": "ACCEPTED",
+      "checks": "33/33",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "TOOL-REXP",
       "automation": "result-explorer",
@@ -301,5 +315,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 32
+  "receipts_processed": 34
 }

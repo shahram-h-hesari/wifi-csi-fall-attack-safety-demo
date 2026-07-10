@@ -5,6 +5,31 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `2e75cdd`.
+- Added a parallel identity layer (`automation/registry/experiment_identity.md` policy +
+  `experiment_identity.yaml` registry + read-only `validate_experiment_identity.py`) separating
+  **run identity** (training/checkpoint provenance) from **evaluation identity** (attack/epsilon/
+  split/evidence conditions), with mandatory readable display names and structured legacy aliases.
+- **Readable names added** for the two curated reference-evidence entries: H15 -> "AFAC frozen-test
+  evaluation under PGD epsilon=0.015"; the AFAC F20 entry -> "AFAC post-hoc F20 operating point
+  under PGD epsilon=0.030".
+- **H15 preserved as a legacy alias** -- the letter "H" has no authoritative expansion anywhere in
+  the repository (exhaustively searched); recorded honestly as `meaning: null, meaning_status:
+  unverified`, never guessed.
+- **Proven, not assumed:** H15 and the AFAC eps=0.030 post-hoc result share one underlying run --
+  confirmed by independently re-hashing the checkpoint file on disk against the SHA256 documented
+  in the H15 frozen-test protocol (exact match). D8b (not bare D8) verified field-for-field against
+  its defining `Target()` entry in `scripts/analysis/plot_d1_d12_recall_far.py`. A1 recorded
+  honestly as a genuine reused/ambiguous alias (two unrelated objects), never silently resolved.
+- **No historical artifact renamed** -- zero edits to `results/`, existing receipts, or any other
+  `automation/registry/*.yaml` file; `reference_evidence.yaml`'s keys are cited, not touched.
+- **Result Explorer integration deferred** to a future, separately-approved step; D3 dashboard
+  rendering of canonical names is likewise not started. This step only creates and validates the
+  identity registry (31/31 tests pass; validates against the real committed registry with zero
+  errors). Receipt: `REG-EXPERIMENT-ID` (requires user approval).
+
 ## 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `eb0c6f6`.

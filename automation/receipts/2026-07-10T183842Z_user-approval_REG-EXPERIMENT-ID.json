@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T183842Z_user-approval_REG-EXPERIMENT-ID",
+  "task_id": "REG-EXPERIMENT-ID",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-10T183733Z_experiment-identity_REG-EXPERIMENT-ID",
+  "approved_claim_path": "automation/receipts/2026-07-10T183733Z_experiment-identity_REG-EXPERIMENT-ID.json",
+  "approved_claim_sha256": "550f3e24cfd0f0f7dfab7ac5a13560fbb216cfb46528172d832d0c62f2f43d97",
+  "summary": "User approved REG-EXPERIMENT-ID (claim 2026-07-10T183733Z_experiment-identity_REG-EXPERIMENT-ID; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "2e75cdd",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

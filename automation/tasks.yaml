@@ -156,3 +156,17 @@ tasks:
     gated: false
     acceptance: acceptance/result-explorer.yaml
     stale_after_days: 30
+  - id: REG-EXPERIMENT-ID
+    title: >-
+      Experiment Identity & Naming Standard — automation/registry/experiment_identity.yaml (run
+      vs. evaluation identity, readable display names, structured legacy aliases) +
+      experiment_identity.md (policy) + read-only validator. Initial backfill: H15_eps0015_frozen
+      and AFAC_eps0030_F20_posthoc, including a PROVEN shared-run link (checkpoint SHA256
+      independently re-hashed) and an honest AMBIGUOUS/REUSED alias record for "A1". Renames
+      NOTHING historical; does NOT yet integrate into Result Explorer or the dashboard (separate
+      future steps).
+    kind: registry
+    automation: experiment-identity
+    gated: false
+    acceptance: acceptance/experiment-identity.yaml
+    stale_after_days: 30

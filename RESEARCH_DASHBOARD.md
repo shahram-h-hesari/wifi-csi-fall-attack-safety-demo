@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 32 |
+| Receipts processed | 34 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -68,6 +68,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `REG-EXPERIMENT-ID` | experiment-identity | ✅ ACCEPTED | 33/33 | hash-verified | — |
 | `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 20/20 | hash-verified | — |
 | `AUT-APPROVAL-BIND` | dashboard-refresh | ✅ ACCEPTED | 18/18 | hash-verified | — |
 | `REG-GOALS` | goal-registry | ✅ ACCEPTED | 15/15 | hash-verified | — |
@@ -169,6 +170,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
 - 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
 - 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
 - 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
@@ -178,6 +180,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-09 — test-split-guard warnings made auditable (stderr + exit 1)
 - 2026-07-09 — HTML dashboard visual design spec revision 2
 - 2026-07-09 — val-pilot-gate design memo committed (v0.2, user-calibrated)
-- 2026-07-09 — test-split-guard built (WARN-ONLY phase)
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T183733Z_experiment-identity_REG-EXPERIMENT-ID",
+  "task_id": "REG-EXPERIMENT-ID",
+  "automation": "experiment-identity",
+  "actor": { "kind": "skill", "name": "research-os-d2e1", "session_hint": "experiment-identity-standard" },
+  "status_claimed": "done",
+  "summary": "D2e-1: Experiment Identity & Naming Standard created. automation/registry/experiment_identity.md (policy: run vs evaluation identity, canonical ID format snake_case run_<goal>_<dataset>_<method>_<disambiguator>_v<n> / eval_<goal>_<dataset>_<method>_<attack>_eps<token>_<evidence-token>_v<n>, epsilon-token rule, versioning, legacy-backfill rules, why-no-renaming) + automation/registry/experiment_identity.yaml (registry: 1 run record, 2 evaluation records, 9-entry legacy_alias_glossary). Part 1 read-only audit findings (all cited, none guessed): letter 'H' in H15 has NO authoritative expansion anywhere in the repository (searched exhaustively) -- recorded meaning: null, meaning_status: unverified. H15_eps0015_frozen and AFAC_eps0030_F20_posthoc PROVEN to share one run: H15_FROZEN_TEST_DECISION_MEMO.md names the exact checkpoint used for the H15 frozen read (checkpoints/.../optionB/seed42/seed42_optionB_maxscore_best.pt, documented SHA256 b85c68a7...); independently re-hashed that checkpoint file (still present on disk) during this audit -- exact match, confirming AFAC_eps0030_F20_posthoc's source_file (that same checkpoint's own eps=0.03 export) is the identical run. D8b (not bare D8) verified field-for-field against scripts/analysis/plot_d1_d12_recall_far.py's Target('D8b', 'AFAC-score post-hoc FAR<=0.20', ...) entry (TP 36/FN 9/FP 91/TN 364, Rfall 0.80, threshold~0.1532, same source_file) -- recorded as a verified alias; bare 'D8' recorded separately as the broader, unverified-scope family label, per the explicit instruction not to conflate family-level and evaluation-level identity. A1 confirmed genuinely AMBIGUOUS/REUSED (variantH Option-A1 training setting vs. an unrelated DSGE 'A1/seed-42' experiment-attempt directory) -- recorded honestly with reused=true and two distinct reused_objects, meaning left null at the top level rather than silently disambiguated. G1/G2/G3 (variantG_targeted_hardneg settings), H1/H2/H3 (variantH_dual_tail_budget settings, a DIFFERENT H-numbering than H15's milestone label -- no relationship asserted), A0/A2 all verified via SETTINGS dict citations in their respective training scripts. Seed=42 verified via training metadata. Immutable IDs (H15_eps0015_frozen, AFAC_eps0030_F20_posthoc, H15-TEST-EPS0015-AFAC-20260705, optionB_AFAC, all historical paths/receipts) confirmed untouched. scripts/automation/validate_experiment_identity.py (read-only validator; loads identity/reference-evidence/goals/datasets registries; enforces all 20 identity safety rules from automation/acceptance/experiment-identity.yaml) created and passes against the REAL committed registry with zero errors. scripts/automation/test_experiment_identity.py (N1-N15 + 4 extra defensive synthetic-fixture cases, N12-N14 additionally re-check the real committed registry read-only) -- 31/31 pass. automation/acceptance/experiment-identity.yaml created describing the identity model, canonical ID format, 20 safety rules, the two verified initial mappings, and an explicit future_integration_boundary stating Result Explorer and D3 dashboard rendering are NOT touched by this step. Regression checks: test_approve.py ALL PASS, test_verify.py ALL PASS, test_result_explorer.py 24 passed -- none of those files were touched. No results/, ledger, manifest, reference_evidence.yaml, goals.yaml, datasets.yaml, result_explorer.py, or historical artifact/path/protocol ID was modified, renamed, or moved.",
+  "files_created": [
+    { "path": "automation/registry/experiment_identity.yaml", "sha256": "534f6a25b86d8b2a524a3a77112c50a7b397993a5220057c5665ffb96cabc9d6" },
+    { "path": "automation/registry/experiment_identity.md", "sha256": "8092f81bc8c6b2616456a876558b5d5f140e40104f7c13d5f04a7b7f1a07013f" },
+    { "path": "automation/acceptance/experiment-identity.yaml", "sha256": "b0f39908156ad78c0a0deed0aec6643af893bbd51fb4e85f91232a4480e9dcba" },
+    { "path": "scripts/automation/validate_experiment_identity.py", "sha256": "52a3894f8fd505379d60ece8a8d2698b71250bd4b69c092b6522d8bcea349c10" },
+    { "path": "scripts/automation/test_experiment_identity.py", "sha256": "0ee11d101112a0cc44bfba934ee385b21e5efe47bea4c655b44a991710d76078" }
+  ],
+  "files_modified": [
+    { "path": "automation/tasks.yaml", "sha256": "c3bf5530f8f9a7063963e83af38bdb30ff368aa8f4a8d85b766ad38a684a34a6" }
+  ],
+  "commands_run": [
+    { "cmd": "read-only repository search for authoritative H15/D8/G1/A1/H1 definitions (grep + file reads); no experiment/training/validation/export script invoked", "exit_code": 0 },
+    { "cmd": "sha256sum checkpoints/.../optionB/seed42/seed42_optionB_maxscore_best.pt -> b85c68a7... (exact match to documented H15 protocol checkpoint hash; proves the shared run link)", "exit_code": 0 },
+    { "cmd": "python -c \"import ast; ast.parse(...)\" -> syntax OK for both new scripts", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_identity.py identity=automation/registry/experiment_identity.yaml reference-evidence=automation/registry/reference_evidence.yaml goals=automation/registry/goals.yaml datasets=automation/registry/datasets.yaml -> PASS, zero errors", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_identity.py -> ALL PASS (31/31: N1-N15 + 4 extra)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_approve.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_result_explorer.py -v -> 24 passed (unaffected)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "EXPID-N1-N15-full-suite", "result": "pass", "evidence_path": "scripts/automation/test_experiment_identity.py" },
+    { "id": "EXPID-real-registry-zero-errors", "result": "pass", "evidence_path": "automation/registry/experiment_identity.yaml" },
+    { "id": "EXPID-h15-checkpoint-hash-verified", "result": "pass", "evidence_path": "automation/registry/experiment_identity.yaml" },
+    { "id": "EXPID-d8b-alias-verified", "result": "pass", "evidence_path": "automation/registry/experiment_identity.yaml" },
+    { "id": "EXPID-a1-ambiguity-honest", "result": "pass", "evidence_path": "automation/registry/experiment_identity.yaml" },
+    { "id": "EXPID-regression-approve-verify-result-explorer", "result": "pass", "evidence_path": "scripts/automation/test_experiment_identity.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "2e75cdd", "expected_dirty": ["automation/registry/experiment_identity.yaml", "automation/registry/experiment_identity.md", "automation/acceptance/experiment-identity.yaml", "scripts/automation/validate_experiment_identity.py", "scripts/automation/test_experiment_identity.py", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Use the corrected --approve CLI to approve REG-EXPERIMENT-ID (it will bind to this exact claim)."
+}

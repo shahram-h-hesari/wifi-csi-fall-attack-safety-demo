@@ -5,6 +5,30 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `894e786`.
+- Curated reference-evidence results (`H15_eps0015_frozen`, `AFAC_eps0030_F20_posthoc`) now carry
+  a supplemental `experiment_identity` block sourced from the D2e-1 registry -- **scientific
+  evidence remains authoritative and unchanged**: metrics, evidence_level, attack, epsilon, split,
+  threshold, and manifest provenance are never altered by enrichment; identity is attached only
+  after the existing D2d-2 scientific resolution + manifest cross-check has already succeeded.
+- **H15 displayed as a legacy alias with unverified expansion** -- `meaning: null,
+  meaning_status: unverified` shown verbatim, never invented.
+- **Identity mismatch never overrides metrics** -- a conflicting or ambiguous identity mapping
+  (wrong epsilon, wrong evidence level, duplicate mapping, unresolved run) degrades to
+  `experiment_identity.state: mismatch` with the trusted scientific row completely untouched and
+  no canonical ID ever shown; a missing/absent identity source degrades to `state: unavailable`.
+  Matching is exact-key only (`reference_evidence_key`) -- H15/D8/D8b/A1/H1 are never valid
+  standalone lookup values, never fuzzy-matched.
+- **D3 rendering remains deferred** -- this step only enriches Result Explorer's own output; no
+  dashboard sections were added.
+- Tests: 40/40 (24 pre-existing F1-F15+extras unmodified + 16 new I1-I15/I4b). Identity-suite
+  regression 32/32 (the D2e-1 claim receipt's own summary said 31/31 due to an earlier counting
+  error, never corrected since receipts are append-only; the actual verified count has been 32/32
+  throughout). Receipt: superseding `TOOL-REXP` claim (requires user approval); `REG-EXPERIMENT-ID`
+  unaffected (none of its hashed artifacts changed) -- remains ACCEPTED with no new receipt.
+
 ## 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `2e75cdd`.

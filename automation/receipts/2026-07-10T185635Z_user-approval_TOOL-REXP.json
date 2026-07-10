@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-10T185635Z_user-approval_TOOL-REXP",
+  "task_id": "TOOL-REXP",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-10T185529Z_result-explorer_TOOL-REXP",
+  "approved_claim_path": "automation/receipts/2026-07-10T185529Z_result-explorer_TOOL-REXP.json",
+  "approved_claim_sha256": "e73dca55e10a98f72508dd042b77c26333d8cd3cdefe4f668e5832a7295d3d0a",
+  "summary": "User approved TOOL-REXP (claim 2026-07-10T185529Z_result-explorer_TOOL-REXP; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "894e786",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

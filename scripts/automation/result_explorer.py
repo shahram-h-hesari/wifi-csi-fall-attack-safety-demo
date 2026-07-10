@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Result Explorer v1 — read-only lookup over EXISTING committed results (D2c + D2d-2).
+"""Result Explorer v1 — read-only lookup over EXISTING committed results (D2c + D2d-2 + D2e-2).
 
 Spec: automation/acceptance/result-explorer.yaml. Contract: run_query(query, sources) -> dict.
 
@@ -20,6 +20,18 @@ no metrics — the curated file may point at evidence, it may never overrule wha
 that evidence is. If sources has no curated source configured, or the named key isn't in it, this
 falls through unchanged to the pre-existing goals.yaml-driven reference_evidence_queries + ledger-
 filter path (D2c), so ordinary and legacy-reference queries are completely unaffected.
+
+D2e-2 identity enrichment: a CURATED reference-evidence row (the two named keys above) may gain a
+supplemental `experiment_identity` block from the optional sources['identity_yaml'] registry
+(automation/registry/experiment_identity.yaml in production). This runs strictly AFTER the
+scientific result has been resolved and provenance-checked -- it only ever ADDS the new
+`experiment_identity` key; it never alters any existing scientific field (metrics, evidence_level,
+attack, epsilon, split, threshold, provenance). Matching is exact-key only via
+`reference_evidence_key`, never fuzzy/alias-based. Three states: `matched` (identity attached),
+`unavailable` (no identity source configured, file missing, malformed YAML, or no mapping exists —
+scientific result unaffected), `mismatch` (a mapping exists but disagrees with the scientific
+result, or is ambiguous — scientific result unaffected, but no canonical identity is attached).
+Ordinary (non-reference) ledger rows never receive an experiment_identity block at all.
 
 Safety: pure read-only stdlib+yaml. Never launches other processes, never builds commands with
 split flags, never calls training/evaluation/export scripts, never opens a file for writing —
@@ -171,6 +183,7 @@ def _curated_reference_lookup(ref_name, gid, sources):
     primary_field, primary_path, primary_man = checked_paths[0]
     row = {
         "goal": gid,
+        "reference_evidence_key": ref_name,
         "dataset": entry.get("dataset"),
         "attack": entry.get("attack"),
         "epsilon": entry.get("epsilon"),
@@ -193,6 +206,152 @@ def _curated_reference_lookup(ref_name, gid, sources):
         "warning_band": list(entry.get("disclosures") or []),
     }
     return row, None
+
+
+# ------------------------------------------------------------ D2e-2: identity enrichment (supplemental)
+def _load_identity_registry(sources):
+    """Read-only load of the OPTIONAL experiment-identity registry. Returns (doc_or_None,
+    reason_or_None). A None doc always carries a specific reason so callers can report an honest
+    'unavailable' state rather than silently doing nothing. Never raises on a missing/malformed
+    file -- degrades to unavailable, exactly like the D2d-2 curated-lookup precedent."""
+    path = sources.get("identity_yaml")
+    if not path:
+        return None, "no identity source configured"
+    p = Path(path)
+    if not p.exists():
+        return None, f"identity registry file not found: {path}"
+    try:
+        doc = yaml.safe_load(p.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError:
+        return None, "identity registry YAML is malformed/unparseable"
+    return doc, None
+
+
+def _identity_epsilon_token(epsilon, identity_doc):
+    """Reads naming_policy.epsilon_tokens directly from the loaded identity document -- the SAME
+    data-driven source scripts/automation/validate_experiment_identity.py uses, so the two can
+    never drift without deliberately importing one from the other."""
+    tokens = ((identity_doc.get("naming_policy") or {}).get("epsilon_tokens")) or {}
+    for k, v in tokens.items():
+        try:
+            if abs(float(k) - float(epsilon)) < 1e-9:
+                return v
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
+def _find_identity_evaluation(identity_doc, ref_key):
+    """Exact match on reference_evidence_key only -- never fuzzy, never alias-based (H15/D8b/A1/H1
+    are never treated as standalone lookup keys here)."""
+    matches = [e for e in (identity_doc.get("evaluations") or [])
+               if e.get("reference_evidence_key") == ref_key]
+    if not matches:
+        return None, "no evaluation in the identity registry references this reference_evidence_key"
+    if len(matches) > 1:
+        return None, (f"duplicate identity mapping: {len(matches)} evaluations reference "
+                       f"reference_evidence_key {ref_key!r}")
+    return matches[0], None
+
+
+def _find_identity_run(identity_doc, run_id):
+    if not run_id:
+        return None, "evaluation record has no run_id"
+    matches = [r for r in (identity_doc.get("runs") or []) if r.get("run_id") == run_id]
+    if not matches:
+        return None, f"referenced run_id {run_id!r} does not resolve to any run record"
+    if len(matches) > 1:
+        return None, f"referenced run_id {run_id!r} resolves to {len(matches)} run records (ambiguous)"
+    return matches[0], None
+
+
+def _identity_cross_check(row_dataset_id, row, evaluation):
+    """Exact, deterministic field comparisons (D2e-2 Part 4). Only compares fields BOTH sides
+    represent -- a field the scientific row doesn't carry is skipped, never forced to mismatch.
+    Epsilon uses a tight tolerance (1e-9), never a loose one that could confuse eps=0.015 with
+    eps=0.030. Returns a list of mismatch reasons; empty = no conflict found."""
+    reasons = []
+    if row.get("goal") != evaluation.get("goal"):
+        reasons.append(f"goal disagreement: result={row.get('goal')!r} vs identity={evaluation.get('goal')!r}")
+    if row_dataset_id is not None and evaluation.get("dataset") is not None:
+        if row_dataset_id != evaluation.get("dataset"):
+            reasons.append(f"dataset disagreement: result={row_dataset_id!r} vs identity={evaluation.get('dataset')!r}")
+    mv = evaluation.get("method_variant")
+    if row.get("defense_or_method_name") and mv:
+        if row["defense_or_method_name"] != mv:
+            reasons.append(f"method_variant disagreement: result={row['defense_or_method_name']!r} vs identity={mv!r}")
+    if row.get("attack") != evaluation.get("attack"):
+        reasons.append(f"attack disagreement: result={row.get('attack')!r} vs identity={evaluation.get('attack')!r}")
+    r_eps, e_eps = row.get("epsilon"), evaluation.get("epsilon")
+    if r_eps is not None and e_eps is not None:
+        r_num, e_num = _num(r_eps), _num(e_eps)
+        if r_num is None or e_num is None or abs(r_num - e_num) > 1e-9:
+            reasons.append(f"epsilon disagreement: result={r_eps!r} vs identity={e_eps!r}")
+    if row.get("split") != evaluation.get("split"):
+        reasons.append(f"split disagreement: result={row.get('split')!r} vs identity={evaluation.get('split')!r}")
+    if row.get("evidence_level") != evaluation.get("evidence_level"):
+        reasons.append(
+            f"evidence_level disagreement: result={row.get('evidence_level')!r} vs identity={evaluation.get('evidence_level')!r}")
+    r_pid, e_pid = row.get("protocol_id"), evaluation.get("protocol_id")
+    if r_pid and e_pid and r_pid != e_pid:
+        reasons.append(f"protocol_id disagreement: result={r_pid!r} vs identity={e_pid!r}")
+    return reasons
+
+
+def _enrich_with_identity(row, row_dataset_id, sources):
+    """Attach a SUPPLEMENTAL experiment_identity block to an already scientifically-resolved
+    curated row. Called strictly after manifest cross-checking has passed. Only ever ADDS the
+    experiment_identity key -- every existing scientific field is left untouched. Never fabricates
+    a mapping; never resolves via alias (H15/D8b/A1/H1 are never used as lookup keys here)."""
+    ref_key = row.get("reference_evidence_key")
+    identity_doc, load_reason = _load_identity_registry(sources)
+    if identity_doc is None:
+        row["experiment_identity"] = {"state": "unavailable", "reason": load_reason}
+        return row
+
+    evaluation, eval_reason = _find_identity_evaluation(identity_doc, ref_key)
+    if evaluation is None:
+        state = "mismatch" if eval_reason and eval_reason.startswith("duplicate") else "unavailable"
+        row["experiment_identity"] = {"state": state, "reason": eval_reason}
+        return row
+
+    mismatches = _identity_cross_check(row_dataset_id, row, evaluation)
+    if mismatches:
+        row["experiment_identity"] = {"state": "mismatch", "reason": "; ".join(mismatches)}
+        return row
+
+    eps_tok = _identity_epsilon_token(evaluation.get("epsilon"), identity_doc)
+    eval_id = evaluation.get("evaluation_id") or ""
+    if eps_tok and eps_tok not in eval_id:
+        row["experiment_identity"] = {
+            "state": "mismatch",
+            "reason": f"epsilon token {eps_tok!r} not found in evaluation_id {eval_id!r}"}
+        return row
+
+    if not evaluation.get("display_name"):
+        row["experiment_identity"] = {"state": "mismatch", "reason": "identity evaluation has no display_name"}
+        return row
+
+    run, run_reason = _find_identity_run(identity_doc, evaluation.get("run_id"))
+    if run is None:
+        row["experiment_identity"] = {"state": "mismatch", "reason": run_reason}
+        return row
+
+    row["experiment_identity"] = {
+        "state": "matched",
+        "evaluation_id": evaluation.get("evaluation_id"),
+        "display_name": evaluation.get("display_name"),
+        "run_id": run.get("run_id"),
+        "run_display_name": run.get("display_name"),
+        "run_link_status": evaluation.get("run_link_status"),
+        "reference_evidence_key": ref_key,
+        "identity_status": evaluation.get("identity_status"),
+        "method_family": evaluation.get("method_family"),
+        "method_variant": evaluation.get("method_variant"),
+        "legacy_aliases": evaluation.get("legacy_aliases") or [],
+        "protocol_id": evaluation.get("protocol_id"),
+    }
+    return row
 
 
 def _receipt_id_for(source_file, receipts_dir):
@@ -231,9 +390,15 @@ def run_query(query, sources):
         if curated_refusal is not None:
             return curated_refusal
         if curated_row is not None:
+            # capture the raw dataset ID BEFORE the display-name rename below -- identity
+            # cross-checking must compare against the identity registry's dataset ID field
+            raw_dataset_id = curated_row.get("dataset")
             ds_c = _resolve_dataset(datasets, curated_row.get("dataset"), None)
             if ds_c:
                 curated_row["dataset"] = ds_c.get("name") or curated_row["dataset"]
+            # D2e-2: scientific result is fully resolved and provenance-checked above; identity
+            # enrichment happens ONLY now, as supplemental metadata that never alters it.
+            curated_row = _enrich_with_identity(curated_row, raw_dataset_id, sources)
             return _result("ok", None, "1 curated result row", [curated_row])
         # no curated entry for this key -> fall back to the pre-existing (D2c) path, unchanged
         ref = (goal.get("reference_evidence_queries") or {}).get(ref_name)
@@ -370,12 +535,12 @@ def run_query(query, sources):
 def main(argv):
     """Usage: result_explorer.py goals=<goals.yaml> datasets=<datasets.yaml> ledger=<ledger.csv> \
 manifest=<manifest.csv> [receipts=<dir>] [reference-evidence=<reference_evidence.yaml>] \
-goal=<id> [attack=..] [epsilon=..] [split=..] [defense=..] [evidence_level=..] \
-[reference_evidence_query=..]  (key=value only; prints JSON)"""
+[identity=<experiment_identity.yaml>] goal=<id> [attack=..] [epsilon=..] [split=..] \
+[defense=..] [evidence_level=..] [reference_evidence_query=..]  (key=value only; prints JSON)"""
     kv = dict(a.partition("=")[::2] for a in argv if "=" in a)
     src_keys = {"goals": "goals_yaml", "datasets": "datasets_yaml",
                 "ledger": "ledger_csv", "manifest": "manifest_csv", "receipts": "receipts_dir",
-                "reference-evidence": "reference_evidence_yaml"}
+                "reference-evidence": "reference_evidence_yaml", "identity": "identity_yaml"}
     sources = {dest: kv.pop(k) for k, dest in src_keys.items() if k in kv}
     missing = [k for k in ("goals_yaml", "datasets_yaml", "ledger_csv", "manifest_csv")
                if k not in sources]

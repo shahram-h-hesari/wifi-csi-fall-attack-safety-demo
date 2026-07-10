@@ -704,5 +704,332 @@ def test_ordinary_queries_unchanged_with_curated_configured(explorer, curated_so
     assert out["state_id"] == "supported_not_evaluated"
 
 
+# ---------------------------------------------------------------- D2e-2: identity enrichment (I1-I15)
+def _write_identity_yaml(path: Path, runs_yaml: str, evaluations_yaml: str) -> Path:
+    """Assembles the identity YAML directly (not via _write's dedent-based helper, whose outer
+    dedent collides with the indentation applied here) so nested list items land at the correct
+    YAML indentation level."""
+    content = (
+        "schema_version: 1\n"
+        "naming_policy:\n"
+        "  epsilon_tokens: {0.015: eps0p015, 0.03: eps0p030}\n"
+        "runs:\n"
+        + textwrap.indent(textwrap.dedent(runs_yaml), "  ")
+        + "evaluations:\n"
+        + textwrap.indent(textwrap.dedent(evaluations_yaml), "  ")
+        + "legacy_alias_glossary: []\n"
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return path
+
+
+_RUN_YAML = """\
+- run_id: run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1
+  display_name: "AFAC optionB seed-42 (maxscore-selected) checkpoint"
+  goal: fall_detection
+  dataset: sensefi_ut_har
+  method_family: AFAC
+  identity_status: verified
+"""
+
+_H15_EVAL_YAML = """\
+- evaluation_id: eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p015_frozen_test_v1
+  display_name: "AFAC frozen-test evaluation under PGD epsilon=0.015"
+  run_id: run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1
+  run_link_status: verified
+  reference_evidence_key: H15_eps0015_frozen
+  goal: fall_detection
+  dataset: sensefi_ut_har
+  method_family: AFAC
+  attack: pgd
+  epsilon: 0.015
+  split: test
+  evidence_level: frozen-test
+  protocol_id: "H15-TEST-EPS0015-AFAC-20260705"
+  identity_status: verified
+  legacy_aliases:
+    - value: H15
+      alias_type: historical_milestone_label
+      meaning: null
+      meaning_status: unverified
+      source_paths: ["results/synthetic_h15_doc.md"]
+      note: "Historical internal label; expansion not asserted."
+"""
+
+_AFAC_EVAL_YAML = """\
+- evaluation_id: eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p030_test_posthoc_v1
+  display_name: "AFAC post-hoc F20 operating point under PGD epsilon=0.030"
+  run_id: run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1
+  run_link_status: verified
+  reference_evidence_key: AFAC_eps0030_F20_posthoc
+  goal: fall_detection
+  dataset: sensefi_ut_har
+  method_family: AFAC
+  method_variant: optionB_AFAC
+  attack: pgd
+  epsilon: 0.03
+  split: test
+  evidence_level: test-post-hoc
+  identity_status: verified
+  legacy_aliases:
+    - value: D8b
+      alias_type: historical_appendix_target_label
+      meaning: "AFAC-score post-hoc FAR<=0.20 operating point"
+      meaning_status: verified
+      source_paths: ["scripts/analysis/plot_d1_d12_recall_far.py"]
+      note: "Verified field-for-field match."
+"""
+
+
+@pytest.fixture()
+def identity_sources(curated_sources):
+    """curated_sources PLUS a synthetic experiment_identity.yaml mirroring the real registry's one
+    run + two evaluations for H15/AFAC."""
+    identity_yaml = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "experiment_identity.yaml",
+        _RUN_YAML, _H15_EVAL_YAML + _AFAC_EVAL_YAML)
+    return {**curated_sources, "identity_yaml": str(identity_yaml)}
+
+
+def test_i1_h15_exact_identity_enrichment(explorer, identity_sources):
+    before = _snapshot(identity_sources["_tmp_root"])
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, identity_sources)
+    assert out["status"] == "ok"
+    row = out["rows"][0]
+    # scientific fields exactly as in F12 (unchanged by enrichment)
+    for k, v in H15_METRICS.items():
+        assert row["metrics"][k] == pytest.approx(v), k
+    assert row["evidence_level"] == "frozen-test"
+    assert row["epsilon"] == pytest.approx(0.015)
+    ei = row["experiment_identity"]
+    assert ei["state"] == "matched"
+    assert ei["evaluation_id"] == "eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p015_frozen_test_v1"
+    assert ei["display_name"] == "AFAC frozen-test evaluation under PGD epsilon=0.015"
+    assert ei["run_id"] == "run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1"
+    assert ei["run_link_status"] == "verified"
+    aliases = ei["legacy_aliases"]
+    assert len(aliases) == 1 and aliases[0]["value"] == "H15"
+    assert aliases[0]["meaning"] is None
+    assert aliases[0]["meaning_status"] == "unverified"
+    assert _snapshot(identity_sources["_tmp_root"]) == before   # read-only proof
+
+
+def test_i2_afac_posthoc_identity_enrichment(explorer, identity_sources):
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "AFAC_eps0030_F20_posthoc"}, identity_sources)
+    assert out["status"] == "ok"
+    row = out["rows"][0]
+    for k, v in AFAC_METRICS.items():
+        assert row["metrics"][k] == pytest.approx(v), k
+    assert row["evidence_level"] == "test-post-hoc"
+    ei = row["experiment_identity"]
+    assert ei["state"] == "matched"
+    assert ei["evaluation_id"] == "eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p030_test_posthoc_v1"
+    assert ei["display_name"] == "AFAC post-hoc F20 operating point under PGD epsilon=0.030"
+    assert ei["run_id"] == "run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1"
+    aliases = ei["legacy_aliases"]
+    assert len(aliases) == 1 and aliases[0]["value"] == "D8b"   # never bare D8
+    assert aliases[0]["meaning_status"] == "verified"
+    assert row["evidence_level"] != "frozen-test"   # never mislabeled
+
+
+def test_i3_scientific_fields_unchanged_by_enrichment(explorer, curated_sources, identity_sources):
+    """Same query, with vs without an identity source configured -- every scientific/provenance
+    field is byte/value equivalent; only experiment_identity differs."""
+    plain = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, curated_sources)
+    enriched = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, identity_sources)
+    row_plain = dict(plain["rows"][0])
+    row_enriched = dict(enriched["rows"][0])
+    # both sides carry a supplemental experiment_identity block (curated_sources has no identity
+    # source configured -> state=unavailable; identity_sources -> state=matched); pop both to
+    # compare only the SCIENTIFIC/provenance fields, which must be byte/value equivalent.
+    assert row_plain.pop("experiment_identity")["state"] == "unavailable"
+    assert row_enriched.pop("experiment_identity")["state"] == "matched"
+    assert row_plain == row_enriched
+
+
+def test_i4_missing_identity_registry(explorer, curated_sources):
+    """No identity_yaml key in sources at all -- scientific result still returns; identity state
+    unavailable; nothing fabricated."""
+    assert "identity_yaml" not in curated_sources
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, curated_sources)
+    assert out["status"] == "ok"
+    row = out["rows"][0]
+    for k, v in H15_METRICS.items():
+        assert row["metrics"][k] == pytest.approx(v), k
+    ei = row["experiment_identity"]
+    assert ei["state"] == "unavailable"
+    assert "evaluation_id" not in ei
+
+
+def test_i4b_identity_file_path_does_not_exist(explorer, curated_sources):
+    src = {**curated_sources, "identity_yaml": str(curated_sources["_tmp_root"] / "nope.yaml")}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    assert out["status"] == "ok"
+    assert out["rows"][0]["experiment_identity"]["state"] == "unavailable"
+
+
+def test_i5_missing_reference_key_mapping(explorer, curated_sources):
+    """Identity file exists and parses, but has zero evaluations referencing this key -- no fuzzy
+    alias fallback, just an honest unavailable state."""
+    empty_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "empty_identity.yaml", _RUN_YAML, "[]\n")
+    src = {**curated_sources, "identity_yaml": str(empty_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    assert out["status"] == "ok"
+    ei = out["rows"][0]["experiment_identity"]
+    assert ei["state"] == "unavailable"
+    assert "evaluation_id" not in ei
+
+
+def test_i6_duplicate_identity_mapping(explorer, curated_sources):
+    dup_eval_yaml = _H15_EVAL_YAML + _H15_EVAL_YAML   # same reference_evidence_key twice
+    dup_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "dup_identity.yaml", _RUN_YAML, dup_eval_yaml)
+    src = {**curated_sources, "identity_yaml": str(dup_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    assert out["status"] == "ok"          # scientific result still returns
+    row = out["rows"][0]
+    assert row["metrics"]["Rfall"] == pytest.approx(H15_METRICS["Rfall"])
+    ei = row["experiment_identity"]
+    assert ei["state"] == "mismatch"
+    assert "duplicate" in ei["reason"].lower()
+    assert "evaluation_id" not in ei      # no canonical ID attached, no arbitrary pick
+
+
+def test_i7_epsilon_conflict(explorer, curated_sources):
+    bad_eval = _H15_EVAL_YAML.replace("epsilon: 0.015", "epsilon: 0.03")   # wrong epsilon for H15
+    bad_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "eps_conflict.yaml", _RUN_YAML, bad_eval)
+    src = {**curated_sources, "identity_yaml": str(bad_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    row = out["rows"][0]
+    assert row["epsilon"] == pytest.approx(0.015)   # scientific epsilon UNCHANGED
+    ei = row["experiment_identity"]
+    assert ei["state"] == "mismatch"
+    assert "epsilon" in ei["reason"].lower()
+    assert "evaluation_id" not in ei
+
+
+def test_i8_evidence_level_conflict(explorer, curated_sources):
+    bad_eval = _H15_EVAL_YAML.replace("evidence_level: frozen-test", "evidence_level: validation-only")
+    bad_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "evlevel_conflict.yaml", _RUN_YAML, bad_eval)
+    src = {**curated_sources, "identity_yaml": str(bad_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    row = out["rows"][0]
+    assert row["evidence_level"] == "frozen-test"   # trusted evidence level UNCHANGED
+    ei = row["experiment_identity"]
+    assert ei["state"] == "mismatch"
+    assert "evidence_level" in ei["reason"].lower()
+
+
+def test_i9_missing_run_record(explorer, curated_sources):
+    bad_eval = _H15_EVAL_YAML.replace(
+        "run_id: run_fall_detection_sensefi_ut_har_afac_optionb_seed42_maxscore_v1",
+        "run_id: run_does_not_exist_v1")
+    bad_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "run_missing.yaml", _RUN_YAML, bad_eval)
+    src = {**curated_sources, "identity_yaml": str(bad_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    assert out["status"] == "ok"
+    ei = out["rows"][0]["experiment_identity"]
+    assert ei["state"] == "mismatch"
+    assert "run_id" in ei["reason"] or "does not resolve" in ei["reason"]
+    assert "run_id" not in ei or ei.get("run_id") is None   # no run fabricated into the block
+
+
+def test_i10_protocol_conflict(explorer, curated_sources):
+    """Both the scientific row and the identity evaluation carry a protocol_id, but they disagree."""
+    conflicting_eval = _H15_EVAL_YAML.replace(
+        'protocol_id: "H15-TEST-EPS0015-AFAC-20260705"', 'protocol_id: "DIFFERENT-PROTOCOL-ID"')
+    bad_identity = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "protocol_conflict.yaml", _RUN_YAML, conflicting_eval)
+    src = {**curated_sources, "identity_yaml": str(bad_identity)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    row = out["rows"][0]
+    assert row["protocol_id"] == "H15-TEST-EPS0015-AFAC-20260705"   # scientific value unchanged
+    ei = row["experiment_identity"]
+    assert ei["state"] == "mismatch"
+    assert "protocol_id" in ei["reason"].lower()
+
+
+def test_i11_ordinary_ledger_query_unchanged(explorer, curated_sources, identity_sources):
+    """A non-reference ledger query never receives an experiment_identity block, identity source
+    configured or not."""
+    plain = explorer.run_query(
+        {"goal": "fall_detection", "dataset": "UT-HAR", "attack": "pgd",
+         "epsilon": 0.03, "evidence_level": "validation-only"}, curated_sources)
+    enriched = explorer.run_query(
+        {"goal": "fall_detection", "dataset": "UT-HAR", "attack": "pgd",
+         "epsilon": 0.03, "evidence_level": "validation-only"}, identity_sources)
+    assert "experiment_identity" not in plain["rows"][0]
+    assert "experiment_identity" not in enriched["rows"][0]
+    assert plain["rows"][0] == enriched["rows"][0]
+
+
+def test_i12_existing_curated_fallback_behavior_unchanged(explorer, curated_sources):
+    """D2d-2 curated-first + legacy-fallback tests (F2/F3/F15-equivalent) still hold with the
+    identity-enrichment code present but not configured."""
+    out_val = explorer.run_query({"goal": "fall_detection"}, curated_sources)
+    assert all(r["split"] != "test" for r in out_val.get("rows", []))
+    out_legacy = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "legacy_only_key_not_curated"},
+        curated_sources)
+    assert out_legacy["status"] == "refused"
+    assert out_legacy["state_id"] == "unknown_reference_query"
+
+
+def test_i13_no_alias_only_fuzzy_lookup(explorer, identity_sources):
+    """H15 and D8b must never resolve as a reference_evidence_query key on their own -- only the
+    real keys (H15_eps0015_frozen, AFAC_eps0030_F20_posthoc) are valid query values."""
+    for bogus_key in ("H15", "D8b", "D8", "A1", "H1"):
+        out = explorer.run_query(
+            {"goal": "fall_detection", "reference_evidence_query": bogus_key}, identity_sources)
+        assert out["status"] == "refused", bogus_key
+        assert out["state_id"] == "unknown_reference_query", bogus_key
+
+
+def test_i14_structured_alias_preservation(explorer, identity_sources):
+    """Alias metadata is returned as structured dicts, never flattened into a string, never
+    inventing a meaning."""
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, identity_sources)
+    aliases = out["rows"][0]["experiment_identity"]["legacy_aliases"]
+    assert isinstance(aliases, list) and isinstance(aliases[0], dict)
+    assert set(aliases[0].keys()) >= {"value", "alias_type", "meaning", "meaning_status", "source_paths", "note"}
+    assert aliases[0]["meaning"] is None
+    assert aliases[0]["meaning_status"] == "unverified"
+
+
+def test_i15_identity_does_not_require_checkpoint_existence(explorer, curated_sources):
+    """A run record whose checkpoint_or_artifact path is synthetic/nonexistent must still enrich
+    successfully -- identity resolution never touches the filesystem checkpoint."""
+    run_with_fake_checkpoint = _RUN_YAML.replace(
+        "identity_status: verified",
+        'checkpoint_or_artifact: "checkpoints/does_not_exist_anywhere.pt"\n  identity_status: verified')
+    identity_yaml = _write_identity_yaml(
+        curated_sources["_tmp_root"] / "registry" / "fake_checkpoint_identity.yaml",
+        run_with_fake_checkpoint, _H15_EVAL_YAML)
+    assert not Path("checkpoints/does_not_exist_anywhere.pt").exists()
+    src = {**curated_sources, "identity_yaml": str(identity_yaml)}
+    out = explorer.run_query(
+        {"goal": "fall_detection", "reference_evidence_query": "H15_eps0015_frozen"}, src)
+    assert out["status"] == "ok"
+    assert out["rows"][0]["experiment_identity"]["state"] == "matched"
+
+
 if __name__ == "__main__":
     raise SystemExit(pytest.main([__file__, "-v"]))

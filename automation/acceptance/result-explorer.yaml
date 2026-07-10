@@ -4,11 +4,13 @@ stage: research-os-2
 gated: false
 type: tool   # read-only lookup CLI; NO experiment execution, ever
 
-status: IMPLEMENTED_D2D2_PENDING_D3   # D2a-c implemented (TOOL-REXP). D2d-1 added the curated-
-  # reference-evidence CONTRACT. D2d-2 (this revision) implements curated-first resolution +
-  # manifest cross-check in result_explorer.py; F12-F15 pass (24/24 total suite). Real-data smoke
-  # queries confirmed exact H15/AFAC curated rows with manifest_cross_check: pass. D3 (Markdown
-  # dashboard rendering of Result Explorer output) is NOT yet implemented -- separate approval.
+status: IMPLEMENTED_D2E2_PENDING_D3   # D2a-c implemented (TOOL-REXP). D2d-1 added the curated-
+  # reference-evidence CONTRACT. D2d-2 implemented curated-first resolution + manifest cross-check.
+  # D2e-2 (this revision) enriches curated reference results with supplemental canonical identity
+  # from automation/registry/experiment_identity.yaml (D2e-1); F1-F15 + F16-F20 pass (40/40 total
+  # suite). Real-data smoke queries confirmed exact H15/AFAC curated rows, unchanged scientific
+  # fields, and state=matched identity blocks. D3 (Markdown dashboard rendering) is NOT yet
+  # implemented -- separate approval.
 
 purpose: >
   Result Explorer v1 — read-only lookup over EXISTING, already-committed results (defense-attempt
@@ -39,8 +41,13 @@ reads_only:
     - "automation/artifact_manifest.csv"                                     # manifest (committed)
   provenance_sources:
     - "automation/receipts/"          # accepted receipts, provenance enrichment only
+  identity_source:
+    - "automation/registry/experiment_identity.yaml — D2e-2, OPTIONAL. If sources['identity_yaml']
+      is absent or the file doesn't exist, curated rows still return with experiment_identity.state
+      = unavailable; nothing about scientific resolution changes. Never required for CI/clean-clone
+      validation; never reads the gitignored checkpoint file the registry's run records reference."
   never_reads:
-    - "checkpoints (any .pt/.pth/.ckpt)"
+    - "checkpoints (any .pt/.pth/.ckpt) — including those referenced by the identity registry's run records"
     - "raw prediction CSVs requiring new inference to interpret"
     - "held-out test data through any command or loader"
 
@@ -191,6 +198,45 @@ fixture_plan:
     - id: F15_fallback_no_curated_entry
       query: "a reference_evidence_query name with NO entry in reference_evidence.yaml"
       expect: "falls back to today's goals.yaml-driven filter resolution unchanged (proves curated-first does not break the pre-D2d-1 path)"
+    - id: F16_h15_identity_enrichment
+      query: "fall_detection + reference_evidence_query H15_eps0015_frozen, with sources['identity_yaml'] configured"
+      expect: "scientific fields identical to F12; experiment_identity.state=matched; evaluation_id eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p015_frozen_test_v1; display_name 'AFAC frozen-test evaluation under PGD epsilon=0.015'; legacy_aliases contains exactly H15 with meaning=null, meaning_status=unverified"
+    - id: F17_afac_identity_enrichment
+      query: "fall_detection + reference_evidence_query AFAC_eps0030_F20_posthoc, with sources['identity_yaml'] configured"
+      expect: "scientific fields identical to F14; experiment_identity.state=matched; evaluation_id eval_fall_detection_sensefi_ut_har_afac_pgd_eps0p030_test_posthoc_v1; legacy_aliases includes verified D8b (never bare D8 as an equivalence, never frozen-test)"
+    - id: F18_identity_unavailable_preserves_scientific_result
+      setup: "no identity_yaml in sources, OR the configured identity file does not exist, OR no evaluation references the queried reference_evidence_key"
+      expect: "scientific row unchanged; experiment_identity.state=unavailable with a specific reason; no canonical evaluation_id/display_name ever appears"
+    - id: F19_identity_mismatch_preserves_scientific_evidence
+      setup: "identity registry has a mapping but it disagrees with the scientific row (epsilon/evidence_level/protocol_id/goal/dataset/method_variant conflict), OR is ambiguous (duplicate mapping, unresolved/ambiguous run)"
+      expect: "scientific row (metrics, evidence_level, epsilon, split, protocol_id) is completely UNCHANGED; experiment_identity.state=mismatch with a deterministic reason; no canonical evaluation_id/display_name/run_id is attached"
+    - id: F20_no_fuzzy_alias_lookup
+      query: "reference_evidence_query set to a bare alias (H15, D8, D8b, A1, H1) instead of the real key"
+      expect: "REFUSED, state_id unknown_reference_query — identity enrichment never becomes a second, fuzzy query mechanism"
+
+# ---------------------------------------------------------------- 5b. identity enrichment contract (D2e-2)
+identity_enrichment_contract:
+  purpose: >
+    Supplemental, non-authoritative metadata connecting a CURATED reference-evidence result to its
+    canonical run/evaluation identity (automation/registry/experiment_identity.yaml, D2e-1).
+    Ordinary (non-reference) ledger rows never receive this block.
+  resolution_order:
+    - "1. Resolve and provenance-check the scientific result via existing D2d-2 curated-first + manifest cross-check (unchanged)."
+    - "2. Read the resolved row's own reference_evidence_key (never an alias)."
+    - "3. Find exactly one identity evaluation with that same reference_evidence_key; zero -> unavailable; more than one -> mismatch."
+    - "4. Cross-check goal/dataset/method_variant/attack/epsilon/split/evidence_level/protocol_id (only fields both sides represent; epsilon uses a 1e-9 tight tolerance, never loose enough to confuse 0.015 with 0.030); any disagreement -> mismatch, no canonical identity attached."
+    - "5. Resolve the evaluation's run_id to exactly one run record; zero or ambiguous -> mismatch."
+    - "6. Attach the identity block ONLY if every check above passed."
+  matching_rule: "exact, case-sensitive match on reference_evidence_key only; never fuzzy, never substring, never alias-based (H15/D8/D8b/A1/H1 are never valid reference_evidence_query values on their own)"
+  states:
+    matched: "canonical identity attached (evaluation_id, display_name, run_id, run_display_name, run_link_status, reference_evidence_key, identity_status, method_family, method_variant, legacy_aliases, protocol_id)"
+    unavailable: "no identity source configured / file missing / malformed YAML / no evaluation references this key — scientific result unaffected, no canonical ID ever shown"
+    mismatch: "a mapping exists but conflicts or is ambiguous (duplicate key, field disagreement, unresolved/ambiguous run) — scientific result unaffected, no canonical ID ever shown"
+  architectural_rule: >
+    Identity enrichment happens strictly AFTER scientific resolution + manifest cross-check have
+    already succeeded. It ONLY ever adds the experiment_identity key; it NEVER alters metrics,
+    evidence_level, attack, epsilon, split, threshold, confusion counts, or manifest provenance.
+    It never requires the gitignored checkpoint file referenced by a run record to exist on disk.
 
 # ---------------------------------------------------------------- 6. acceptance criteria (what D2 must prove)
 design_complete:
@@ -207,6 +253,7 @@ test_passed:
   provenance: "every row shows source_file; sha256/hash, commit, receipt_id, and committed/accepted status shown whenever manifest/receipts provide them"
   no_test_leakage: "default (filterless) queries can never return split=test rows; test evidence requires explicit filter or named reference query (F1 vs F2)"
   curated_reference_integrity: "curated entries (D2d-1: reference_evidence.yaml) resolve to exactly one row each, never a filtered pool (F12/F14); a curated entry never renders unless its manifest cross-check passes (F13); named queries with no curated entry fall back unchanged (F15)"
+  identity_enrichment_integrity: "identity attachment never alters scientific fields (F16/F17/I3); missing/malformed identity source degrades honestly to unavailable, never fabricates (F18); conflicting or ambiguous identity mappings degrade to mismatch WITHOUT touching the trusted scientific result (F19); no alias-only fuzzy lookup exists (F20/I13); alias metadata returned structured, never flattened or invented (I14); identity resolution never requires the gitignored checkpoint file to exist (I15)"
 accepted:
   - "User approval receipt (actor.kind: user) exists for TOOL-REXP."
 

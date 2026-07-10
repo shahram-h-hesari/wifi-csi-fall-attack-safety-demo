@@ -51,7 +51,7 @@ frozen_protocol_registry:
 
 test_split_guard:
   status: "warn-only"
-  note: "PreToolUse hook active (.claude/settings.json), WARN-ONLY: warns on --split test/legacy and export/gate scripts invoked without --split, but does NOT block. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 still default to --split test. Blocking mode is a future upgrade."
+  note: "PreToolUse hook active (.claude/settings.json), WARN-ONLY: warns on --split test/legacy and export/gate scripts invoked without --split, but does NOT block. Warning mechanism (commit dbf658a): one WARN-ONLY line to stderr + exit 1 — non-blocking under hook rules (only exit 2 blocks), transcript-auditable as a hook_non_blocking_error attachment. Safe commands exit 0 silently. export_probability_predictions.py:63 and adaptive_gate_attack.py:116 still default to --split test. Blocking mode is a future upgrade."
 
 validation_read_log:
   status: "not_instrumented"

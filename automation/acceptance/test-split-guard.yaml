@@ -8,6 +8,15 @@ type: hook   # PreToolUse on Bash (and PowerShell)
 # is the future upgrade, gated on a warn-only observation window with zero false positives.
 current_phase: warn-only
 
+# Accepted warn-only contract (commit dbf658a, 2026-07-10). Supersedes the original exit-0/stdout
+# design, which executed correctly but was not visible in the Claude Code Desktop main view.
+warn_contract:
+  risky_command: "prints ONE WARN-ONLY line to stderr and exits 1"
+  exit_1_meaning: "non-blocking under Claude Code hook rules — stderr is shown to the user and the tool call CONTINUES; only exit 2 blocks"
+  safe_command: "exits 0 silently (no stdout, no stderr)"
+  auditability: "each warning is recorded in the session transcript as a hook_non_blocking_error attachment (durable audit trail even where the UI does not surface it)"
+  unchanged: "no blocking, no tokens, no permission-decision output of any kind; normal permission flow untouched"
+
 matcher_script: "scripts/automation/test_split_guard.py"
 fixture_test: "scripts/automation/test_split_guard_cases.py"
 hook_settings: ".claude/settings.json"   # NEVER settings.local.json
@@ -31,10 +40,11 @@ phase_A_warn_only:
     - "Hook registered in .claude/settings.json (PreToolUse, matcher Bash|PowerShell)."
   test_passed:
     - "Fixture suite (>=14 cases) classifies WARN vs ALLOW correctly."
-    - "Warn-only NEVER blocks: hook exits 0 even for --split test; warning reaches stderr."
-    - "--split val is silent (exit 0, no warning)."
+    - "Warn-only NEVER blocks: risky command prints ONE WARN-ONLY line to stderr and exits 1 (non-blocking per hook rules — only exit 2 blocks; tool call continues); stdout stays empty."
+    - "--split val is silent (exit 0, no output on either stream)."
+    - "Warning is transcript-auditable: fires as a hook_non_blocking_error attachment in the session transcript."
     - "No false warns on pytest / test_*-named invocations / reading existing test CSVs / dashboard / scan / git."
-    - "Static check: matcher writes nothing (no open()/write; guard log disabled this phase)."
+    - "Static check: matcher writes nothing (no open()/write; guard log disabled this phase) and emits no permission-decision output."
   required_evidence_files:
     - "scripts/automation/test_split_guard.py"
     - "scripts/automation/test_split_guard_cases.py"

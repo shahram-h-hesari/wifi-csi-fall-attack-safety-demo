@@ -17,8 +17,8 @@
   "repository_identity": {
     "governance_repository": {
       "repository_id": "governance-self",
-      "full_commit_sha": "ed50db0d62b755cd7aae9f00228665ba0cdb5750",
-      "short_head": "ed50db0",
+      "full_commit_sha": "3021f1279ce8cdd9d5dd728e683d8376fb0f83ea",
+      "short_head": "3021f12",
       "worktree_clean": true
     },
     "external_repositories_used": []
@@ -163,7 +163,7 @@
     "RESEARCH-OS-MIGRATION-design": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "17/17",
+      "checks": "13/13",
       "failed": []
     },
     "NEXT-EXP-REVIEW": {
@@ -184,7 +184,7 @@
       "task_id": "RESEARCH-OS-MIGRATION-design",
       "automation": "research-os-migration",
       "display": "ACCEPTED",
-      "checks": "17/17",
+      "checks": "13/13",
       "strength": "hash-verified",
       "failed": []
     },
@@ -466,5 +466,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 66
+  "receipts_processed": 68
 }

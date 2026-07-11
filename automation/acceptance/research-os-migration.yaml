@@ -40,16 +40,68 @@ repositories:
     local_path: "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo"
     remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
     branch: "feature/safety-proxy-guided-defense"
-    starting_commit: "ed50db0d62b755cd7aae9f00228665ba0cdb5750"
+    research_os_history_floor: "f64d5626d3b159f85988668f0a86281035678e93 -- the repository's own root commit, i.e. the fixed, permanent lower bound of every commit that could ever touch the migrated paths; this floor never changes and is safe to hard-code, unlike a moving upper endpoint (see source_snapshot_policy, correction below)"
+    minimum_required_ancestor: "3021f1279ce8cdd9d5dd728e683d8376fb0f83ea -- the commit that accepted THIS design contract itself; the eventual SOURCE_SNAPSHOT_SHA (defined below) MUST have this commit as an ancestor, so the migrated inventory is guaranteed to include this contract, its own claim/approval receipts, and everything accepted alongside it. This is a MINIMUM bound, not a fixed endpoint -- see source_snapshot_policy."
   target:
     local_path: "C:\\Users\\Hesar\\Documents\\GitHub\\research-os"
     remote_url: "https://github.com/shahram-h-hesari/research-os.git"
     base_branch: "main"
     base_commit: "b997ed6aba4e3395c3b02eef951b3536450b8961"
+    base_commit_change_policy: "the target base remains exactly b997ed6aba4e3395c3b02eef951b3536450b8961 unless a separately approved design amendment to THIS contract explicitly changes it -- it is never silently advanced just because research-os's main moves"
+
+  # ------------------------------------------------------------- source-snapshot policy (correction)
+  source_snapshot_policy:
+    problem_being_corrected: >
+      The prior version of this contract hard-coded the history range's upper endpoint to
+      ed50db0d62b755cd7aae9f00228665ba0cdb5750 (the commit at which EXTERNAL-REPO-RESOLUTION was
+      accepted). This design contract (research-os-migration.yaml) and its own claim/approval
+      receipts were themselves subsequently committed at 3021f1279ce8cdd9d5dd728e683d8376fb0f83ea --
+      AFTER ed50db0d. Following the old hard-coded endpoint literally would OMIT this very contract,
+      its superseded and active design claims, its approval receipt, and the automation/tasks.yaml /
+      dashboard/status/changelog updates that came with it -- directly violating the migration
+      inventory's own "entire automation directory / all historical receipts" requirement. This
+      section replaces the fixed endpoint with an execution-time policy so the same self-referential
+      staleness cannot recur with THIS correction's own commit either.
+    rule: >
+      The history range's upper endpoint is NEVER a value hard-coded in this contract. It is always
+      SOURCE_SNAPSHOT_SHA -- a full 40-character commit SHA captured fresh at migration-implementation
+      PREFLIGHT time, defined as follows:
+    preflight_capture_procedure:
+      - "1. Run `git -C <source_local_path> rev-parse HEAD` on the wifi-csi-fall-attack-safety-demo checkout, on branch feature/safety-proxy-guided-defense. The full 40-character result is SOURCE_SNAPSHOT_SHA."
+      - "2. Verify SOURCE_SNAPSHOT_SHA has minimum_required_ancestor (3021f1279ce8cdd9d5dd728e683d8376fb0f83ea) as an ancestor: `git merge-base --is-ancestor 3021f1279ce8cdd9d5dd728e683d8376fb0f83ea SOURCE_SNAPSHOT_SHA` must succeed. If it fails, HARD STOP -- the checkout is somehow behind the accepted design contract itself, which must never be silently tolerated."
+      - "3. Verify SOURCE_SNAPSHOT_SHA is exactly synchronized with origin/feature/safety-proxy-guided-defense: `git rev-parse origin/feature/safety-proxy-guided-defense` (after a read-only `git fetch --dry-run` style check, or by trusting a just-fetched remote-tracking ref) must equal SOURCE_SNAPSHOT_SHA exactly. If local HEAD is ahead of or diverged from the pushed remote, HARD STOP -- the migration must never operate on unpushed local-only commits."
+      - "4. Verify the source checkout has zero tracked modifications and zero staged files: `git status --porcelain` restricted to tracked paths must be empty (pre-existing untracked items such as .codex/, results/**, scripts/analysis/** are permitted and irrelevant to this check, per the existing dirty-worktree cleanliness policy in target_branch_policy)."
+      - "5. Record SOURCE_SNAPSHOT_SHA in both the migration_provenance.yaml record (section 8) and the RESEARCH-OS-MIGRATION implementation claim receipt -- never only in one or the other."
+    freeze_after_capture: >
+      Once SOURCE_SNAPSHOT_SHA is captured and verified (steps 1-4 above), the source repository is
+      considered FROZEN for the remainder of the migration implementation. If source HEAD, tracked
+      working-tree state, current branch, or the remote-tracking relationship to
+      origin/feature/safety-proxy-guided-defense changes at any point before target-side validation
+      (migration_implementation_sequence step 4) completes, the migration implementation MUST ABORT
+      -- it may not silently re-capture a new snapshot mid-run and continue as if nothing changed.
+    no_self_referential_hardcoding: >
+      This correction does deliberately NOT replace ed50db0d62b755cd7aae9f00228665ba0cdb5750 with
+      another permanently hard-coded "latest design commit" (e.g. 3021f1279ce8cdd9d5dd728e683d8376fb0f83ea
+      itself) as the new fixed upper endpoint -- doing so would immediately become stale again the
+      moment this very correction is committed, reproducing the exact defect being fixed. Instead,
+      3021f1279ce8cdd9d5dd728e683d8376fb0f83ea is recorded ONLY as minimum_required_ancestor (a floor
+      the eventual snapshot must be at or after), never as the snapshot itself. The snapshot is always
+      captured fresh, at execution time, per the procedure above.
+    rerun_with_a_different_snapshot: >
+      If the migration implementation is re-run and captures a DIFFERENT SOURCE_SNAPSHOT_SHA than a
+      prior attempt (e.g. because more commits landed on feature/safety-proxy-guided-defense in the
+      meantime), this is NOT silently accepted as an equivalent re-run. It must fail visibly unless a
+      NEW migration claim is authored that EXPLICITLY supersedes the earlier attempt's claim (per the
+      existing supersedes convention used throughout this repository's receipts) and explicitly
+      documents the new SOURCE_SNAPSHOT_SHA and why it differs. A silent, undocumented re-snapshot is
+      exactly the ambiguity this correction exists to prevent.
+
   identity_verification_required_before_any_implementation_step: >
     The implementation must verify, via read-only git commands only: source repo's `git remote get-url
-    origin` equals the source remote_url above; source HEAD is a descendant of (or equal to) the
-    starting_commit; target repo's `git remote get-url origin` equals the target remote_url above;
+    origin` equals the source remote_url above; source HEAD equals the freshly-captured
+    SOURCE_SNAPSHOT_SHA (per source_snapshot_policy above), which must in turn have
+    research_os_history_floor as a distant ancestor and minimum_required_ancestor as a nearer ancestor;
+    target repo's `git remote get-url origin` equals the target remote_url above;
     target main is at (or a descendant of) base_commit. Any mismatch is a hard stop, not a warning.
 
 # ------------------------------------------------------------------------------- 3. migration inventory
@@ -234,55 +286,73 @@ target_collision_and_preservation_policy:
 # ------------------------------------------ 5. history-preservation method (correction 3 -- one exact, reproducible procedure)
 history_preservation:
   investigation_performed_before_finalizing: >
-    Before finalizing this method, the source repository's actual commit history was inspected:
-    `git log --oneline -- automation/ scripts/automation/ RESEARCH_DASHBOARD.md .gitignore
-    .claude/skills/dashboard-refresh/` returns EXACTLY 27 commits, oldest first
-    f64d5626d3b159f85988668f0a86281035678e93 ("Create standalone WiFi CSI fall attack safety demo" --
-    the repository's own root commit, which touched only .gitignore at that time, adding the base
-    36-line file with no Research-OS-specific content yet) through
+    Before finalizing this method, the source repository's actual commit history was inspected as of
+    this correction's own writing: `git log --oneline -- automation/ scripts/automation/
+    RESEARCH_DASHBOARD.md .gitignore .claude/skills/dashboard-refresh/` returned EXACTLY 27 commits at
+    that time, oldest first f64d5626d3b159f85988668f0a86281035678e93 ("Create standalone WiFi CSI
+    fall attack safety demo" -- the repository's own root commit, recorded as
+    research_os_history_floor in the repositories section) through
     ed50db0d62b755cd7aae9f00228665ba0cdb5750 ("Add external-repository resolution support"), and a
-    scripted check confirmed ZERO of these 27 commits also touch any excluded path (results/,
-    figures/, scripts/analysis/, scripts/archive/, or any checkpoint-pattern path) -- i.e. no commit
-    exists that would need internal path-splitting. The single .gitignore line
-    (automation/local/external_repository_paths.yaml) was introduced in exactly one commit,
-    ed50db0d62b755cd7aae9f00228665ba0cdb5750, confirmed via `git log -S <line> -- .gitignore`.
+    scripted check confirmed ZERO of those 27 commits also touch any excluded path (results/,
+    figures/, scripts/analysis/, scripts/archive/, or any checkpoint-pattern path). This design
+    contract itself (and its own claim/approval receipts) was SUBSEQUENTLY committed at
+    3021f1279ce8cdd9d5dd728e683d8376fb0f83ea -- AFTER that 27-commit snapshot -- which is exactly why
+    the upper endpoint is never hard-coded (see repositories.source_snapshot_policy, above): the
+    investigation's specific commit list is illustrative evidence that this repository's history is
+    cleanly separable, not a frozen enumeration the implementation may treat as complete. The
+    implementation MUST re-run the equivalent `git log`/mixed-commit scan against the freshly-captured
+    SOURCE_SNAPSHOT_SHA at execution time and hard-stop if it ever finds a commit mixing migrated and
+    excluded paths, rather than trusting this investigation's historical commit count. The single
+    .gitignore line (automation/local/external_repository_paths.yaml) was introduced in exactly one
+    commit as of this investigation, ed50db0d62b755cd7aae9f00228665ba0cdb5750, confirmed via
+    `git log -S <line> -- .gitignore`; this remains true for any later SOURCE_SNAPSHOT_SHA since
+    nothing has since touched that line again (re-verified at implementation time, not assumed).
   chosen_method: >
     A SINGLE reproducible procedure, run once, in this exact order, with no implementation
-    discretion over WHICH method to use (only over exact tool invocation syntax at execution time):
+    discretion over WHICH method to use (only over exact tool invocation syntax at execution time).
+    Every reference below to "SOURCE_SNAPSHOT_SHA" means the full 40-character commit SHA captured
+    fresh at preflight per repositories.source_snapshot_policy -- never a value hard-coded in this
+    contract:
       1. In a TEMPORARY, disposable clone of the source repository (never the working checkout at
          C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo), run
          `git subtree split --prefix=automation --branch=migration-split-automation` and
          `git subtree split --prefix=scripts/automation --branch=migration-split-scripts-automation`,
-         each scoped to the exact source commit range f64d5626d3b159f85988668f0a86281035678e93..
-         ed50db0d62b755cd7aae9f00228665ba0cdb5750 (i.e. `git subtree split` naturally only includes
-         commits touching the given prefix within reachable history up to the starting_commit; no
-         additional range flag is needed because the investigation above already confirmed the full
-         reachable history contains no later or earlier commits touching these prefixes outside this
-         range).
-      2. In the SAME temporary clone, run `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..ed50db0d62b755cd7aae9f00228665ba0cdb5750 -- RESEARCH_DASHBOARD.md` and
-         `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..ed50db0d62b755cd7aae9f00228665ba0cdb5750 -- .claude/skills/dashboard-refresh/SKILL.md`
-         to produce ordered, per-commit patch files for each standalone root file.
+         each scoped to the exact source commit range
+         f64d5626d3b159f85988668f0a86281035678e93..SOURCE_SNAPSHOT_SHA (i.e. `git subtree split`
+         naturally only includes commits touching the given prefix within reachable history up to
+         SOURCE_SNAPSHOT_SHA; the implementation must re-run the mixed-commit scan from
+         investigation_performed_before_finalizing against this exact range before proceeding, rather
+         than assuming the illustrative 27-commit count above still applies verbatim).
+      2. In the SAME temporary clone, run
+         `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..SOURCE_SNAPSHOT_SHA -- RESEARCH_DASHBOARD.md`
+         and
+         `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..SOURCE_SNAPSHOT_SHA -- .claude/skills/dashboard-refresh/SKILL.md`
+         to produce ordered, per-commit patch files for each standalone root file, up through
+         SOURCE_SNAPSHOT_SHA.
       3. The single .gitignore line is EXPLICITLY NOT handled via format-patch/am (correction from
-         the prior version of this contract): `git format-patch`/`git am` operate on the WHOLE FILE's
-         diff, and research-os's .gitignore is a structurally different, pre-existing file (see
+         an even earlier version of this contract): `git format-patch`/`git am` operate on the WHOLE
+         FILE's diff, and research-os's .gitignore is a structurally different, pre-existing file (see
          target_collision_and_preservation_policy, section 4b) -- applying a source-derived .gitignore
          patch would either fail to apply cleanly (context mismatch) or silently reintroduce
          source-repository-specific ignore patterns (checkpoints, pilot logs) that do not belong in
          research-os. Instead, the ONE line is added as an explicit, manually-authored content
          addition (see section 4b's resolution) in the SAME migration commit that applies the
          automation/scripts.automation subtree merges -- its provenance (which source commit
-         introduced it: ed50db0d62b755cd7aae9f00228665ba0cdb5750) is recorded in the migration
-         provenance record (section 8) exactly as if it had been format-patched, without pretending
-         the mechanical patch-apply tooling was actually used on a file it cannot cleanly handle.
+         introduced it, re-confirmed at implementation time via `git log -S` against
+         SOURCE_SNAPSHOT_SHA rather than assumed to still be ed50db0d62b755cd7aae9f00228665ba0cdb5750)
+         is recorded in the migration provenance record (section 8) exactly as if it had been
+         format-patched, without pretending the mechanical patch-apply tooling was actually used on a
+         file it cannot cleanly handle.
       4. In research-os, create `migrate/research-os-layer` from `main` at
          b997ed6aba4e3395c3b02eef951b3536450b8961 (never from a later main state without first
-         re-verifying identity per section 2). Fetch the temporary clone's two subtree-split branches
-         as a temporary remote, then `git merge --allow-unrelated-histories
-         migration-split-automation` followed by `git merge --allow-unrelated-histories
-         migration-split-scripts-automation` (each a distinct, ordinary merge commit, not a squash),
-         then `git am` the two root-file patch series, then commit the single .gitignore line
-         addition and the new automation/requirements.txt (section 3b) as one final, clearly-labeled
-         "Research OS migration: add automation/requirements.txt and .gitignore entry" commit.
+         re-verifying identity per repositories.identity_verification_required_before_any_implementation_step).
+         Fetch the temporary clone's two subtree-split branches as a temporary remote, then
+         `git merge --allow-unrelated-histories migration-split-automation` followed by
+         `git merge --allow-unrelated-histories migration-split-scripts-automation` (each a distinct,
+         ordinary merge commit, not a squash), then `git am` the two root-file patch series, then
+         commit the single .gitignore line addition and the new automation/requirements.txt
+         (section 3b) as one final, clearly-labeled "Research OS migration: add
+         automation/requirements.txt and .gitignore entry" commit.
       5. Delete the temporary clone and its local subtree-split branches; they are disposable
          scaffolding, never pushed anywhere, never referenced again after step 4 completes.
   why_safest_for_this_repository_shape: >
@@ -317,7 +387,10 @@ history_preservation:
     fully reachable in the SOURCE repository forever (nothing there is rewritten or deleted), and the
     migration provenance record (section 8) maps every migrated commit's new research-os SHA back to
     its original wifi-csi-fall-attack-safety-demo SHA -- traceability comes from that record, not from
-    identical SHAs across repositories.
+    identical SHAs across repositories. The record's `migration.source_commit_range` field always
+    states the ACTUAL SOURCE_SNAPSHOT_SHA captured and used for that specific migration run (per
+    repositories.source_snapshot_policy), never a value copied from this contract's own illustrative
+    examples.
   authorship_and_timestamps: >
     `git subtree split`, `git format-patch`, and `git am` all preserve original author name, author
     email, and author/committer timestamps by design; only the NEW merge/commit metadata created
@@ -398,7 +471,7 @@ receipt_and_historical_task_policy:
         source_repository_id: "wifi-csi-fall-attack-safety-demo"
         source_remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
         source_branch: "feature/safety-proxy-guided-defense"
-        source_commit_range: "f64d5626d3b159f85988668f0a86281035678e93..ed50db0d62b755cd7aae9f00228665ba0cdb5750"
+        source_commit_range: "f64d5626d3b159f85988668f0a86281035678e93..<SOURCE_SNAPSHOT_SHA captured fresh at implementation preflight, per repositories.source_snapshot_policy -- e.g. 3021f1279ce8cdd9d5dd728e683d8376fb0f83ea or a later descendant that has it as an ancestor, whichever is HEAD of feature/safety-proxy-guided-defense at the moment the migration implementation actually runs; NEVER the stale ed50db0d62b755cd7aae9f00228665ba0cdb5750 endpoint from an earlier draft of this contract>"
         target_repository_id: "research-os"
         target_remote_url: "https://github.com/shahram-h-hesari/research-os.git"
         target_base_commit: "b997ed6aba4e3395c3b02eef951b3536450b8961"
@@ -406,11 +479,11 @@ receipt_and_historical_task_policy:
         target_migration_merge_commits: "list of the actual merge/patch/final commit SHAs created on migrate/research-os-layer, filled in at implementation time"
         history_method: "git subtree split (automation/, scripts/automation/) + git format-patch/am (RESEARCH_DASHBOARD.md, SKILL.md) + one manual provenance-recorded content addition (.gitignore line) -- per section 5"
       per_receipt_or_task_mapping:
-        - historical_identity: "e.g. receipt_id or task_id, one entry per historical receipt/task"
+        - historical_identity: "e.g. receipt_id or task_id, one entry per historical receipt/task -- this MUST include research-os-migration.yaml itself, its superseded design claim, its active design claim, and its approval receipt (all committed at 3021f1279ce8cdd9d5dd728e683d8376fb0f83ea), plus every other receipt present at SOURCE_SNAPSHOT_SHA, not merely those present at ed50db0d"
           source_repository_id: "wifi-csi-fall-attack-safety-demo"
           source_remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
           source_commit_context: "the short git.head value already recorded inside the historical receipt itself, restated here alongside its full-SHA resolution if resolvable (see interpretation policy below)"
-          migration_source_snapshot: "full 40-character source commit SHA at the moment this receipt's file content was captured for migration (== the source_commit_range upper bound, since all receipts migrate together in one pass)"
+          migration_source_snapshot: "full 40-character source commit SHA at the moment this receipt's file content was captured for migration (== SOURCE_SNAPSHOT_SHA, since all receipts migrate together in one pass)"
           target_migration_commit: "the research-os commit SHA (post-migration) whose tree contains this exact receipt file"
           legacy_hash_interpretation: "ALWAYS_SOURCE_REPOSITORY -- see interpretation policy below"
     interpretation_policy_for_legacy_seven_character_hashes: >
@@ -560,7 +633,11 @@ rollback_procedure:
 implementation_validation_suite:
   criteria:
     - "correct source and target remote identities verified via git remote get-url origin against both configured URLs before any write"
-    - "exact source starting commit (ed50db0d62b755cd7aae9f00228665ba0cdb5750 or a later descendant, reverified at implementation time) and exact target base commit (b997ed6aba4e3395c3b02eef951b3536450b8961 or a later main descendant, reverified at implementation time) are recorded in the migration claim"
+    - "SOURCE_SNAPSHOT_SHA is captured fresh at preflight per repositories.source_snapshot_policy (never a hard-coded value), has minimum_required_ancestor (3021f1279ce8cdd9d5dd728e683d8376fb0f83ea) as a verified ancestor, exactly matches origin/feature/safety-proxy-guided-defense, and is recorded in both migration_provenance.yaml and the migration claim"
+    - "exact target base commit (b997ed6aba4e3395c3b02eef951b3536450b8961 or a later main descendant, reverified at implementation time per base_commit_change_policy) is recorded in the migration claim"
+    - "the migrated inventory at SOURCE_SNAPSHOT_SHA is proven (by explicit file-listing diff, not assumed) to include automation/acceptance/research-os-migration.yaml itself, its superseded design claim (2026-07-11T082139Z...), its active design claim (2026-07-11T083329Z...), its approval receipt (2026-07-11T083643Z...), the corresponding automation/tasks.yaml / dashboard_changelog.md / RESEARCH_DASHBOARD.md / automation/status.json content, and every other receipt present at SOURCE_SNAPSHOT_SHA -- not merely those present at the earlier, now-superseded ed50db0d snapshot"
+    - "the migration implementation claim and its approval receipt are correctly recorded as NEW target-repository records (full governance-commit SHA required, per the Phase 1 commit-and-provenance policy) -- they are never claimed to exist in, or backdated to, the source snapshot itself"
+    - "if the migration is re-run with a different SOURCE_SNAPSHOT_SHA than a prior attempt, this is proven to fail visibly unless a new migration claim explicitly supersedes the earlier attempt's claim and documents the new snapshot and why it differs"
     - "exact migration inventory (section 3) and exclusion inventory (section 4) match what was actually imported -- verified by an explicit file listing diff, not assumed"
     - "no file under results/, figures/, checkpoints, or any model-weight path appears anywhere in migrate/research-os-layer's tree or history -- verified by scanning the imported tree for any of these path prefixes and asserting zero matches"
     - "every migrated file's content matches the accepted source snapshot byte-for-byte where no intentional target adaptation is documented (the only intentionally adapted content is the two-line .gitignore entry and any research-os-local requirements.txt addition, both explicitly logged as adaptations, not silent drift)"

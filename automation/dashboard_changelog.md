@@ -5,6 +5,39 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — RESEARCH-OS-MIGRATION-design: source-snapshot self-reference correction
+
+- **actor:** user-identified correction; recorded by Claude. **HEAD** `3021f12`.
+- **Defect found:** the accepted contract's history-range upper endpoint was hard-coded to
+  `ed50db0d62b755cd7aae9f00228665ba0cdb5750`. This design contract (and its own claim/approval
+  receipts) was itself subsequently committed at `3021f1279ce8cdd9d5dd728e683d8376fb0f83ea` —
+  **after** that endpoint — so following the old range literally would have **omitted the contract
+  itself, its claims, and its approval receipt** from the migration inventory, directly violating the
+  "entire automation directory / all historical receipts" policy.
+- **Correction:** replaced the fixed endpoint with an execution-time `SOURCE_SNAPSHOT_SHA` policy
+  (`repositories.source_snapshot_policy`). At migration-implementation preflight, the full 40-char
+  HEAD of `wifi-csi-fall-attack-safety-demo`'s `feature/safety-proxy-guided-defense` is captured
+  fresh, verified to have `3021f1279ce8cdd9d5dd728e683d8376fb0f83ea` (`minimum_required_ancestor`) as
+  an ancestor, verified to exactly match `origin/feature/safety-proxy-guided-defense`, and verified
+  clean (no tracked modifications/staged files) — then the source repository is **frozen** for the
+  remainder of the migration; any change before target-side validation completes aborts the run.
+  `f64d5626d3b159f85988668f0a86281035678e93` (the repo's own root commit) remains the fixed,
+  permanent lower bound (`research_os_history_floor`) since it can never become stale.
+  `3021f1279ce8cdd9d5dd728e683d8376fb0f83ea` is recorded **only** as a minimum-ancestor floor, **not**
+  as a new hard-coded snapshot — deliberately avoiding reproducing the same self-referential staleness
+  with this very correction's own future commit. A re-run capturing a different snapshot than a prior
+  attempt must fail visibly unless a new migration claim explicitly supersedes the earlier one.
+- All history-extraction commands (`git subtree split`, `git format-patch`) now reference
+  `SOURCE_SNAPSHOT_SHA` symbolically instead of the stale literal endpoint; the target base
+  (`b997ed6aba4e3395c3b02eef951b3536450b8961`) is unchanged.
+- `automation/tasks.yaml` and this changelog were **not** re-edited beyond this append — the task
+  registration's title does not reference the stale endpoint, so no change was needed there.
+- **Design-only, nothing performed:** no migration branch, history extraction, patch generation,
+  copy, deletion, merge, experiment, queue action, protocol change, or held-out-test read occurred.
+  `research-os` confirmed untouched (still `b997ed6a`, clean). A new superseding design claim was
+  created; the prior superseded claim, active claim, and approval receipt from the `3021f12` commit
+  all remain byte-unchanged and historical.
+
 ## 2026-07-11 — RESEARCH-OS-MIGRATION-design: Research OS migration Phase 2 design contract (corrected)
 
 - **actor:** user-approved design step, corrected after review; recorded by Claude. **HEAD** `ed50db0`.

@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 63 |
+| Receipts processed | 66 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -241,6 +241,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `RESEARCH-OS-MIGRATION-design` | research-os-migration | ✅ ACCEPTED | 17/17 | hash-verified | — |
 | `EXTERNAL-REPO-RESOLUTION` | external-repository-resolution | ✅ ACCEPTED | 52/52 | hash-verified | — |
 | `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 8/8 | hash-verified | — |
 | `EXTERNAL-REPO-RESOLUTION-design` | external-repository-resolution | ✅ ACCEPTED | 9/9 | hash-verified | — |
@@ -353,6 +354,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-11 — RESEARCH-OS-MIGRATION-design: Research OS migration Phase 2 design contract (corrected)
 - 2026-07-11 — EXTERNAL-REPO-RESOLUTION: external repository resolver implementation
 - 2026-07-11 — EXTERNAL-REPO-RESOLUTION-design: Research OS migration Phase 1 design contract
 - 2026-07-11 — VALIDATION-PILOT-GATE-design: Validation-pilot gate design contract (Step 15)
@@ -362,6 +364,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — D4a-1: Local-source academic paper registry created
 - 2026-07-10 — D3: Markdown research-evidence rendering added
 - 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
-- 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T083643Z_user-approval_RESEARCH-OS-MIGRATION-design",
+  "task_id": "RESEARCH-OS-MIGRATION-design",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-11T083329Z_research-os-migration_RESEARCH-OS-MIGRATION-design",
+  "approved_claim_path": "automation/receipts/2026-07-11T083329Z_research-os-migration_RESEARCH-OS-MIGRATION-design.json",
+  "approved_claim_sha256": "1734c4fff18082d01e0c4ed315a4d25994c5a8580eb6f25a65d29ce09317de55",
+  "summary": "User approved RESEARCH-OS-MIGRATION-design (claim 2026-07-11T083329Z_research-os-migration_RESEARCH-OS-MIGRATION-design; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "ed50db0",
+    "expected_dirty": []
+  },
+  "full_governance_commit_sha": "ed50db0d62b755cd7aae9f00228665ba0cdb5750",
+  "external_repositories_used": [],
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

@@ -5,6 +5,79 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — RESEARCH-OS-MIGRATION-design: Research OS migration Phase 2 design contract (corrected)
+
+- **actor:** user-approved design step, corrected after review; recorded by Claude. **HEAD** `ed50db0`.
+- New design-only contract `automation/acceptance/research-os-migration.yaml` for a controlled,
+  **history-preserving relocation** of the Research OS layer (dashboard, registries, acceptance
+  contracts, receipts, reviews, automation) from `wifi-csi-fall-attack-safety-demo` into
+  `research-os`, using the now-ACCEPTED external-repository resolver
+  (`EXTERNAL-REPO-RESOLUTION`, 52/52) so experiment evidence is never copied.
+- **Migration inventory:** `RESEARCH_DASHBOARD.md`, `automation/` (entire directory), and
+  `scripts/automation/` (entire directory) **except** `test_split_guard.py` /
+  `test_split_guard_cases.py`, which remain in the experiment repository — an explicit, documented
+  exception, since the `.claude` PreToolUse hook that invokes them protects the experiment
+  repository's own git/shell operations and would silently stop firing there if moved. Also covers
+  the relevant `.gitignore` line and `.claude/skills/dashboard-refresh/SKILL.md`.
+- **Exclusion inventory:** `results/`, `figures/`, checkpoints/model weights, `scripts/analysis/`,
+  `scripts/archive/`, dataset/training code, experiment execution scripts, thesis-specific files
+  (`EXPERIMENT_EVIDENCE_INDEX.md`, `LOCAL_PROJECT_MAP.md`, `README.md`, etc.), and
+  `.claude/skills/git-stage-check/SKILL.md` — all remain sole-sourced in the experiment repository.
+- **Correction 1 — dependency policy:** a new, minimal `automation/requirements.txt`
+  (`PyYAML==6.0.3`, `pytest==9.1.0` — the complete non-stdlib import set of every
+  `scripts/automation/*.py`, verified by grep) is authored fresh for the target, scoped inside
+  `automation/` rather than the repo root; the source repo's full `requirements.txt`
+  (numpy/pandas/matplotlib/scipy/scikit-learn/jupyter/streamlit/torch) is explicitly NOT copied.
+  A clean-venv import + full `pytest` pass from `research-os` is now a required validation step.
+- **Correction 2 — target collision inventory:** a read-only inventory of the actual `research-os`
+  repository at `b997ed6a` found it is **not empty** — it is an existing, operating Markdown-ledger +
+  Claude-Code-agent "Weekly PhD Research OS Agent" (`dashboard.md`, `CLAUDE.md`, `state/*.md`,
+  `lanes/*.md`, `guardrails/*.md`, `.claude/agents/research-os.md`, `.claude/commands/*.md`) that
+  already reads `wifi-csi-fall-attack-safety-demo` via a documented sibling-folder convention (a
+  pre-existing, different mechanism this migration does not touch). One real, blocking collision was
+  found: the target's `.gitignore` blocks `*.csv`, which would silently swallow
+  `automation/artifact_manifest.csv` — resolved via an explicit, labeled **append** (never overwrite)
+  adding a negation plus the migrated local-override ignore line. `RESEARCH_DASHBOARD.md` vs. the
+  target's own `dashboard.md`, and `.claude/skills/` vs. the target's own `.claude/agents/` /
+  `.claude/commands/`, are flagged as naming-ambiguity notes (no technical collision) — both pairs
+  coexist unmodified. No target file is silently overwritten; any unresolved collision hard-stops.
+- **Correction 3 — one exact history-preservation procedure:** `git subtree split` for `automation/`
+  and `scripts/automation/`, run in a **temporary, disposable clone** (never the working checkout),
+  over a verified, exact 27-commit range (`f64d5626`..`ed50db0d`) confirmed to contain **zero**
+  commits mixing migrated and excluded paths; `git format-patch`/`git am` for
+  `RESEARCH_DASHBOARD.md` and `SKILL.md`; the single `.gitignore` line is explicitly **not**
+  format-patched (whole-file patch tooling is the wrong mechanism for a one-line addition to a
+  structurally different target file) but added as a manually-authored, provenance-recorded content
+  addition instead. Includes duplicate-import detection and documented rerun-safety (delete-and-retry
+  a partial branch, never silently append a second import).
+- **Correction 4 — migration provenance record:** a new, separate
+  `automation/migration_provenance.yaml` (never an edit to any historical receipt) maps historical
+  receipt/task identity → source repository/commit context, with a fixed interpretation policy
+  (every legacy 7-character `git.head` value is **always** read as the source repository, never
+  reinterpreted as `research-os`) and explicit `"unresolvable"` reporting for any hash that cannot be
+  resolved — never silently accepted. Verification now distinguishes three claim categories:
+  historical source-repository, reverified cross-repository, and new target-repository (full SHAs).
+- **Correction 5 — per-task target-state classification:** every migrated task now has an explicit
+  target state — historical ACCEPTED (REG-GOALS, REG-DATASETS, REF-EVID, REG-PAPERS, etc.),
+  actively-reverified ACCEPTED (TOOL-REXP, DASH-D3, REG-EXPERIMENT-ID, REG-CANDIDATES/
+  NEXT-EXP-REVIEW/DASH-NEXT-EXP-REVIEW), or the special case `AUT-TSG-impl` — **excluded from active
+  target-state computation** in `research-os` since its enforcement files don't migrate; the
+  dashboard must render this exclusion explicitly and never present it as actively reverified.
+- **Correction 6 — unambiguous 10-step sequence:** migration validation (create branch → import →
+  configure a **local-only, uncommitted** external-repo override → validate → create+approve the
+  migration claim → **push, non-force**) is now steps 1–7 and is **strictly separate** from the
+  main-branch merge/authority transition (step 8) and source decommission (step 10), each its own
+  later, separately-approved task. Rollback (deleting the unmerged branch) applies only to steps 1–7;
+  `VALIDATION-PILOT-GATE` resumes **only after step 8** actually completes, never merely after an
+  unmerged, validated branch passes tests.
+- **Design-only, nothing performed:** no migration branch created, no file copied/moved/deleted in
+  either repository, no remote changed, no history merged, no `git subtree`/`filter-repo`/
+  `format-patch`/`cherry-pick`/`bundle` command run, no real local override created. `wifi-csi-fall-
+  attack-safety-demo` remains authoritative; `VALIDATION-PILOT-GATE` implementation remains paused;
+  `research-os` confirmed untouched (still at `b997ed6a`, clean working tree).
+- Task `RESEARCH-OS-MIGRATION-design` registered in `automation/tasks.yaml` as its own gated design
+  task (`depends_on: [EXTERNAL-REPO-RESOLUTION, EXTERNAL-REPO-RESOLUTION-design]`).
+
 ## 2026-07-11 — EXTERNAL-REPO-RESOLUTION: external repository resolver implementation
 
 - **actor:** implementation step by Codex on branch `feature/safety-proxy-guided-defense`.

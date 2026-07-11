@@ -1,0 +1,637 @@
+schema_version: 1
+automation: research-os-migration
+stage: research-os-migration-phase-2-design
+gated: true    # every future claim over this contract is approval-gated, like every prior registry
+type: design_contract   # SPEC ONLY -- no migration branch, import, or file move exists yet
+
+status: DESIGN_ONLY_NOT_IMPLEMENTED
+
+relationship_to_prior_phases: >
+  This is Migration Phase 2 of the accepted architecture recommendation (read-only migration audit)
+  and builds directly on the now-ACCEPTED Migration Phase 1 (EXTERNAL-REPO-RESOLUTION-design /
+  EXTERNAL-REPO-RESOLUTION, checks 9/9 and 52/52 respectively). Phase 1 built and validated the
+  resolver, tracked registry (automation/registry/external_repositories.yaml), and gitignored
+  local-override template (automation/local/external_repository_paths.example.yaml) that let Research
+  OS code resolve an external experiment repository's evidence WITHOUT co-location. This contract
+  (Phase 2) designs the actual, history-preserving RELOCATION of the Research OS layer out of
+  wifi-csi-fall-attack-safety-demo and into research-os, using that resolver -- it does not perform
+  the relocation, and it does not touch either repository's committed state.
+
+# ---------------------------------------------------------------------------------- 1. purpose
+purpose: >
+  Defines a controlled, history-preserving migration of the Research OS governance layer (dashboard,
+  registries, acceptance contracts, receipts, reviews, automation scripts) from
+  wifi-csi-fall-attack-safety-demo into research-os, such that:
+    - research-os becomes the sole home of dashboard/governance/registries/acceptance/receipts/
+      reviews/automation;
+    - wifi-csi-fall-attack-safety-demo remains the sole home of experiment code, results,
+      checkpoints, figures, analysis scripts, and evidence artifacts;
+    - research-os accesses experiment evidence exclusively through the accepted external-repository
+      resolver (EXTERNAL-REPO-RESOLUTION), never by copying evidence;
+    - no two permanent Research OS sources of truth remain after the migration completes.
+  This contract creates NO migration branch, copies NO file, deletes NO file, changes NO remote,
+  merges NO history, runs NO git subtree/filter-repo/format-patch/cherry-pick/bundle command, creates
+  NO real local override, and does not resume VALIDATION-PILOT-GATE implementation. It is a contract
+  for a future, separately-approved implementation task (RESEARCH-OS-MIGRATION) only.
+
+# --------------------------------------------------------------------- 2. repositories and starting state
+repositories:
+  source:
+    local_path: "C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo"
+    remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
+    branch: "feature/safety-proxy-guided-defense"
+    starting_commit: "ed50db0d62b755cd7aae9f00228665ba0cdb5750"
+  target:
+    local_path: "C:\\Users\\Hesar\\Documents\\GitHub\\research-os"
+    remote_url: "https://github.com/shahram-h-hesari/research-os.git"
+    base_branch: "main"
+    base_commit: "b997ed6aba4e3395c3b02eef951b3536450b8961"
+  identity_verification_required_before_any_implementation_step: >
+    The implementation must verify, via read-only git commands only: source repo's `git remote get-url
+    origin` equals the source remote_url above; source HEAD is a descendant of (or equal to) the
+    starting_commit; target repo's `git remote get-url origin` equals the target remote_url above;
+    target main is at (or a descendant of) base_commit. Any mismatch is a hard stop, not a warning.
+
+# ------------------------------------------------------------------------------- 3. migration inventory
+migration_inventory:
+  principle: >
+    The inventory is NOT limited to the three paths named in the task prompt (RESEARCH_DASHBOARD.md,
+    automation/, scripts/automation/) -- every root-level file and every import/execution dependency
+    of the Research OS layer was inspected before finalizing this list.
+  root_level_files_to_migrate:
+    - path: "RESEARCH_DASHBOARD.md"
+      reason: "the generated Research OS dashboard itself"
+    - path: ".gitignore (Research-OS-relevant lines only)"
+      reason: "the single tracked line 'automation/local/external_repository_paths.yaml' must be reproduced in research-os's own .gitignore; the source .gitignore as a whole is NOT migrated (it also covers experiment-repo-specific patterns -- pilot logs, checkpoints, results -- that do not apply to research-os)"
+    - path: ".claude/skills/dashboard-refresh/SKILL.md"
+      reason: "a thin wrapper skill over scripts/automation/update_dashboard.py; belongs with the automation it wraps"
+  directories_to_migrate:
+    - path: "automation/"
+      reason: "entire directory: README.md, acceptance/, artifact_manifest.csv + .meta.json, dashboard_changelog.md, designs/, do_not_build_yet.md, experiment_queue.yaml, frontier.yaml, literature/, local/ (template only, see local-override policy), receipts/, registry/, reviews/, roadmap.yaml, status.json, tasks.yaml"
+      exclusion_within_this_directory: "none -- automation/ contains no experiment-specific content; confirmed by the Phase 1 audit and re-confirmed for this contract (grep of automation/ for results/ or checkpoints/ finds only STRING REFERENCES to evidence paths, never the evidence itself)"
+    - path: "scripts/automation/"
+      reason: "entire directory: update_dashboard.py, repo_resolver.py, result_explorer.py, scan_artifacts.py, dashboard_research_summary.py, dashboard_candidate_review.py, next_experiment_brainstorm_checker.py, all validate_*.py, all test_*.py -- EXCEPT test_split_guard.py and test_split_guard_cases.py (see explicit exception below)"
+  explicit_exception_test_split_guard:
+    files: ["scripts/automation/test_split_guard.py", "scripts/automation/test_split_guard_cases.py"]
+    decision: "REMAIN in wifi-csi-fall-attack-safety-demo; NOT migrated, despite being tracked under scripts/automation/ and governed by task AUT-TSG."
+    reason: >
+      test_split_guard.py is invoked by .claude/settings.json's PreToolUse hook using a path relative
+      to whatever repository Claude Code is running Bash/PowerShell commands in. That hook protects
+      the EXPERIMENT repository's own git/shell operations (blocking or warning on unauthorized
+      --split test invocations of export_probability_predictions.py / adaptive_gate_attack.py, both
+      of which live in the experiment repository). If this script moved to research-os, the hook
+      would silently stop firing in wifi-csi-fall-attack-safety-demo the moment the source copy was
+      later decommissioned -- an unacceptable safety regression. This is a deliberate, narrow,
+      documented exception to "automation/scripts/automation moves wholesale," not an oversight or a
+      second source of truth: the AUT-TSG *governance record* (acceptance/test-split-guard.yaml,
+      its receipts, its tasks.yaml entry) moves to research-os as history/tracking, while the *live
+      enforcement mechanism* (script + .claude hook) necessarily stays operationally bound to the
+      repository it protects -- exactly analogous to how a CI config lives in every repository it
+      guards, not only in a central governance repo.
+    consequence: "research-os's copy of tasks.yaml will describe AUT-TSG and reference its acceptance file, but the actual .py enforcement files are not present in research-os; this is called out explicitly in the migration receipt so it is never mistaken for a missed file."
+  additional_dependency_check_performed:
+    - checked: "requirements.txt"
+      finding: "lists numpy/pandas/matplotlib/scipy/scikit-learn/jupyter/streamlit/pytest -- experiment-code dependencies. PyYAML (used by every Research OS script) is installed in the local .venv but is NOT listed in requirements.txt today. This is a pre-existing gap, not introduced by this design; the migration implementation must add a minimal research-os-local requirements file (e.g. requirements.txt with pytest + PyYAML) rather than assuming the experiment repo's requirements.txt is available post-migration."
+    - checked: ".claude/skills/git-stage-check/SKILL.md"
+      finding: "a pre-commit staging verifier for THIS repo's thesis-specific hygiene (seed isolation, checkpoint leakage, log files) -- experiment-repo-specific, NOT migrated; distinct from automation/acceptance/git-stage-check.yaml's AUT-GSC-EXT task, which is a Research-OS-tracked future automation idea and DOES migrate as a governance record (design-only, unimplemented either way)"
+    - checked: "EXPERIMENT_EVIDENCE_INDEX.md, LOCAL_PROJECT_MAP.md, README.md, THIRD_PARTY_NOTICES.md, LICENSE"
+      finding: "all experiment-repository-specific (thesis evidence trail, local path map naming this specific machine's experiment checkout, project README, licensing) -- NOT migrated"
+    - checked: "import/execution dependencies of scripts/automation/*.py"
+      finding: "no script imports anything from outside automation/ or scripts/automation/ other than the standard library, PyYAML, and (in tests) pytest; scan_artifacts.py and repo_resolver.py read experiment-repo paths only through repository-relative strings / the resolver, never via a Python import of experiment code -- confirming no hidden source-tree dependency exists beyond the two directories and the root dashboard file"
+    - checked: "pytest.ini / conftest.py / pyproject.toml at repo root or under scripts/automation/"
+      finding: "none exist; every scripts/automation/test_*.py inserts its own directory into sys.path at the top of the file (HERE = Path(__file__).resolve().parent; sys.path.insert(0, str(HERE))), so tests are runnable via `pytest scripts/automation/` from any working directory without any additional test-configuration file. No test-configuration file needs to migrate beyond the test files themselves."
+
+# --------------------------------------------------------------- 3b. dependency and runtime policy (correction 1)
+dependency_and_runtime_policy:
+  problem_being_corrected: >
+    The original contract excluded the experiment repository's requirements.txt (correctly -- it
+    lists numpy/pandas/matplotlib/scipy/scikit-learn/jupyter/streamlit/pytest, all experiment-code
+    dependencies) but did not define what the TARGET repository uses instead. This section resolves
+    that gap with one explicit, chosen policy, based on an actual inspection of both the source
+    scripts and the target repository (not an assumption).
+  source_import_inventory: >
+    Every module under scripts/automation/ was grepped for `import`/`from` statements. The complete
+    set of non-stdlib imports across the ENTIRE directory (production code and tests) is exactly two
+    third-party packages: PyYAML (imported as `import yaml`) and pytest (imported only by test_*.py
+    files, i.e. a test/dev-only dependency, never a runtime dependency of update_dashboard.py,
+    repo_resolver.py, scan_artifacts.py, result_explorer.py, or any validator). No script imports
+    numpy, pandas, matplotlib, scipy, scikit-learn, jupyter, streamlit, torch, or any other package
+    from the source repository's requirements.txt. Locally installed versions (from the source
+    repository's .venv, via `pip freeze`): PyYAML==6.0.3, pytest==9.1.0, Python 3.10.11.
+  target_environment_inventory: >
+    A read-only inventory of research-os at commit b997ed6aba4e3395c3b02eef951b3536450b8961 found NO
+    requirements.txt, pyproject.toml, Pipfile, setup.py, or any other Python dependency/environment
+    file anywhere in the repository. research-os today is a Markdown/config-only repository (its own
+    .gitignore explicitly states: "this repo is Markdown/config only" and blocks *.pdf/*.csv/*.png/
+    *.pt/etc.) operated by a Claude Code agent (.claude/agents/research-os.md) that reads/writes
+    Markdown ledgers -- it has never executed Python code. There is therefore no existing target
+    dependency file to extend, and no committed environment specification to prove sufficient.
+  chosen_policy: >
+    CREATE a new, minimal, explicitly-scoped dependency file at automation/requirements.txt (inside
+    the migrated automation/ directory, NOT at research-os's repository root) containing exactly:
+      PyYAML==6.0.3
+      pytest==9.1.0
+    This is scoped to automation/ specifically (not a root-level requirements.txt) so it is
+    unambiguous that only the newly-added automation subsystem has a Python dependency surface --
+    research-os's pre-existing Markdown/config-only character for everything else is preserved and
+    not silently redefined as "a Python project" by this migration. A short note is added to
+    automation/README.md (migrated) documating "python -m venv + pip install -r
+    automation/requirements.txt" as the setup step, and stating the Python version convention
+    (3.10+, matching the source repository's .venv) inherited from wifi-csi-fall-attack-safety-demo.
+  do_not_copy_full_requirements_txt: "explicitly rejected -- copying the source's complete requirements.txt would pull in numpy/pandas/matplotlib/scipy/scikit-learn/jupyter/streamlit/torch, none of which any automation/ or scripts/automation/ script imports; this would misrepresent the automation layer's actual dependency surface and bloat the target environment for no functional reason."
+  migration_inventory_addition: "automation/requirements.txt is added to the migration inventory (section 3) as a NEW file authored during the implementation, not copied from any existing source file -- it does not exist in wifi-csi-fall-attack-safety-demo today and is not claimed to."
+  validation_requirement: >
+    The implementation must prove, as part of the validation suite (section 11): starting from a
+    CLEAN Python virtual environment (no packages beyond a bare Python 3.10+ interpreter), running
+    `pip install -r automation/requirements.txt` followed by `python -c "import sys;
+    sys.path.insert(0,'scripts/automation'); import update_dashboard, repo_resolver, result_explorer,
+    scan_artifacts, dashboard_research_summary, dashboard_candidate_review,
+    next_experiment_brainstorm_checker"` succeeds with no ImportError, AND the full
+    `pytest scripts/automation/` suite passes, all executed from within research-os's own checkout
+    post-migration -- proving automation/requirements.txt is complete and sufficient on its own,
+    with no hidden dependency on the source repository's environment.
+
+# ------------------------------------------------------------------------------- 4. exclusion inventory (remains in experiment repository)
+exclusion_inventory:
+  - "results/ (all experiment outputs)"
+  - "figures/ (referenced by artifact_manifest.csv, never duplicated into research-os)"
+  - "checkpoints and model weights, wherever stored"
+  - "scripts/analysis/ (analysis/plotting scripts, referenced as generator_script)"
+  - "scripts/archive/ (pre-thesis plot generators)"
+  - "SenseFi/UT-HAR dataset and training code"
+  - "experiment execution scripts (export_probability_predictions.py, adaptive_gate_attack.py, and similar)"
+  - "thesis-specific or experiment-specific files: EXPERIMENT_EVIDENCE_INDEX.md, LOCAL_PROJECT_MAP.md, README.md, THIRD_PARTY_NOTICES.md, LICENSE, requirements.txt (experiment-code deps)"
+  - "scripts/automation/test_split_guard.py, scripts/automation/test_split_guard_cases.py, and .claude/settings.json's PreToolUse hook wiring (explicit exception, section 3)"
+  - ".claude/skills/git-stage-check/SKILL.md (experiment-repo-specific pre-commit hygiene)"
+  - "root-level pilot logs (A1_seed42_pilot_run.log, basat_*.log, bilstm_*.log, optionB_*.log -- already gitignored, local-only)"
+
+# --------------------------------------------------------- 4b. target collision and preservation policy (correction 2)
+target_collision_and_preservation_policy:
+  method: >
+    A read-only inventory of research-os at commit b997ed6aba4e3395c3b02eef951b3536450b8961
+    (`git ls-tree -r`, plus direct inspection of every root file and .claude/ subtree) was performed
+    and cross-checked against every path in the migration inventory (section 3).
+  actual_target_state_found: >
+    research-os is NOT an empty or scaffold repository. It is an existing, operating, differently-
+    architected system: a "Weekly PhD Research OS Agent" -- a Markdown-ledger + Claude-Code-agent
+    research-operations tracker, governed by its own CLAUDE.md, with its own dashboard (dashboard.md),
+    its own append-only state ledgers (state/experiments.md, state/commits.md, state/roadmap.md,
+    state/decisions.md, state/thesis-updates.md, state/literature.md, state/weekly/*.md), its own
+    audience-specific "lanes/" files, its own "guardrails/" claim-safety files, its own agent
+    definition (.claude/agents/research-os.md) and slash commands
+    (.claude/commands/research-log.md, roadmap-change.md, weekly-review.md), its own README.md,
+    CLAUDE.md, LICENSE-equivalent notices, and its own .gitignore. Its own CLAUDE.md documents that it
+    ALREADY reads wifi-csi-fall-attack-safety-demo (and two other repos) via an implicit SIBLING-
+    FOLDER convention ("This repo sits beside the work repos in the local parent GitHub workspace") --
+    this is noted explicitly below as a pre-existing, DIFFERENT mechanism from the Phase 1 resolver,
+    not something this migration modifies or is authorized to modify.
+  per_path_collision_report:
+    - migration_path: "RESEARCH_DASHBOARD.md"
+      target_state: "does not exist under this name; target has a DIFFERENT existing file, dashboard.md, serving a different purpose (a thesis-roadmap P1-P5 committee-facing status pane, not a governance/automation dashboard)"
+      collision_type: "none (no file/directory collision) -- but a NAMING/PURPOSE ambiguity is flagged: after migration research-os will contain two conceptually distinct 'dashboards' (dashboard.md = thesis roadmap; RESEARCH_DASHBOARD.md = Research OS governance/automation status). Both are preserved unmodified and unmerged; RESEARCH_DASHBOARD.md keeps its name exactly as migrated. No rename, merge, or deletion of either file is in scope for this migration."
+      resolution: "PRESERVE both files as-is, unmodified, un-merged, distinctly named. Flag the naming ambiguity in the migration receipt so it is never mistaken for a missed conflict."
+    - migration_path: ".gitignore (single line: automation/local/external_repository_paths.yaml)"
+      target_state: "target HAS its own .gitignore, structured around 'this repo is Markdown/config only' and explicitly blocking *.csv, *.png, *.pdf, *.pt, *.pth, and other binary/data extensions"
+      collision_type: "REAL, BLOCKING collision: automation/artifact_manifest.csv (a tracked .csv file being migrated) would be silently caught by the target's existing `*.csv` ignore rule if added without an explicit exception -- a `git add -f` workaround is EXPLICITLY REJECTED here as it would silently fight the target's own ignore policy on every future automation/ change, not just this one."
+      resolution: >
+        The implementation must APPEND (never overwrite) to research-os's existing .gitignore, in a
+        clearly-labeled new section (e.g. "# === Research OS automation (tracked, exempt from the
+        Markdown/config-only rule above) ==="), both: (a) the migrated line
+        `automation/local/external_repository_paths.yaml` (to gitignore the real local override), and
+        (b) an explicit negation `!automation/artifact_manifest.csv` (and `!automation/**/*.json` for
+        receipts, if JSON is ever later added to a blocking rule -- confirmed NOT currently blocked,
+        so no negation is needed for receipts today, but the check is repeated at implementation time
+        in case the target .gitignore changes before then). Every other existing line in the target
+        .gitignore is left completely untouched.
+    - migration_path: ".claude/skills/dashboard-refresh/SKILL.md"
+      target_state: "target's .claude/ directory ALREADY EXISTS and already contains .claude/agents/research-os.md and .claude/commands/{research-log,roadmap-change,weekly-review}.md -- a DIFFERENT Claude Code extension mechanism (agents + commands) for a DIFFERENT purpose (the weekly advisor-ledger agent), NOT skills"
+      collision_type: "no file or directory collision (skills/ is a new subdirectory under the existing .claude/) -- but a NAMING ambiguity is flagged: .claude/agents/research-os.md is itself literally named 'research-os' and governs an entirely separate system from the migrated automation/dashboard-refresh skill. Both can and do coexist as distinct .claude/ subpaths (agents/, commands/, skills/) with no technical conflict."
+      resolution: "ADD .claude/skills/dashboard-refresh/SKILL.md as a new file under a new subdirectory. Do not modify .claude/agents/research-os.md, any .claude/commands/*.md, or any other existing .claude/ content. Flag the naming ambiguity (two different things both called 'research-os' in the same repo -- the pre-existing weekly-ledger agent, and the migrated governance/automation layer this contract moves) explicitly in the migration receipt and recommend, as a non-blocking follow-up NOT part of this migration, that a human later add one clarifying sentence to CLAUDE.md distinguishing the two."
+    - migration_path: "automation/ (entire directory)"
+      target_state: "no automation/ directory exists in research-os today"
+      collision_type: "none"
+      resolution: "add as a wholly new top-level directory"
+    - migration_path: "scripts/automation/ (entire directory, minus the test-split-guard exception)"
+      target_state: "no scripts/ directory of any kind exists in research-os today"
+      collision_type: "none"
+      resolution: "add as a wholly new top-level directory tree (scripts/automation/)"
+    - migration_path: "automation/requirements.txt (new file, section 3b)"
+      target_state: "no Python dependency file of any kind exists in research-os today"
+      collision_type: "none"
+      resolution: "add as a wholly new file"
+  root_files_explicitly_not_touched: "README.md, CLAUDE.md, LICENSE-equivalent notices, dashboard.md, guardrails/, lanes/, state/, templates/ -- none of these are part of the migration inventory, and this contract's future implementation must not modify, rename, or delete any of them"
+  hard_requirements_confirmed:
+    - "no target file is silently overwritten -- the only pre-existing target file touched at all is .gitignore, and only via an explicit, labeled APPEND, never a full-file replace"
+    - "no source file is silently omitted -- every migration-inventory path (section 3) and its disposition is enumerated above; the test-split-guard exception (section 3) is the only intentional omission from scripts/automation/, and it is documented, not silent"
+    - "any collision NOT explicitly resolved above is an UNEXPECTED collision and must STOP the migration implementation -- it may not proceed via ad hoc improvisation"
+  preflight_requirement: >
+    Before importing anything, the implementation must generate a machine-readable preflight
+    inventory and collision report (see migration_provenance_record, section 8, for its schema) that
+    re-runs this exact per-path check against research-os's THEN-CURRENT state (in case main has
+    moved since this contract was written) and HARD-STOPS if any newly-discovered collision is not
+    already covered by the resolutions listed above.
+
+# ------------------------------------------ 5. history-preservation method (correction 3 -- one exact, reproducible procedure)
+history_preservation:
+  investigation_performed_before_finalizing: >
+    Before finalizing this method, the source repository's actual commit history was inspected:
+    `git log --oneline -- automation/ scripts/automation/ RESEARCH_DASHBOARD.md .gitignore
+    .claude/skills/dashboard-refresh/` returns EXACTLY 27 commits, oldest first
+    f64d5626d3b159f85988668f0a86281035678e93 ("Create standalone WiFi CSI fall attack safety demo" --
+    the repository's own root commit, which touched only .gitignore at that time, adding the base
+    36-line file with no Research-OS-specific content yet) through
+    ed50db0d62b755cd7aae9f00228665ba0cdb5750 ("Add external-repository resolution support"), and a
+    scripted check confirmed ZERO of these 27 commits also touch any excluded path (results/,
+    figures/, scripts/analysis/, scripts/archive/, or any checkpoint-pattern path) -- i.e. no commit
+    exists that would need internal path-splitting. The single .gitignore line
+    (automation/local/external_repository_paths.yaml) was introduced in exactly one commit,
+    ed50db0d62b755cd7aae9f00228665ba0cdb5750, confirmed via `git log -S <line> -- .gitignore`.
+  chosen_method: >
+    A SINGLE reproducible procedure, run once, in this exact order, with no implementation
+    discretion over WHICH method to use (only over exact tool invocation syntax at execution time):
+      1. In a TEMPORARY, disposable clone of the source repository (never the working checkout at
+         C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo), run
+         `git subtree split --prefix=automation --branch=migration-split-automation` and
+         `git subtree split --prefix=scripts/automation --branch=migration-split-scripts-automation`,
+         each scoped to the exact source commit range f64d5626d3b159f85988668f0a86281035678e93..
+         ed50db0d62b755cd7aae9f00228665ba0cdb5750 (i.e. `git subtree split` naturally only includes
+         commits touching the given prefix within reachable history up to the starting_commit; no
+         additional range flag is needed because the investigation above already confirmed the full
+         reachable history contains no later or earlier commits touching these prefixes outside this
+         range).
+      2. In the SAME temporary clone, run `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..ed50db0d62b755cd7aae9f00228665ba0cdb5750 -- RESEARCH_DASHBOARD.md` and
+         `git format-patch f64d5626d3b159f85988668f0a86281035678e93^..ed50db0d62b755cd7aae9f00228665ba0cdb5750 -- .claude/skills/dashboard-refresh/SKILL.md`
+         to produce ordered, per-commit patch files for each standalone root file.
+      3. The single .gitignore line is EXPLICITLY NOT handled via format-patch/am (correction from
+         the prior version of this contract): `git format-patch`/`git am` operate on the WHOLE FILE's
+         diff, and research-os's .gitignore is a structurally different, pre-existing file (see
+         target_collision_and_preservation_policy, section 4b) -- applying a source-derived .gitignore
+         patch would either fail to apply cleanly (context mismatch) or silently reintroduce
+         source-repository-specific ignore patterns (checkpoints, pilot logs) that do not belong in
+         research-os. Instead, the ONE line is added as an explicit, manually-authored content
+         addition (see section 4b's resolution) in the SAME migration commit that applies the
+         automation/scripts.automation subtree merges -- its provenance (which source commit
+         introduced it: ed50db0d62b755cd7aae9f00228665ba0cdb5750) is recorded in the migration
+         provenance record (section 8) exactly as if it had been format-patched, without pretending
+         the mechanical patch-apply tooling was actually used on a file it cannot cleanly handle.
+      4. In research-os, create `migrate/research-os-layer` from `main` at
+         b997ed6aba4e3395c3b02eef951b3536450b8961 (never from a later main state without first
+         re-verifying identity per section 2). Fetch the temporary clone's two subtree-split branches
+         as a temporary remote, then `git merge --allow-unrelated-histories
+         migration-split-automation` followed by `git merge --allow-unrelated-histories
+         migration-split-scripts-automation` (each a distinct, ordinary merge commit, not a squash),
+         then `git am` the two root-file patch series, then commit the single .gitignore line
+         addition and the new automation/requirements.txt (section 3b) as one final, clearly-labeled
+         "Research OS migration: add automation/requirements.txt and .gitignore entry" commit.
+      5. Delete the temporary clone and its local subtree-split branches; they are disposable
+         scaffolding, never pushed anywhere, never referenced again after step 4 completes.
+  why_safest_for_this_repository_shape: >
+    The 27-commit investigation above confirms the Research OS layer is cleanly confined -- zero
+    commits mix migrated and excluded paths -- making `git subtree split` (which mechanically
+    includes only commits touching a given prefix) both correct and sufficient, without needing the
+    far riskier alternative of a full `git filter-repo` pass over the entire source repository's
+    history (which would also touch results/, figures/, scripts/analysis/ commits and require active,
+    error-prone path-exclusion filtering across hundreds of unrelated commits). Using a TEMPORARY,
+    disposable clone (never the working checkout) for the subtree-split step ensures the working
+    checkout at C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo is never touched,
+    branched, or checked-out-from during the import.
+  how_root_files_are_preserved: >
+    RESEARCH_DASHBOARD.md and SKILL.md are carried via `git format-patch` + `git am` (step 2/4 above),
+    which preserves original author/committer metadata via the mbox format's headers; the single
+    .gitignore line is handled as a manual, provenance-recorded content addition (step 3), not a
+    file-level patch, for the structural reason given above.
+  how_commits_touching_both_migrated_and_excluded_paths_are_filtered: >
+    They do not exist -- confirmed by the 27-commit investigation above (a scripted per-commit
+    name-only scan found zero commits touching both a migrated path and results/, figures/,
+    scripts/analysis/, scripts/archive/, or any checkpoint-pattern path in the same commit). This is
+    stated as a VERIFIED FACT about this specific repository's history, not an assumption the
+    procedure merely hopes is true; the implementation must re-run this exact check at execution time
+    and hard-stop if a newly-created mixed commit is ever found (e.g. if new commits landed between
+    this design and implementation).
+  how_unrelated_experiment_files_are_proven_absent: >
+    Post-import, the implementation must grep the ENTIRE tree of migrate/research-os-layer for
+    results/, figures/, checkpoints, scripts/analysis/, scripts/archive/ path prefixes and assert zero
+    matches (this is also implementation_validation_suite item 4, section 11) -- proof, not assertion.
+  original_source_commit_identities: >
+    `git subtree split` rewrites commit SHAs (paths change); the exact original commit hashes remain
+    fully reachable in the SOURCE repository forever (nothing there is rewritten or deleted), and the
+    migration provenance record (section 8) maps every migrated commit's new research-os SHA back to
+    its original wifi-csi-fall-attack-safety-demo SHA -- traceability comes from that record, not from
+    identical SHAs across repositories.
+  authorship_and_timestamps: >
+    `git subtree split`, `git format-patch`, and `git am` all preserve original author name, author
+    email, and author/committer timestamps by design; only the NEW merge/commit metadata created
+    during import (steps 4-5) carries a new committer identity, clearly distinguishable from the
+    preserved original commits it merges in.
+  duplicate_import_detection: >
+    Before running step 4, the implementation must check whether `migrate/research-os-layer` (or any
+    branch reachable from research-os's remote) already contains a commit whose message and diff
+    exactly match any commit about to be merged in (a simple `git log --grep` / patch-id comparison
+    against the two subtree-split branches) -- if a match is found, the run STOPS rather than
+    creating a duplicate merge; this makes a second, accidental invocation of the same migration
+    procedure fail safely instead of silently duplicating history.
+  rerun_safety: >
+    Re-running the entire procedure from scratch (e.g. after a failed or aborted attempt) is safe
+    PROVIDED the target's `migrate/research-os-layer` branch (if partially created) is deleted first
+    -- the procedure always creates the branch fresh from base_commit and never assumes or reuses a
+    prior partial state. If `migrate/research-os-layer` already exists and is NOT empty/fresh, the
+    implementation hard-stops and requires an explicit human decision (delete-and-retry, or continue
+    from the existing partial branch) rather than silently appending a second import on top.
+  duplicate_or_unrelated_history_note: >
+    `--allow-unrelated-histories` is required and expected (research-os's `main` and the subtree-split
+    branches share no common ancestor) -- this is correct for a first-time cross-repository import,
+    not evidence of an error.
+  why_no_force_push_or_history_rewrite_is_required: >
+    Every step operates on NEW branches only: a temporary, disposable clone's local subtree-split
+    branches (never pushed anywhere), and a new `migrate/research-os-layer` branch in research-os
+    created from `main` (never `main` itself, and never the source repository's
+    `feature/safety-proxy-guided-defense` branch, which is read-only throughout). Nothing already
+    pushed to either remote is rewritten, reset, or force-pushed; `migrate/research-os-layer` is
+    pushed for the first time as a normal, non-force push of a new branch.
+
+# ------------------------------------------------------------------------------- 6. target branch and cleanliness policy
+target_branch_policy:
+  migration_branch_name: "migrate/research-os-layer"
+  see_also: "migration_implementation_sequence (correction 6) defines the exact 10-step boundary this policy operates within -- this contract's implementation covers ONLY steps 1-7 (create branch through push, never merge into main)"
+  rules:
+    - "branches from research-os's exact base_commit (b997ed6aba4e3395c3b02eef951b3536450b8961) on main, never from an arbitrary later main state without re-verifying identity first"
+    - "the implementation NEVER commits directly to research-os's main, and NEVER merges migrate/research-os-layer into main -- that merge is explicitly step 8 of migration_implementation_sequence, a separate, later, separately-approved task"
+    - "the implementation NEVER force-pushes any branch in either repository"
+    - "before any write operation, verify target remote identity (git remote get-url origin == target remote_url) and source remote identity + source commit (per section 2)"
+    - "stop (hard failure, not a warning) if either repository is dirty beyond explicitly allowed untracked files -- 'explicitly allowed' means ONLY pre-existing untracked items already known and named in the source repo's status at contract time (e.g. .codex/, results/**, scripts/analysis/** new files from unrelated prior work); any unexpected modification to a TRACKED file in either repository is a hard stop"
+    - "the import phase (section 5) reads the source repository but performs NO commit, branch, checkout, or write of any kind against it -- the source branch feature/safety-proxy-guided-defense is never modified during import"
+
+# ------------------------------------------------------------------------- 7. external-repository configuration after migration
+external_repository_configuration:
+  tracked_registry_entry_research_os_side:
+    location: "research-os's own copy of automation/registry/external_repositories.yaml (migrated as part of automation/)"
+    repository_id: "wifi-csi-fall-attack-safety-demo"
+    contents: "identical portable fields already defined by the Phase 1 registry: repository_role: experiment-and-evidence, expected_remote_url: https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git, canonical_branch_or_ref_policy, provenance_commit_policy, required_repository_relative_paths, allowed_evidence_roots, read_only_to_research_os: true, git_identity_verification_required: true, dirty_worktree_policy, claim_boundaries -- no absolute local path, no credential"
+  real_local_override_in_research_os:
+    path: "research-os's automation/local/external_repository_paths.yaml"
+    must: "point repository_id wifi-csi-fall-attack-safety-demo to the local checkout path (C:\\Users\\Hesar\\Documents\\GitHub\\wifi-csi-fall-attack-safety-demo on this machine); remain covered by research-os's own .gitignore; never be committed; contain no credentials"
+    creation_timing: "created ONLY during the implementation's validation phase (Phase 3 below), never during this design step and never during the import phase (Phase 1 of the implementation) -- the import phase does not need to resolve any evidence, only to move governance files"
+  implementation_test_plan_for_cross_repo_resolution:
+    - "a test (using research-os's own test suite, run from the target checkout) configures a LOCAL override pointing at the real wifi-csi-fall-attack-safety-demo checkout and asserts repo_resolver resolves repository_id=wifi-csi-fall-attack-safety-demo, matches expected_remote_url exactly, and captures a full 40-character commit SHA from that checkout's current HEAD"
+    - "a synthetic-repo test (temporary git init repo, no network) exercises dirty-worktree policy handling identically to the Phase 1 EXTERNAL-REPO-RESOLUTION test suite, re-run from research-os to prove the resolver behaves identically regardless of which repository hosts it"
+    - "a legacy bare-path resolution test confirms that, with exactly one repository_id configured (wifi-csi-fall-attack-safety-demo), a bare legacy path such as results/afac_score_frozen_threshold_followup/... resolves through the configured default-legacy-repository compatibility mode defined in the Phase 1 contract, without any sibling-folder inference"
+    - "a negative test confirms NO resolution occurs via sibling-folder guessing: temporarily renaming or hiding the local-override file must produce the Phase 1 contract's documented visible failure, never a silent fallback to a folder adjacent to research-os"
+
+# --------------------------------------------------- 8. receipt, provenance, and task-state policy (corrections 4 + 5)
+receipt_and_historical_task_policy:
+  historical_receipts:
+    rule: "every receipt already in wifi-csi-fall-attack-safety-demo's automation/receipts/ (all ~70+ existing receipts as of this contract) is migrated as a FILE (via the history-preservation procedure, section 5) but its CONTENT is never rewritten, re-hashed, or edited -- byte-identical before and after migration."
+    short_git_head_fields: "every historical receipt's ambiguous 7-character git.head value remains documented as referring to a commit in wifi-csi-fall-attack-safety-demo's history, never reinterpreted as a research-os commit merely because the file now physically resides in research-os."
+    old_approval_bindings: "remain valid exactly as recorded (approved_claim_receipt_id / approved_claim_path / approved_claim_sha256 continue to point at the co-migrated claim receipt file, whose content and hash are unchanged by the file-level move)."
+    no_rewrite_rule: "no historical receipt is rewritten, re-hashed, renamed, or reinterpreted merely because it changed repositories."
+
+  migration_provenance_record:
+    principle: >
+      Historical receipts are NEVER edited to add cross-repository context (per the no-rewrite rule
+      above). Instead, a SEPARATE, new, append-only record is created that maps historical/task
+      identity to source-repository and target-migration context, without touching any historical
+      receipt file.
+    proposed_committed_path: "automation/migration_provenance.yaml (migrated into research-os as part of the final migration commit, section 5 step 4; does not exist in wifi-csi-fall-attack-safety-demo today and is authored fresh during the implementation)"
+    proposed_schema:
+      schema_version: 1
+      migration:
+        source_repository_id: "wifi-csi-fall-attack-safety-demo"
+        source_remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
+        source_branch: "feature/safety-proxy-guided-defense"
+        source_commit_range: "f64d5626d3b159f85988668f0a86281035678e93..ed50db0d62b755cd7aae9f00228665ba0cdb5750"
+        target_repository_id: "research-os"
+        target_remote_url: "https://github.com/shahram-h-hesari/research-os.git"
+        target_base_commit: "b997ed6aba4e3395c3b02eef951b3536450b8961"
+        target_migration_branch: "migrate/research-os-layer"
+        target_migration_merge_commits: "list of the actual merge/patch/final commit SHAs created on migrate/research-os-layer, filled in at implementation time"
+        history_method: "git subtree split (automation/, scripts/automation/) + git format-patch/am (RESEARCH_DASHBOARD.md, SKILL.md) + one manual provenance-recorded content addition (.gitignore line) -- per section 5"
+      per_receipt_or_task_mapping:
+        - historical_identity: "e.g. receipt_id or task_id, one entry per historical receipt/task"
+          source_repository_id: "wifi-csi-fall-attack-safety-demo"
+          source_remote_url: "https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
+          source_commit_context: "the short git.head value already recorded inside the historical receipt itself, restated here alongside its full-SHA resolution if resolvable (see interpretation policy below)"
+          migration_source_snapshot: "full 40-character source commit SHA at the moment this receipt's file content was captured for migration (== the source_commit_range upper bound, since all receipts migrate together in one pass)"
+          target_migration_commit: "the research-os commit SHA (post-migration) whose tree contains this exact receipt file"
+          legacy_hash_interpretation: "ALWAYS_SOURCE_REPOSITORY -- see interpretation policy below"
+    interpretation_policy_for_legacy_seven_character_hashes: >
+      Every historical receipt's short git.head value is interpreted, by fixed policy, as ALWAYS
+      referring to the SOURCE repository (wifi-csi-fall-attack-safety-demo), NEVER to research-os,
+      regardless of which repository the receipt file physically resides in after migration. This is
+      a static, one-line interpretation rule recorded once in migration_provenance.yaml's `migration`
+      block, not something computed per-receipt. If a short hash happens to also match a commit in
+      research-os's own (unrelated) history by coincidence, the policy still resolves it as the
+      SOURCE repository's commit -- ambiguity is resolved by fixed origin, not by disambiguation
+      heuristics.
+    when_a_legacy_short_hash_cannot_be_resolved: >
+      If a historical receipt's short git.head value does not uniquely resolve to a commit in the
+      source repository (e.g. it was truncated ambiguously, or the referenced commit was later
+      garbage-collected -- not expected, but possible in principle), the migration_provenance.yaml
+      entry for that receipt records `source_commit_context: "unresolvable"` explicitly, rather than
+      guessing or silently omitting the entry. This is reported, never hidden.
+
+  automated_verification_claim_classification:
+    principle: "the migrated verifier (update_dashboard.py, run from research-os) must distinguish exactly three claim categories, never conflate them:"
+    categories:
+      - name: "historical source-repository claims"
+        definition: "any receipt whose git.head is a short hash and predates migration -- verified ONLY via hash-check of the receipt's own claimed file content (already migrated, byte-unchanged); the verifier does NOT attempt to resolve git.head as a live commit in either repository for these -- it is read as a historical label, per the interpretation policy above."
+        target_state: "historical ACCEPTED (unchanged from pre-migration status) -- see per-task classification below"
+      - name: "reverified cross-repository claims"
+        definition: "a task whose acceptance criteria require reading/hashing EXPERIMENT-repository evidence; after migration, its verification path changes from same-repo `Path(__file__).resolve().parents[2]` to resolver-based cross-repo resolution via automation/registry/external_repositories.yaml + the real local override"
+        target_state: "must be actively re-run via `--verify` from research-os; expected to reproduce identical check counts (see per-task table below); becomes a NEW receipt only if reconciliation is genuinely needed (see reconciliation policy)"
+      - name: "new target-repository claims"
+        definition: "any claim authored AFTER migration, describing work done from/about research-os itself"
+        target_state: "must record full 40-character SHAs for both the research-os (governance) commit and any external (experiment) repository commit touched, per the Phase 1 commit-and-provenance policy -- never a 7-character abbreviation"
+    the_migrated_verifier_must_not:
+      - "interpret a historical source-repository hash as a research-os hash, under any circumstance"
+      - "silently accept an unresolvable legacy hash as verified -- an unresolvable hash is reported exactly as 'unresolvable' (see migration_provenance_record above), never treated as a pass"
+      - "require rewriting any historical receipt to add cross-repository context -- all such context lives in migration_provenance.yaml only"
+
+  per_task_target_state_classification:
+    principle: "every migrated task's target-repository state (in research-os, post-migration) is one of: historical ACCEPTED, actively-reverified ACCEPTED, VERIFIED-AWAITING-APPROVAL, VERIFIED, BLOCKED, or excluded from active target-state computation. No task is left ambiguous."
+    historical_accepted_no_reconciliation_needed:
+      - "REG-GOALS, REG-DATASETS, REF-EVID, REG-PAPERS -- acceptance criteria never depended on a live experiment-repository read (hand-curated/pointer registries); target state: historical ACCEPTED"
+      - "AUT-APPROVAL-BIND, ROADMAP-V2, DASH-S8-design, AUT-VPG-design, VALIDATION-PILOT-GATE-design, EXTERNAL-REPO-RESOLUTION-design, EXTERNAL-REPO-RESOLUTION, RESEARCH-OS-MIGRATION-design -- design/dashboard-refresh/resolver-implementation tasks whose acceptance criteria are self-contained within automation/ (no live experiment-repository read at verification time); target state: historical ACCEPTED"
+    actively_reverified_expected_identical_counts:
+      - task: "TOOL-REXP (result-explorer)"
+        why: "directly resolves results/ paths and hashes evidence in the experiment repository"
+        target_state_before_reverification: "VERIFIED-AWAITING-APPROVAL is NOT the right label here -- its historical approval remains valid per the no-rewrite rule; its target state is historical ACCEPTED immediately post-migration (file-level, unchanged), then upgraded to actively-reverified ACCEPTED once a fresh --verify run from research-os (using the resolver) reproduces the same check count"
+      - task: "DASH-D3 (dashboard-research-summary)"
+        why: "reads Result Explorer output, which reads experiment evidence"
+        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
+      - task: "REG-EXPERIMENT-ID (experiment-identity)"
+        why: "references checkpoint hashes in the experiment repository"
+        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
+      - task: "REG-CANDIDATES, NEXT-EXP-REVIEW, DASH-NEXT-EXP-REVIEW"
+        why: "re-resolve candidate/dataset/evidence references that ultimately trace to experiment-repo paths"
+        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
+    special_case_excluded_from_normal_reverification:
+      - task: "AUT-TSG-impl (test-split-guard)"
+        why: "its enforcement files (test_split_guard.py, test_split_guard_cases.py, and the .claude hook) do NOT migrate (section 3 exception) -- there is no live research-os-side mechanism to reverify"
+        target_state: "historical ACCEPTED ONLY in research-os (a governance/tracking record of a decision made and enforced elsewhere) -- EXCLUDED from active target-state computation in research-os, since research-os cannot execute or verify this hook. The task's LIVE, operationally-meaningful state continues to be governed and verified from wifi-csi-fall-attack-safety-demo, which remains authoritative for AUT-TSG-impl specifically, indefinitely, regardless of the overall authority transition (section 10). The migrated dashboard MUST render this exclusion explicitly (e.g. a visible annotation: 'operational files not migrated; live state tracked in the experiment repository') and MUST NOT present AUT-TSG-impl as if it were actively reverified from research-os -- doing so would misrepresent an unmigrated enforcement mechanism as if research-os had verified it."
+    dashboard_rendering_requirement: >
+      The target dashboard (research-os's RESEARCH_DASHBOARD.md) must never render a historical task
+      as "actively reverified" before its actual re-verification run has occurred and matched, and
+      must never render AUT-TSG-impl (or any future task in the same special-case category) as if its
+      operational files were migrated when they were not -- this is a rendering-honesty requirement,
+      not merely a policy statement, and is added to the implementation validation suite (section 11).
+    reconciliation_receipts: >
+      A reconciliation receipt (a NEW claim, never an edit of a historical one) is created ONLY if a
+      re-verification run from research-os produces a DIFFERENT check count or outcome than the
+      historical acceptance recorded -- the discrepancy is investigated and reported, never silently
+      accepted. If re-verification reproduces identical counts, no reconciliation receipt is needed;
+      the migration receipt's own record of "reverified, counts matched" is sufficient.
+
+# ------------------------- 9. source decommission policy, branch/merge boundary, and authority transition (correction 6)
+migration_implementation_sequence:
+  principle: >
+    The prior version of this contract left the boundary between "migration validation" and
+    "main-branch authority transition" ambiguous (it described authority changing "after a Phase 4
+    merge" while also describing rollback as "deleting an unmerged branch" -- an internal
+    contradiction). This section replaces that ambiguity with one exact, unambiguous sequence.
+  rule_check_performed: >
+    No existing accepted repository rule (in any acceptance/*.yaml, tasks.yaml, or prior receipt in
+    this repository) mandates a specific merge-timing convention for a cross-repository migration --
+    this is a novel operation with no established precedent to follow or deviate from. The sequence
+    below is therefore a fresh, explicit design choice, not a deviation from any existing rule.
+  exact_sequence:
+    - step: 1
+      name: "Create migration branch"
+      description: "create migrate/research-os-layer in research-os from the exact verified target base_commit (section 2); never from an arbitrary later main state without re-verifying identity first"
+    - step: 2
+      name: "Import"
+      description: "run the history-preservation procedure (section 5) in full: subtree split (in a temporary, disposable clone) + format-patch/am + the manual .gitignore line + automation/requirements.txt, all committed onto migrate/research-os-layer only"
+    - step: 3
+      name: "Configure the local external-repository override for LOCAL VALIDATION ONLY"
+      description: "create the real (gitignored) automation/local/external_repository_paths.yaml in the research-os checkout, pointing at the existing wifi-csi-fall-attack-safety-demo local path -- this file is never committed and exists only on the local machine running validation"
+    - step: 4
+      name: "Run all target-side validations"
+      description: "execute the full implementation_validation_suite (section 11) from within the research-os checkout on migrate/research-os-layer -- dashboard render/idempotency, registries/validators, resolver, Result Explorer, artifact scanning, Brainstorm Checker, dependency/import proof (section 3b), collision-free proof (section 4b), and every historical-receipt byte-identity/reconciliation check (section 8)"
+    - step: 5
+      name: "Create and approve the migration implementation claim"
+      description: "author the RESEARCH-OS-MIGRATION claim receipt (recording full source/target SHAs, the migration_provenance.yaml contents, and validation results) and obtain a human approval receipt through the standard --approve CLI, exactly as every other implementation task in this repository requires -- BEFORE any push"
+    - step: 6
+      name: "Push the migration branch normally"
+      description: "push migrate/research-os-layer to origin as a new branch (non-force, first-time push); main is NOT touched by this push"
+    - step: 7
+      name: "STOP -- do not merge into research-os/main in this task"
+      description: "RESEARCH-OS-MIGRATION's implementation ENDS here. migrate/research-os-layer exists, is pushed, is validated, and is approved as a claim -- but research-os/main is untouched and wifi-csi-fall-attack-safety-demo remains fully authoritative at this point."
+    - step: 8
+      name: "Main-branch merge and authority transition (SEPARATE, later, explicitly-approved task)"
+      description: "merging migrate/research-os-layer into research-os's main, and the resulting authority transition, is its OWN separate task with its OWN design contract and its OWN user approval -- NOT part of RESEARCH-OS-MIGRATION's scope, and NOT performed automatically just because step 4's validations passed"
+    - step: 9
+      name: "Source remains authoritative until the separate transition task completes"
+      description: "wifi-csi-fall-attack-safety-demo's existing automation/ and scripts/automation/ remain the ONLY authoritative, live Research OS copy through steps 1-7 and until the separate transition task (step 8) is itself approved and executed"
+    - step: 10
+      name: "Source decommission (a further separate, later, separately-gated task)"
+      description: "removal of automation/ and scripts/automation/ (minus the test-split-guard exception) from wifi-csi-fall-attack-safety-demo happens only after the separate transition task (step 8) has been live and stable, and only via its own accepted design contract and its own user approval"
+  this_contract_and_its_future_implementation_cover: "steps 1-7 only"
+  steps_8_through_10_are_explicitly_out_of_scope: true
+
+# ------------------------------------------------------------------------------------- 10. authority transition
+authority_transition:
+  before_authority_transition:
+    - "wifi-csi-fall-attack-safety-demo's existing automation/ and scripts/automation/ remain the authoritative, live Research OS copy"
+    - "migrate/research-os-layer may exist, be validated, be pushed, and even be claim-approved (steps 1-7) WITHOUT this changing authority -- an approved, pushed, unmerged migration branch is not yet authoritative"
+    - "VALIDATION-PILOT-GATE implementation stays paused"
+    - "no new Research OS governance work is redirected to research-os yet"
+  exact_transition_point: >
+    Authority transitions to research-os ONLY after ALL of: (a) the SEPARATE, later, explicitly-
+    approved main-branch-merge task (migration_implementation_sequence step 8) actually merges
+    migrate/research-os-layer into research-os's main; (b) that separate task's own validation
+    (re-confirming everything in section 11 still holds post-merge) passes with zero discrepancy;
+    (c) a human approval receipt is recorded for THAT separate task's claim. Passing step 4's
+    validations on the unmerged branch is a PREREQUISITE for proposing the separate transition task --
+    it is explicitly NOT itself the transition point.
+  after_authority_transition:
+    - "research-os becomes authoritative for all NEW dashboard and automation work"
+    - "no new Research OS tasks are developed inside wifi-csi-fall-attack-safety-demo going forward"
+    - "VALIDATION-PILOT-GATE implementation MAY resume, but ONLY in research-os, and ONLY after this exact transition point (not merely after an unmerged migration branch passes tests, per the correction above) -- resuming it any earlier would resume gate-implementation work in a repository the migration has not yet made authoritative"
+    - "the source Research OS copy in wifi-csi-fall-attack-safety-demo becomes FROZEN (read-only in practice, not technically locked) pending the separate, later, separately-gated decommission task (sequence step 10)"
+    - "the test-split-guard exception continues operating from wifi-csi-fall-attack-safety-demo indefinitely -- it is never frozen or decommissioned, since it protects live experiment-repository operations regardless of where governance lives"
+
+# ------------------------------------------------------------------------------------- 10b. rollback procedure
+rollback_procedure:
+  during_steps_1_to_6: "delete the local and (if pushed) remote migrate/research-os-layer branch in research-os; this has zero effect on research-os's main (never touched) and zero effect on wifi-csi-fall-attack-safety-demo (never written to at any point in steps 1-6, only read from)"
+  after_step_6_push_before_step_8_merge: "identical rollback: delete the pushed-but-unmerged migrate/research-os-layer branch; main is still untouched because step 8 (merge) has not occurred"
+  after_step_8_merge_ever_occurs: "rollback is explicitly OUT OF SCOPE for this contract -- it belongs to the separate transition task's own design contract (sequence step 8), which must define its own rollback procedure for an already-merged main before it is approved to execute"
+  source_repository_rollback: "not applicable at any point covered by this contract -- wifi-csi-fall-attack-safety-demo is never written to by steps 1-7"
+
+# ------------------------------------------------------------------------------------- 11. required validation (future implementation acceptance criteria)
+implementation_validation_suite:
+  criteria:
+    - "correct source and target remote identities verified via git remote get-url origin against both configured URLs before any write"
+    - "exact source starting commit (ed50db0d62b755cd7aae9f00228665ba0cdb5750 or a later descendant, reverified at implementation time) and exact target base commit (b997ed6aba4e3395c3b02eef951b3536450b8961 or a later main descendant, reverified at implementation time) are recorded in the migration claim"
+    - "exact migration inventory (section 3) and exclusion inventory (section 4) match what was actually imported -- verified by an explicit file listing diff, not assumed"
+    - "no file under results/, figures/, checkpoints, or any model-weight path appears anywhere in migrate/research-os-layer's tree or history -- verified by scanning the imported tree for any of these path prefixes and asserting zero matches"
+    - "every migrated file's content matches the accepted source snapshot byte-for-byte where no intentional target adaptation is documented (the only intentionally adapted content is the two-line .gitignore entry and any research-os-local requirements.txt addition, both explicitly logged as adaptations, not silent drift)"
+    - "every historical receipt's sha256 (recomputed post-migration) matches its pre-migration sha256 exactly -- zero-byte-drift proof, not a spot check"
+    - "every historical approval receipt's approved_claim_receipt_id / approved_claim_path / approved_claim_sha256 still resolves correctly against its co-migrated claim receipt"
+    - "the full existing Research OS test suite (test_scan_artifacts.py, test_result_explorer.py, test_repo_resolver.py, test_verify.py, all validate_*.py-backed tests, etc.) passes when run from research-os"
+    - "EXTERNAL-REPO-RESOLUTION's resolver works correctly when invoked from research-os, resolving wifi-csi-fall-attack-safety-demo via the real (gitignored) local override created in phase 2"
+    - "Result Explorer resolves and hashes evidence correctly in the experiment repository via the resolver, from research-os"
+    - "artifact scanning (scan_artifacts.py) remains strictly read-only against the experiment repository -- verified via before/after hash comparison of the experiment repository's working tree"
+    - "the dashboard renders from research-os and is idempotent (two consecutive --render runs byte-identical; --check reports PASS)"
+    - "every registry (goals, datasets, reference_evidence, experiment_candidates, experiment_identity, paper_registry) and every validator passes when run from research-os"
+    - "the Brainstorm Checker (NEXT-EXP-REVIEW) and dashboard candidate review (DASH-NEXT-EXP-REVIEW) reproduce identical verdicts/ranks from research-os as they did from wifi-csi-fall-attack-safety-demo"
+    - "test-split guards and held-out-test protections are demonstrably unweakened: the .claude hook and test_split_guard.py remain fully in force in wifi-csi-fall-attack-safety-demo (section 3 exception), unmodified by this migration"
+    - "automation/experiment_queue.yaml's content is migrated unchanged and remains empty/unchanged in effect -- no queue action is introduced by migration"
+    - "wifi-csi-fall-attack-safety-demo remains fully operational and byte-unchanged (beyond the explicitly allowed pre-existing untracked items) throughout the entire import and validation process"
+    - "migrate/research-os-layer contains zero copied result/evidence data anywhere in its tree or history"
+    - "no absolute machine-specific path (e.g. C:\\Users\\Hesar\\...) is committed anywhere in migrate/research-os-layer -- verified by grepping the entire imported tree for the local username/path pattern and asserting zero matches outside the gitignored, uncommitted local-override file"
+    - "rollback is proven possible by deleting the unmerged migrate/research-os-layer branch with zero effect on research-os's main or on wifi-csi-fall-attack-safety-demo (per rollback_procedure, section 10b)"
+    - "a clean Python virtual environment installing only automation/requirements.txt can import every scripts/automation/*.py production module and pass the full pytest scripts/automation/ suite, run from within research-os's own checkout (section 3b)"
+    - "every per-path collision resolution in target_collision_and_preservation_policy (section 4b) is verified against research-os's THEN-CURRENT state at implementation time (not merely this contract's snapshot), and the preflight collision report (section 4b) hard-stops on any newly-discovered, unresolved collision"
+    - "the migration_provenance.yaml record (section 8) is created, is internally consistent with the actual imported commits, and every historical receipt's legacy short-hash interpretation resolves per the fixed source-repository policy (section 8) with zero ambiguous/unresolvable entries left unreported"
+    - "the migrated dashboard renders AUT-TSG-impl (and any task in the same special-case category) with an explicit non-migrated-operational-files annotation, never as if actively reverified from research-os (section 8 dashboard-rendering requirement)"
+    - "migrate/research-os-layer is pushed to origin (a normal, non-force push of a new branch) and a human approval receipt exists for the RESEARCH-OS-MIGRATION claim -- BOTH occur strictly before any main-branch merge is even proposed, per migration_implementation_sequence steps 5-7"
+    - "no merge into research-os's main occurs as part of this implementation -- verified by confirming main's HEAD is unchanged from base_commit throughout, and that the separate transition task (sequence step 8) has not been created or executed by this implementation"
+  test_requirement: "dry-run and synthetic temporary-repository tests are used wherever they can substitute for operating on the real target (e.g. the resolver's dirty-worktree and traversal/escape tests, per Phase 1 precedent, and the clean-venv dependency-import proof, section 3b); the real source/target pair is touched only for the identity-verification, subtree-split/format-patch/am, and final cross-repository resolution proof steps, all of which are read-only against the source repository and confined to the new, unmerged, pushed-but-not-merged migration branch in the target repository."
+
+# ------------------------------------------------------------------------------------- 12. design deliverable boundary
+design_deliverable_boundary:
+  this_contract_creates: "only this acceptance/design specification"
+  this_contract_does_not_create:
+    - "a migration branch in research-os"
+    - "any copied or moved file in either repository"
+    - "any deletion in either repository"
+    - "any change to either repository's remote configuration"
+    - "any merged history"
+    - "any git subtree/filter-repo/format-patch/cherry-pick/bundle invocation"
+    - "any real local override file"
+    - "any VALIDATION-PILOT-GATE implementation"
+    - "any experiment, queue action, protocol-freeze record, or held-out-test read"
+  future_task_boundaries:
+    this_step: "RESEARCH-OS-MIGRATION-design -- this design-only contract; registered in automation/tasks.yaml as its own gated design task, following the EXTERNAL-REPO-RESOLUTION-design / VALIDATION-PILOT-GATE-design precedent of explicit registration."
+    future_implementation: "RESEARCH-OS-MIGRATION -- the actual migration (import, dependency setup, collision-safe placement, cross-repository configuration and validation), registered in automation/tasks.yaml at that time, covering ONLY steps 1-7 of migration_implementation_sequence (create branch through push+approve) -- steps 8-10 (main-branch merge/authority transition, source decommission) are explicitly separate, later, separately-gated tasks."
+    likely_implementation_dependencies: [EXTERNAL-REPO-RESOLUTION, EXTERNAL-REPO-RESOLUTION-design]
+    separate_downstream_tasks_not_created_by_this_contract:
+      - "the future main-branch-merge / authority-transition task (migration_implementation_sequence step 8)"
+      - "the future source-decommission task (migration_implementation_sequence step 10)"
+      - "VALIDATION-PILOT-GATE implementation -- remains paused until the separate authority-transition task (step 8) completes in research-os, not merely after this migration's unmerged branch passes validation"
+      - "any full legacy-path-migration cleanup task (converting every bare path reference to explicit (repository_id, repository_relative_path) pairs -- a separate, later task per the Phase 1 contract's own path-migration policy)"
+      - "any future clarifying edit to research-os's CLAUDE.md distinguishing .claude/agents/research-os.md from the migrated automation/ layer (section 4b naming-ambiguity note) -- a non-blocking, optional, separate follow-up"
+
+# ------------------------------------------------------------------------------------------ acceptance criteria
+design_complete:
+  - "This acceptance file approved by the user."
+implementation_complete:
+  - "NOT YET -- no migration branch exists in research-os."
+  - "NOT YET -- no subtree-split/format-patch import has been performed."
+  - "NOT YET -- no cross-repository resolution has been validated from research-os."
+  - "NOT YET -- no authority transition has occurred."
+test_passed:
+  not_applicable: "no implementation exists yet to test"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for this design step, task_id RESEARCH-OS-MIGRATION-design, registered in automation/tasks.yaml as its own gated design task, depending on EXTERNAL-REPO-RESOLUTION and EXTERNAL-REPO-RESOLUTION-design."
+
+forbidden_actions:
+  - "create a migration branch in this step"
+  - "copy, move, or delete any file in either repository in this step"
+  - "change either repository's remote configuration in this step"
+  - "merge histories, or run git subtree/filter-repo/format-patch/cherry-pick/bundle in this step"
+  - "create a real local override file in this step"
+  - "implement VALIDATION-PILOT-GATE in this step"
+  - "run any experiment or access held-out-test data in this step"
+  - "merge migrate/research-os-layer into research-os's main as part of this contract or its future implementation task -- that is exclusively migration_implementation_sequence step 8, a separate, later, separately-approved task"
+  - "perform the source decommission (migration_implementation_sequence step 10) as part of this contract or its future implementation task"
+  - "stage, commit, or push"

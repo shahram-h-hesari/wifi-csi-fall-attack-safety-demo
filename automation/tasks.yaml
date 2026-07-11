@@ -282,6 +282,40 @@ tasks:
     depends_on: [EXTERNAL-REPO-RESOLUTION-design, DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID, DASH-S6]
     acceptance: acceptance/external-repo-resolution.yaml
     stale_after_days: 30
+  - id: RESEARCH-OS-MIGRATION-design
+    title: >-
+      Research OS Migration design contract (Migration Phase 2, corrected) —
+      automation/acceptance/research-os-migration.yaml. Designs a controlled, history-preserving
+      relocation of the Research OS governance layer (dashboard, registries, acceptance contracts,
+      receipts, reviews, automation) from wifi-csi-fall-attack-safety-demo into research-os, using
+      the now-accepted external-repository resolver (EXTERNAL-REPO-RESOLUTION) so experiment
+      evidence is never copied. Corrected after review to add: (1) an explicit dependency/runtime
+      policy (a new, minimal automation/requirements.txt, scoped to automation/, not a copy of the
+      experiment repo's requirements.txt); (2) a read-only target-collision inventory of the ACTUAL
+      research-os repository (an existing, operating Markdown-ledger + Claude-agent PhD
+      research-ops system, not an empty scaffold), with an explicit .gitignore-append collision
+      resolution for automation/artifact_manifest.csv and documented naming-ambiguity notes (no
+      silent overwrite); (3) one exact, reproducible history-preservation procedure (git subtree
+      split in a disposable temporary clone + format-patch/am + a manually-recorded .gitignore
+      line addition, over a verified 27-commit range with zero mixed migrated/excluded-path
+      commits); (4) a separate migration_provenance.yaml record mapping historical receipts to
+      source-repository context without editing any historical receipt, plus a three-way
+      claim-classification policy (historical / reverified / new); (5) an explicit per-task target
+      state classification (historical ACCEPTED vs. actively-reverified ACCEPTED vs. the
+      AUT-TSG-impl special case excluded from active target-state computation, since its
+      enforcement files do not migrate); (6) an unambiguous 10-step sequence separating migration
+      validation (steps 1-7: branch, import, local-only validation config, validate, approve,
+      push) from main-branch merge/authority transition (step 8, a separate later task) and source
+      decommission (step 10, a further separate later task) — VALIDATION-PILOT-GATE resumes only
+      after step 8, never merely after an unmerged, validated branch. Design-only: no migration
+      branch, import, or cross-repository validation has been performed. Does not implement
+      VALIDATION-PILOT-GATE and does not decommission or merge the source Research OS copy.
+    kind: design
+    automation: research-os-migration
+    gated: true
+    depends_on: [EXTERNAL-REPO-RESOLUTION, EXTERNAL-REPO-RESOLUTION-design]
+    acceptance: acceptance/research-os-migration.yaml
+    stale_after_days: 30
   - id: NEXT-EXP-REVIEW
     title: >-
       Next Experiment Brainstorm Checker — scripts/automation/next_experiment_brainstorm_checker.py

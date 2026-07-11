@@ -264,6 +264,24 @@ tasks:
     depends_on: [DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID]
     acceptance: acceptance/external-repo-resolution.yaml
     stale_after_days: 30
+  - id: EXTERNAL-REPO-RESOLUTION
+    title: >-
+      External-Repository Resolution implementation (Research OS migration Phase 1) —
+      scripts/automation/repo_resolver.py plus a tracked portable external-repository registry,
+      gitignored machine-local override template, read-only registry validator, and synthetic
+      temporary-Git-repository tests. Resolves governance-repository identity separately from
+      external experiment/evidence repositories; verifies remote URL, full 40-character commit SHA,
+      required paths, dirty-worktree policy, allowed evidence roots, path traversal, absolute paths,
+      and symlink escapes; supports explicit (repository_id, repository_relative_path) evidence
+      references plus bounded legacy-path compatibility. Does not migrate Research OS files, create
+      a real local override, copy evidence, run experiments, alter queues/protocols/candidates, or
+      read held-out-test data.
+    kind: tool
+    automation: external-repository-resolution
+    gated: true
+    depends_on: [EXTERNAL-REPO-RESOLUTION-design, DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID, DASH-S6]
+    acceptance: acceptance/external-repo-resolution.yaml
+    stale_after_days: 30
   - id: NEXT-EXP-REVIEW
     title: >-
       Next Experiment Brainstorm Checker — scripts/automation/next_experiment_brainstorm_checker.py

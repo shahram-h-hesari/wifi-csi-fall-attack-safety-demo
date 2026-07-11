@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T080728Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION",
+  "task_id": "EXTERNAL-REPO-RESOLUTION",
+  "automation": "external-repository-resolution",
+  "actor": {
+    "kind": "skill",
+    "name": "codex",
+    "session_hint": "external-repo-resolution-correction-audit"
+  },
+  "status_claimed": "done",
+  "summary": "Correction-only superseding implementation claim for EXTERNAL-REPO-RESOLUTION. This preserves the original 2026-07-11T075030Z claim and 2026-07-11T075307Z approval historically, and supersedes them only because the acceptance audit found a safe Windows-compatible directory-junction fallback for the resolver symlink-escape test. The implementation behavior is unchanged except scripts/automation/test_repo_resolver.py now exercises symlink-escape protection on this Windows environment instead of skipping when ordinary symlink privileges are unavailable. Final resolver synthetic tests report 30 passed, 0 skipped. The TOOL-REXP reconciliation was separately governed by its own superseding claim and approval pair. No Research OS migration, evidence copy, real local override, experiment, pilot, queue action, protocol change, candidate mutation, threshold selection, network access, or held-out-test read occurred.",
+  "files_created": [
+    {
+      "path": "scripts/automation/repo_resolver.py",
+      "sha256": "5bca50336390853f853aa8abe9d03b3c43e15d8225ba69ff887afd59b2bdfa4c"
+    },
+    {
+      "path": "automation/registry/external_repositories.yaml",
+      "sha256": "a2a0b0ac3a40ba3e0a2520c1e941f1dc7e4135f7dceb7fbb7d485a53c026f366"
+    },
+    {
+      "path": "automation/local/external_repository_paths.example.yaml",
+      "sha256": "f1c98108d4b5f50cd38b9a4f25850975acd67120bd6545d3c1c3c3bc1e89ee92"
+    },
+    {
+      "path": "scripts/automation/validate_external_repositories.py",
+      "sha256": "5c5dfebc0109f9976c2ec0fb6126d82a750541582f9f02fab4e52392e88af8f7"
+    },
+    {
+      "path": "scripts/automation/test_repo_resolver.py",
+      "sha256": "00a6e0dd10d6dc2edaf125921997d2a3e8394ba81cb208786b965ad61f9b4d7f"
+    }
+  ],
+  "files_modified": [
+    {
+      "path": ".gitignore",
+      "sha256": "8f5f10ff6397ab9cee3e581b969cbfd0d3273030abdd56007274534e8df3c7f2"
+    },
+    {
+      "path": "scripts/automation/scan_artifacts.py",
+      "sha256": "a083e12443ef49539ed2a952df633029cdac2cc9fcfee39052961902b93eeca8"
+    },
+    {
+      "path": "scripts/automation/result_explorer.py",
+      "sha256": "4ec27ac06d8842b00f534dee05e338418cbc7aaa05b52d99db447fdb5b042ae6"
+    },
+    {
+      "path": "scripts/automation/update_dashboard.py",
+      "sha256": "5d350141ae04133152d635a780820502845cd1d6922b65138186397927021b5c"
+    },
+    {
+      "path": "automation/tasks.yaml",
+      "sha256": "541136d6cad9ca4174e3dd79b9d2e8a4a78eea3903697ade838cb4edc8cdd726"
+    },
+    {
+      "path": "automation/dashboard_changelog.md",
+      "sha256": "d1ad4152a808152490514c0392d69079264938c889805aecf2b8127fcc9e1321"
+    }
+  ],
+  "commands_run": [
+    {
+      "cmd": "python -m pytest scripts/automation/test_repo_resolver.py -q -rs -> 30 passed in 15.57s",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/validate_external_repositories.py -> PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_result_explorer.py -> 40 passed",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_scan_artifacts.py -> RESULT: ALL PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_experiment_candidates.py -> RESULT: ALL PASS (33/33)",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/validate_experiment_candidates.py -> PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_paper_registry.py -> RESULT: ALL PASS (28/28)",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/validate_paper_registry.py -> PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_experiment_identity.py -> RESULT: ALL PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/validate_experiment_identity.py identity=automation/registry/experiment_identity.yaml reference-evidence=automation/registry/reference_evidence.yaml goals=automation/registry/goals.yaml datasets=automation/registry/datasets.yaml -> PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_next_experiment_brainstorm_checker.py -> RESULT: ALL PASS (39/39)",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/validate_next_experiment_review.py -> PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python -m pytest scripts/automation/test_dashboard_candidate_review.py -q -> 17 passed",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_verify.py -> RESULT: ALL PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_approve.py -> RESULT: ALL PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_split_guard.py -> exit 0",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/test_split_guard_cases.py -> RESULT: ALL PASS",
+      "exit_code": 0
+    },
+    {
+      "cmd": "python scripts/automation/update_dashboard.py --check -> idempotency PASS",
+      "exit_code": 0
+    }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    {
+      "id": "resolver_synthetic_temp_git_repositories",
+      "result": "pass",
+      "evidence_path": "scripts/automation/test_repo_resolver.py"
+    },
+    {
+      "id": "windows_junction_symlink_escape_fallback",
+      "result": "pass",
+      "evidence_path": "scripts/automation/test_repo_resolver.py"
+    },
+    {
+      "id": "external_repository_registry_validator",
+      "result": "pass",
+      "evidence_path": "scripts/automation/validate_external_repositories.py"
+    },
+    {
+      "id": "legacy_scanner_result_explorer_dashboard_regressions",
+      "result": "pass"
+    },
+    {
+      "id": "registry_review_receipt_task_and_split_guard_regressions",
+      "result": "pass"
+    }
+  ],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "285e97b",
+    "expected_dirty": [
+      ".gitignore",
+      "automation/dashboard_changelog.md",
+      "automation/local/external_repository_paths.example.yaml",
+      "automation/receipts/2026-07-11T080728Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION.json",
+      "automation/registry/external_repositories.yaml",
+      "automation/tasks.yaml",
+      "scripts/automation/repo_resolver.py",
+      "scripts/automation/result_explorer.py",
+      "scripts/automation/scan_artifacts.py",
+      "scripts/automation/test_repo_resolver.py",
+      "scripts/automation/update_dashboard.py",
+      "scripts/automation/validate_external_repositories.py"
+    ]
+  },
+  "full_governance_commit_sha": "285e97bfc399b68eb82de2c7fba549b4fe40e109",
+  "external_repositories_used": [],
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-11T075030Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION",
+  "next_action": "Approve EXTERNAL-REPO-RESOLUTION with scripts/automation/update_dashboard.py --approve EXTERNAL-REPO-RESOLUTION so this corrected implementation claim is bound to an exact user approval receipt."
+}

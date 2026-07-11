@@ -120,6 +120,14 @@ def _normalize_path(p):
     return str(p).replace("\\", "/").strip() if p else p
 
 
+def _manifest_path(row):
+    return _normalize_path(row.get("path") or row.get("repository_relative_path"))
+
+
+def _manifest_repository_id(row):
+    return row.get("repository_id") or None
+
+
 def _curated_reference_lookup(ref_name, gid, sources):
     """Exact-key curated lookup against sources['reference_evidence_yaml']. Returns
     (row_or_None, refusal_result_or_None); exactly one is non-None, or BOTH are None when no
@@ -148,7 +156,7 @@ def _curated_reference_lookup(ref_name, gid, sources):
             f"REFUSED — curated key {ref_name!r} belongs to goal {entry.get('goal')!r}, "
             f"not the requested {gid!r}", [])
 
-    manifest_rows = {_normalize_path(m.get("path")): m for m in _load_csv(sources["manifest_csv"])}
+    manifest_rows = {_manifest_path(m): m for m in _load_csv(sources["manifest_csv"])}
     provenance = entry.get("provenance") or {}
     declared_level = entry.get("evidence_level")
     required_level = provenance.get("required_manifest_evidence_level")
@@ -181,6 +189,16 @@ def _curated_reference_lookup(ref_name, gid, sources):
             f"(expected one of {CURATED_PROVENANCE_PATH_FIELDS})", [])
 
     primary_field, primary_path, primary_man = checked_paths[0]
+    provenance = {
+        "sha256": primary_man.get("sha256") or None,
+        "committed": primary_man.get("committed") or None,
+        "curated_key": ref_name,
+        "manifest_cross_check": "pass",
+        "checked_paths": [{"field": f, "path": p} for f, p, _ in checked_paths],
+    }
+    if _manifest_repository_id(primary_man):
+        provenance["repository_id"] = _manifest_repository_id(primary_man)
+
     row = {
         "goal": gid,
         "reference_evidence_key": ref_name,
@@ -196,13 +214,7 @@ def _curated_reference_lookup(ref_name, gid, sources):
         "metrics": dict(entry.get("metrics") or {}),   # copied verbatim from the approved entry
         "clean_disclosure_companion": entry.get("clean_disclosure_companion"),
         "source_file": primary_path,
-        "provenance": {
-            "sha256": primary_man.get("sha256") or None,
-            "committed": primary_man.get("committed") or None,
-            "curated_key": ref_name,
-            "manifest_cross_check": "pass",
-            "checked_paths": [{"field": f, "path": p} for f, p, _ in checked_paths],
-        },
+        "provenance": provenance,
         "warning_band": list(entry.get("disclosures") or []),
     }
     return row, None
@@ -443,7 +455,7 @@ def run_query(query, sources):
             filters[key] = defaults.get(key)
 
     ledger = _load_csv(sources["ledger_csv"])
-    manifest = {m.get("path"): m for m in _load_csv(sources["manifest_csv"])}
+    manifest = {_manifest_path(m): m for m in _load_csv(sources["manifest_csv"])}
 
     # a ledger row belongs to this goal iff its defining metric (first primary key) is populated
     keys = goal.get("primary_metric_keys") or []
@@ -511,6 +523,8 @@ def run_query(query, sources):
         if man:
             provenance["sha256"] = man.get("sha256") or None
             provenance["committed"] = man.get("committed") or None
+            if _manifest_repository_id(man):
+                provenance["repository_id"] = _manifest_repository_id(man)
         rid = _receipt_id_for(r.get("source_file"), sources.get("receipts_dir"))
         if rid:
             provenance["receipt_id"] = rid

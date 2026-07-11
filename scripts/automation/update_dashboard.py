@@ -44,8 +44,9 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import dashboard_research_summary as drs  # noqa: E402 -- D3: research-evidence section renderer
 import dashboard_candidate_review as dcr  # noqa: E402 -- DASH-NEXT-EXP-REVIEW: candidate-review section renderer
+import repo_resolver as rr  # noqa: E402 -- external-repository resolution / full-SHA provenance
 
-REPO = Path(__file__).resolve().parents[2]
+REPO = rr.governance_repo_root()
 AUT = REPO / "automation"
 DASHBOARD_MD = REPO / "RESEARCH_DASHBOARD.md"
 STATUS_JSON = AUT / "status.json"
@@ -132,6 +133,11 @@ def run_git(args):
 def git_head():
     h = run_git(["rev-parse", "--short", "HEAD"])
     return h.strip() if h else "unknown"
+
+
+def git_full_head():
+    h = run_git(["rev-parse", "HEAD"])
+    return h.strip() if h and re.match(r"^[0-9a-f]{40}$", h.strip()) else "unknown"
 
 
 # ------------------------------------------------ artifact manifest (Stage 6, read-only)
@@ -356,6 +362,7 @@ def has_user_approval(task_id, receipts, base: Path = REPO):
 def build_status(roadmap, tasks, frontier, receipts):
     plans = roadmap.get("plans", [])
     plan_id = plans[-1]["plan_id"] if plans else "none"
+    ig = integrity_gate()
 
     task_states = {}
     for t in tasks.get("tasks", []):
@@ -407,7 +414,16 @@ def build_status(roadmap, tasks, frontier, receipts):
         "verification_active": True,
         "plan_in_effect": plan_id,
         "counters": frontier.get("counters", {}),
-        "integrity_gate": integrity_gate(),
+        "integrity_gate": ig,
+        "repository_identity": {
+            "governance_repository": {
+                "repository_id": rr.GOVERNANCE_REPOSITORY_ID,
+                "full_commit_sha": git_full_head(),
+                "short_head": git_head(),
+                "worktree_clean": ig["clean"],
+            },
+            "external_repositories_used": [],
+        },
         "tasks": task_states,
         "verification_ledger": ledger,
         "automations": autos,
@@ -810,6 +826,8 @@ def write_approval(task_id, receipts_dir=None, dry_run=False, note=None,
         "acceptance_tests": [],
         "split_usage": {"splits_touched": [], "test_read": False, "authorization_token": None},
         "git": {"head": git_head(), "expected_dirty": []},
+        "full_governance_commit_sha": git_full_head(),
+        "external_repositories_used": [],
         "requires_user_approval": False, "blocked_on": None, "supersedes": None,
         "next_action": "",
     }

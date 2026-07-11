@@ -5,6 +5,30 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — EXTERNAL-REPO-RESOLUTION: external repository resolver implementation
+
+- **actor:** implementation step by Codex on branch `feature/safety-proxy-guided-defense`.
+- Added the Phase 1 resolver layer defined by
+  `automation/acceptance/external-repo-resolution.yaml`: governance-repository resolution remains
+  distinct from explicit external repository resolution; external repositories resolve only through
+  the tracked portable registry plus the gitignored local override; no sibling-folder inference,
+  network access, repository mutation, evidence copying, or Research OS migration is introduced.
+- Added `scripts/automation/repo_resolver.py` with full 40-character commit-SHA capture, exact
+  local `origin` remote-string verification, required-path checks, dirty-worktree policy handling,
+  path traversal and absolute-path rejection, allowed-evidence-root enforcement, symlink-escape
+  rejection via realpath, deterministic typed errors, deterministic public metadata, zero-config
+  same-repository fallback, and bounded legacy bare-path compatibility.
+- Added the tracked zero-config registry `automation/registry/external_repositories.yaml` and the
+  committed safe template `automation/local/external_repository_paths.example.yaml`; the real
+  machine-local override `automation/local/external_repository_paths.yaml` is explicitly ignored by
+  `.gitignore` and was not created.
+- Added `scripts/automation/validate_external_repositories.py` and
+  `scripts/automation/test_repo_resolver.py` using synthetic temporary local Git repositories only.
+  Existing scanner, Result Explorer, and dashboard code now use the shared governance root and accept
+  repository-aware metadata without changing legacy outputs in same-repository mode.
+- Registered implementation task `EXTERNAL-REPO-RESOLUTION` as gated and dependent on the accepted
+  design plus the relevant dashboard/result/identity/artifact-scanning tasks.
+
 ## 2026-07-11 — EXTERNAL-REPO-RESOLUTION-design: Research OS migration Phase 1 design contract
 
 - **actor:** user-approved design step; recorded by Claude. **HEAD** `890a1e6`.

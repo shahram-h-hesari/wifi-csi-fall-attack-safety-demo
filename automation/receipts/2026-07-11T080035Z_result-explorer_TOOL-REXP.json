@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T080035Z_result-explorer_TOOL-REXP",
+  "task_id": "TOOL-REXP",
+  "automation": "result-explorer",
+  "actor": {
+    "kind": "skill",
+    "name": "codex",
+    "session_hint": "external-repo-resolution-reconciliation-approval-correction"
+  },
+  "status_claimed": "done",
+  "summary": "Correction-only superseding reconciliation claim for TOOL-REXP. The prior 2026-07-11T075040Z_result-explorer_TOOL-REXP receipt correctly identified the Result Explorer hash refresh caused by EXTERNAL-REPO-RESOLUTION's repository-aware manifest compatibility, but it set requires_user_approval=false, which left the previously ACCEPTED TOOL-REXP task at VERIFIED under the repository's claim-specific approval rules. This receipt preserves that historical receipt unchanged and supersedes it only to require the normal claim-specific user approval for the active reconciliation. The code behavior remains unchanged: legacy path-column manifests resolve exactly as before, repository_id provenance appears only when the manifest row actually carries repository_id, and Result Explorer remains read-only/stdout-only with no experiment execution, validation/training/export/threshold-selection invocation, queue/protocol/candidate mutation, network access, or held-out-test read.",
+  "files_created": [
+    {
+      "path": "scripts/automation/result_explorer.py",
+      "sha256": "4ec27ac06d8842b00f534dee05e338418cbc7aaa05b52d99db447fdb5b042ae6"
+    },
+    {
+      "path": "scripts/automation/test_result_explorer.py",
+      "sha256": "1eacf32e2818d917b188f196c7849e729771654add27a9d23655962a7826214c"
+    }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    {
+      "cmd": "python scripts/automation/test_result_explorer.py -> 40 passed",
+      "exit_code": 0
+    }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    {
+      "id": "result_explorer_legacy_and_curated_regression",
+      "result": "pass",
+      "evidence_path": "scripts/automation/test_result_explorer.py"
+    }
+  ],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "285e97b",
+    "expected_dirty": [
+      "scripts/automation/result_explorer.py",
+      "scripts/automation/test_result_explorer.py",
+      "automation/receipts/2026-07-11T080035Z_result-explorer_TOOL-REXP.json"
+    ]
+  },
+  "full_governance_commit_sha": "285e97bfc399b68eb82de2c7fba549b4fe40e109",
+  "external_repositories_used": [],
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-11T075040Z_result-explorer_TOOL-REXP",
+  "next_action": "Approve TOOL-REXP via scripts/automation/update_dashboard.py --approve TOOL-REXP so this reconciliation is bound to an exact user approval receipt."
+}

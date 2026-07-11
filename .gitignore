@@ -32,5 +32,8 @@ __pycache__/
 # Local logs
 *.log
 
+# Machine-local Research OS external repository overrides
+automation/local/external_repository_paths.yaml
+
 # Original UT-HAR raw source clone
 third_party/Wifi_Activity_Recognition/

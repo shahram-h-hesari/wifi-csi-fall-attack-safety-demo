@@ -30,7 +30,12 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import repo_resolver as rr  # noqa: E402
+
+REPO = rr.governance_repo_root()
 SCAN_ROOTS = ["results", "figures", "tables", "notes"]
 EXTS = {".csv", ".png", ".pdf", ".tex", ".md", ".json"}
 EXCLUDE_DIRS = {".git", ".venv", "__pycache__", "checkpoints", ".codex", "thesis_artifacts", "automation"}
@@ -39,6 +44,7 @@ LEDGER = "results/defense_attempt_inventory/defense_attempt_results_long.csv"
 COLUMNS = ["path", "kind", "sha256", "size_bytes", "generator_script", "link_method",
            "evidence_level", "evidence_provenance", "split", "claim_boundary",
            "overleaf_ready", "overleaf_blockers", "committed"]
+COLUMNS_WITH_REPOSITORY = ["repository_id", *COLUMNS]
 
 TOOL_VERSION = "scan_artifacts/1.0"
 
@@ -264,7 +270,7 @@ def overleaf_ready(kind, evidence, claim, generator, committed_artifact, tracked
 
 
 # ------------------------------------------------------------------- build
-def build_rows():
+def build_rows(repository_id=None):
     frozen = build_frozen_allowlist()
     by_path, by_base = load_ledger()
     tracked = git_tracked()
@@ -277,13 +283,16 @@ def build_rows():
         gen, method = link_generator(p, np)
         committed = np in tracked
         orl, blk = overleaf_ready(kind, ev, claim, gen, committed, tracked)
-        rows.append({
+        row = {
             "path": np, "kind": kind, "sha256": sha256_file(p), "size_bytes": p.stat().st_size,
             "generator_script": gen, "link_method": method,
             "evidence_level": ev, "evidence_provenance": prov, "split": split,
             "claim_boundary": claim, "overleaf_ready": orl, "overleaf_blockers": blk,
             "committed": "yes" if committed else "no",
-        })
+        }
+        if repository_id:
+            row["repository_id"] = repository_id
+        rows.append(row)
     rows.sort(key=lambda r: r["path"])
     return rows, frozen
 
@@ -300,10 +309,11 @@ def summarize(rows):
             "by_overleaf_ready": counts("overleaf_ready")}
 
 
-def write_manifest(rows, out_path: Path):
+def write_manifest(rows, out_path: Path, include_repository_id=False):
     out_path.parent.mkdir(parents=True, exist_ok=True)
+    fieldnames = COLUMNS_WITH_REPOSITORY if include_repository_id else COLUMNS
     with out_path.open("w", encoding="utf-8", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=COLUMNS)
+        w = csv.DictWriter(f, fieldnames=fieldnames, extrasaction="ignore")
         w.writeheader()
         for r in rows:
             w.writerow(r)
@@ -323,9 +333,11 @@ def main():
     ap.add_argument("--write", action="store_true", help="write the manifest (otherwise dry-run)")
     ap.add_argument("--manifest-out", default="automation/artifact_manifest.csv",
                     help="manifest output path (only used with --write)")
+    ap.add_argument("--repository-id", default=None,
+                    help="optional repository_id column value for explicit cross-repository manifests")
     args = ap.parse_args()
 
-    rows, frozen = build_rows()
+    rows, frozen = build_rows(repository_id=args.repository_id)
     s = summarize(rows)
     print(f"[scan] {s['total']} artifacts | frozen-allowlist size {len(frozen)}")
     print(f"[scan] by_kind={s['by_kind']}")
@@ -343,7 +355,7 @@ def main():
         for guard in ("results", "figures", "tables", "notes", "thesis_artifacts", "checkpoints"):
             if (REPO / guard) in out.parents:
                 sys.exit(f"[refused] will not write into protected tree: {guard}/")
-    meta = write_manifest(rows, out)
+    meta = write_manifest(rows, out, include_repository_id=bool(args.repository_id))
     print(f"[write] {out.relative_to(REPO) if REPO in out.parents else out} ({len(rows)} rows) + {meta.name}")
     return 0
 

@@ -14,6 +14,15 @@
     "protected_paths_dirty": [],
     "clean": true
   },
+  "repository_identity": {
+    "governance_repository": {
+      "repository_id": "governance-self",
+      "full_commit_sha": "285e97bfc399b68eb82de2c7fba549b4fe40e109",
+      "short_head": "285e97b",
+      "worktree_clean": true
+    },
+    "external_repositories_used": []
+  },
   "tasks": {
     "DASH-S1": {
       "display": "VERIFIED",
@@ -118,7 +127,7 @@
     "TOOL-REXP": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
-      "checks": "33/33",
+      "checks": "8/8",
       "failed": []
     },
     "REG-PAPERS": {
@@ -145,6 +154,12 @@
       "checks": "9/9",
       "failed": []
     },
+    "EXTERNAL-REPO-RESOLUTION": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "52/52",
+      "failed": []
+    },
     "NEXT-EXP-REVIEW": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
@@ -159,6 +174,22 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "EXTERNAL-REPO-RESOLUTION",
+      "automation": "external-repository-resolution",
+      "display": "ACCEPTED",
+      "checks": "52/52",
+      "strength": "hash-verified",
+      "failed": []
+    },
+    {
+      "task_id": "TOOL-REXP",
+      "automation": "result-explorer",
+      "display": "ACCEPTED",
+      "checks": "8/8",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "EXTERNAL-REPO-RESOLUTION-design",
       "automation": "external-repository-resolution",
@@ -228,14 +259,6 @@
       "automation": "dashboard-research-summary",
       "display": "ACCEPTED",
       "checks": "45/45",
-      "strength": "hash-verified",
-      "failed": []
-    },
-    {
-      "task_id": "TOOL-REXP",
-      "automation": "result-explorer",
-      "display": "ACCEPTED",
-      "checks": "33/33",
       "strength": "hash-verified",
       "failed": []
     },
@@ -429,5 +452,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 56
+  "receipts_processed": 63
 }

@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 56 |
+| Receipts processed | 63 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -241,6 +241,8 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `EXTERNAL-REPO-RESOLUTION` | external-repository-resolution | ✅ ACCEPTED | 52/52 | hash-verified | — |
+| `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 8/8 | hash-verified | — |
 | `EXTERNAL-REPO-RESOLUTION-design` | external-repository-resolution | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `VALIDATION-PILOT-GATE-design` | validation-pilot-gate-readiness | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `DASH-NEXT-EXP-REVIEW` | dashboard-candidate-review | ✅ ACCEPTED | 50/50 | hash-verified | — |
@@ -250,7 +252,6 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 | `REG-CANDIDATES-design` | experiment-candidates | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `REG-PAPERS` | paper-registry | ✅ ACCEPTED | 39/39 | hash-verified | — |
 | `DASH-D3` | dashboard-research-summary | ✅ ACCEPTED | 45/45 | hash-verified | — |
-| `TOOL-REXP` | result-explorer | ✅ ACCEPTED | 33/33 | hash-verified | — |
 | `REG-EXPERIMENT-ID` | experiment-identity | ✅ ACCEPTED | 33/33 | hash-verified | — |
 | `AUT-APPROVAL-BIND` | dashboard-refresh | ✅ ACCEPTED | 18/18 | hash-verified | — |
 | `REG-GOALS` | goal-registry | ✅ ACCEPTED | 15/15 | hash-verified | — |
@@ -352,6 +353,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-11 — EXTERNAL-REPO-RESOLUTION: external repository resolver implementation
 - 2026-07-11 — EXTERNAL-REPO-RESOLUTION-design: Research OS migration Phase 1 design contract
 - 2026-07-11 — VALIDATION-PILOT-GATE-design: Validation-pilot gate design contract (Step 15)
 - 2026-07-11 — DASH-NEXT-EXP-REVIEW: Candidate review added to research dashboard (Step 14)
@@ -361,6 +363,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — D3: Markdown research-evidence rendering added
 - 2026-07-10 — D2e-2: Result Explorer enriched with canonical experiment identity
 - 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
-- 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

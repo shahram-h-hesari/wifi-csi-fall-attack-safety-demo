@@ -225,6 +225,23 @@ tasks:
     depends_on: [REG-PAPERS, REG-GOALS, REG-DATASETS, REG-EXPERIMENT-ID, REF-EVID]
     acceptance: acceptance/experiment-candidates.yaml
     stale_after_days: 30
+  - id: VALIDATION-PILOT-GATE-design
+    title: >-
+      Validation-Pilot Gate design contract (Step 15) — automation/acceptance/validation-pilot-gate.yaml.
+      Defines the future read-only gate that reviews a human-authored pilot proposal for ONE
+      selected experiment candidate: is it specified clearly and safely enough to be proposed for
+      a validation-only pilot? Never answers scientific-success guarantee, run authorization,
+      queue entry, held-out-test access, frozen-protocol use, or final scientific approval.
+      Distinct from the existing, still-unimplemented AUT-VPG (val-pilot-gate) design, which will
+      eventually EXECUTE a validation-split evaluation; this gate only reviews a WRITTEN PROPOSAL
+      and never runs code or touches val/test data. Design-only: no gate implementation,
+      validator, test, pilot-proposal template, or generated review exists yet.
+    kind: design
+    automation: validation-pilot-gate-readiness
+    gated: true
+    depends_on: [NEXT-EXP-REVIEW, REG-CANDIDATES]
+    acceptance: acceptance/validation-pilot-gate.yaml
+    stale_after_days: 30
   - id: NEXT-EXP-REVIEW
     title: >-
       Next Experiment Brainstorm Checker — scripts/automation/next_experiment_brainstorm_checker.py

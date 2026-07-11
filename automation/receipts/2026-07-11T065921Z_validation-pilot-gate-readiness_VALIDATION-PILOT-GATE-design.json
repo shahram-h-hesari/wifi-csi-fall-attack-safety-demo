@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T065921Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design",
+  "task_id": "VALIDATION-PILOT-GATE-design",
+  "automation": "validation-pilot-gate-readiness",
+  "actor": { "kind": "skill", "name": "research-os-4e-design-correction", "session_hint": "validation-pilot-gate-contract-correction" },
+  "status_claimed": "done",
+  "summary": "Correction pass over the VALIDATION-PILOT-GATE-design claim, superseding 2026-07-11T065011Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design, in response to a user correction-only review that identified three issues, all now fixed. (1) Field-count error: the prior claim's changelog text said the pilot-proposal schema had 23 fields; the actual schema in automation/acceptance/validation-pilot-gate.yaml has always had 25 fields (proposal_id through claim_boundaries) -- no field was added or removed; only the prose miscount in automation/dashboard_changelog.md was corrected to 25. (2) Task-registration reconciliation: the user's original instruction explicitly required registering the design task separately from the future implementation task. The prior claim declined to add a automation/tasks.yaml entry, citing an INFERRED convention from precedent (REG-CANDIDATES-design/NEXT-EXP-REVIEW-design/AUT-VPG-design/DASH-S8-design all used an unregistered '-design'-suffixed receipt task_id). On inspection, this is confirmed to be an observed convention, NOT a written schema rule: automation/tasks.yaml's own header ('Task registry. SOURCE-OF-TRUTH for task DEFINITIONS ONLY... status is computed from receipts + acceptance at Stage 4+') imposes no restriction against a design-only entry, and update_dashboard.py's verification ledger explicitly supports both registered and unregistered task_ids ('incl. tasks not in tasks.yaml, e.g. legacy') -- that is a capability for graceful handling, not a rule requiring non-registration. Per the user's explicit instruction, VALIDATION-PILOT-GATE-design is now registered in automation/tasks.yaml as its own task (kind: design, gated: true, depends_on: [NEXT-EXP-REVIEW, REG-CANDIDATES], acceptance: acceptance/validation-pilot-gate.yaml), separate from the future VALIDATION-PILOT-GATE implementation task (not yet registered, per design/implementation separation). The acceptance contract's own future_task_boundaries.this_step text was updated to reflect this and to honestly note that earlier design steps followed the unregistered convention instead, without asserting the new approach retroactively applies to them. (3) Held-out-test policy defect: the prior contract's hard_blocked_rules and explicitly_forbidden_in_a_proposal sections each contained a bullet worded as 'the proposal attempts to use test data WITHOUT citing a real, already-accepted protocol_id' / 'any frozen-protocol invocation NOT citing a real, already-accepted protocol_id' -- both phrasings, by negation, implied that CITING a real accepted protocol_id could make held-out-test use or a frozen-protocol invocation acceptable INSIDE this gate, contradicting the gate's own stated purpose (validation-only pilot readiness review). Both bullets were revised to state the block is unconditional regardless of any cited protocol_id, and a new top-level section 'held_out_test_policy' (3b) was added stating, verbatim per the user's five required points: (i) any proposal requesting/implying/comparing-on/tuning-on/reading held-out-test data is BLOCKED unconditionally; (ii) an existing accepted frozen protocol does NOT make a validation-pilot proposal READY; (iii) a protocol_id may be recorded ONLY as contextual dependency information for a separate, later, human-run protocol/test-review stage; (iv) this gate never authorizes, prepares, or short-circuits held-out-test use under any outcome; (v) READY-FOR-HUMAN-APPROVAL is possible only when no held-out-test access is requested, checked independently of every other dimension. The protocol_readiness gate-dimension description and the ready_conditions.all_of held-out-test bullet were both strengthened to cross-reference this policy and explicitly state that an accepted protocol_id's presence never contributes to READY. YAML re-parsed successfully after all edits (26 top-level keys, plus the new held_out_test_policy section = 27). Field count independently re-verified via yaml.safe_load: len(pilot_proposal_schema.fields) == 25, exactly matching the user's own enumerated list. No gate implementation, pilot proposal (for AFAC or any other candidate), experiment-queue entry, execution script, or protocol-freeze record was created. automation/registry/experiment_candidates.yaml, automation/reviews/next_experiment_review.yaml, automation/experiment_queue.yaml, and every other protected registry/acceptance contract/protocol-freeze/test-split-guard file remain byte-unchanged.",
+  "corrections_applied": {
+    "field_count_corrected_from_23_to_25": true,
+    "task_registered_in_tasks_yaml": true,
+    "held_out_test_policy_strengthened_unconditional": true
+  },
+  "files_created": [
+    { "path": "automation/acceptance/validation-pilot-gate.yaml", "sha256": "9f97d5d43d1844754da9db427930622d16c1fdf34a656bad135c031aa4d50474" }
+  ],
+  "files_modified": [
+    { "path": "automation/tasks.yaml", "sha256": "03cf244a5a105a76fd4ec11f9f4c2f7b888bc9744ca0f907563bd73835087007" },
+    { "path": "automation/dashboard_changelog.md" },
+    { "path": "RESEARCH_DASHBOARD.md" },
+    { "path": "automation/status.json" }
+  ],
+  "commands_run": [
+    { "cmd": "python -c \"import yaml; d=yaml.safe_load(open('automation/acceptance/validation-pilot-gate.yaml', encoding='utf-8')); print(len(d['pilot_proposal_schema']['fields']))\" -> 25", "exit_code": 0 },
+    { "cmd": "python -c \"import yaml; t=yaml.safe_load(open('automation/tasks.yaml', encoding='utf-8')); print('VALIDATION-PILOT-GATE-design' in [x['id'] for x in t['tasks']])\" -> True", "exit_code": 0 },
+    { "cmd": "git status --short -> automation/acceptance/validation-pilot-gate.yaml (new), automation/tasks.yaml (modified), automation/dashboard_changelog.md (modified); registries/queue unchanged", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "34648b4", "expected_dirty": ["automation/receipts/**", "automation/tasks.yaml", "automation/dashboard_changelog.md", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-11T065011Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design",
+  "next_action": "Use the corrected --approve CLI to approve VALIDATION-PILOT-GATE-design (it will bind to this exact, superseding claim). The prior claim and its approval remain historically present but superseded; they are not edited or deleted."
+}

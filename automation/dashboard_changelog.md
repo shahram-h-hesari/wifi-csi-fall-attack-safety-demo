@@ -5,6 +5,41 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — VALIDATION-PILOT-GATE-design: Validation-pilot gate design contract (Step 15)
+
+- **actor:** user-approved design step; recorded by Claude. **HEAD** `34648b4`.
+- New design-only contract `automation/acceptance/validation-pilot-gate.yaml` for a future
+  **Validation-Pilot Gate** that reads a human-authored pilot proposal for ONE selected experiment
+  candidate and answers only: "is this candidate specified clearly and safely enough to be
+  proposed for a validation-only pilot?" It explicitly never answers scientific-success guarantee,
+  run authorization, queue entry, held-out-test access, frozen-protocol use, or final scientific
+  approval.
+- **Distinct from the existing, still-unimplemented AUT-VPG task** (`val-pilot-gate.yaml`): AUT-VPG
+  will eventually EXECUTE a validation-split evaluation and compute a numeric AUROC/recall gate;
+  this new gate only reviews a WRITTEN PROPOSAL and never runs code or touches val/test data —
+  strictly upstream of any such execution.
+- Defines a full pilot-proposal schema (**25 fields** incl. `research_question`, `hypothesis`,
+  `claimed_material_difference`, `explicit_prohibition_on_held_out_test_access`,
+  `pilot_size_and_bounded_scope`, `seed_plan`, `success_criteria`, `failure_and_stop_criteria`,
+  `provenance_requirements`, `claim_boundaries`), nine **separately reported** gate dimensions
+  (never one opaque score), three outcomes (`READY-FOR-HUMAN-APPROVAL` / `NEEDS-REVISION` /
+  `BLOCKED`, precedence BLOCKED > NEEDS-REVISION > READY), 14 hard-`BLOCKED` rules, 11
+  `NEEDS-REVISION` conditions, and explicit `READY` conditions. Every `READY-FOR-HUMAN-APPROVAL`
+  outcome must state, verbatim, **"Suitable for human pilot-approval review only."** and that this
+  does not authorize execution.
+- **Held-out-test policy (section 3b) is unconditional:** any request/implication/comparison/
+  tuning/read of held-out-test data is `BLOCKED` with no exception; an existing accepted frozen
+  protocol never lifts this, never contributes to `READY`, and a `protocol_id` may be recorded
+  only as contextual dependency information pointing to a separate, later, human-run
+  protocol/test-review stage — this gate never authorizes, prepares, or short-circuits held-out-
+  test use under any outcome.
+- **Task `VALIDATION-PILOT-GATE-design` is registered in `automation/tasks.yaml`** (kind: design,
+  gated, `depends_on: [NEXT-EXP-REVIEW, REG-CANDIDATES]`) as its own separate design task —
+  distinct from the future `VALIDATION-PILOT-GATE` implementation task, which will be registered
+  separately when the gate itself is built.
+- **No gate implementation, pilot proposal (for AFAC or any other candidate), experiment-queue
+  entry, execution script, or protocol-freeze record was created.**
+
 ## 2026-07-11 — DASH-NEXT-EXP-REVIEW: Candidate review added to research dashboard (Step 14)
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `a6ef7d5`.

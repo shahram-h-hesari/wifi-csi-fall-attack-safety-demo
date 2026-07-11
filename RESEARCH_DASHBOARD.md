@@ -14,20 +14,20 @@
 
 | | |
 |---|---|
-| Generated | 2026-07-10 |
+| Generated | 2026-07-11 |
 | Plan in effect | `roadmap-2026-07-10-v2` |
 | Verification | **active** (Stage 4) |
 | Integrity gate (no model/log staged; protected paths clean) | ✅ clean |
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 50 |
+| Receipts processed | 54 |
 ---
 
 ## 1. Now / Next / Blocked
 
-- **Today (2026-07-10):** SoT reconciliation complete + roadmap v2 in effect; soak day 1 (verify + render + idempotency)
-- **Next (2026-07-11):** Soak day 2 (daily refresh; observe [delta], staleness, counters)
+- **Today (2026-07-11):** Soak day 2 (daily refresh; observe [delta], staleness, counters) · _secondary:_ Untracked backlog triage batch 1 (inventory + commit/ignore proposal)
+- **Next (2026-07-12):** val-pilot-gate acceptance-spec design (reconcile acceptance/val-pilot-gate.yaml with the memo) - CONDITIONAL: design-only, requires explicit user go-ahead
 - **Blockers:** none
 - **Awaiting your approval:** none
 ---
@@ -241,6 +241,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `VALIDATION-PILOT-GATE-design` | validation-pilot-gate-readiness | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `DASH-NEXT-EXP-REVIEW` | dashboard-candidate-review | ✅ ACCEPTED | 50/50 | hash-verified | — |
 | `NEXT-EXP-REVIEW` | next-experiment-brainstorm-checker | ✅ ACCEPTED | 45/45 | hash-verified | — |
 | `NEXT-EXP-REVIEW-design` | next-experiment-brainstorm-checker | ✅ ACCEPTED | 9/9 | hash-verified | — |
@@ -350,6 +351,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-11 — VALIDATION-PILOT-GATE-design: Validation-pilot gate design contract (Step 15)
 - 2026-07-11 — DASH-NEXT-EXP-REVIEW: Candidate review added to research dashboard (Step 14)
 - 2026-07-10 — NEXT-EXP-REVIEW: Read-only Next Experiment Brainstorm Checker implemented
 - 2026-07-10 — REG-CANDIDATES: Evidence-grounded experiment-candidate registry created
@@ -359,6 +361,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — D2e-1: Experiment Identity & Naming Standard added
 - 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
 - 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
-- 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

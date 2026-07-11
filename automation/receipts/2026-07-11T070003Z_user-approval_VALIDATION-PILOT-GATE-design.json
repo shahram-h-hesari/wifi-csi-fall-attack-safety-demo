@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T070003Z_user-approval_VALIDATION-PILOT-GATE-design",
+  "task_id": "VALIDATION-PILOT-GATE-design",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-11T065921Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design",
+  "approved_claim_path": "automation/receipts/2026-07-11T065921Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design.json",
+  "approved_claim_sha256": "559b5eaaaba539e17cdac727dcd669fb5081c4382d0515afe9ccdc65b5bc0ce2",
+  "summary": "User approved VALIDATION-PILOT-GATE-design (claim 2026-07-11T065921Z_validation-pilot-gate-readiness_VALIDATION-PILOT-GATE-design; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "34648b4",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

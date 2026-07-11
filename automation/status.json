@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated": "2026-07-10",
+  "generated": "2026-07-11",
   "stage": 4,
   "verification_active": true,
   "plan_in_effect": "roadmap-2026-07-10-v2",
@@ -133,6 +133,12 @@
       "checks": "36/36",
       "failed": []
     },
+    "VALIDATION-PILOT-GATE-design": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "9/9",
+      "failed": []
+    },
     "NEXT-EXP-REVIEW": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
@@ -147,6 +153,14 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "VALIDATION-PILOT-GATE-design",
+      "automation": "validation-pilot-gate-readiness",
+      "display": "ACCEPTED",
+      "checks": "9/9",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "DASH-NEXT-EXP-REVIEW",
       "automation": "dashboard-candidate-review",
@@ -401,5 +415,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 50
+  "receipts_processed": 54
 }

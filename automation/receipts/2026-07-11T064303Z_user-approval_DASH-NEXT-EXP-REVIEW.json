@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T064303Z_user-approval_DASH-NEXT-EXP-REVIEW",
+  "task_id": "DASH-NEXT-EXP-REVIEW",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-11T064211Z_dashboard-candidate-review_DASH-NEXT-EXP-REVIEW",
+  "approved_claim_path": "automation/receipts/2026-07-11T064211Z_dashboard-candidate-review_DASH-NEXT-EXP-REVIEW.json",
+  "approved_claim_sha256": "99f4d38516e0e7a9d637f8940e11b29a75b07665b7a2840aa75e6b1d93aacaa2",
+  "summary": "User approved DASH-NEXT-EXP-REVIEW (claim 2026-07-11T064211Z_dashboard-candidate-review_DASH-NEXT-EXP-REVIEW; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "a6ef7d5",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

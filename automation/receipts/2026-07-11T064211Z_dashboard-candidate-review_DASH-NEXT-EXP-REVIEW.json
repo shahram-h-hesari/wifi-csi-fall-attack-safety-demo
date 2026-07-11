@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T064211Z_dashboard-candidate-review_DASH-NEXT-EXP-REVIEW",
+  "task_id": "DASH-NEXT-EXP-REVIEW",
+  "automation": "dashboard-candidate-review",
+  "actor": { "kind": "skill", "name": "research-os-step14", "session_hint": "dashboard-candidate-review" },
+  "status_claimed": "done",
+  "summary": "Step 14: dashboard candidate-review section. New scripts/automation/dashboard_candidate_review.py renders the generated '## 2b. Next-Experiment Candidate Review — Human Decision Required' section into RESEARCH_DASHBOARD.md (BEGIN/END AUTO:NEXT-EXPERIMENT-REVIEW markers) by DISPLAYING the already-accepted automation/reviews/next_experiment_review.yaml verbatim -- review_id, source_fingerprint, candidate_count, GO/REVIEW/NO-GO counts (0/6/2), the accepted rank order for all 8 candidates, each candidate's derived_verdict/verdict_reasons/blockers/required_human_actions/material_difference_requirement status, and the highest-ranked candidate (candidate_afac_low_far_calibration_v1, REVIEW). The renderer contains NO verdict-derivation logic whatsoever -- it never recalculates, reinterprets, reranks, or overrides any field the Brainstorm Checker (NEXT-EXP-REVIEW) already computed; this is statically proven by test_renderer_never_recomputes_a_verdict (source-text scan confirming absence of dataset_readiness==/allowed_split==/evidence_strength==/test_read_risk==/derive_verdict/derive_material_difference). A prominent warning states no verdict authorizes running an experiment, entering the experiment queue, using a frozen protocol, or accessing held-out test data, and that GO means 'suitable for human planning review only.' Candidates 1-6 (all REVIEW) require human planning review; candidates 7-8 (NO-GO) are blocked (dataset_blocked / no_experiment_allowed); AFAC (candidate_afac_low_far_calibration_v1) is explicitly not approved to run. Honest degradation: if automation/reviews/next_experiment_review.yaml is missing, malformed, or structurally inconsistent (duplicate/missing candidate_id, non-contiguous ranks, or summary counts disagreeing with its own entries), the section renders a visible INTEGRITY WARNING instead of silently omitting the section or fabricating data -- covered by synthetic fixtures for all four inconsistency classes. scripts/automation/update_dashboard.py changed minimally: imports dashboard_candidate_review, adds a _candidate_review_sources() helper + r_candidate_review() wrapper, and inserts it into render()'s parts list immediately after r_research_evidence() (as '## 2b.', following the existing '4/4b' numbering convention) -- no other function changed. Tests scripts/automation/test_dashboard_candidate_review.py: 17/17 ALL PASS covering section rendering, exact accepted rank order preservation, exact GO=0/REVIEW=6/NO-GO=2 counts, all 8 candidates appearing exactly once, verdicts matching the accepted review verbatim, NO-GO blockers displayed, D13/D14 material-difference stated_unverified statuses displayed, required human actions displayed, the no-execution-authorization warning present, missing-review integrity warning, four classes of invalid-review integrity warning (malformed YAML, duplicate candidate_id, non-contiguous ranks, summary/entry count disagreement), deterministic+idempotent rendering (both the section alone and the full dashboard twice), existing dashboard sections (##1, ##2 D3 research-evidence, ##3 roadmap) retaining their exact prior content, and confirmation that rendering never mutates automation/registry/experiment_candidates.yaml or automation/experiment_queue.yaml (byte-for-byte before/after). Real-data smoke: r_candidate_review() run against the real committed review shows exactly the 8 candidates in accepted rank order with GO=0/REVIEW=6/NO-GO=2 and the no-execution warning present. Full regression (all unaffected): test_dashboard_research_summary.py 18/18, test_result_explorer.py 40/40, test_next_experiment_brainstorm_checker.py 39/39 + validate_next_experiment_review.py PASS, test_experiment_candidates.py 33/33 + validate_experiment_candidates.py PASS, test_paper_registry.py 28/28 + validate_paper_registry.py PASS, test_experiment_identity.py 32/32 + validate_experiment_identity.py PASS, test_approve.py ALL PASS, test_verify.py ALL PASS. Receipt-impact analysis (read-only, before this claim): grepped every existing receipt for scripts/automation/update_dashboard.py; the only files_created reference (DASH-S3) carries no sha256 (existence-only, unaffected by content edits); all other receipts reference it only in files_modified, never hash-checked by verify_receipt(). Empirically re-ran --verify after the edits: every previously-ACCEPTED task (NEXT-EXP-REVIEW, REG-CANDIDATES, REG-PAPERS, DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID, AUT-APPROVAL-BIND, REG-GOALS, REF-EVID, REG-DATASETS, AUT-TSG-impl, etc.) remained at its exact prior display/checks -- zero drift, no superseding claim required for any existing task. Task DASH-NEXT-EXP-REVIEW registered in automation/tasks.yaml (gated: true, depends_on [NEXT-EXP-REVIEW, DASH-D3], acceptance: null -- no dedicated acceptance spec was authored for this step). automation/reviews/next_experiment_review.yaml, automation/registry/experiment_candidates.yaml, automation/literature/paper_registry.yaml, automation/frontier.yaml, automation/registry/goals.yaml, automation/registry/datasets.yaml, automation/registry/reference_evidence.yaml, automation/registry/experiment_identity.yaml, automation/artifact_manifest.csv, automation/experiment_queue.yaml, all acceptance contracts, protocol-freeze files, test-split-guard files, and Result Explorer code were NOT modified. No experiment, training, validation, model evaluation, export, threshold selection, or test read occurred; no command contained --split; no web access or download occurred.",
+  "files_created": [
+    { "path": "scripts/automation/dashboard_candidate_review.py", "sha256": "e846fa4b2cc2a063a5e89b52dd41ac3508f396227ab3f091144ea65311fd4da3" },
+    { "path": "scripts/automation/test_dashboard_candidate_review.py", "sha256": "13776a32df81ea2930c4c711e4384015f896dc175713c64c962e264a7fd9f7ee" }
+  ],
+  "files_modified": [
+    { "path": "scripts/automation/update_dashboard.py", "sha256": "e7fa63a28901456fc160d1e286a64072897893fabb99b5f85831317ab2bdccd7" },
+    { "path": "automation/tasks.yaml", "sha256": "185c6cd10d6d169fcebae9d03ddaedd5ec2c528a39c688fd48f46627e0fd2c5a" },
+    { "path": "automation/dashboard_changelog.md" },
+    { "path": "RESEARCH_DASHBOARD.md" },
+    { "path": "automation/status.json" }
+  ],
+  "commands_run": [
+    { "cmd": "python -c \"import ast; ast.parse(open('scripts/automation/dashboard_candidate_review.py', encoding='utf-8').read())\" -> syntax OK", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_dashboard_candidate_review.py -v -> 17 passed", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_dashboard_research_summary.py -q -> 18 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_result_explorer.py -q -> 40 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_next_experiment_brainstorm_checker.py -> RESULT: ALL PASS (39/39; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_next_experiment_review.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_candidates.py -> RESULT: ALL PASS (33/33; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_candidates.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_paper_registry.py -> RESULT: ALL PASS (28/28; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_paper_registry.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_identity.py -> ALL PASS (32/32; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_identity.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_approve.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --render -> wrote RESEARCH_DASHBOARD.md + status.json; integrity CLEAN", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --render (second run) -> no additional git diff vs first render", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --check -> idempotency PASS", "exit_code": 0 },
+    { "cmd": "python scripts/automation/update_dashboard.py --verify -> all previously-ACCEPTED tasks unchanged; integrity CLEAN", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "DNR-section-renders-exact-rank-order", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-counts-and-all-candidates-once", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-verdicts-blockers-actions-material-difference", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-no-execution-authorization-warning", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-missing-and-invalid-review-integrity-warning", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-deterministic-idempotent", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-existing-sections-unaffected", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-registry-and-queue-unchanged", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" },
+    { "id": "DNR-no-verdict-recomputation", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_candidate_review.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "a6ef7d5", "expected_dirty": ["scripts/automation/dashboard_candidate_review.py", "scripts/automation/test_dashboard_candidate_review.py", "scripts/automation/update_dashboard.py", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Use the corrected --approve CLI to approve DASH-NEXT-EXP-REVIEW (it will bind to this exact claim)."
+}

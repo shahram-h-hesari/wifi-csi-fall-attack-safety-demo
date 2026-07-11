@@ -55,6 +55,24 @@ tasks:
     depends_on: [DASH-S4, DASH-S6]   # needs stable status.json + artifact_manifest.csv
     acceptance: acceptance/html-dashboard.yaml
     stale_after_days: 7
+  - id: DASH-NEXT-EXP-REVIEW
+    title: >-
+      Dashboard candidate-review section (Step 14) — scripts/automation/dashboard_candidate_review.py.
+      Renders the "## 2b. Next-Experiment Candidate Review" section of RESEARCH_DASHBOARD.md purely
+      by DISPLAYING the already-accepted automation/reviews/next_experiment_review.yaml (review_id,
+      source_fingerprint, GO/REVIEW/NO-GO counts, accepted rank order, verdict/reasons/blockers/
+      required-human-actions/material-difference-status per candidate, highest-ranked candidate,
+      and a no-execution/no-queue/no-frozen-protocol/no-test-read warning). Never recalculates,
+      reinterprets, reranks, or overrides any verdict the Brainstorm Checker (NEXT-EXP-REVIEW) has
+      already produced. Renders a visible integrity warning (never a silent omission) if the review
+      file is missing, malformed, or structurally inconsistent (duplicate/missing candidate_id,
+      non-contiguous ranks, summary/entry count disagreement).
+    kind: dashboard
+    automation: dashboard-candidate-review
+    gated: true
+    depends_on: [NEXT-EXP-REVIEW, DASH-D3]
+    acceptance: null   # no dedicated acceptance spec was authored for this step; the claim/approval receipts are the contract
+    stale_after_days: 5
   - id: DASH-D3
     title: >-
       Dashboard D3 — Markdown research-evidence rendering (scripts/automation/dashboard_research_

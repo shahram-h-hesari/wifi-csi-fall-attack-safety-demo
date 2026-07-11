@@ -43,6 +43,7 @@ HERE = Path(__file__).resolve().parent
 if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import dashboard_research_summary as drs  # noqa: E402 -- D3: research-evidence section renderer
+import dashboard_candidate_review as dcr  # noqa: E402 -- DASH-NEXT-EXP-REVIEW: candidate-review section renderer
 
 REPO = Path(__file__).resolve().parents[2]
 AUT = REPO / "automation"
@@ -696,11 +697,22 @@ def r_research_evidence():
     return drs.render_research_evidence(_research_sources())
 
 
+def _candidate_review_sources():
+    """DASH-NEXT-EXP-REVIEW: source path for the generated (already-accepted) Brainstorm review.
+    Read-only; this dashboard section only DISPLAYS the review, never recomputes it."""
+    return {"next_experiment_review_yaml": str(AUT / "reviews" / "next_experiment_review.yaml")}
+
+
+def r_candidate_review():
+    return dcr.render_candidate_review(_candidate_review_sources())
+
+
 def render(status, roadmap, queue, frontier, receipts):
     parts = [
         r_banner(status),
         r_now_next(roadmap, receipts),
         r_research_evidence(),
+        r_candidate_review(),
         r_roadmap(roadmap),
         r_automation_table(status),
         r_verification_ledger(status),

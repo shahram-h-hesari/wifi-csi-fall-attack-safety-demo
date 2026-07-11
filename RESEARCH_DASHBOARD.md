@@ -21,7 +21,7 @@
 | Validation gate-reads consumed | **0 logged** |
 | Frozen test reads consumed | **1** |
 | Artifact manifest | last scan 2026-07-09 (2512 artifacts) |
-| Receipts processed | 48 |
+| Receipts processed | 50 |
 ---
 
 ## 1. Now / Next / Blocked
@@ -123,6 +123,88 @@ Warnings:
 <!-- END AUTO:RESEARCH-EVIDENCE -->
 ---
 
+<!-- BEGIN AUTO:NEXT-EXPERIMENT-REVIEW -->
+
+## 2b. Next-Experiment Candidate Review — Human Decision Required
+
+**Human decision required.** Review `review_2026-07-11T052615Z` · source_fingerprint `8b2ae6c88bda…` · 8 candidates.
+
+- **GO:** 0 · **REVIEW:** 6 · **NO-GO:** 2
+- **Highest-ranked planning candidate:** `candidate_afac_low_far_calibration_v1` — 🟡 REVIEW
+
+> ⚠️ No verdict below authorizes running an experiment, entering the experiment queue, using a frozen protocol, or accessing held-out test data. **GO means suitable for human planning review only.**
+
+| Rank | Candidate | Verdict | Material difference |
+|---|---|---|---|
+| 1 | `candidate_afac_low_far_calibration_v1` | 🟡 REVIEW | not_applicable |
+| 2 | `candidate_neyman_pearson_far_control_v1` | 🟡 REVIEW | not_applicable |
+| 3 | `candidate_temporal_event_far_reduction_v1` | 🟡 REVIEW | not_applicable |
+| 4 | `candidate_ensemble_gating_score_fusion_v1` | 🟡 REVIEW | stated_unverified |
+| 5 | `candidate_partial_auc_low_far_ranking_v1` | 🟡 REVIEW | stated_unverified |
+| 6 | `candidate_walking_detection_baseline_v1` | 🟡 REVIEW | not_applicable |
+| 7 | `candidate_gait_mobility_data_acquisition_v1` | 🔴 NO-GO | not_applicable |
+| 8 | `candidate_future_fall_risk_data_acquisition_v1` | 🔴 NO-GO | not_applicable |
+
+**Per-candidate reasons, blockers, and required human actions:**
+
+- **#1 `candidate_afac_low_far_calibration_v1`** (🟡 REVIEW)
+  - reason: literature support is only indirect/background/not_established
+  - reason: a literature gap applies: gap_probability_calibration_low_far
+  - action: Human planning review required before this direction is considered further (not approved to run).
+  - action: Close the literature gap(s) gap_probability_calibration_low_far (future D4a-2 external verification) or accept the recorded limitation.
+- **#2 `candidate_neyman_pearson_far_control_v1`** (🟡 REVIEW)
+  - reason: evidence_strength is literature_only
+  - action: Human planning review required before this direction is considered further (not approved to run).
+- **#3 `candidate_temporal_event_far_reduction_v1`** (🟡 REVIEW)
+  - reason: literature support is only indirect/background/not_established
+  - reason: a literature gap applies: gap_wifi_csi_temporal_false_alarm_reduction
+  - reason: evidence_strength is literature_gap
+  - action: Human planning review required before this direction is considered further (not approved to run).
+  - action: Close the literature gap(s) gap_wifi_csi_temporal_false_alarm_reduction (future D4a-2 external verification) or accept the recorded limitation.
+- **#4 `candidate_ensemble_gating_score_fusion_v1`** (🟡 REVIEW)
+  - reason: prior negative evidence exists and the material difference is stated_unverified (human scientific review required)
+  - reason: prior local negative evidence exists
+  - reason: evidence_strength is local_negative_evidence
+  - action: Human planning review required before this direction is considered further (not approved to run).
+  - action: Human scientific review: judge whether the STATED material difference vs results/d13_score_fusion/stage0_validation_complementarity_audit/D13_STAGE0_COMPLEMENTARITY_AUDIT.md is scientifically sufficient (checker does not certify it).
+- **#5 `candidate_partial_auc_low_far_ranking_v1`** (🟡 REVIEW)
+  - reason: prior negative evidence exists and the material difference is stated_unverified (human scientific review required)
+  - reason: prior local negative evidence exists
+  - reason: evidence_strength is local_negative_evidence
+  - action: Human planning review required before this direction is considered further (not approved to run).
+  - action: Human scientific review: judge whether the STATED material difference vs results/d14_partial_auc_low_far_ranking/D14_FAIL_VALIDATION_GATE.md is scientifically sufficient (checker does not certify it).
+- **#6 `candidate_walking_detection_baseline_v1`** (🟡 REVIEW)
+  - reason: literature support is only indirect/background/not_established
+  - reason: dataset_readiness is available_not_evaluated
+  - action: Human planning review required before this direction is considered further (not approved to run).
+- **#7 `candidate_gait_mobility_data_acquisition_v1`** (🔴 NO-GO)
+  - reason: dataset_readiness is unavailable
+  - reason: allowed_split is no_experiment_allowed
+  - reason: evidence_strength is dataset_blocked
+  - reason: a literature gap applies: gap_walking_pattern_labeled_csi_dataset
+  - blocker: allowed_split is no_experiment_allowed
+  - blocker: dataset_readiness is unavailable
+  - blocker: evidence_strength is dataset_blocked
+  - action: Not actionable as a model experiment in its current form.
+  - action: Close the literature gap(s) gap_walking_pattern_labeled_csi_dataset (future D4a-2 external verification) or accept the recorded limitation.
+  - action: Acquire the required dataset before this direction can become actionable.
+- **#8 `candidate_future_fall_risk_data_acquisition_v1`** (🔴 NO-GO)
+  - reason: dataset_readiness is aspirational_only
+  - reason: allowed_split is no_experiment_allowed
+  - reason: evidence_strength is dataset_blocked
+  - reason: target goal 'future_fall_risk_prediction' has an empty allowed_evidence_levels list
+  - reason: a literature gap applies: gap_longitudinal_csi_fall_risk_cohort
+  - blocker: allowed_split is no_experiment_allowed
+  - blocker: dataset_readiness is aspirational_only
+  - blocker: evidence_strength is dataset_blocked
+  - blocker: target goal 'future_fall_risk_prediction' has an empty allowed_evidence_levels list
+  - action: Not actionable as a model experiment in its current form.
+  - action: Close the literature gap(s) gap_longitudinal_csi_fall_risk_cohort (future D4a-2 external verification) or accept the recorded limitation.
+  - action: Acquire the required dataset before this direction can become actionable.
+
+<!-- END AUTO:NEXT-EXPERIMENT-REVIEW -->
+---
+
 ## 3. 7-day roadmap
 
 Plan `roadmap-2026-07-10-v2` (created 2026-07-09).
@@ -159,6 +241,7 @@ Legend: ✅ verified · ⚠️ claimed-unverified · ⬜ not started · ➖ n/a.
 
 | Task | Automation | State | Checks | Strength | Failed |
 |---|---|---|---|---|---|
+| `DASH-NEXT-EXP-REVIEW` | dashboard-candidate-review | ✅ ACCEPTED | 50/50 | hash-verified | — |
 | `NEXT-EXP-REVIEW` | next-experiment-brainstorm-checker | ✅ ACCEPTED | 45/45 | hash-verified | — |
 | `NEXT-EXP-REVIEW-design` | next-experiment-brainstorm-checker | ✅ ACCEPTED | 9/9 | hash-verified | — |
 | `REG-CANDIDATES` | experiment-candidates | ✅ ACCEPTED | 36/36 | hash-verified | — |
@@ -267,6 +350,7 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 
 ## 12. Recent changes
 
+- 2026-07-11 — DASH-NEXT-EXP-REVIEW: Candidate review added to research dashboard (Step 14)
 - 2026-07-10 — NEXT-EXP-REVIEW: Read-only Next Experiment Brainstorm Checker implemented
 - 2026-07-10 — REG-CANDIDATES: Evidence-grounded experiment-candidate registry created
 - 2026-07-10 — D4a-1: Local-source academic paper registry created
@@ -276,6 +360,5 @@ See [`automation/do_not_build_yet.md`](automation/do_not_build_yet.md). Headline
 - 2026-07-10 — D2d-2: curated reference resolution + manifest cross-check in Result Explorer
 - 2026-07-10 — Safety fix: approvals bound to the exact claim receipt (AUT-APPROVAL-BIND)
 - 2026-07-10 — Research OS layer D2d-1: Curated Reference Evidence registry (contract only)
-- 2026-07-10 — Research OS layer D2: Result Explorer v1 (read-only lookup tool)
 
 Full history: [`automation/dashboard_changelog.md`](automation/dashboard_changelog.md).

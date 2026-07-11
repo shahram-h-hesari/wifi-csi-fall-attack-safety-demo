@@ -5,6 +5,41 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — DASH-NEXT-EXP-REVIEW: Candidate review added to research dashboard (Step 14)
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `a6ef7d5`.
+- New `scripts/automation/dashboard_candidate_review.py` renders a generated
+  `## 2b. Next-Experiment Candidate Review — Human Decision Required` section into
+  `RESEARCH_DASHBOARD.md`, purely by **displaying** the already-accepted
+  `automation/reviews/next_experiment_review.yaml` verbatim — review_id, source_fingerprint,
+  GO/REVIEW/NO-GO counts (**0 / 6 / 2**), the accepted rank order for all 8 candidates, each
+  candidate's verdict/reasons/blockers/required-human-actions/material-difference status, and the
+  highest-ranked candidate (`candidate_afac_low_far_calibration_v1`, REVIEW).
+- **Never recalculates, reinterprets, reranks, or overrides** any verdict the Brainstorm Checker
+  (NEXT-EXP-REVIEW) already produced — the renderer contains no verdict-derivation logic at all
+  (statically test-enforced: no `dataset_readiness ==`, `allowed_split ==`, `derive_verdict`, etc.
+  in the renderer source).
+- **A prominent warning** states no verdict authorizes running an experiment, entering the
+  experiment queue, using a frozen protocol, or accessing held-out test data — GO is explicitly
+  "suitable for human planning review only." Candidates 1–6 (REVIEW) require human planning
+  review; candidates 7–8 (NO-GO) are blocked (dataset-blocked / `no_experiment_allowed`). AFAC
+  (`candidate_afac_low_far_calibration_v1`) is **not** approved to run.
+- **Honest degradation:** if `automation/reviews/next_experiment_review.yaml` is missing,
+  malformed, or structurally inconsistent (duplicate/missing `candidate_id`, non-contiguous ranks,
+  summary counts disagreeing with its own entries), the section renders a visible **INTEGRITY
+  WARNING** instead of silently omitting the section or fabricating data.
+- Tests `test_dashboard_candidate_review.py`: **17/17 ALL PASS** (section renders, exact rank
+  order, exact counts, all 8 candidates exactly once, verdicts match, NO-GO blockers shown, D13/D14
+  material-difference statuses shown, required human actions shown, no-execution warning present,
+  missing/invalid review → integrity warning, deterministic/idempotent, existing sections
+  unaffected, candidate registry + experiment queue unchanged by rendering, no verdict
+  recomputation, no source mutation). Regression: dashboard-research-summary 18/18, result-explorer
+  40/40, next-experiment-brainstorm-checker 39/39 + validator PASS, experiment-candidates 33/33 +
+  validator PASS, paper-registry 28/28 + validator PASS, experiment-identity 32/32 + validator
+  PASS, approve/verify suites ALL PASS — all unaffected.
+- Task **DASH-NEXT-EXP-REVIEW** registered in `automation/tasks.yaml` (gated; depends on
+  NEXT-EXP-REVIEW, DASH-D3).
+
 ## 2026-07-10 — NEXT-EXP-REVIEW: Read-only Next Experiment Brainstorm Checker implemented
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `af19644`.

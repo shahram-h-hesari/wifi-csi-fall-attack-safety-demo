@@ -5,6 +5,37 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-10 — NEXT-EXP-REVIEW: Read-only Next Experiment Brainstorm Checker implemented
+
+- **actor:** user-approved implementation; recorded by Claude. **HEAD** `af19644`.
+- New `scripts/automation/next_experiment_brainstorm_checker.py` (read-only) reads the accepted
+  registries, **re-resolves every candidate reference** (paper/gap/dataset/goal/evidence/
+  evaluation/protocol/repo-relative path — unresolved forces NO-GO, never silently omitted), and
+  derives a deterministic GO/REVIEW/NO-GO verdict per candidate from the accepted policy
+  (`acceptance/next-experiment-review.yaml`). It reports four **separate** dimensions
+  (scientific_promise / practical_readiness / data_readiness / split_safety — never one opaque
+  score), ranks deterministically (verdict > data_readiness > allowed_split > evidence_strength >
+  candidate_id), and is idempotent via a `source_fingerprint`.
+- **Generated** `automation/reviews/next_experiment_review.yaml` over the 8 accepted candidates:
+  **0 GO, 6 REVIEW, 2 NO-GO, 0 unresolved references.** The 6 fall/walking candidates are REVIEW
+  (indirect-only literature, literature gaps, `available_not_evaluated`, or prior D13/D14 negative
+  evidence with only a *stated* material difference); the 2 data-acquisition candidates are NO-GO
+  (`dataset_blocked` / `no_experiment_allowed`, `future_fall_risk_prediction` empty
+  `allowed_evidence_levels`). No candidate reaches GO under the current evidence.
+- **Material-difference is derived, not stored:** prior negative evidence + no stated difference →
+  `missing` → NO-GO; + a stated difference → `stated_unverified` → capped at REVIEW; the checker
+  **never certifies** a claimed difference is sufficient (human scientific review required). D13
+  and D14 are referenced by pointer, never re-typing their result tables.
+- **GO means "Suitable for human planning review only"** — never permission to run, enter the
+  queue, read held-out test data, or use a frozen protocol. The checker's only write target is the
+  review file; it never modifies a registry or `automation/experiment_queue.yaml`, imports no
+  subprocess/network module, and constructs no runnable command (statically test-enforced).
+- Validator `validate_next_experiment_review.py` (rebuilds from source + independent structural
+  scans): **PASS**. Tests `test_next_experiment_brainstorm_checker.py`: **39/39 ALL PASS**.
+  Idempotency proven (byte-identical second generation). Task **NEXT-EXP-REVIEW** registered in
+  `automation/tasks.yaml` (gated; depends on REG-CANDIDATES/REG-PAPERS/REG-GOALS/REG-DATASETS/
+  REF-EVID/REG-EXPERIMENT-ID). No dedicated dashboard section was added.
+
 ## 2026-07-10 — REG-CANDIDATES: Evidence-grounded experiment-candidate registry created
 
 - **actor:** user-approved implementation; recorded by Claude. **HEAD** `d09937f`.

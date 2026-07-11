@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW",
+  "task_id": "NEXT-EXP-REVIEW",
+  "automation": "next-experiment-brainstorm-checker",
+  "actor": { "kind": "skill", "name": "research-os-4d-implementation", "session_hint": "brainstorm-checker" },
+  "status_claimed": "done",
+  "summary": "NEXT-EXP-REVIEW: read-only Next Experiment Brainstorm Checker + validator + tests + generated planning review, implementing the accepted design contract automation/acceptance/next-experiment-review.yaml (hash-bound by NEXT-EXP-REVIEW-design; confirmed byte-identical sha256 822420f9995694f08d3785a30519664802261072d443177c1f0f9580e8dafb47 -- NOT modified). scripts/automation/next_experiment_brainstorm_checker.py reads all 9 authoritative inputs (experiment_candidates.yaml, paper_registry.yaml, frontier.yaml, goals.yaml, datasets.yaml, reference_evidence.yaml, experiment_identity.yaml, artifact_manifest.csv, acceptance/protocol-freeze.yaml), RE-RESOLVES every candidate reference at generation time (paper_id, literature_gap_id, dataset_id, goal_id, reference-evidence key, evaluation_id, protocol_id, and repository-relative evidence paths) and turns any unresolved/stale reference into a blocker that forces NO-GO (never silently omitted). Derives GO/REVIEW/NO-GO deterministically per acceptance section 6 (force_no_go > cap_at_review > may_permit_go precedence; verdict_reasons lists every fired rule). Material-difference is DERIVED, never read from the registry: no prior negative evidence -> not_applicable; prior negative + no stated difference -> missing -> NO-GO; prior negative + stated difference -> stated_unverified -> capped at REVIEW; the checker never certifies a claimed difference is sufficient. Four dimensions reported separately (scientific_promise, practical_readiness, data_readiness, split_safety) -- no single opaque score. Deterministic ranking tuple (derived_verdict > data_readiness > allowed_split > evidence_strength[strong_local_and_literature>local_supported_literature_indirect>literature_only>literature_gap>local_negative_evidence>dataset_blocked] > candidate_id); ranking is a property of the review only, never written back to the candidate registry, and the checker never reads or trusts any stored score/priority/rank/verdict. Idempotency: source_fingerprint = sha256 over each authoritative file's sha256 (fixed sorted order) + policy_version + impl_version; an unchanged fingerprint preserves the existing review_id/generated_at and re-emits byte-identical YAML (proven: two consecutive generations produced changed=False and identical sha256 31841a87409643415bffbfeda2fdddd813452b10f8f3fe7abba653aea78a4c86). Generated automation/reviews/next_experiment_review.yaml over the 8 accepted candidates: review_id review_2026-07-11T052615Z, source_fingerprint 8b2ae6c88bdaf8022cd045039447aa9eb4e79978a8a9218d4f93ee6fa912c4e6, candidate_count 8, GO=0 REVIEW=6 NO-GO=2, unresolved_reference_count=0. Ranking/verdicts: #1 candidate_afac_low_far_calibration_v1 REVIEW (indirect-only literature + literature gap); #2 candidate_neyman_pearson_far_control_v1 REVIEW (evidence_strength literature_only); #3 candidate_temporal_event_far_reduction_v1 REVIEW (indirect/background literature + literature gap + literature_gap strength); #4 candidate_ensemble_gating_score_fusion_v1 REVIEW (D13 prior negative, material difference stated_unverified, local_negative_evidence); #5 candidate_partial_auc_low_far_ranking_v1 REVIEW (D14 prior negative, material difference stated_unverified, local_negative_evidence); #6 candidate_walking_detection_baseline_v1 REVIEW (available_not_evaluated + indirect-only literature); #7 candidate_gait_mobility_data_acquisition_v1 NO-GO (dataset unavailable, no_experiment_allowed, dataset_blocked); #8 candidate_future_fall_risk_data_acquisition_v1 NO-GO (aspirational_only, no_experiment_allowed, dataset_blocked, empty allowed_evidence_levels). No candidate reaches GO under the current evidence. Safety: the checker imports stdlib+yaml only (no subprocess/socket/urllib/requests/http.client/pty/asyncio; no os.system/os.popen/eval/exec), constructs no runnable experiment command, never reads/writes a held-out test split, never authorizes a frozen-test read, and writes exactly ONE file (automation/reviews/next_experiment_review.yaml via a single review_path.write_text call and nowhere else) -- statically asserted by the test suite. GO is defined in-file as 'Suitable for human planning review only.' and the review's notice states no verdict authorizes running/queueing/test-reading/frozen-protocol use. Validator scripts/automation/validate_next_experiment_review.py (read-only): rebuilds the review from current sources seeded with the on-disk review_id/generated_at and asserts byte-identical output (covering fingerprint correctness, verdict/ranking/material-difference/summary correctness, determinism, and idempotency in one shot) plus independent structural checks (candidate_count matches registry, each candidate appears exactly once, ranks unique/contiguous, unresolved-reference->NO-GO cross-check, dataset_blocked->NO-GO, available_not_evaluated/new-frozen-protocol/test-risk cannot be GO, prior-negative not omitted, no command/queue-linkage/absolute-path/clinical/long-table content, candidate registry hash unchanged, experiment_queue.yaml still empty, and a static scan proving the checker has no forbidden import/call and exactly one designated write target) -> PASS, zero errors. Tests scripts/automation/test_next_experiment_brainstorm_checker.py: 39/39 ALL PASS covering every required synthetic case (GO/REVIEW/NO-GO derivations, all cap/force rules, unresolved paper/evidence/dataset/goal references, missing protocol, requires_new_frozen_protocol/test-risk cannot GO, manual-verdict-field ignored, stored priority/score ignored, deterministic tie-break, contiguous ranks, summary correctness, fingerprint mismatch detection, generated_at preservation, byte-identical rebuild, command/queue/absolute-path/clinical/table rejection, negation-aware allowances, network/subprocess-free implementation, single designated write target, purity). Task NEXT-EXP-REVIEW registered in automation/tasks.yaml (gated: true; depends_on REG-CANDIDATES/REG-PAPERS/REG-GOALS/REG-DATASETS/REF-EVID/REG-EXPERIMENT-ID). No candidate registry, literature registry, goals/datasets registry, frontier, artifact manifest, experiment_queue.yaml, protocol-freeze file, thesis file, result file, or checkpoint was modified. No experiment, training, validation, model evaluation, export, threshold selection, or test read occurred; no command contained --split; no web access or download occurred. No dedicated next-experiment section was added to RESEARCH_DASHBOARD.md and no dashboard rendering code was modified.",
+  "status_flags": {
+    "candidate_count": 8,
+    "go_count": 0,
+    "review_count": 6,
+    "no_go_count": 2,
+    "unresolved_reference_count": 0,
+    "source_fingerprint": "8b2ae6c88bdaf8022cd045039447aa9eb4e79978a8a9218d4f93ee6fa912c4e6",
+    "idempotent": true,
+    "no_command_generation": true,
+    "no_queue_modification": true,
+    "no_test_read_authorization": true,
+    "no_candidate_registry_modification": true
+  },
+  "files_created": [
+    { "path": "scripts/automation/next_experiment_brainstorm_checker.py", "sha256": "5902be08cee38357d3dd746a169cc39a90f293a22579a7d7d550ec310dcceb01" },
+    { "path": "scripts/automation/validate_next_experiment_review.py", "sha256": "b75768f3c3f4256d4d33292725b05565598a1d20b3bfd75a59527df4390bab42" },
+    { "path": "scripts/automation/test_next_experiment_brainstorm_checker.py", "sha256": "f67c1ab612c7843970e27afb780a0be8d61c509bb705a9e20edbacc466a2534b" },
+    { "path": "automation/reviews/next_experiment_review.yaml", "sha256": "31841a87409643415bffbfeda2fdddd813452b10f8f3fe7abba653aea78a4c86" }
+  ],
+  "files_modified": [
+    { "path": "automation/acceptance/next-experiment-review.yaml", "sha256": "822420f9995694f08d3785a30519664802261072d443177c1f0f9580e8dafb47", "note": "READ-ONLY implementation contract; hash confirmed byte-identical to the NEXT-EXP-REVIEW-design claim -- not edited by this claim, listed for provenance completeness" },
+    { "path": "automation/tasks.yaml" },
+    { "path": "automation/dashboard_changelog.md" },
+    { "path": "RESEARCH_DASHBOARD.md" },
+    { "path": "automation/status.json" }
+  ],
+  "commands_run": [
+    { "cmd": "python scripts/automation/next_experiment_brainstorm_checker.py -> wrote automation/reviews/next_experiment_review.yaml; GO=0 REVIEW=6 NO-GO=2 unresolved_refs=0; fingerprint 8b2ae6c8...", "exit_code": 0 },
+    { "cmd": "python scripts/automation/next_experiment_brainstorm_checker.py (second run) -> changed=False, byte-identical (idempotent)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_next_experiment_review.py -> PASS, no errors", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_next_experiment_brainstorm_checker.py -> RESULT: ALL PASS (39/39)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_candidates.py -> ALL PASS (33/33; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_candidates.py -> PASS, no errors (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_paper_registry.py -> ALL PASS (28/28; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_paper_registry.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_dashboard_research_summary.py -q -> 18 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_result_explorer.py -q -> 40 passed (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_experiment_identity.py -> ALL PASS (32/32; unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/validate_experiment_identity.py -> PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_approve.py -> ALL PASS (unaffected)", "exit_code": 0 },
+    { "cmd": "python scripts/automation/test_verify.py -> ALL PASS (unaffected)", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "NER-real-review-validates", "result": "pass", "evidence_path": "automation/reviews/next_experiment_review.yaml" },
+    { "id": "NER-verdict-derivation", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-material-difference-derivation", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-unresolved-reference-forces-nogo", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-no-go-review-go-caps", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-deterministic-ranking-idempotency", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-safety-no-command-no-queue-no-testread", "result": "pass", "evidence_path": "scripts/automation/test_next_experiment_brainstorm_checker.py" },
+    { "id": "NER-validator-structural-scans", "result": "pass", "evidence_path": "scripts/automation/validate_next_experiment_review.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "af19644", "expected_dirty": ["scripts/automation/next_experiment_brainstorm_checker.py", "scripts/automation/validate_next_experiment_review.py", "scripts/automation/test_next_experiment_brainstorm_checker.py", "automation/reviews/next_experiment_review.yaml", "automation/tasks.yaml", "automation/dashboard_changelog.md", "automation/receipts/**", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Use the corrected --approve CLI to approve NEXT-EXP-REVIEW (it will bind to this exact claim)."
+}

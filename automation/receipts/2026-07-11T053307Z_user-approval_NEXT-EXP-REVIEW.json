@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T053307Z_user-approval_NEXT-EXP-REVIEW",
+  "task_id": "NEXT-EXP-REVIEW",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW",
+  "approved_claim_path": "automation/receipts/2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW.json",
+  "approved_claim_sha256": "d6574195edaea80b212f1e50b6c443ba99655222072d1f0503ad9478627ce1f2",
+  "summary": "User approved NEXT-EXP-REVIEW (claim 2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "af19644",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

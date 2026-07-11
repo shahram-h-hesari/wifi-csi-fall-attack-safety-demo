@@ -207,6 +207,22 @@ tasks:
     depends_on: [REG-PAPERS, REG-GOALS, REG-DATASETS, REG-EXPERIMENT-ID, REF-EVID]
     acceptance: acceptance/experiment-candidates.yaml
     stale_after_days: 30
+  - id: NEXT-EXP-REVIEW
+    title: >-
+      Next Experiment Brainstorm Checker — scripts/automation/next_experiment_brainstorm_checker.py
+      (read-only) + validator + tests, generating automation/reviews/next_experiment_review.yaml.
+      Re-resolves every candidate reference, derives GO/REVIEW/NO-GO deterministically from the
+      accepted policy (acceptance/next-experiment-review.yaml), reports four separate dimensions
+      (scientific_promise / practical_readiness / data_readiness / split_safety), ranks
+      deterministically, and is idempotent via a source_fingerprint. GO means human-planning-review
+      only; NO verdict authorizes running, queue entry, a test read, or frozen-protocol use. The
+      checker's ONLY write target is the review file; it never modifies a registry or the queue.
+    kind: tool
+    automation: next-experiment-brainstorm-checker
+    gated: true
+    depends_on: [REG-CANDIDATES, REG-PAPERS, REG-GOALS, REG-DATASETS, REF-EVID, REG-EXPERIMENT-ID]
+    acceptance: acceptance/next-experiment-review.yaml
+    stale_after_days: 30
   - id: REG-EXPERIMENT-ID
     title: >-
       Experiment Identity & Naming Standard — automation/registry/experiment_identity.yaml (run

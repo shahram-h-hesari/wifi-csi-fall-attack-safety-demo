@@ -1,0 +1,284 @@
+schema_version: 1
+automation: external-repository-resolution
+stage: research-os-migration-phase-1-design
+gated: true    # every future claim over this contract is approval-gated, like every prior registry
+type: design_contract   # SPEC ONLY -- no resolver code, registry file, local-path file, or test exists yet
+
+status: DESIGN_ONLY_NOT_IMPLEMENTED
+
+relationship_to_migration_audit: >
+  This is Migration Phase 1 of the accepted architecture recommendation (read-only audit delivered
+  earlier in this session): `research-os` becomes the governance/dashboard/automation repository;
+  `wifi-csi-fall-attack-safety-demo` remains the experiment-and-evidence repository; evidence is
+  never copied into `research-os`. This contract designs ONLY the repository-resolution layer that
+  removes the current hard assumption -- `REPO = Path(__file__).resolve().parents[2]` in
+  scripts/automation/scan_artifacts.py and scripts/automation/update_dashboard.py -- that Research OS
+  code and experiment evidence must live in the same Git repository. It does not move any file, does
+  not implement the resolver, and does not touch the authoritative repository location.
+
+# ---------------------------------------------------------------------------------- 1. purpose
+purpose: >
+  Defines the future external-repository-resolution mechanism BEFORE any resolver code, tracked
+  registry file, local-path override file, or test exists. Once implemented, the mechanism will let
+  Research OS automation (running from wherever it is governed) resolve a logical experiment
+  repository by `repository_id`, verify its identity and commit, and safely read
+  repository-relative evidence paths from it -- without ever assuming sibling-folder co-location and
+  without ever copying evidence.
+
+  This contract makes NO change to scan_artifacts.py, result_explorer.py, update_dashboard.py, any
+  validator, any registry, or any receipt-generation code. It defines NO tracked registry file, NO
+  local-path override file, and reviews NO real external-repository configuration. It is a contract
+  for a future layer only.
+
+# --------------------------------------------------------------------------- 2. two-layer configuration model
+configuration_layers:
+  principle: >
+    Portable, auditable, committed identity information (WHAT repository, WHERE it lives logically,
+    WHAT is expected of it) must be strictly separated from machine-local, non-portable, never-committed
+    location information (WHERE it happens to be checked out on this machine). Conflating the two is
+    exactly the defect this design corrects: the current REPO-relative-to-script-location assumption
+    is an implicit, undocumented, non-configurable version of layer 2 with no layer 1 at all.
+
+  layer_1_tracked_registry:
+    proposed_path: "automation/registry/external_repositories.yaml"
+    committed: true
+    contains_portable_information_only: true
+    must_not_contain: "any absolute local filesystem path, any credential, any machine-specific value"
+    proposed_schema:
+      schema_version: 1
+      repositories:
+        - repository_id: "stable slug, e.g. wifi-csi-fall-attack-safety-demo"
+          repository_role: "experiment-and-evidence | governance-self (Research OS's own repo needs no entry -- it resolves itself, per resolver requirement 1)"
+          expected_remote_url: "the canonical https:// GitHub remote URL, e.g. https://github.com/shahram-h-hesari/wifi-csi-fall-attack-safety-demo.git"
+          canonical_branch_or_ref_policy: "e.g. 'any branch, commit recorded per-claim' or 'must be a descendant of main' -- explicit policy string, not a single hardcoded branch, since experiment work happens on feature branches (this repo's own history is on feature/safety-proxy-guided-defense, not main)"
+          provenance_commit_policy: "e.g. 'full 40-char SHA required in every receipt that reads this repository's evidence; no branch name alone is sufficient provenance'"
+          required_repository_relative_paths: "list of paths that MUST exist in a valid checkout of this repository_id, e.g. [automation/artifact_manifest.csv is NOT here -- that lives in research-os; instead: results/, figures/, scripts/analysis/, scripts/archive/]"
+          allowed_evidence_roots: "list of repository-relative path PREFIXES the resolver may ever read from for this repository_id, e.g. [results/, figures/, checkpoints/, scripts/analysis/, scripts/archive/] -- an explicit allowlist, never an implicit any-path policy"
+          read_only_to_research_os: true    # always true for every experiment repository; Research OS never writes here
+          git_identity_verification_required: true
+          dirty_worktree_policy: "allowed_read_only | rejected | allowed_with_recorded_dirty_state (see section: dirty-worktree policy)"
+          claim_boundaries: "list of what a receipt referencing this repository_id must NOT be interpreted as implying, mirroring the claim_boundaries convention already used in paper_registry.yaml / experiment_candidates.yaml / validation-pilot-gate.yaml, e.g. 'presence in this registry does not authorize any experiment, queue entry, or held-out-test read'"
+    note_on_governance_self: >
+      Research OS's own repository (wherever it is governed from, e.g. a future `research-os` repo)
+      is resolved directly as "the repository this code is running from" and does NOT need its own
+      entry in external_repositories.yaml -- this registry is exclusively for OTHER repositories
+      Research OS reads evidence from. Conflating "my own root" with "an external root" in one
+      resolution path is exactly the bug being designed away; the future resolver must expose these
+      as two distinctly named resolution functions (see resolver requirement 1).
+
+  layer_2_gitignored_local_override:
+    proposed_path: "automation/local/external_repository_paths.yaml"
+    alternative_conventional_location: "a single-purpose dotfile such as .research-os-local.yaml at repo root, if automation/local/ is judged to invite accidental commits of other machine-local state -- the design defers this naming choice to implementation time, but the location MUST be covered by an explicit .gitignore entry either way"
+    excluded_from_git: true    # MUST be listed in .gitignore; never staged, never committed, never present in a receipt
+    contains: "a flat map of repository_id -> absolute local checkout path only"
+    must_not_contain: "credentials, tokens, any value other than repository_id -> local path"
+    never_appears_in: "receipts, committed registries, dashboard output, status.json -- only the RESOLVED repository_id, remote URL, and commit SHA may appear in generated artifacts; the raw local path never does"
+    proposed_schema:
+      schema_version: 1
+      local_paths:
+        wifi-csi-fall-attack-safety-demo: "<absolute path to your local checkout>"
+    documented_template:
+      path: "automation/local/external_repository_paths.example.yaml (committed, template only)"
+      contents: >
+        schema_version: 1
+        local_paths:
+          <repository_id>: "<absolute path to your local checkout of repository_id>"
+      contains_no_user_specific_path: true
+    behavior_when_missing: >
+      The resolver must FAIL VISIBLY, not silently degrade or guess a sibling-folder path. The error
+      must name: the missing file's expected location, the repository_id that could not be resolved,
+      and a pointer to the committed template file so a human can create their own local override.
+      No automatic sibling-directory inference is permitted under any circumstance (resolver
+      requirement 3) -- this is the exact failure mode that produced the repository-placement
+      confusion audited earlier in this session, and the design must foreclose it explicitly rather
+      than merely discourage it.
+
+# ------------------------------------------------------------------------------- 3. resolver requirements
+resolver_module:
+  proposed_location: "a future shared module, e.g. scripts/automation/repo_resolver.py, imported by scan_artifacts.py, result_explorer.py, update_dashboard.py, and any future validator -- NOT created by this design contract"
+  responsibilities:
+    - "1. Resolve the Research OS governance repository root (wherever this code is executing from) via a distinct function/path from external evidence repository roots -- never the same code path, so a bug in external resolution can never silently corrupt self-resolution or vice versa"
+    - "2. Resolve any evidence path strictly as the pair (repository_id, repository_relative_path), never as a bare path string alone -- eliminating the ambiguity described in the path-migration policy below"
+    - "3. NEVER infer an external repository's location from sibling-folder layout, parent-directory search, or any other implicit filesystem convention -- resolution occurs ONLY through layer_2_gitignored_local_override, and its absence is a hard failure (see behavior_when_missing above), not a fallback trigger"
+    - >
+      4. Verify, for every resolution of a given repository_id, before any evidence read:
+        - the configured local path exists on disk
+        - it is a valid Git worktree (a `.git` entry resolves, `git rev-parse --show-toplevel` succeeds)
+        - `git remote get-url origin` (or the configured remote name) matches `expected_remote_url` from layer 1 exactly
+        - every path in `required_repository_relative_paths` (layer 1) exists in the checkout
+        - `git rev-parse HEAD` resolves to a full 40-character commit SHA (never accept or record a 7-character abbreviation as authoritative identity -- see commit-and-provenance policy)
+        - the worktree's dirty/clean state satisfies the repository's configured `dirty_worktree_policy`
+    - "5. Reject: any repository-relative path containing `..` (path traversal), any absolute evidence path, any resolved real path (after symlink resolution) that falls outside the repository_id's `allowed_evidence_roots` -- symlink-escape checking must resolve the real path via realpath/os.path.realpath before the allowed-roots check, not merely string-match the unresolved path"
+    - "6. Operate strictly read-only against every external experiment repository: open files for reading and compute hashes only; never open any file handle in a write mode against an external repository path"
+    - "7. NEVER invoke git fetch, clone, checkout, pull, reset, merge, push, or any other repository-mutating command against an external repository -- the only git operations permitted against an external repository are read-only identity queries (remote URL, current HEAD SHA, worktree dirty-state, path existence)"
+    - "8. NEVER perform network access of any kind -- no fetch, no clone, no remote API call; identity verification (`expected_remote_url` match) is a purely local string comparison against `git remote get-url origin`'s local config output, never a live reachability check"
+    - >
+      9. Fail visibly (raise a clear, typed error -- never a silent no-op, never a fallback guess) when:
+        - the requested repository_id is not present in the tracked registry (layer 1)
+        - the local override (layer 2) has no entry for that repository_id
+        - the configured local path does not exist or is not a Git worktree
+        - `git remote get-url origin` does not match `expected_remote_url`
+        - any `required_repository_relative_paths` entry is missing
+        - the resolved commit is not a valid full 40-character SHA (e.g. detached-but-unresolvable state)
+        - a requested repository-relative path escapes `allowed_evidence_roots` by traversal or symlink
+        - the worktree is dirty and the repository's `dirty_worktree_policy` requires clean
+
+# ------------------------------------------------------------------------------- 4. commit and provenance policy
+commit_and_provenance_policy:
+  three_distinct_identities_that_must_never_be_conflated:
+    - name: "Research OS governance-repository commit"
+      description: "the commit of the repository Research OS code itself is running from (its own history) -- recorded as a full 40-char SHA in future receipts' git field"
+    - name: "external experiment-repository commit"
+      description: "the commit of the resolved external checkout at the moment evidence was read -- a SEPARATE full 40-char SHA, recorded per repository_id used in a given claim"
+    - name: "historical receipt Git fields from before migration"
+      description: >
+        every existing receipt in automation/receipts/ (including all four VALIDATION-PILOT-GATE-design
+        receipts and every earlier receipt this session produced) recorded a single ambiguous 7-character
+        `git.head` value under the historical implicit assumption of one shared repository. These fields
+        are NEVER reinterpreted, rewritten, or backfilled with dual full SHAs -- they remain historical
+        artifacts of a single-repository era, read as "this happened in wifi-csi-fall-attack-safety-demo
+        at approximately this commit," never re-parsed as if they used the new two-repository schema.
+  future_receipt_and_status_schema_additions:
+    - "full_governance_commit_sha: the complete 40-character SHA of the Research OS repository's HEAD at claim time (replaces reliance on ambiguous 7-char git.head for any NEW claim; existing short-hash receipts are not migrated)"
+    - "external_repositories_used: a list, one entry per repository_id actually read during the claimed work, each containing: repository_id, full_commit_sha (40 chars), expected_remote_url, resolved_remote_url (must match), worktree_clean: bool, evidence_paths_read: [{repository_relative_path, sha256}]"
+  rule: >
+    No future cross-repository claim may rely on a 7-character abbreviated hash as its sole commit
+    identity for either the governance or the external repository. Full 40-character SHAs are
+    mandatory in any NEW receipt that reads evidence through the resolver. This does not retroactively
+    invalidate or require updating any existing receipt.
+
+# ------------------------------------------------------------------------------- 5. path migration policy
+path_migration_policy:
+  problem_being_solved: >
+    Every current acceptance contract, registry, artifact_manifest.csv row, and script assumes a bare
+    string like `results/afac_score_frozen_threshold_followup/...` unambiguously means "in the one
+    repository everything lives in." Once Research OS governs multiple experiment repositories, a bare
+    path string is no longer unambiguous.
+  future_explicit_model:
+    fields: "repository_id + repository_relative_path, always together, never repository_relative_path alone in any NEW reference"
+    example: "{ repository_id: wifi-csi-fall-attack-safety-demo, repository_relative_path: results/afac_score_frozen_threshold_followup/summary.csv }"
+  legacy_path_compatibility_during_transition:
+    rule: >
+      Existing bare-string paths in already-accepted registries/contracts/artifact_manifest.csv rows
+      (produced before this resolver exists) are NOT rewritten by this design or its future
+      implementation. A documented compatibility mode is required: when the resolver encounters a bare
+      legacy path (no repository_id qualifier) it may resolve it ONLY against a single, explicitly
+      configured "default legacy repository_id" (set once, e.g. to wifi-csi-fall-attack-safety-demo,
+      since that is where every current bare path already lives) -- never by guessing among multiple
+      configured repositories.
+    ambiguity_prevention: >
+      If more than one repository_id is ever configured in the tracked registry, legacy-compatibility
+      bare-path resolution becomes invalid and must fail visibly rather than guess -- compatibility mode
+      is valid ONLY while exactly one experiment repository_id is configured. This is an explicit,
+      checkable precondition, not an assumption.
+    when_compatibility_mode_is_removed: >
+      Compatibility mode is a bounded transitional feature. It is intended to be retired once every
+      acceptance contract, registry, and artifact_manifest.csv row has been migrated to explicit
+      (repository_id, repository_relative_path) pairs -- a separate, later, explicitly-approved task,
+      not part of this design or its implementation.
+    stale_or_unresolved_path_reporting: >
+      Any path (legacy bare-string or explicit pair) that fails to resolve under the rules above must
+      be reported by name, by the repository_id it was checked against (or "no repository_id configured"
+      for a legacy path with zero or multiple candidates), and by which specific verification step
+      failed (existence / allowed-roots / traversal / hash mismatch) -- never silently dropped or
+      silently treated as passing.
+
+# ------------------------------------------------------------------------------- 6. affected components (future changes only -- NOT made by this contract)
+affected_components_future_changes:
+  - component: "scripts/automation/scan_artifacts.py"
+    change: "replace REPO = Path(__file__).resolve().parents[2] with resolver-based resolution; artifact scanning becomes repository_id-aware"
+  - component: "scripts/automation/result_explorer.py"
+    change: "evidence lookups become (repository_id, repository_relative_path) pairs resolved through the shared resolver"
+  - component: "scripts/automation/update_dashboard.py"
+    change: "replace REPO-relative git subprocess calls (line ~126) with two distinct calls: one for the governance repo, one per external repository_id referenced by a claim; dashboard rendering gains a components for cross-repository identity display"
+  - component: "evidence/path validators (validate_experiment_candidates.py, validate_experiment_identity.py, validate_paper_registry.py, validate_next_experiment_review.py)"
+    change: "any path-existence or hash check gains a repository_id parameter instead of assuming self-repo"
+  - component: "artifact-manifest handling (automation/artifact_manifest.csv, artifact_manifest.meta.json, scan_artifacts.py)"
+    change: "manifest rows gain an explicit repository_id column; legacy rows fall under path_migration_policy compatibility mode"
+  - component: "experiment identity (automation/registry/experiment_identity.yaml)"
+    change: "checkpoint/path references become repository_id-qualified"
+  - component: "reference evidence (automation/registry/reference_evidence.yaml)"
+    change: "any repository-relative evidence pointer becomes repository_id-qualified"
+  - component: "frontier (automation/frontier.yaml)"
+    change: "frozen_protocol_registry and any results/checkpoints references become repository_id-qualified; git subprocess-derived fields distinguish governance vs external commit"
+  - component: "candidate review inputs (automation/registry/experiment_candidates.yaml, automation/reviews/next_experiment_review.yaml)"
+    change: "any evidence-path or checkpoint reference becomes repository_id-qualified"
+  - component: "receipt creation and verification (scripts/automation/update_dashboard.py, automation/receipts/*.json convention)"
+    change: "adopt the commit-and-provenance schema additions in section 4 for any NEW claim reading cross-repository evidence; historical receipts remain untouched"
+  - component: "dashboard status generation (automation/status.json, RESEARCH_DASHBOARD.md rendering)"
+    change: "display governance-repo and external-repo identities as distinct fields, never merged into one ambiguous git.head-style value for cross-repository claims"
+  - component: "tests currently assuming one repository root (test_scan_artifacts.py, test_result_explorer.py, test_experiment_candidates.py, test_experiment_identity.py, test_verify.py, and others)"
+    change: "gain synthetic-external-repository fixtures (temporary Git repos) to exercise both same-repository (legacy/back-compat) and explicit external-repository resolution paths"
+
+# ------------------------------------------------------------------------------- 7. safety requirements
+safety_requirements:
+  the_future_resolver_must_not:
+    - "run any experiment"
+    - "access held-out-test data beyond existing permitted metadata/path-existence checks (identical boundary to every prior read-only checker in this repo)"
+    - "weaken test-split guards (scripts/automation/test_split_guard.py and its PreToolUse hook remain fully in force, unmodified by this design)"
+    - "modify automation/experiment_queue.yaml"
+    - "modify any protocol-freeze record (automation/acceptance/protocol-freeze.yaml or any future golden-master/verify receipt)"
+    - "authorize execution of any kind"
+    - "copy experiment evidence into Research OS's own repository or anywhere else"
+    - "create a second result source of truth (the resolver READS from the single existing evidence location; it never duplicates evidence)"
+    - "access network resources"
+    - "write into an external experiment repository under any circumstance"
+
+# ------------------------------------------------------------------------------- 8. outcomes and validation (future acceptance criteria)
+implementation_acceptance_criteria:
+  criteria:
+    - "current same-repository mode remains fully backward compatible: with zero external_repositories.yaml entries and zero local-override entries, all existing behavior (scan_artifacts.py, result_explorer.py, update_dashboard.py, every existing test) is byte-identical to pre-resolver behavior"
+    - "explicit external-repository mode is exercised using synthetic temporary Git repositories created and torn down within the test suite -- never against real wifi-csi-fall-attack-safety-demo or research-os checkouts, and never over the network"
+    - "a configured expected_remote_url that does not match the synthetic repo's actual origin is rejected with a named, specific error"
+    - "a missing local-override entry for a requested repository_id fails clearly, naming the repository_id and the expected override-file location, with no silent fallback"
+    - "dirty-worktree handling for a synthetic external repo follows exactly the configured dirty_worktree_policy (allowed_read_only / rejected / allowed_with_recorded_dirty_state), each exercised as a distinct test case"
+    - "full 40-character commit SHA identities are captured and asserted in test output for both governance and external repositories; a truncated/short hash anywhere in new resolver output is a test failure"
+    - "path traversal (`../`) and evidence paths outside allowed_evidence_roots are rejected, including a symlink-escape case (a symlink inside an allowed root pointing outside it) verified via realpath resolution"
+    - "the synthetic external repository's contents remain byte-unchanged after every test (asserted via before/after hash comparison of the synthetic repo's working tree) -- proving the resolver never wrote to it"
+    - "the full existing dashboard/Result Explorer/artifact-scanning/validator/receipt/task-verification regression suite passes unchanged when run in same-repository (legacy) mode"
+    - "deterministic rendering and idempotency (the existing --check double-render byte-identical guarantee) remain intact after the resolver module is introduced in legacy mode"
+  test_requirement: "comprehensive synthetic tests using temporary repositories (e.g. via a pytest tmp_path fixture initializing a real throwaway `git init` repo with a controllable remote, commit, and dirty state); no network access permitted anywhere in the test suite"
+
+# ------------------------------------------------------------------------------- 9. future migration boundary
+future_migration_boundary:
+  this_task_does_not: >
+    migrate any Research OS file out of wifi-csi-fall-attack-safety-demo; delete any part of the
+    current Research OS layer; change which repository is authoritative for automation/ or
+    scripts/automation/ today; create the resolver implementation, the tracked external-repository
+    registry file, the local-path override file, any migration branch, any copied file in
+    research-os, any migration commit, any queue entry, any pilot proposal, or any experiment.
+  the_actual_migration: >
+    receives a SEPARATE accepted contract (a future Migration Phase 2 design, and later a Migration
+    Phase 2 implementation) after this resolver (Migration Phase 1) is implemented, tested with
+    synthetic repositories, and validated against the REAL wifi-csi-fall-attack-safety-demo /
+    research-os pair in explicit external-repository mode -- per the staged plan already delivered in
+    this session's migration audit (Phase 0 freeze -> Phase 1 resolver -> Phase 2 history-preserving
+    move -> Phase 3 cross-repo validation -> Phase 4 decommission duplicate).
+  validation_pilot_gate_status: >
+    VALIDATION-PILOT-GATE implementation remains paused, exactly as stated in that contract's own
+    design-deliverable boundary and in this session's migration recommendation, until the migrated
+    Research OS (once actually migrated, in a later phase) passes cross-repository verification. This
+    design contract does not change that pause; it is a prerequisite step, not an exception to it.
+
+# ------------------------------------------------------------------------------------------ acceptance criteria
+design_complete:
+  - "This acceptance file approved by the user."
+implementation_complete:
+  - "NOT YET -- no resolver module exists."
+  - "NOT YET -- no automation/registry/external_repositories.yaml exists."
+  - "NOT YET -- no automation/local/external_repository_paths.yaml or its .example template exists."
+  - "NOT YET -- no synthetic-repository test suite exists."
+test_passed:
+  not_applicable: "no implementation exists yet to test"
+accepted:
+  - "User approval receipt (actor.kind: user) exists for this design step, task_id EXTERNAL-REPO-RESOLUTION-design, registered in automation/tasks.yaml as its own gated design task, following the VALIDATION-PILOT-GATE-design precedent of explicit registration (per direct user instruction in that step) rather than the earlier unregistered '-design' convention."
+
+forbidden_actions:
+  - "create the resolver module, tracked registry file, or local-path override file in this step"
+  - "create any synthetic-repository test in this step"
+  - "modify scan_artifacts.py, result_explorer.py, update_dashboard.py, any validator, or any registry/acceptance contract other than this new file and the task-registration files required by convention"
+  - "move, copy, or delete any Research OS file"
+  - "create a migration branch or any file inside research-os"
+  - "create any experiment_queue.yaml entry, pilot proposal, protocol-freeze record, or experiment result"
+  - "begin VALIDATION-PILOT-GATE implementation"
+  - "stage, commit, or push"

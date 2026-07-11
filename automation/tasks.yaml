@@ -242,6 +242,28 @@ tasks:
     depends_on: [NEXT-EXP-REVIEW, REG-CANDIDATES]
     acceptance: acceptance/validation-pilot-gate.yaml
     stale_after_days: 30
+  - id: EXTERNAL-REPO-RESOLUTION-design
+    title: >-
+      External-Repository Resolution design contract (Research OS migration Phase 1) —
+      automation/acceptance/external-repo-resolution.yaml. Designs the future repository-resolution
+      layer that removes the current hard assumption (REPO = Path(__file__).resolve().parents[2] in
+      scan_artifacts.py / update_dashboard.py) that Research OS automation and experiment evidence
+      must live in the same Git repository. Defines a two-layer configuration model (a tracked,
+      portable automation/registry/external_repositories.yaml registry + a gitignored, machine-local
+      automation/local/external_repository_paths.yaml override), a read-only resolver's
+      responsibilities (identity verification, full-40-char-SHA provenance, path-traversal and
+      symlink-escape rejection, no network, no mutation of external repositories), a commit/
+      provenance policy distinguishing governance-repo vs. external-repo commits from historical
+      single-repo receipt fields, and a legacy-path compatibility/migration policy. Design-only: no
+      resolver module, tracked registry file, local-path override file, or test exists yet. Precedes
+      a separate, later Migration Phase 2 (actual file relocation) contract; does not move, copy, or
+      delete any Research OS file, and does not resume VALIDATION-PILOT-GATE implementation.
+    kind: design
+    automation: external-repository-resolution
+    gated: true
+    depends_on: [DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID]
+    acceptance: acceptance/external-repo-resolution.yaml
+    stale_after_days: 30
   - id: NEXT-EXP-REVIEW
     title: >-
       Next Experiment Brainstorm Checker — scripts/automation/next_experiment_brainstorm_checker.py

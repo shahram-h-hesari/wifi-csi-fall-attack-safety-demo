@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-11T072814Z_user-approval_EXTERNAL-REPO-RESOLUTION-design",
+  "task_id": "EXTERNAL-REPO-RESOLUTION-design",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-11T072545Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION-design",
+  "approved_claim_path": "automation/receipts/2026-07-11T072545Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION-design.json",
+  "approved_claim_sha256": "4277fca0a3bdbba45200199e2792a3d8ca22ff938cce21a16eb097c97ee41d4b",
+  "summary": "User approved EXTERNAL-REPO-RESOLUTION-design (claim 2026-07-11T072545Z_external-repository-resolution_EXTERNAL-REPO-RESOLUTION-design; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "890a1e6",
+    "expected_dirty": []
+  },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

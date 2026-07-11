@@ -139,6 +139,12 @@
       "checks": "9/9",
       "failed": []
     },
+    "EXTERNAL-REPO-RESOLUTION-design": {
+      "display": "ACCEPTED",
+      "strength": "hash-verified",
+      "checks": "9/9",
+      "failed": []
+    },
     "NEXT-EXP-REVIEW": {
       "display": "ACCEPTED",
       "strength": "hash-verified",
@@ -153,6 +159,14 @@
     }
   },
   "verification_ledger": [
+    {
+      "task_id": "EXTERNAL-REPO-RESOLUTION-design",
+      "automation": "external-repository-resolution",
+      "display": "ACCEPTED",
+      "checks": "9/9",
+      "strength": "hash-verified",
+      "failed": []
+    },
     {
       "task_id": "VALIDATION-PILOT-GATE-design",
       "automation": "validation-pilot-gate-readiness",
@@ -415,5 +429,5 @@
       "detail": "TP 41/45, recall 0.9111, FAR 0.1319; success rule TP>=39 AND FP<=68 satisfied"
     }
   ],
-  "receipts_processed": 54
+  "receipts_processed": 56
 }

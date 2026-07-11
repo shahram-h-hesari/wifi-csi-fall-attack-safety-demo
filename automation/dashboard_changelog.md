@@ -5,6 +5,53 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — EXTERNAL-REPO-RESOLUTION-design: Research OS migration Phase 1 design contract
+
+- **actor:** user-approved design step; recorded by Claude. **HEAD** `890a1e6`.
+- New design-only contract `automation/acceptance/external-repo-resolution.yaml` for a future
+  **repository-resolution layer** (Research OS migration Phase 1) that removes the current hard
+  assumption — `REPO = Path(__file__).resolve().parents[2]` in `scan_artifacts.py` /
+  `update_dashboard.py` — that Research OS automation and experiment evidence must share one Git
+  repository.
+- Defines a **two-layer configuration model**: a tracked, portable
+  `automation/registry/external_repositories.yaml` registry (repository_id, expected remote URL,
+  allowed evidence roots, dirty-worktree policy, claim boundaries — never an absolute local path) +
+  a gitignored, machine-local `automation/local/external_repository_paths.yaml` override (repository_id
+  → absolute checkout path only, never committed, never in a receipt).
+- Defines the future resolver's responsibilities: resolve governance-repo root and each external
+  evidence-repo root through **distinct** code paths; resolve every evidence reference as
+  `(repository_id, repository_relative_path)`, never a bare string; **never** infer an external
+  repository from sibling-folder layout; verify existence, Git-worktree validity, exact remote-URL
+  match, required-path presence, a full 40-character commit SHA, and the configured dirty-worktree
+  policy before any read; reject path traversal, absolute evidence paths, and symlink escape
+  (via realpath resolution) outside `allowed_evidence_roots`; remain strictly read-only and
+  network-free against every external repository (no fetch/clone/checkout/pull/reset/merge/push);
+  fail visibly (never silently fall back or guess) on every listed error condition.
+- **Commit/provenance policy:** distinguishes the Research OS governance-repository commit from each
+  external experiment-repository commit — both recorded as full 40-character SHAs in any *future*
+  cross-repository claim. Historical receipts (every existing receipt's ambiguous 7-character
+  `git.head`) are explicitly **not** reinterpreted, rewritten, or backfilled — they remain read as
+  single-repository-era historical records.
+- **Path migration policy:** legacy bare-string paths (`results/...`, `checkpoints/...`, etc.) are
+  not rewritten by this design; a bounded legacy-compatibility mode is defined (valid only while
+  exactly one experiment `repository_id` is configured) with an explicit removal condition once every
+  reference is migrated to explicit `(repository_id, repository_relative_path)` pairs — a separate,
+  later, explicitly-approved task.
+- Lists future-only changes needed in `scan_artifacts.py`, `result_explorer.py`,
+  `update_dashboard.py`, every path/evidence validator, artifact-manifest handling, experiment
+  identity, reference evidence, `frontier.yaml`, candidate-review inputs, receipt creation, dashboard
+  status generation, and every test currently assuming one repository root — **none implemented by
+  this contract**.
+- **Design-only, nothing implemented:** no resolver module, no
+  `automation/registry/external_repositories.yaml`, no `automation/local/external_repository_paths.yaml`
+  (or its example template), no synthetic-repository test suite. No Research OS file was moved,
+  copied, or deleted; no migration branch or `research-os` file was created; no queue entry, pilot
+  proposal, protocol-freeze record, or experiment occurred. `VALIDATION-PILOT-GATE` implementation
+  remains paused, unaffected by this step.
+- Task `EXTERNAL-REPO-RESOLUTION-design` registered in `automation/tasks.yaml` as its own gated
+  design task (`depends_on: [DASH-D3, TOOL-REXP, REG-EXPERIMENT-ID]`), following the
+  `VALIDATION-PILOT-GATE-design` precedent of explicit task registration.
+
 ## 2026-07-11 — VALIDATION-PILOT-GATE-design: Validation-pilot gate design contract (Step 15)
 
 - **actor:** user-approved design step; recorded by Claude. **HEAD** `34648b4`.

@@ -5,6 +5,49 @@ appends here. At Stage 3+ the render script writes these entries; today they are
 
 ---
 
+## 2026-07-11 — RESEARCH-OS-MIGRATION-design: verification-contract strengthening (post-audit correction)
+
+- **actor:** user-identified correction, following a read-only audit of the pushed
+  `migrate/research-os-layer` branch; recorded by Claude. **HEAD** `54559c3`.
+- The audit found the migration IMPLEMENTATION (not this design) contained defects and one
+  unauthorized scope change against the THEN-accepted contract. This amendment strengthens the
+  contract so those gaps cannot recur, without touching `research-os` in any way.
+- **Absolute-path classification (new section `absolute_path_classification_policy`):** replaces the
+  old unconditional "zero matches" wording with two explicit categories — `active_machine_path_matches`
+  (must be exactly 0, hard gate, no exceptions) and `historical_documentary_literal_matches` (every
+  occurrence individually enumerated by file/line/excerpt/justification and human-reviewed, never
+  silently folded into a generic "pass"). A bare "scoped pass" string is now explicitly disallowed as
+  acceptance evidence — directly correcting the audited implementation's self-authorized reclassification
+  of a failing check.
+- **`.gitattributes` policy (new section, exact decision made):** `.gitattributes` MAY be added for
+  the migrated code paths, but `automation/receipts/** -text` is now a REQUIRED exclusion line —
+  historical receipts must never be subject to line-ending normalization. The audit found 29 of 68
+  shared receipts silently changed from CRLF to LF; the contract now requires any future
+  implementation to restore exact source bytes and prove it via raw sha256 (not JSON-equivalence).
+- **Durable active reverification (`actively_reverified_durable_and_rerunnable`):** `TOOL-REXP`,
+  `DASH-D3`, `REG-EXPERIMENT-ID`, `REG-CANDIDATES`, `NEXT-EXP-REVIEW`, `DASH-NEXT-EXP-REVIEW`, and
+  (newly added) `EXTERNAL-REPO-RESOLUTION` must each be verified via a durable, re-runnable,
+  task-specific check from `research-os` — never the generic historical-receipt-hash shortcut the
+  audit found applied uniformly to every task, which made a future resolver regression invisible to
+  `--verify`.
+- **`AUT-TSG-impl` exact annotation:** the dashboard must render, reachably, the exact statement
+  "Historical acceptance only — operational enforcement remains in wifi-csi-fall-attack-safety-demo
+  and is not active from research-os." The audit found the annotation mechanism existed in code but
+  was unreachable (dead) for this task.
+- **Byte-level status idempotency:** both `RESEARCH_DASHBOARD.md` and `automation/status.json` must
+  be raw-sha256-identical across two consecutive renders with no source-fingerprint change — stronger
+  than `--check` reporting PASS alone, since the audit observed `status.json`'s raw bytes differing
+  across renders despite `--check` passing.
+- **New `correction_consequences` section:** explicitly states the existing target-repository
+  implementation claims (`093919Z`/`094307Z`/approval `094324Z`, at target commits `de0f1aa`/`5820d2d`)
+  remain historical but are INSUFFICIENT for this corrected contract; a future implementation must
+  capture a new `SOURCE_SNAPSHOT_SHA`, rebuild or update `migrate/research-os-layer`, and create a
+  new superseding implementation claim and approval.
+- **Design-only, nothing performed:** no file was migrated, copied, or moved; no file in `research-os`
+  was modified, committed, pushed, or regenerated; `migrate/research-os-layer` and `main` were
+  independently re-confirmed unchanged (`5820d2d9...` / `b997ed6a...`) both before and after this
+  correction. No experiment, queue action, protocol change, merge, or held-out-test read occurred.
+
 ## 2026-07-11 — RESEARCH-OS-MIGRATION-design: source-snapshot self-reference correction
 
 - **actor:** user-identified correction; recorded by Claude. **HEAD** `3021f12`.

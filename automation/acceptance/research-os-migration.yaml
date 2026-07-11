@@ -283,6 +283,44 @@ target_collision_and_preservation_policy:
     moved since this contract was written) and HARD-STOPS if any newly-discovered collision is not
     already covered by the resolutions listed above.
 
+# -------------------------------------------------------------- .gitattributes policy (correction, exact decision)
+gitattributes_policy:
+  problem_being_corrected: >
+    The first migration-implementation attempt added a `.gitattributes` file to research-os that was
+    NOT named anywhere in the accepted migration inventory (section 3), applying `text eol=lf` broadly
+    to `automation/**`, `scripts/automation/**`, `RESEARCH_DASHBOARD.md`, `.claude/skills/**`,
+    `.gitignore`, and `.gitattributes` itself. Because `automation/receipts/**` falls under
+    `automation/**`, this silently normalized 29 of 68 shared historical receipts from CRLF to LF,
+    changing their sha256 -- directly violating historical_receipts.rule (above). This contract now
+    makes the exact, non-discretionary decision required, rather than leaving it to the implementation.
+  decision: >
+    A `.gitattributes` file MAY be added to research-os for the migrated code/documentation paths
+    (this is a reasonable, low-risk normalization for newly-added Python/YAML/Markdown source), BUT it
+    MUST explicitly exclude every path whose bytes are subject to a historical byte-identity
+    requirement from any normalization. This is option 2 of the two choices posed in the correction
+    review: include `.gitattributes`, with an exact, explicit exclusion.
+  required_exact_patterns:
+    - "automation/** text eol=lf   # safe: newly migrated Python/YAML/Markdown source, no historical byte-identity requirement on these paths"
+    - "scripts/automation/** text eol=lf   # safe: newly migrated Python source"
+    - "RESEARCH_DASHBOARD.md text eol=lf   # safe: generated file, regenerated fresh on every render, no historical-byte requirement"
+    - "automation/receipts/** -text   # REQUIRED EXCLUSION: every historical receipt's exact source bytes must survive migration unmodified; -text disables any line-ending conversion Git would otherwise apply"
+  rule: >
+    `automation/receipts/**` (and any other path a historical claim receipt's own recorded sha256
+    refers to, if ever expanded beyond receipts themselves) must be pattern-excluded from EVERY
+    `.gitattributes` normalization rule, listed as its OWN explicit line using `-text`, positioned so
+    it is not shadowed by an earlier broader pattern (`.gitattributes` patterns are matched in file
+    order with later, more specific patterns taking precedence for a given path -- the receipts
+    exclusion line must appear, and be verified to take effect, for every path under
+    automation/receipts/).
+  required_correction_for_the_next_implementation_attempt: >
+    Any future migration-implementation attempt must: (1) add the `automation/receipts/** -text` line
+    (or an equivalent exact exclusion) BEFORE importing any historical receipt; (2) if a prior attempt
+    already normalized receipts (as the audited attempt did), re-import or restore those receipts to
+    their exact source-snapshot bytes as part of the correction, not merely add the exclusion line
+    going forward; (3) prove, via implementation_validation_suite's raw sha256 comparison, that every
+    historical receipt in the corrected branch is byte-identical to its source-snapshot counterpart.
+  migration_inventory_addition: ".gitattributes is now an explicit, named part of the migration inventory (section 3) -- a NEW file authored during implementation (it does not exist in wifi-csi-fall-attack-safety-demo today), with the exact required patterns above and no others that could shadow the receipts exclusion."
+
 # ------------------------------------------ 5. history-preservation method (correction 3 -- one exact, reproducible procedure)
 history_preservation:
   investigation_performed_before_finalizing: >
@@ -457,6 +495,80 @@ receipt_and_historical_task_policy:
     short_git_head_fields: "every historical receipt's ambiguous 7-character git.head value remains documented as referring to a commit in wifi-csi-fall-attack-safety-demo's history, never reinterpreted as a research-os commit merely because the file now physically resides in research-os."
     old_approval_bindings: "remain valid exactly as recorded (approved_claim_receipt_id / approved_claim_path / approved_claim_sha256 continue to point at the co-migrated claim receipt file, whose content and hash are unchanged by the file-level move)."
     no_rewrite_rule: "no historical receipt is rewritten, re-hashed, renamed, or reinterpreted merely because it changed repositories."
+    byte_identity_is_literal_not_approximate: >
+      "byte-identical" means the exact raw bytes, including line-ending encoding -- NOT "the same
+      content after normalization." An audit of the first migration attempt found 29 of 68 shared
+      historical receipts changed from CRLF to LF due to a target `.gitattributes` rule applying
+      `text eol=lf` broadly under `automation/**`, which silently changed their sha256 even though
+      their parsed JSON content was unchanged. This is a CONFIRMED VIOLATION of this rule, not a
+      theoretical risk: it must never recur. Line-ending normalization, whitespace normalization, or
+      any other content transformation of a historical receipt file during import, checkout, or any
+      later operation is explicitly FORBIDDEN. See gitattributes_policy (below) for the exact required
+      fix, and implementation_validation_suite for the required proof (raw sha256 equality against the
+      source snapshot, not merely JSON-equivalence).
+    required_correction_for_the_next_implementation_attempt: >
+      Any future migration-implementation attempt must RESTORE every already-migrated historical
+      receipt in migrate/research-os-layer (or any successor branch) to its EXACT source-snapshot
+      bytes before that branch can be considered valid -- re-checking out each receipt file from the
+      recorded source blob, or re-importing it through a corrected `.gitattributes` (or its absence),
+      whichever the implementation determines actually achieves byte equality, and then proving it via
+      the raw sha256 comparison in implementation_validation_suite. A JSON-content-equivalence check
+      (e.g. comparing parsed objects) is explicitly NOT sufficient proof of byte-identity.
+
+# ---------------------------------------------------------------- absolute-path classification policy (correction)
+absolute_path_classification_policy:
+  problem_being_corrected: >
+    The implementation's superseding migration claim reclassified a failing absolute-path scan as a
+    generic "scoped pass" after discovering that this very design contract's own prose (written before
+    this correction) contains literal machine-specific paths (e.g.
+    C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo). That reclassification was not
+    authorized by the accepted contract text at the time, which stated an unconditional "zero matches
+    ... outside the gitignored, uncommitted local-override file" rule with no historical-literal
+    exception. This section replaces the vague "scoped pass" with two explicit, narrow, non-generic
+    categories and a required scanner output schema -- a "scoped pass" phrase alone is NEVER sufficient
+    acceptance evidence going forward.
+  forbidden_active_machine_specific_paths:
+    definition: >
+      An absolute, machine-specific filesystem path (e.g. matching the pattern of this machine's
+      username/home-directory structure) that appears in content that is READ, RESOLVED, or ACTED
+      UPON at runtime, or that is newly generated by any tool in this repository.
+    forbidden_in:
+      - "active tracked registries (automation/registry/*.yaml, automation/registry/external_repositories.yaml)"
+      - "runtime configuration read by any script (any file scripts/automation/*.py opens and parses to make a decision)"
+      - "generated status (automation/status.json)"
+      - "generated dashboard content (RESEARCH_DASHBOARD.md)"
+      - "any NEW claim or approval receipt authored after this contract's acceptance (i.e. every receipt whose task_id or content did not already exist at the source snapshot)"
+      - "migration_provenance.yaml's runtime fields (source_commit_range, target_migration_merge_commits, generated_history_shas, and any other field a script reads programmatically)"
+      - "executable code defaults (e.g. a hard-coded fallback path in repo_resolver.py or update_dashboard.py)"
+      - "any committed local-override-shaped file (the real local override itself must never be committed at all, per external_repository_configuration, section 7)"
+    requirement: "active_machine_path_matches MUST equal exactly 0 in every category above. This is a hard, unconditional pass/fail gate -- no scope, exception, or waiver may reduce it."
+  historical_documentary_literals:
+    definition: >
+      A literal absolute path that exists ONLY inside an IMMUTABLE historical artifact -- a receipt or
+      an accepted design contract's own prose -- that was already committed, byte-identical, before
+      this correction, and that this contract's own no-rewrite rule (historical_receipts.no_rewrite_rule
+      above) forbids editing.
+    rules:
+      - "a historical/documentary literal must NEVER be used as runtime configuration by any script"
+      - "a historical/documentary literal must NEVER be interpreted as a resolver path, fallback, or default by repo_resolver.py or any other script"
+      - "a historical/documentary literal must NEVER be copied, quoted, or re-derived into any newly generated claim, status, or dashboard field -- it stays confined to the historical file it already lives in"
+      - "every historical/documentary literal must be individually reported by the absolute-path scanner, by exact file path and line number, never summarized as a single generic count or silently folded into a 'pass'"
+      - "a historical/documentary literal is classified as documentary provenance, explicitly labeled as such -- it is never silently ignored and never counted toward, or used to justify, active_machine_path_matches"
+  required_scanner_outcome_schema:
+    active_machine_path_matches: "integer; MUST be 0 for the scan to pass at all"
+    historical_documentary_literal_matches:
+      - path: "repository-relative path of the file containing the literal"
+        line: "line number"
+        literal_excerpt: "the matched text, for human review"
+        justification: "why this specific occurrence is classified as historical/documentary rather than active (e.g. 'inside automation/acceptance/research-os-migration.yaml, an immutable historical design-contract file already accepted before this scan; describes a temporary clone location in prose, never read by any script')"
+    outcome: "PASS only if active_machine_path_matches == 0; every historical_documentary_literal_matches entry is enumerated (never zero-summarized) and has been HUMAN-REVIEWED, not merely machine-classified, before the claim is considered acceptable"
+  explicitly_forbidden: >
+    A claim receipt MAY NOT report this check as a bare "pass" or "scoped pass" string. It MUST report
+    the full required_scanner_outcome_schema above, including every historical_documentary_literal_matches
+    entry, so a human reviewer (not the implementation itself) makes the final call on whether the
+    enumerated historical literals are acceptable. Self-authored scope narrowing of this check, as
+    occurred in the audited superseding migration claim, is a defect requiring correction, not a valid
+    precedent for future claims.
 
   migration_provenance_record:
     principle: >
@@ -524,29 +636,53 @@ receipt_and_historical_task_policy:
     historical_accepted_no_reconciliation_needed:
       - "REG-GOALS, REG-DATASETS, REF-EVID, REG-PAPERS -- acceptance criteria never depended on a live experiment-repository read (hand-curated/pointer registries); target state: historical ACCEPTED"
       - "AUT-APPROVAL-BIND, ROADMAP-V2, DASH-S8-design, AUT-VPG-design, VALIDATION-PILOT-GATE-design, EXTERNAL-REPO-RESOLUTION-design, EXTERNAL-REPO-RESOLUTION, RESEARCH-OS-MIGRATION-design -- design/dashboard-refresh/resolver-implementation tasks whose acceptance criteria are self-contained within automation/ (no live experiment-repository read at verification time); target state: historical ACCEPTED"
-    actively_reverified_expected_identical_counts:
-      - task: "TOOL-REXP (result-explorer)"
-        why: "directly resolves results/ paths and hashes evidence in the experiment repository"
-        target_state_before_reverification: "VERIFIED-AWAITING-APPROVAL is NOT the right label here -- its historical approval remains valid per the no-rewrite rule; its target state is historical ACCEPTED immediately post-migration (file-level, unchanged), then upgraded to actively-reverified ACCEPTED once a fresh --verify run from research-os (using the resolver) reproduces the same check count"
-      - task: "DASH-D3 (dashboard-research-summary)"
-        why: "reads Result Explorer output, which reads experiment evidence"
-        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
-      - task: "REG-EXPERIMENT-ID (experiment-identity)"
-        why: "references checkpoint hashes in the experiment repository"
-        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
-      - task: "REG-CANDIDATES, NEXT-EXP-REVIEW, DASH-NEXT-EXP-REVIEW"
-        why: "re-resolve candidate/dataset/evidence references that ultimately trace to experiment-repo paths"
-        target_state_before_reverification: "historical ACCEPTED immediately post-migration; actively-reverified ACCEPTED once re-verification matches"
+    actively_reverified_durable_and_rerunnable:
+      problem_being_corrected: >
+        The audited migration-implementation attempt routed EVERY predating task's claim (including
+        every task listed below) through one generic, shallow "historical-receipt-hash" shortcut in
+        update_dashboard.py (a function short-circuiting on "does this receipt file predate the
+        migration snapshot?" alone, ignoring migration_provenance.yaml's own
+        task_state_classification). The genuine active reverification (a pytest run, a validator run)
+        happened exactly ONCE, recorded only as a static block inside migration_provenance.yaml -- it
+        is not wired into `--verify` as a re-runnable check, so a future regression in resolver-based
+        evidence resolution would NOT be caught by re-running verification. This section replaces that
+        gap with an explicit, durable requirement.
+      tasks_requiring_durable_active_reverification:
+        - "TOOL-REXP (result-explorer)"
+        - "DASH-D3 (dashboard-research-summary)"
+        - "REG-EXPERIMENT-ID (experiment-identity)"
+        - "REG-CANDIDATES"
+        - "NEXT-EXP-REVIEW"
+        - "DASH-NEXT-EXP-REVIEW"
+        - "EXTERNAL-REPO-RESOLUTION -- added by this correction: its own acceptance criteria (synthetic-repo tests AND real cross-repository resolution) must remain re-provable from research-os, not reduced to a receipt-hash check merely because its claim predates the migration snapshot"
+      requirements_for_each_listed_task:
+        - "`update_dashboard.py --verify`, run from research-os, MUST execute or otherwise directly validate that task's target-side cross-repository acceptance checks (e.g. actually invoking the resolver to resolve real evidence for TOOL-REXP/DASH-D3/REG-EXPERIMENT-ID/REG-CANDIDATES/NEXT-EXP-REVIEW/DASH-NEXT-EXP-REVIEW; actually re-running EXTERNAL-REPO-RESOLUTION's own synthetic-repo test assertions or an equivalent live check) -- it must NOT fall back to the generic historical-receipt-hash shortcut for these specific tasks, regardless of whether their claim receipt predates the migration snapshot"
+        - "the task's dashboard/status state must be visibly and structurally distinct from a purely historical task's state -- e.g. a distinct `strength` label such as `actively-reverified-cross-repository` (never the same `historical-receipt-hash` string used for tasks with no live cross-repo dependency), so a human glancing at the dashboard can tell the two apart without reading source code"
+        - "the target check schema for these tasks does NOT need to numerically match the source's original check count if research-os's accepted contract defines a different (but explicit, task-specific, and at least as strong in meaning) check set -- e.g. TOOL-REXP's target checks may legitimately differ in count from its source-side 8/8, PROVIDED every target check is explicit, named, and durable, never a single generic 3-check placeholder standing in for what were 8 distinct, meaningful assertions"
+        - "a future regression -- e.g. the resolver failing to resolve real evidence, or a validator failing -- MUST cause `--verify` to report a failure for that specific task, not a silent pass; this is the core requirement: active reverification must be a live, re-runnable safety property, not a one-time historical footnote"
     special_case_excluded_from_normal_reverification:
       - task: "AUT-TSG-impl (test-split-guard)"
         why: "its enforcement files (test_split_guard.py, test_split_guard_cases.py, and the .claude hook) do NOT migrate (section 3 exception) -- there is no live research-os-side mechanism to reverify"
-        target_state: "historical ACCEPTED ONLY in research-os (a governance/tracking record of a decision made and enforced elsewhere) -- EXCLUDED from active target-state computation in research-os, since research-os cannot execute or verify this hook. The task's LIVE, operationally-meaningful state continues to be governed and verified from wifi-csi-fall-attack-safety-demo, which remains authoritative for AUT-TSG-impl specifically, indefinitely, regardless of the overall authority transition (section 10). The migrated dashboard MUST render this exclusion explicitly (e.g. a visible annotation: 'operational files not migrated; live state tracked in the experiment repository') and MUST NOT present AUT-TSG-impl as if it were actively reverified from research-os -- doing so would misrepresent an unmigrated enforcement mechanism as if research-os had verified it."
+        target_state: "historical ACCEPTED ONLY in research-os (a governance/tracking record of a decision made and enforced elsewhere) -- EXCLUDED from active target-state computation in research-os, since research-os cannot execute or verify this hook. The task's LIVE, operationally-meaningful state continues to be governed and verified from wifi-csi-fall-attack-safety-demo, which remains authoritative for AUT-TSG-impl specifically, indefinitely, regardless of the overall authority transition (section 10)."
+        required_exact_annotation: >
+          The migrated dashboard MUST render, for this task specifically and reachable regardless of
+          which internal verification code path is used, the exact statement (verbatim, or
+          functionally equivalent wording that preserves every clause): "Historical acceptance only --
+          operational enforcement remains in wifi-csi-fall-attack-safety-demo and is not active from
+          research-os." This is a required, reachable rendering -- the audited implementation attempt
+          wrote an annotation mechanism for this (NON_MIGRATED_OPERATIONAL_EVIDENCE) but placed it in a
+          code path that a separate, earlier-checked historical-receipt shortcut bypassed entirely,
+          making the annotation dead code. The correction must ensure this exact annotation is reached
+          and rendered for AUT-TSG-impl specifically, independent of whichever generic historical-hash
+          path its underlying claim receipt would otherwise take.
+        must_not: "present AUT-TSG-impl as if it were actively reverified, actively enforced, or in any way live from research-os -- it must be excluded from any active target-enforcement claim, always and only historical."
     dashboard_rendering_requirement: >
       The target dashboard (research-os's RESEARCH_DASHBOARD.md) must never render a historical task
-      as "actively reverified" before its actual re-verification run has occurred and matched, and
-      must never render AUT-TSG-impl (or any future task in the same special-case category) as if its
-      operational files were migrated when they were not -- this is a rendering-honesty requirement,
-      not merely a policy statement, and is added to the implementation validation suite (section 11).
+      as "actively reverified" before its actual re-verification run has occurred and matched; must
+      never render one of the tasks_requiring_durable_active_reverification list as a plain historical
+      task with no distinguishing label; and must never render AUT-TSG-impl without its
+      required_exact_annotation reachable and visible -- this is a rendering-honesty requirement, not
+      merely a policy statement, and is added to the implementation validation suite (section 11).
     reconciliation_receipts: >
       A reconciliation receipt (a NEW claim, never an edit of a historical one) is created ONLY if a
       re-verification run from research-os produces a DIFFERENT check count or outcome than the
@@ -640,29 +776,70 @@ implementation_validation_suite:
     - "if the migration is re-run with a different SOURCE_SNAPSHOT_SHA than a prior attempt, this is proven to fail visibly unless a new migration claim explicitly supersedes the earlier attempt's claim and documents the new snapshot and why it differs"
     - "exact migration inventory (section 3) and exclusion inventory (section 4) match what was actually imported -- verified by an explicit file listing diff, not assumed"
     - "no file under results/, figures/, checkpoints, or any model-weight path appears anywhere in migrate/research-os-layer's tree or history -- verified by scanning the imported tree for any of these path prefixes and asserting zero matches"
-    - "every migrated file's content matches the accepted source snapshot byte-for-byte where no intentional target adaptation is documented (the only intentionally adapted content is the two-line .gitignore entry and any research-os-local requirements.txt addition, both explicitly logged as adaptations, not silent drift)"
-    - "every historical receipt's sha256 (recomputed post-migration) matches its pre-migration sha256 exactly -- zero-byte-drift proof, not a spot check"
+    - "every migrated file's content matches the accepted source snapshot byte-for-byte where no intentional target adaptation is documented (the only intentionally adapted content is the .gitignore entry, the .gitattributes file per gitattributes_policy, and any research-os-local requirements.txt addition, all explicitly logged as adaptations, not silent drift)"
+    - "every historical receipt's RAW sha256 (recomputed post-migration via sha256sum on the file, never a parsed-JSON-equivalence check) matches its pre-migration sha256 exactly, for EVERY shared historical receipt -- zero-byte-drift proof across the full set, not a spot check; per historical_receipts.byte_identity_is_literal_not_approximate and gitattributes_policy, a CRLF-to-LF (or any other) transformation is a FAILURE of this criterion even if the parsed JSON content is unchanged"
     - "every historical approval receipt's approved_claim_receipt_id / approved_claim_path / approved_claim_sha256 still resolves correctly against its co-migrated claim receipt"
     - "the full existing Research OS test suite (test_scan_artifacts.py, test_result_explorer.py, test_repo_resolver.py, test_verify.py, all validate_*.py-backed tests, etc.) passes when run from research-os"
     - "EXTERNAL-REPO-RESOLUTION's resolver works correctly when invoked from research-os, resolving wifi-csi-fall-attack-safety-demo via the real (gitignored) local override created in phase 2"
     - "Result Explorer resolves and hashes evidence correctly in the experiment repository via the resolver, from research-os"
     - "artifact scanning (scan_artifacts.py) remains strictly read-only against the experiment repository -- verified via before/after hash comparison of the experiment repository's working tree"
-    - "the dashboard renders from research-os and is idempotent (two consecutive --render runs byte-identical; --check reports PASS)"
+    - "the dashboard renders from research-os and is idempotent: two consecutive --render runs, with no change to the underlying source fingerprint, produce RESEARCH_DASHBOARD.md with raw sha256 EQUAL across both runs, and automation/status.json with raw sha256 EQUAL across both runs -- both files, independently, not merely `--check` reporting PASS. An audit of the first migration attempt found automation/status.json's raw bytes differing across two consecutive renders despite `--check` reporting PASS, indicating `--check`'s internal comparison may tolerate a volatile field a raw diff would catch; this criterion requires the STRONGER, raw-byte proof, and requires investigating and eliminating any field in status.json (or RESEARCH_DASHBOARD.md) that changes value when the source fingerprint has not changed (e.g. a timestamp set to 'now' on every render rather than derived from content) -- no such volatile field is permitted"
     - "every registry (goals, datasets, reference_evidence, experiment_candidates, experiment_identity, paper_registry) and every validator passes when run from research-os"
     - "the Brainstorm Checker (NEXT-EXP-REVIEW) and dashboard candidate review (DASH-NEXT-EXP-REVIEW) reproduce identical verdicts/ranks from research-os as they did from wifi-csi-fall-attack-safety-demo"
     - "test-split guards and held-out-test protections are demonstrably unweakened: the .claude hook and test_split_guard.py remain fully in force in wifi-csi-fall-attack-safety-demo (section 3 exception), unmodified by this migration"
     - "automation/experiment_queue.yaml's content is migrated unchanged and remains empty/unchanged in effect -- no queue action is introduced by migration"
     - "wifi-csi-fall-attack-safety-demo remains fully operational and byte-unchanged (beyond the explicitly allowed pre-existing untracked items) throughout the entire import and validation process"
     - "migrate/research-os-layer contains zero copied result/evidence data anywhere in its tree or history"
-    - "no absolute machine-specific path (e.g. C:\\Users\\Hesar\\...) is committed anywhere in migrate/research-os-layer -- verified by grepping the entire imported tree for the local username/path pattern and asserting zero matches outside the gitignored, uncommitted local-override file"
+    - "absolute_path_classification_policy's required_scanner_outcome_schema is produced in full for the migration claim: active_machine_path_matches == 0 (hard gate, no exceptions), and every historical_documentary_literal_match is individually enumerated (file, line, excerpt, justification) and human-reviewed -- a bare 'pass' or 'scoped pass' string is NOT acceptable evidence for this criterion"
     - "rollback is proven possible by deleting the unmerged migrate/research-os-layer branch with zero effect on research-os's main or on wifi-csi-fall-attack-safety-demo (per rollback_procedure, section 10b)"
     - "a clean Python virtual environment installing only automation/requirements.txt can import every scripts/automation/*.py production module and pass the full pytest scripts/automation/ suite, run from within research-os's own checkout (section 3b)"
     - "every per-path collision resolution in target_collision_and_preservation_policy (section 4b) is verified against research-os's THEN-CURRENT state at implementation time (not merely this contract's snapshot), and the preflight collision report (section 4b) hard-stops on any newly-discovered, unresolved collision"
     - "the migration_provenance.yaml record (section 8) is created, is internally consistent with the actual imported commits, and every historical receipt's legacy short-hash interpretation resolves per the fixed source-repository policy (section 8) with zero ambiguous/unresolvable entries left unreported"
-    - "the migrated dashboard renders AUT-TSG-impl (and any task in the same special-case category) with an explicit non-migrated-operational-files annotation, never as if actively reverified from research-os (section 8 dashboard-rendering requirement)"
+    - "the migrated dashboard renders AUT-TSG-impl's exact required_exact_annotation (section 8, special_case_excluded_from_normal_reverification), reachably and visibly, regardless of which internal verification code path its underlying claim receipt takes -- never as if actively reverified or actively enforced from research-os"
+    - "every task in tasks_requiring_durable_active_reverification (section 8) is verified via a durable, re-runnable, task-specific check distinct from the generic historical-receipt shortcut -- never collapsed into the same shallow check as a task with no live cross-repository dependency"
     - "migrate/research-os-layer is pushed to origin (a normal, non-force push of a new branch) and a human approval receipt exists for the RESEARCH-OS-MIGRATION claim -- BOTH occur strictly before any main-branch merge is even proposed, per migration_implementation_sequence steps 5-7"
     - "no merge into research-os's main occurs as part of this implementation -- verified by confirming main's HEAD is unchanged from base_commit throughout, and that the separate transition task (sequence step 8) has not been created or executed by this implementation"
   test_requirement: "dry-run and synthetic temporary-repository tests are used wherever they can substitute for operating on the real target (e.g. the resolver's dirty-worktree and traversal/escape tests, per Phase 1 precedent, and the clean-venv dependency-import proof, section 3b); the real source/target pair is touched only for the identity-verification, subtree-split/format-patch/am, and final cross-repository resolution proof steps, all of which are read-only against the source repository and confined to the new, unmerged, pushed-but-not-merged migration branch in the target repository."
+
+# ------------------------------------------------------------------- correction consequences (this amendment, non-negotiable)
+correction_consequences:
+  principle: >
+    Because this amendment changes the accepted contract's own bytes (a superseding
+    RESEARCH-OS-MIGRATION-design claim is required, per repository convention), several concrete
+    consequences follow for any future migration-implementation work. These are recorded explicitly so
+    Codex (or any future implementer) cannot proceed on the mistaken assumption that the audited
+    migrate/research-os-layer branch already satisfies this corrected contract.
+  new_source_snapshot_required: >
+    After this amendment is committed to wifi-csi-fall-attack-safety-demo, any future migration
+    implementation (or correction of the existing one) MUST capture a NEW SOURCE_SNAPSHOT_SHA per
+    repositories.source_snapshot_policy -- the commit that carries this very amendment (and any
+    subsequent commits) becomes the new minimum_required_ancestor floor for that future snapshot, by
+    the same non-self-referential rule already established: this amendment's own commit is recorded
+    later as a floor, never hard-coded here as a fixed endpoint.
+  existing_target_implementation_claim_is_insufficient: >
+    The existing target-repository implementation claims
+    (2026-07-11T093919Z_research-os-migration_RESEARCH-OS-MIGRATION.json, superseded by
+    2026-07-11T094307Z_research-os-migration_RESEARCH-OS-MIGRATION.json, approved by
+    2026-07-11T094324Z_user-approval_RESEARCH-OS-MIGRATION.json, at target commits de0f1aa/5820d2d)
+    remain HISTORICAL records of what was actually done under the PRIOR, uncorrected contract text --
+    they are NOT edited, NOT deleted, and NOT reinterpreted. However, they are explicitly INSUFFICIENT
+    to satisfy this corrected contract: they do not satisfy the absolute-path classification schema
+    (section: absolute_path_classification_policy), the gitattributes receipts-exclusion requirement
+    (section: gitattributes_policy), the durable active-reverification requirement (section:
+    actively_reverified_durable_and_rerunnable), the AUT-TSG-impl exact-annotation requirement, or the
+    byte-level status idempotency requirement (implementation_validation_suite). A future
+    implementation claim must supersede them with a claim that actually satisfies this corrected text.
+  migration_branch_must_be_rebuilt_or_updated: >
+    Codex must later update or rebuild migrate/research-os-layer (or an equivalent successor branch)
+    against a freshly captured SOURCE_SNAPSHOT_SHA, and create a NEW superseding
+    RESEARCH-OS-MIGRATION implementation claim and a NEW approval, once this corrected contract is
+    itself accepted. This design-only amendment does NOT perform that work, does NOT touch the
+    existing migrate/research-os-layer branch, and does NOT touch research-os's main.
+  this_amendment_does_not: >
+    migrate anything; modify, commit, push, or regenerate any file in research-os; merge
+    migrate/research-os-layer into main; create or rebuild any migration branch; or create a new
+    migration implementation claim. It corrects the DESIGN CONTRACT ONLY, in
+    wifi-csi-fall-attack-safety-demo.
 
 # ------------------------------------------------------------------------------------- 12. design deliverable boundary
 design_deliverable_boundary:
@@ -711,4 +888,6 @@ forbidden_actions:
   - "run any experiment or access held-out-test data in this step"
   - "merge migrate/research-os-layer into research-os's main as part of this contract or its future implementation task -- that is exclusively migration_implementation_sequence step 8, a separate, later, separately-approved task"
   - "perform the source decommission (migration_implementation_sequence step 10) as part of this contract or its future implementation task"
+  - "modify, commit, push, regenerate, or otherwise touch any file in research-os (including migrate/research-os-layer) as part of this correction-only amendment"
+  - "treat the existing target migration implementation claim/approval as sufficient for this corrected contract (see correction_consequences)"
   - "stage, commit, or push"

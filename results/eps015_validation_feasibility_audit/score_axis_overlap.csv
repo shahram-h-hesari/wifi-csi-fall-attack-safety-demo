@@ -1,0 +1,11 @@
+axis_a,axis_b,n_common_windows,shared_tp,shared_fp,unique_fp_a,unique_fp_b,unique_recovered_fall_a,unique_recovered_fall_b,disagreement_count
+AFAC_maxscore,D14B_seed44,496,39,44,5,12,1,1,19
+AFAC_maxscore,GR1_macroF1,496,38,30,19,12,2,2,35
+AFAC_maxscore,SA1_lowFA,496,40,36,13,15,0,2,30
+AFAC_maxscore,ST1b6_lowFA,496,39,34,15,9,1,3,28
+D14B_seed44,GR1_macroF1,496,38,35,21,7,2,2,32
+D14B_seed44,SA1_lowFA,496,40,43,13,8,0,2,23
+D14B_seed44,ST1b6_lowFA,496,39,39,17,4,1,3,25
+GR1_macroF1,SA1_lowFA,496,39,34,8,17,1,3,29
+GR1_macroF1,ST1b6_lowFA,496,40,31,11,12,0,2,25
+SA1_lowFA,ST1b6_lowFA,496,41,37,14,6,1,1,22

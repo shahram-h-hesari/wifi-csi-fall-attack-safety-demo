@@ -6,15 +6,18 @@
 > program dashboard; this file is a curated summary, updated by hand alongside the artifact.
 > Live styled version: https://claude.ai/code/artifact/0f907387-ae53-4736-a839-9e23913eba62
 
-Last synced: 2026-07-19 — 3-artifact consolidation is now confirmed archive-verified. Combined
-Map, Architecture §02–§07 (all six sections), and RI Workflow's all 25 task records (23
-phase-counted + 2 `notRICount`-labeled Validation-Pilot Gate tasks) are embedded live in the
-Control Center, verified by direct DOM inspection of the published page, not just source review.
-The standalone Research OS Architecture (`dd0cc064…`) and Research Intelligence Workflow
-(`dc0b8dc0…`) artifacts are now **archived** — each carries an added banner linking to its
-Control Center replacement; neither was deleted (Claude cannot delete a user's published
-artifact), both remain readable. The standalone Combined Architecture and Operational Workstreams
-Map (`9766d8e9…`) is likewise labeled a synchronized snapshot, Control Center primary. The
+Last synced: 2026-07-20 — the three redundant standalone artifacts (Research OS Architecture
+`dd0cc064…`, Research Intelligence Workflow `dc0b8dc0…`, Combined Architecture and Operational
+Workstreams Map `9766d8e9…`) are **deleted** (user action, 2026-07-20), after a verified
+content-parity check confirmed every real gap was migrated first: all six Architecture §02–§07
+sections, all 25 RI Workflow task records (23 phase-counted + 2 `notRICount`-labeled
+Validation-Pilot Gate tasks), and one residual §01 gap (Publications/future-research-agent as
+Knowledge Base consumers + the bidirectional feedback-loop note) added as an addendum to the
+Canonical Information Flow section. All three URLs are now dead; every reference to them across
+the artifact family (CSI Sentinel, VLR, Thesis Chapter View) was found and repointed to the
+Control Center's `#architecture-workstreams` / `#panel-ri` anchors before the deletion. The
+Research OS Control Center is now the sole artifact for architecture/workstreams content — a
+four-artifact family (Control Center, VLR, CSI Sentinel, Thesis Chapter View). The
 Priority 1 (Validation-Pilot Gate) card is a full-width card above four equal secondary cards; a
 collapsed "How Stage 3, Validation-Pilot Gate, and Stage 4 relate" section makes explicit that
 Stage 3 / Phase 3C is NOT a formal Stage 4 dependency — only Validation-Pilot Gate acceptance is.

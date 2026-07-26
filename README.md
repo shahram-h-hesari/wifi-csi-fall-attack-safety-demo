@@ -79,9 +79,15 @@ This work uses three related repositories with different purposes.
 
 | Repository | Role |
 |---|---|
+| `research-os` | Canonical Research OS governance/dashboard/registry repository |
 | `ai-ml-wifi-sensing-hub` | Evidence hub, literature mapping, clinical-safety metric framework, and research gap documentation |
 | `secure-wifi-csi-healthcare-sensing` | Implementation repo for experiments, scripts, notebooks, prediction files, metrics, figures, and lab reports |
 | `wifi-csi-fall-attack-safety-demo` | Standalone public demo repo for making the fall attack-safety workflow easier to view as an independent project |
+
+The embedded Research OS copy that previously lived in this repository has been retired. See
+`RESEARCH_OS_MOVED.md`. This repository remains authoritative for experiment code, results,
+figures, checkpoints, thesis artifacts, experiment-specific agents/skills, and local safety
+controls.
 
 The evidence hub explains why safety-oriented metrics matter.
 

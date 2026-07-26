@@ -10,12 +10,17 @@
 | Item | Path |
 |---|---|
 | Repo root | `C:\Users\Hesar\Documents\GitHub\wifi-csi-fall-attack-safety-demo` |
-| Main documentation | `README.md` · `EXPERIMENT_EVIDENCE_INDEX.md` |
+| Main documentation | `README.md` · `EXPERIMENT_EVIDENCE_INDEX.md` · `RESEARCH_OS_MOVED.md` |
 | This file | `LOCAL_PROJECT_MAP.md` |
 | Dependencies | `requirements.txt` |
 | Gitignore | `.gitignore` |
 | Third-party notices | `THIRD_PARTY_NOTICES.md` |
 | Root-level pilot logs | `A1_seed42_pilot_run.log`, `basat_*.log`, `bilstm_*.log`, `optionB_*.log` — local-only, gitignored |
+
+Research OS governance, dashboards, registries, receipts, and acceptance contracts now live in
+`C:\Users\Hesar\Documents\GitHub\research-os`. This experiment repository keeps experiment code,
+results, figures, checkpoints, thesis artifacts, experiment-specific agents/skills, and the local
+test-split safety hook.
 
 ---
 

@@ -1,7 +1,0 @@
-schema_version: 1
-
-# Phase 1 implementation starts in zero-config same-repository mode.
-# External experiment repositories are added only after a separate human-reviewed
-# local override exists on the machine running the automation.
-default_legacy_repository_id: null
-repositories: []

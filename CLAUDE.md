@@ -39,36 +39,24 @@ CLIs/commands to run in order, the exact stop conditions (duplicates, missing da
 exact report-back format I need. The user pastes it directly into Codex; they should never have
 to write their own Codex prompt from my description.
 
-## Standing rule — two dashboards, keep both views fresh
+## Standing rule — Research OS is no longer embedded here
 
-This repo is the experiment/evidence layer of a larger program tracked in
-`C:\Users\Hesar\Documents\GitHub\research-os` (program stages 0–6; its `automation/status.json` +
-`PROGRAM_STATUS.md` render a stage dashboard). Mapping: Stage 3A = this repo's candidate
-registry/checker/candidate-review skill · Stage 3B = the paper-intelligence lane (research-os repo) ·
-Stage 4 is BLOCKED on this repo's val-pilot-gate.
+This repo is the experiment/evidence layer. The embedded Research OS copy has been retired;
+see `RESEARCH_OS_MOVED.md`.
 
 Rules:
-1. When recommending the next task, consider BOTH plans: this repo's `automation/roadmap.yaml`
-   AND the research-os program dashboard's current active item. Name which plan each candidate
-   task comes from.
-2. After completing any roadmap/skill task in this repo, refresh BOTH views in the same turn:
-   run `update_dashboard.py` AND republish the CSI Sentinel agent-view artifact
-   (https://claude.ai/code/artifact/0f907387-ae53-4736-a839-9e23913eba62) so the skills board
-   and pickup point never go stale. A second artifact exists for the startup lane —
-   Startup Architecture (https://claude.ai/code/artifact/c101de51-1b75-408d-b328-7b68889ee838):
-   republish it on MILESTONES only (a card changes column: proposed→designed→built), not every
-   change; its live counterpart is the auto-syncing section on the research-os HTML dashboard.
-3. The program dashboard embeds a copy of this repo's weekly status; after meaningful dashboard
-   changes here, remind the user it needs a resync (its render script lives in research-os).
-4. Rule #2's "refresh both views" applies to research-os-repo work too, not just wifi-csi-repo
-   work — a whole selector/benchmark workstream went ~15 turns unlogged (no receipt, no
-   lane-note entry) because this was only being checked for wifi-csi tasks. Every task in
-   EITHER repo needs a receipt + lane-note decision-log entry + both artifacts refreshed.
-5. Every artifact must have a local-file source of truth Codex can read (a markdown mirror in
-   the relevant repo), not just a claude.ai artifact — CSI Sentinel had none until 2026-07-17,
-   making it impossible to share with Codex. Startup Architecture's lane note already served
-   this role; CSI Sentinel now has `wifi-csi-fall-attack-safety-demo/CSI_SENTINEL_AGENT_VIEW.md`.
-   Keep both mirrors updated alongside their artifacts.
+1. Use `C:\Users\Hesar\Documents\GitHub\research-os` on `main` for Research OS dashboards,
+   registries, receipts, acceptance contracts, roadmap state, and Research OS automation.
+2. Do not recreate `automation/`, `RESEARCH_DASHBOARD.md`, dashboard-refresh skills, or
+   Research OS automation scripts in this repository.
+3. This repository remains authoritative for experiment code, results, figures, checkpoints,
+   thesis artifacts, experiment-specific agents/skills, and the local safety hook.
+4. The live test-split safeguard remains here and must stay operational:
+   `.claude/settings.json` invokes `scripts/automation/test_split_guard.py`, with cases in
+   `scripts/automation/test_split_guard_cases.py`.
+5. If Research OS state needs to reflect an experiment-repo change, update and verify it from
+   the canonical `research-os` repository; treat this repo as the external experiment/evidence
+   source.
 
 ## Standing rule — the artifact family shares facts through a manifest, not memory
 
@@ -95,13 +83,13 @@ Rules:
    that per-edit grepping misses — do one whenever asked, or proactively after a run of several
    consecutive edits to the same artifact family.
 
-## Standing rule — the Control Center artifact updates the same turn as the plan/experiment it reflects
+## Standing rule — Research OS updates happen from the canonical repo
 
-The Research OS Control Center artifact (`f155b23f-cb75-4710-ab64-5da8b52b1931`) is the canonical
-"what's the current state" surface for Goals, Plan & Tasks, Literature Evidence, Experiments,
-Results, Decisions, Thesis Outputs, and Human Approval. It is static published HTML — nothing in
-it updates unless I republish it — so it will silently drift stale unless refreshing it is part
-of the same turn as the underlying change, not a separate follow-up task.
+The Research OS Control Center artifact (`f155b23f-cb75-4710-ab64-5da8b52b1931`) is still the
+canonical "what's the current state" surface for Goals, Plan & Tasks, Literature Evidence,
+Experiments, Results, Decisions, Thesis Outputs, and Human Approval. Its source and render
+pipeline now live in `C:\Users\Hesar\Documents\GitHub\research-os`, not in this experiment
+repository.
 
 Trigger this rule whenever a turn does any of the following in this repo or research-os:
 - Starts, plans, or approves a new experiment (candidate promoted, experiment kicked off, seed
@@ -112,13 +100,10 @@ Trigger this rule whenever a turn does any of the following in this repo or rese
 - Produces a new thesis output (chapter draft, figure, table)
 
 Do, in the same turn:
-1. Update the underlying source of truth first (roadmap.yaml, status.json, results/ files,
-   decision log, receipts) — the artifact must reflect real state, never be edited ahead of it.
-2. Re-open the relevant section of `research-os-control-center.html` in the scratchpad, update
-   the affected card/row/detail panel with the new fact, and republish to the same URL
-   (`f155b23f-cb75-4710-ab64-5da8b52b1931`) so the link never changes.
+1. Update the experiment artifact in this repo first when the change is experiment evidence.
+2. Switch to `research-os` to update Research OS ledgers, receipts, dashboards, and artifacts.
 3. If the change also affects a shared fact (see the artifact-family manifest rule above), update
-   `ARTIFACT_CROSS_REFERENCE_MANIFEST.md` and any sibling artifact in the same turn.
+   the manifest and sibling artifact sources from `research-os`.
 4. If I forget and the user has to ask "does the Control Center reflect X yet?", that is a sign
    this rule was skipped — treat it as a miss, not a reasonable follow-up ask.
 

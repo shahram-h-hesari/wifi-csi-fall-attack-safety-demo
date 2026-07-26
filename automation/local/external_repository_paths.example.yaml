@@ -1,3 +1,0 @@
-schema_version: 1
-local_paths:
-  <repository_id>: "<absolute path to your local checkout of repository_id>"

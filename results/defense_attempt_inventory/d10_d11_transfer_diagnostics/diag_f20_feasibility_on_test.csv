@@ -1,0 +1,5 @@
+method,f20_feasible_on_test,n_feasible_candidate_taus,feasible_tau_min,feasible_tau_max,tau_upper_bound_fall36th,tau_lower_bound_nf92nd,window_width,max_TP_at_FP_le_91,TP_shortfall_vs_36
+D8b_AFAC,True,1,0.153246,0.153246,0.153246,0.152965,0.000281,36,0
+D10,False,0,,,0.05724,0.077852,-0.020612,32,4
+D11a,False,0,,,0.03935,0.063374,-0.024024,30,6
+D11b,False,0,,,0.046125,0.056932,-0.010807,30,6

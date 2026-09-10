@@ -1,0 +1,10 @@
+method_id,method_desc,run_name,far_cap,selection_split,attack,epsilon,selected_threshold,val_TP,val_FN,val_FP,val_TN,val_recall,val_FAR,val_AUROC
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)",GR1_v2macroF1,0.2,val,pgd,0.03,0.075261,39,5,86,366,0.886364,0.190265,0.871229
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)",GR1_v2macroF1,0.15,val,pgd,0.03,0.148867,26,18,67,385,0.590909,0.148230,0.871229
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)",GR1_v2macroF1,0.1,val,pgd,0.03,0.250327,15,29,38,414,0.340909,0.084071,0.871229
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)",ST1b6_v2lowFA,0.2,val,pgd,0.03,0.051834,40,4,86,366,0.909091,0.190265,0.868966
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)",ST1b6_v2lowFA,0.15,val,pgd,0.03,0.111270,21,23,59,393,0.477273,0.130531,0.868966
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)",ST1b6_v2lowFA,0.1,val,pgd,0.03,0.174677,16,28,40,412,0.363636,0.088496,0.868966
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)",SA1_v2lowFA,0.2,val,pgd,0.03,0.048495,39,5,85,367,0.886364,0.188053,0.872788
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)",SA1_v2lowFA,0.15,val,pgd,0.03,0.083365,29,15,64,388,0.659091,0.141593,0.872788
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)",SA1_v2lowFA,0.1,val,pgd,0.03,0.124667,23,21,45,407,0.522727,0.099558,0.872788

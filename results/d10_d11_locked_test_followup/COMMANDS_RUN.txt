@@ -1,0 +1,14 @@
+# Commands run for the D10/D11 locked held-out test follow-up (2026-07-04)
+# Python: .venv (Python 3.10.11, torch 2.12.0+cpu), repo commit 1bcf6b8, branch feature/safety-proxy-guided-defense
+# No training. No thesis edits. No commits.
+
+# 1. Test-split score exports (inference only; clean/FGSM/PGD at eps=0.030, PGD-10 alpha=eps/6 defaults)
+.venv/Scripts/python.exe scripts/export_probability_predictions.py --checkpoint checkpoints/safety_guided_defense/boundary_aware_selective_at/gairat/seed42/GR1/seed42_basat_gairat_GR1_v2macroF1_best.pt --model lenet --epsilon 0.03 --run-name GR1_v2macroF1 --out-dir results/d10_d11_locked_test_followup/test_eval --split test
+.venv/Scripts/python.exe scripts/export_probability_predictions.py --checkpoint checkpoints/safety_guided_defense/boundary_aware_selective_at/seed42/beta6p0/seed42_basat_stage1_beta6p0_v2lowFA_best.pt --model lenet --epsilon 0.03 --run-name ST1b6_v2lowFA --out-dir results/d10_d11_locked_test_followup/test_eval --split test
+.venv/Scripts/python.exe scripts/export_probability_predictions.py --checkpoint checkpoints/safety_guided_defense/boundary_aware_selective_at/sat/seed42/SA1/seed42_basat_sat_SA1_v2lowFA_best.pt --model lenet --epsilon 0.03 --run-name SA1_v2lowFA --out-dir results/d10_d11_locked_test_followup/test_eval --split test
+
+# 2. Frozen validation-threshold selection + one-shot test application + breakdowns
+.venv/Scripts/python.exe scripts/analysis/d10_d11_locked_test_followup.py
+
+# 3. Post-hoc test operating-region characterization (labeled; same evidence type as D8b reference)
+.venv/Scripts/python.exe scripts/analysis/d10_d11_posthoc_test_characterization.py

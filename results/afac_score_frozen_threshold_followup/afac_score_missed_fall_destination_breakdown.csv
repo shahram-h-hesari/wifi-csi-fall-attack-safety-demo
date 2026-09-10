@@ -1,0 +1,14 @@
+far_cap,role,threshold,argmax_destination_class,missed_fall_count
+0.18,primary,0.170908,walk,7
+0.18,primary,0.170908,run,5
+0.18,primary,0.170908,lie down,2
+0.2,comparison,0.147881,walk,5
+0.2,comparison,0.147881,lie down,2
+0.2,comparison,0.147881,run,2
+0.15,diagnostic,0.181992,walk,7
+0.15,diagnostic,0.181992,run,5
+0.15,diagnostic,0.181992,lie down,3
+0.1,r90f10_diagnostic,0.234373,walk,11
+0.1,r90f10_diagnostic,0.234373,run,9
+0.1,r90f10_diagnostic,0.234373,fall,6
+0.1,r90f10_diagnostic,0.234373,lie down,4

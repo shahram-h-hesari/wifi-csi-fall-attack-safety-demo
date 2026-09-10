@@ -1,0 +1,5 @@
+method,ks_fall_val_vs_test,ks_nonfall_val_vs_test,val_auroc,test_auroc
+D8b_AFAC,0.1404,0.0515,0.8719,0.8439
+D10,0.1545,0.0777,0.8712,0.847
+D11a,0.2202,0.0729,0.869,0.8199
+D11b,0.1672,0.0658,0.8728,0.8278

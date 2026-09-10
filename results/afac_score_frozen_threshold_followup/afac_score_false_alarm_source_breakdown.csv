@@ -1,0 +1,24 @@
+far_cap,role,threshold,true_source_class,false_alarm_count
+0.18,primary,0.170908,run,34
+0.18,primary,0.170908,walk,21
+0.18,primary,0.170908,stand up,10
+0.18,primary,0.170908,lie down,8
+0.18,primary,0.170908,pickup,8
+0.18,primary,0.170908,sit down,2
+0.2,comparison,0.147881,run,38
+0.2,comparison,0.147881,walk,27
+0.2,comparison,0.147881,lie down,10
+0.2,comparison,0.147881,stand up,10
+0.2,comparison,0.147881,pickup,8
+0.2,comparison,0.147881,sit down,2
+0.15,diagnostic,0.181992,run,33
+0.15,diagnostic,0.181992,walk,20
+0.15,diagnostic,0.181992,stand up,10
+0.15,diagnostic,0.181992,lie down,8
+0.15,diagnostic,0.181992,pickup,7
+0.15,diagnostic,0.181992,sit down,2
+0.1,r90f10_diagnostic,0.234373,run,18
+0.1,r90f10_diagnostic,0.234373,walk,16
+0.1,r90f10_diagnostic,0.234373,stand up,7
+0.1,r90f10_diagnostic,0.234373,pickup,6
+0.1,r90f10_diagnostic,0.234373,lie down,4

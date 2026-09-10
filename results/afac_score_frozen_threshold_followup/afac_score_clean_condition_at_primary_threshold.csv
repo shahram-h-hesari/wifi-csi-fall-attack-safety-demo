@@ -1,0 +1,2 @@
+far_cap,role,frozen_threshold,clean_TP,clean_FN,clean_FP,clean_TN,clean_recall,clean_FAR,clean_precision,clean_F1
+0.18,primary,0.170908,44,1,41,414,0.977778,0.090110,0.517647,0.676923

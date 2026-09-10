@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-17T060000Z_val-pilot-gate_AUT-VPG-SCANNER",
+  "task_id": "AUT-VPG-SCANNER",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "val-pilot-gate read-only scanner build (Claude, design section 10 step 3)", "session_hint": "wifi-csi working session 2026-07-17" },
+  "status_claimed": "done",
+  "summary": "Built scripts/automation/val_pilot_scan.py: the read-only results/-walking scanner (design step 3, first iteration) that uses the tested val_pilot_gate_lib to verify REAL validation pilots and report their gate status + metrics-only verdict. Ran it on the actual eps=0.015 validation frontier sweep (results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015/). LOAD-BEARING FINDING: all 5 eps=0.015 val axes (AFAC_maxscore, D14B_seed44, GR1_macroF1, SA1_lowFA, ST1b6_lowFA) are INCOMPLETE for gate purposes -- provenance NO-GO, reason metadata_json_missing -- because the historical artifact set has probability CSVs + a frontier metrics CSV but NO per-axis metadata JSON and therefore NO recorded checkpoint path for hash-binding. This means the R90F10-stretch frozen test read on ST1b6_lowFA CANNOT currently be justified through the gate: NOT because the metrics are weak (ST1b6_lowFA val AUROC 0.9607, recall@FAR10 0.9545 at FAR 0.0951 -- clears R90F10 ON VALIDATION; GR1_macroF1 recall@FAR20 1.0), but because the evidence chain lacks the checkpoint hash-binding the gate requires (design section 3 staleness / section 4 matching depend on it). The gate is doing exactly its job -- refusing to treat tempting-but-unbound validation numbers as sufficient to authorize a test read. Actionable next step surfaced: regenerate the val export for the chosen axis WITH metadata (checkpoint path recorded), so a future pilot is complete and hash-bindable. SAFETY (verified): scanner WRITES NOTHING (git shows no results/ mutation; only new source files + receipt), reads only validation artifacts (raises TestReadRefused on any _test_/_legacy_ path -- confirmed by a direct test), runs no --split command / no export / no training / no eval, and no printed verdict authorizes a test read. Import scan: no subprocess/socket/urllib/requests/--split/write tokens in code (only read-mode file opens).",
+  "files_created": [
+    { "path": "scripts/automation/val_pilot_scan.py", "sha256": "2ae85bf1664896eaa6d3b63dca4f1abfa824fc89f5a2f10a0aa17ab036385130" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": "python scripts/automation/val_pilot_scan.py", "exit_code": 0 },
+    { "cmd": "val_pilot_scan._assert_not_test on a _test_ path -> TestReadRefused (confirmed); on a _val_ path -> allowed", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015", "kind": "report", "split": "val", "evidence_level": "validation-only" }
+  ],
+  "acceptance_tests": [
+    { "id": "VPG-scanner-read-only-no-writes", "result": "pass", "evidence_path": "git status results/ (clean of new tracked writes)" },
+    { "id": "VPG-scanner-refuses-test-paths", "result": "pass", "evidence_path": "scripts/automation/val_pilot_scan.py TestReadRefused" }
+  ],
+  "split_usage": { "splits_touched": ["val"], "test_read": false, "authorization_token": null },
+  "git": { "head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d", "expected_dirty": ["scripts/automation/val_pilot_scan.py", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Human decision: to make ST1b6_lowFA (or GR1_macroF1) eligible for a frozen test read, authorize regenerating its validation export WITH metadata recording the checkpoint path (a --split val run, not test). That is the smallest concrete unblock for the R90F10 stretch. Gate steps 4-5 (dashboard receipt rendering, guard integration) remain separate and later."
+}

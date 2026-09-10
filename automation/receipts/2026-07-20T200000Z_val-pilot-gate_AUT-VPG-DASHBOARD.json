@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-20T200000Z_val-pilot-gate_AUT-VPG-DASHBOARD",
+  "task_id": "AUT-VPG-DASHBOARD",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "val-pilot-gate design step 4 (dashboard receipt rendering)", "session_hint": "wifi-csi working session 2026-07-20, immediately after AUT-VPG-FIXTURES + AUT-VPG-SCANNER were approved" },
+  "status_claimed": "done",
+  "summary": "Implements design VAL_PILOT_GATE_DESIGN.md §10 step 4 ('Dashboard receipt fourth -- enable receipt writing + CLAIMED/VERIFIED/ACCEPTED rendering via the existing update_dashboard.py path'), following the design's exact §7 receipt schema and CLAIMED/VERIFIED/ACCEPTED vocabulary. Two independently-testable halves: (1) WRITER -- extended scripts/automation/val_pilot_scan.py with an opt-in --write-receipts flag (default remains read-only/zero-writes, preserving the step-3 contract) and write_receipts(), which writes one receipt_version:2 JSON per VERIFIED pilot to automation/val_pilot_receipts/<run_name>_<seed>_eps<epsilon>.json -- never for NO-GO/NEEDS-REVIEW pilots (a receipt asserts completeness, never a failure), and refuses on sight if ever pointed at a results/ tree (hardcoded default path, not exposed as a configurable CLI flag, plus a runtime RuntimeError guard). scan() was extended to carry metadata_path/checkpoint_sha256/pilot_fields through to each report so the writer has everything §7's schema needs, without re-deriving anything verify_pilot() already computed. (2) RENDERER -- new scripts/automation/dashboard_val_pilot_gate.py (dashboard_val_pilot_gate.render_val_pilot_gate), following the exact modular pattern of dashboard_candidate_review.py (a VIEW, never a verdict engine: reads already-written receipt JSON files only, never imports val_pilot_gate_lib/val_pilot_scan, never recomputes a verdict or re-verifies a pilot -- enforced by a grep-based regression test). Renders a new '## 7b. Validation-pilot gate' section (BEGIN/END AUTO:VAL-PILOT-GATE markers) via update_dashboard.py's existing render() pipeline: a CLAIMED/VERIFIED/ACCEPTED candidate-status strip, a validation-read count per candidate (visibility against val-split overfitting, design §7), and a per-pilot table (candidate/seed/epsilon/status/verdict/metrics). A malformed or incomplete individual receipt file is skipped with a named warning rather than aborting the whole section (a directory of independently-written files should never let one bad file hide all the good ones). An empty/missing automation/val_pilot_receipts/ dir renders an honest 'No pilot receipts yet' message, never a fabricated zero-count table. ACCEPTED is read from the receipt's own `acceptance` field, which nothing yet writes -- promoting a VERIFIED pilot receipt to ACCEPTED is deliberately left as separate, later, explicitly-approved work, consistent with the design's 'each step gated on user approval' discipline; every current receipt therefore renders VERIFIED, and the ACCEPTED column will activate automatically once that mechanism exists, with zero renderer changes required. Real end-to-end verification: ran the scanner with --write-receipts against the actual eps=0.015 sweep -- correctly wrote 0 receipts (all 5 axes remain NO-GO/metadata_json_missing, unchanged finding from the step-3 claim) and created no automation/val_pilot_receipts/ directory at all (mkdir only happens inside the per-pilot write branch, never speculatively). Ran the real dashboard render + --check: new '## 7b.' section appears, byte-identical on a second render (idempotent), all pre-existing sections (## 1, ## 2b, ## 7, ## 8-9, etc.) unaffected. Full regression: all 124 tests under scripts/automation/ pass (was 116 before this session's two additions; +5 test_val_pilot_scan.py receipt-writer tests, +13 test_dashboard_val_pilot_gate.py renderer tests -- some overlap with pre-existing counts already covered by earlier receipts this session). No experiment, training, export, threshold selection, or test read occurred at any point. No file under results/ was created or modified.",
+  "files_created": [
+    { "path": "scripts/automation/val_pilot_scan.py", "sha256": "122b8db6e6633b7041f0becd6a59a46bd454f9c58cb818115cd11ab0ca4554f7" },
+    { "path": "scripts/automation/test_val_pilot_scan.py", "sha256": "ce5e2d216ab06f6ed92bb79485736a2d680b5ff5ac799fbe554b47e5d2c68668" },
+    { "path": "scripts/automation/dashboard_val_pilot_gate.py", "sha256": "35be0c9433696e88a45c2a1d9bac8a686097edccf48d9ffd983d55f1057e2af0" },
+    { "path": "scripts/automation/test_dashboard_val_pilot_gate.py", "sha256": "2a2bf4ce5c513c8a36b6cfc8837538592f263e2a258650f96d9c945669293acc" },
+    { "path": "scripts/automation/update_dashboard.py", "sha256": "279a37b31d7c30caf92d0d2c68aa23dba1cb13cebff5e11122611be232fb9577" }
+  ],
+  "files_modified": [
+    { "path": "RESEARCH_DASHBOARD.md", "change": "re-rendered: new '## 7b. Validation-pilot gate' section inserted after '## 7. Safety, integrity & frozen protocols'; all other sections unchanged" },
+    { "path": "automation/status.json", "change": "re-rendered alongside RESEARCH_DASHBOARD.md" }
+  ],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe -m pytest scripts/automation/test_val_pilot_scan.py -v -> 5 passed", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe -m pytest scripts/automation/test_dashboard_val_pilot_gate.py -v -> 13 passed", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe -m pytest scripts/automation/ -q -> 124 passed", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/update_dashboard.py --check -> idempotency PASS", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/update_dashboard.py -> integrity CLEAN, new section rendered", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/val_pilot_scan.py --write-receipts (real eps0015 sweep) -> 'Wrote 0 pilot receipt(s)', no automation/val_pilot_receipts/ dir created, git status of that path empty", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "RESEARCH_DASHBOARD.md", "kind": "report", "split": "none", "evidence_level": "n/a" }
+  ],
+  "acceptance_tests": [
+    { "id": "VPG-DASHBOARD-writer-verified-only", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" },
+    { "id": "VPG-DASHBOARD-writer-refuses-results-tree", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" },
+    { "id": "VPG-DASHBOARD-renderer-empty-state-honest", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_val_pilot_gate.py" },
+    { "id": "VPG-DASHBOARD-renderer-never-reverifies", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_val_pilot_gate.py" },
+    { "id": "VPG-DASHBOARD-full-dashboard-idempotent", "result": "pass", "evidence_path": "scripts/automation/test_dashboard_val_pilot_gate.py" }
+  ],
+  "split_usage": { "splits_touched": ["val"], "test_read": false, "authorization_token": null },
+  "git": { "head": "316bae30b19984c7f6fb691a452fc4f6ed0d7b02", "expected_dirty": ["scripts/automation/val_pilot_scan.py", "scripts/automation/test_val_pilot_scan.py", "scripts/automation/dashboard_val_pilot_gate.py", "scripts/automation/test_dashboard_val_pilot_gate.py", "scripts/automation/update_dashboard.py", "RESEARCH_DASHBOARD.md", "automation/status.json", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "Approve via update_dashboard.py --approve AUT-VPG-DASHBOARD if desired. Substantive gate finding is still unchanged: all 5 eps=0.015 val axes remain provenance NO-GO (metadata_json_missing), so the val-pilot-receipts table will stay empty until a validation export is regenerated WITH metadata recording the checkpoint path -- that regeneration (not more dashboard plumbing) is the real next unblock for the R90F10-stretch frozen test read. Design §10 step 5 (optional guard integration into test_split_guard.py) remains explicitly last and not yet authorized."
+}

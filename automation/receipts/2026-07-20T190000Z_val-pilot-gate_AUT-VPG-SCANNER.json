@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-20T190000Z_val-pilot-gate_AUT-VPG-SCANNER",
+  "task_id": "AUT-VPG-SCANNER",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "val-pilot-gate read-only scanner — receipt correction pass", "session_hint": "wifi-csi working session 2026-07-20, triggered by --verify surfacing 3 failing checks on the 07-17 claim" },
+  "status_claimed": "done",
+  "summary": "Supersedes 2026-07-17T060000Z_val-pilot-gate_AUT-VPG-SCANNER.json, which the verifier (--verify) now reports CLAIMED-UNVERIFIED with 3 failing checks: sha256:scripts/automation/val_pilot_scan.py, acceptance:VPG-scanner-read-only-no-writes, acceptance:VPG-scanner-refuses-test-paths. Root-caused both failure classes, not just re-hashed around them. (1) sha256 mismatch: the original receipt's claimed hash (2ae85bf1...) does not match the file's current content (538c5974a61baf633d5331fd947d4c2a39c9c42d888d3c2d810083b855a5c2d3). Ruled out line-ending drift (file is pure LF; hash is unchanged under LF normalization) -- the file was genuinely edited after 07-17T06:00 (most likely during the same day's later 'PILOT REGEN' work) with no superseding receipt filed at the time. Read the current file directly: it still implements both safety properties the original receipt claimed (WRITES NOTHING -- first-iteration stdout-only report, no receipt/results mutation from the scanner itself; refuses to open any path containing a '_test_'/'_legacy_' token via _assert_not_test(), raised before any file is opened) -- this is a stale-claim defect, not a functional regression. (2) Both acceptance-test failures are because their evidence_path fields were prose sentences ('git status results/ (clean of new tracked writes)', 'scripts/automation/val_pilot_scan.py TestReadRefused') rather than paths to a real artifact on disk -- the verifier's acceptance-test check (update_dashboard.py:244) requires (base / evidence_path).exists(), and a sentence is never a path. Fix: wrote scripts/automation/test_val_pilot_scan.py, a real, re-runnable pytest file that encodes both properties as automated assertions instead of one-off command transcripts: test_assert_not_test_refuses_forbidden_split_tokens_but_allows_val (uses fixed literal Path objects, not pytest's tmp_path, so the directory name pytest would auto-generate from this test's own function name -- which itself contains the substring 'not_test_r' -- can never accidentally trip the very guard under test) and test_scan_writes_nothing_and_reports_missing_metadata_as_no_go (builds a synthetic sweep dir + frontier CSV matching the real '{axis}_epsNNNN_...' filename convention verified against results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015/, snapshots every file's (size, mtime) under the scanned tree before and after calling scan() directly, and asserts the snapshots are byte-for-byte identical; also asserts the missing-metadata axis is correctly reported NO-GO/metadata_json_missing per val_pilot_gate_lib's own Section 2 rule, never silently upgraded). Both tests pass (2 passed). Independently re-ran the scanner against the real eps=0.015 sweep directory as an extra real-world check (not just the synthetic test): exit 0, `git status --short results/` byte-identical before and after, output matches the original claim's substantive finding (all axes provenance NO-GO / metadata_json_missing; metrics unchanged). No experiment, training, export, threshold selection, or test read occurred. No file under results/ was created or modified by this receipt.",
+  "files_created": [
+    { "path": "scripts/automation/val_pilot_scan.py", "sha256": "538c5974a61baf633d5331fd947d4c2a39c9c42d888d3c2d810083b855a5c2d3" },
+    { "path": "scripts/automation/test_val_pilot_scan.py", "sha256": "d3ccef96faf28935ad4e930da6e16a4fd6e03a0b9afe2f183f101ec19a2485cd" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe -m pytest scripts/automation/test_val_pilot_scan.py -v -> 2 passed", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/val_pilot_scan.py (real eps0015 sweep, re-confirmation) -> exit 0, git status --short results/ unchanged before/after", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015", "kind": "report", "split": "val", "evidence_level": "validation-only" }
+  ],
+  "acceptance_tests": [
+    { "id": "VPG-scanner-read-only-no-writes", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" },
+    { "id": "VPG-scanner-refuses-test-paths", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" }
+  ],
+  "split_usage": { "splits_touched": ["val"], "test_read": false, "authorization_token": null },
+  "git": { "head": "316bae30b19984c7f6fb691a452fc4f6ed0d7b02", "expected_dirty": ["scripts/automation/test_val_pilot_scan.py", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-17T060000Z_val-pilot-gate_AUT-VPG-SCANNER",
+  "next_action": "Re-run update_dashboard.py --verify to confirm AUT-VPG-SCANNER now hash-verifies clean; approve via update_dashboard.py --approve AUT-VPG-SCANNER if desired. Substantive finding is unchanged from the original claim: all 5 eps=0.015 val axes are provenance NO-GO (metadata_json_missing) -- the R90F10-stretch frozen test read on ST1b6_lowFA still cannot be justified through the gate until a validation export is regenerated WITH metadata recording the checkpoint path."
+}

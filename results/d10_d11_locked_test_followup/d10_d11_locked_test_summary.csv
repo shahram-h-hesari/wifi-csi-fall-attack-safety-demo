@@ -1,0 +1,11 @@
+method_id,method_desc,evidence_type,far_cap,threshold,test_TP,test_FN,test_FP,test_TN,test_recall,test_FAR,test_AUROC,F20_met,R90F10_met
+D8b (reference),"AFAC-score (optionB_maxscore seed42), held-out test post-hoc FAR sweep",test post-hoc FAR sweep (NOT frozen-threshold protocol),0.2,0.153246,36,9,91,364,0.8,0.2,0.8439,True,False
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)","held-out test, frozen validation-selected threshold",0.2,0.075261,34,11,93,362,0.755556,0.204396,0.846984,False,False
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)","held-out test, frozen validation-selected threshold",0.15,0.148867,24,21,68,387,0.533333,0.149451,0.846984,False,False
+D10,"GAIRAT-style boundary reweighting (GR1, v2macroF1 checkpoint)","held-out test, frozen validation-selected threshold",0.1,0.250327,14,31,41,414,0.311111,0.090110,0.846984,False,False
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.2,0.051834,31,14,102,353,0.688889,0.224176,0.819878,False,False
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.15,0.111270,21,24,76,379,0.466667,0.167033,0.819878,False,False
+D11a,"SAT-style selective filtering, internal Stage-1/BASAT pilot (beta6p0, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.1,0.174677,11,34,55,400,0.244444,0.120879,0.819878,False,False
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.2,0.048495,34,11,98,357,0.755556,0.215385,0.827839,False,False
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.15,0.083365,25,20,77,378,0.555556,0.169231,0.827839,False,False
+D11b,"SAT-style selective filtering pilot (SA1, v2lowFA checkpoint)","held-out test, frozen validation-selected threshold",0.1,0.124667,16,29,56,399,0.355556,0.123077,0.827839,False,False

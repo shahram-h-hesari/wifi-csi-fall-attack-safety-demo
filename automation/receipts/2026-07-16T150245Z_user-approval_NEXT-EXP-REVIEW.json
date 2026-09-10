@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-16T150245Z_user-approval_NEXT-EXP-REVIEW",
+  "task_id": "NEXT-EXP-REVIEW",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-17T010000Z_candidate-review_NEXT-EXP-REVIEW",
+  "approved_claim_path": "automation/receipts/2026-07-17T010000Z_candidate-review_NEXT-EXP-REVIEW.json",
+  "approved_claim_sha256": "703d1d678dc347de53c21cabf4ced1a0a7a4d16a7ddbe1f5802912894b9751a7",
+  "summary": "User approved NEXT-EXP-REVIEW (claim 2026-07-17T010000Z_candidate-review_NEXT-EXP-REVIEW; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "a2b6b06",
+    "expected_dirty": []
+  },
+  "full_governance_commit_sha": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d",
+  "external_repositories_used": [],
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

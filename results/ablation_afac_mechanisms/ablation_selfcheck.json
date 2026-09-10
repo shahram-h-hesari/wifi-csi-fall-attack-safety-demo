@@ -1,0 +1,42 @@
+{
+  "factor_keys": [
+    "adaptive",
+    "k_abs_min"
+  ],
+  "grid_complete_2x2": true,
+  "frozen_identity": {
+    "train_one_epoch_variantH_is_vh": true,
+    "lambda_update_is_ob": true,
+    "selection_score_is_ob": true,
+    "clean_guard_is_ob": true,
+    "load_foundation_is_tvg": true
+  },
+  "constants": {
+    "LAM_B0": 0.25,
+    "LAM_R": 1.0,
+    "ETA": 0.1,
+    "LAM_B_MAX": 1.0,
+    "TARGET_FAR": 0.1,
+    "K_ABS_MIN_ON": 4,
+    "EPOCHS": 70,
+    "EXPECTED_VAL_NONFALL": 452,
+    "K_FRAC": 0.25,
+    "GAMMA_B": 0.5,
+    "GAMMA_R": 0.5,
+    "BASE_LAM_S": 1.0,
+    "BASE_LAM_F": 1.0,
+    "BASE_LAM_T": 1.0,
+    "BASE_W_WR": 2.0
+  },
+  "V11_reproduces_optionB": true,
+  "fixed_lambda_b_trajectory": [
+    0.25,
+    0.25,
+    0.25,
+    0.25,
+    0.25
+  ],
+  "adaptive_moves_up_on_high_far": true,
+  "adaptive_moves_down_on_low_far": true,
+  "no_test_reference_in_run_train": true
+}

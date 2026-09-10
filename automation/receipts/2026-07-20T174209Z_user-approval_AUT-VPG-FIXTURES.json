@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-20T174209Z_user-approval_AUT-VPG-FIXTURES",
+  "task_id": "AUT-VPG-FIXTURES",
+  "automation": "(user-approval)",
+  "actor": {
+    "kind": "user",
+    "name": "user"
+  },
+  "status_claimed": "approved",
+  "approved_claim_receipt_id": "2026-07-17T050000Z_val-pilot-gate_AUT-VPG-FIXTURES",
+  "approved_claim_path": "automation/receipts/2026-07-17T050000Z_val-pilot-gate_AUT-VPG-FIXTURES.json",
+  "approved_claim_sha256": "edeb03e7e303b8ceaafb713331decad73e838cfb1378b92f9b56e4dc454bb50b",
+  "summary": "User approved AUT-VPG-FIXTURES (claim 2026-07-17T050000Z_val-pilot-gate_AUT-VPG-FIXTURES; evidence was VERIFIED-AWAITING-APPROVAL).",
+  "files_created": [],
+  "files_modified": [],
+  "commands_run": [],
+  "artifacts": [],
+  "acceptance_tests": [],
+  "split_usage": {
+    "splits_touched": [],
+    "test_read": false,
+    "authorization_token": null
+  },
+  "git": {
+    "head": "316bae3",
+    "expected_dirty": []
+  },
+  "full_governance_commit_sha": "316bae30b19984c7f6fb691a452fc4f6ed0d7b02",
+  "external_repositories_used": [],
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": ""
+}

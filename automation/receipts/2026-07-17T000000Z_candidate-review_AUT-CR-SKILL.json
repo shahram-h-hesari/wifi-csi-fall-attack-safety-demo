@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-17T000000Z_candidate-review_AUT-CR-SKILL",
+  "task_id": "AUT-CR-SKILL",
+  "automation": "candidate-review",
+  "actor": { "kind": "skill", "name": "candidate-review", "session_hint": "roadmap-2026-07-16-v3 day 2" },
+  "status_claimed": "done",
+  "summary": "Wrapped the accepted next-experiment-brainstorm-checker as a named skill (.claude/skills/candidate-review); ran it end-to-end. Re-derivation was triggered because 2026-07-16's frontier.yaml promise/stretch reframe changed one of the checker's authoritative sources, so this is a real, expected re-derivation, not a skill defect. Verdicts unchanged (0 GO / 6 REVIEW / 2 NO-GO, same ranking); only the source_fingerprint and generated_at changed. This correctly demoted NEXT-EXP-REVIEW from ACCEPTED to CLAIMED-UNVERIFIED pending user re-acceptance -- the skill does not and must not auto-accept.",
+  "files_created": [
+    { "path": ".claude/skills/candidate-review/SKILL.md", "sha256": "" }
+  ],
+  "files_modified": [
+    { "path": "automation/reviews/next_experiment_review.yaml", "change": "re-derived: review_id/generated_at/source_fingerprint updated to reflect frontier.yaml's 2026-07-16 content change; verdicts and ranking unchanged", "sha256": "6f953823746bdfade9787ae264921178c02ec08a68b72958a965ac9301c667b4" },
+    { "path": "RESEARCH_DASHBOARD.md", "change": "regenerated via update_dashboard.py; §2b now shows review_2026-07-16T144805Z; §4b NEXT-EXP-REVIEW flipped ACCEPTED -> CLAIMED-UNVERIFIED", "sha256": "91342c889ebc6450427f278e96e4eecb5cdb53f7f047fd6e156572360b06fe96" }
+  ],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/next_experiment_brainstorm_checker.py --check", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/next_experiment_brainstorm_checker.py", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/update_dashboard.py", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "automation/reviews/next_experiment_review.yaml", "kind": "report", "split": "none", "evidence_level": "n/a" }
+  ],
+  "acceptance_tests": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d", "expected_dirty": ["automation/reviews/next_experiment_review.yaml", "RESEARCH_DASHBOARD.md", "automation/status.json", ".claude/skills/candidate-review/SKILL.md"] },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "NEXT-EXP-REVIEW is now CLAIMED-UNVERIFIED (hash-verified check, correct behavior after frontier.yaml changed) -- if you want it back at ACCEPTED, re-approve via /dashboard-refresh --approve NEXT-EXP-REVIEW; verdicts themselves did not change so this is a formality, not new scientific content."
+}

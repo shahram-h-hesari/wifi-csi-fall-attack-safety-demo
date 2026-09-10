@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-17T050000Z_val-pilot-gate_AUT-VPG-FIXTURES",
+  "task_id": "AUT-VPG-FIXTURES",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "val-pilot-gate fixture build (Claude fable, test-first step 2 of VAL_PILOT_GATE_DESIGN.md section 10)", "session_hint": "wifi-csi working session 2026-07-17" },
+  "status_claimed": "done",
+  "summary": "Built the val-pilot gate CORE LOGIC + FIXTURE SUITE (design step 2, read-only-scanner conception chosen by user over the executing-skill conception). scripts/automation/val_pilot_gate_lib.py = pure stdlib logic implementing design sections 2-5: verify_pilot (section 2 completeness + section 3 evidence rules, incl. metadata-missing/split=test/filename-metadata-disagreement/checkpoint-absent handling), is_stale (section 3 retrain-in-place hazard), match_command (section 4 exact checkpoint path+hash / run_name / seed / epsilon matching, non-match names the failing field), compute_verdict (section 5 STRONG-GO/REVIEW-GO/NO-GO/NEEDS-REVIEW with integrity-first precedence + dominance). scripts/automation/test_val_pilot_gate_cases.py = 31 fixtures covering design section 8 cases A-L plus verdict bands, dominance + strict-improvement counterexample, integrity override, and static safety meta-scan (no subprocess/network/eval/exec/--split in code; write-free except rb-hashing). ALL SYNTHETIC: temp-dir artifacts only, no real checkpoint, no real validation CSV, no held-out-test data, no --split command run, no results/ tree walked. Import audit confirms lib is pure stdlib (hashlib/dataclasses/pathlib/typing). 31/31 fixtures pass under both direct run and pytest. One fixture initially failed (safety scan flagged '--split' appearing in the lib's own prose describing what it must NEVER do); fixed by stripping comments+docstrings before the token scan, same spirit as the guard suite's permissionDecision-comment fix. STOPPING HERE per user decision: the real results/-walking scanner (design section 10 step 3) is a SEPARATE, later, separately-approved step and was NOT built.",
+  "files_created": [
+    { "path": "scripts/automation/val_pilot_gate_lib.py", "sha256": "e97c6ba9d73ad4f78e89ea69bc1ace0a431418514fd3fc99b66978cbee652664" },
+    { "path": "scripts/automation/test_val_pilot_gate_cases.py", "sha256": "440c40548bc29ea4b0b0f9da16633bb2add3651d24c9f28a4fb29fea09d7dad3" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": "python scripts/automation/test_val_pilot_gate_cases.py", "exit_code": 0 },
+    { "cmd": "python -m pytest scripts/automation/test_val_pilot_gate_cases.py -q", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "VPG-fixtures-A-through-L", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_gate_cases.py" },
+    { "id": "VPG-verdict-bands-and-dominance", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_gate_cases.py" },
+    { "id": "VPG-static-safety-scan", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_gate_cases.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d", "expected_dirty": ["scripts/automation/val_pilot_gate_lib.py", "scripts/automation/test_val_pilot_gate_cases.py", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "STOP for user review of the fixture suite + core logic. Next step (design section 10 step 3), separately approved: the read-only results/-walking scanner scripts/automation/val_pilot_scan.py that verifies REAL pilots (e.g. ST1b6_lowFA) using this lib. That step reads real results/ but still writes nothing on its first iteration."
+}

@@ -1,0 +1,14 @@
+panel,condition,metric,mean,std,ci95_low,ci95_high,display_mean_sd,display_ci,seed,status,clean_accuracy,clean_fall_recall,pgd03_fall_recall
+aggregate,Clean,Fall recall,0.977778,0.015713,0.958267,0.997289,0.978 +/- 0.016,"[0.958, 0.997]",,,,,
+aggregate,Clean,False-fall alarms,1.4,0.894427,0.289422,2.510578,1.40 +/- 0.89,"[0.3, 2.5]",,,,,
+aggregate,FGSM epsilon=0.03,Fall recall,0.008889,0.012172,-0.006224,0.024002,0.009 +/- 0.012,"[0, 0.024]",,,,,
+aggregate,FGSM epsilon=0.03,False-fall alarms,32.2,20.327322,6.960298,57.439702,32.2 +/- 20.3,"[7.0, 57.4]",,,,,
+aggregate,PGD epsilon=0.03,Fall recall,0.0,0.0,0.0,0.0,0.000 +/- 0.000,"[0.000, 0.000]",,,,,
+aggregate,PGD epsilon=0.03,False-fall alarms,54.0,32.046841,14.208593,93.791407,54.0 +/- 32.0,"[14.2, 93.8]",,,,,
+seed,,,,,,,,,42,clean-qualified,0.942,0.977778,0.0
+seed,,,,,,,,,43,clean-qualified,0.964,0.955556,0.0
+seed,,,,,,,,,44,clean-qualified,0.984,0.977778,0.0
+seed,,,,,,,,,46,clean-qualified,0.982,0.977778,0.0
+seed,,,,,,,,,48,clean-qualified,0.978,1.0,0.0
+seed,,,,,,,,,45,non-converged,0.294,0.0,
+seed,,,,,,,,,47,non-converged,0.294,0.0,

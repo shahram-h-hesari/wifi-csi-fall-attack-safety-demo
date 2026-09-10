@@ -1,0 +1,55 @@
+Chapter 4 reconstructed artifact hash comparison
+
+This report compares reconstructed figures against the existing experiment PNGs
+and the active thesis PNGs. A hash mismatch does not imply a metric mismatch;
+the reconstructed script is not the original missing generator.
+
+Figure 4.7 reconstructed
+  path: results/reconstructed_ch04_cross_arch_resnet/ch04_figure_4_7_cross_architecture_fall_recall_vs_epsilon_reconstructed.png
+  exists: True
+  sha256: 54433561ed8ae11faeb46324399e5481e874b263a27655b1055d71a733d2c149
+  dimensions: 1650x675
+  bytes: 116537
+
+Figure 4.7 existing experiment
+  path: results/cross_architecture/figures/cross_architecture_seed42_fall_recall_vs_epsilon.png
+  exists: True
+  sha256: 561656923916965618cd0bc3fce1d98ecb997bc3a2c17b78a65fa4b892aff87e
+  dimensions: 1650x675
+  bytes: 122644
+
+Figure 4.7 active thesis
+  path: C:\Users\Hesar\Documents\GitHub\thesis-overleaf-linked\images\ch04_cross_arch_fall_recall_vs_epsilon.png
+  exists: True
+  sha256: 54433561ed8ae11faeb46324399e5481e874b263a27655b1055d71a733d2c149
+  dimensions: 1650x675
+  bytes: 116537
+
+Figure 4.8 reconstructed
+  path: results/reconstructed_ch04_cross_arch_resnet/ch04_figure_4_8_resnet18_multiseed_fall_recall_vs_epsilon_reconstructed.png
+  exists: True
+  sha256: a4fafd29b8a4bcfa81b4b831d6cf4ce930102ea313cf699f90324a6bf4a4e0f2
+  dimensions: 1600x900
+  bytes: 122618
+
+Figure 4.8 existing experiment
+  path: results/cross_architecture/resnet/figures/resnet18_clean_qualified_fall_recall_vs_epsilon.png
+  exists: True
+  sha256: abbdfb78c3f0434c87219285f72073aad3cedb05682c5090d44466c66a9641bc
+  dimensions: 1600x900
+  bytes: 127537
+
+Figure 4.8 active thesis
+  path: C:\Users\Hesar\Documents\GitHub\thesis-overleaf-linked\images\ch04_resnet18_multiseed_fall_recall_vs_epsilon.png
+  exists: True
+  sha256: a4fafd29b8a4bcfa81b4b831d6cf4ce930102ea313cf699f90324a6bf4a4e0f2
+  dimensions: 1600x900
+  bytes: 122618
+
+Pairwise matches
+  fig47_reconstructed_matches_experiment: DIFFER
+  fig47_reconstructed_matches_thesis: MATCH
+  fig47_experiment_matches_thesis: DIFFER
+  fig48_reconstructed_matches_experiment: DIFFER
+  fig48_reconstructed_matches_thesis: MATCH
+  fig48_experiment_matches_thesis: DIFFER

@@ -1,0 +1,33 @@
+method_id,far_cap,threshold,argmax_destination_class,missed_fall_count
+D10,0.2,0.075261,walk,9
+D10,0.2,0.075261,lie down,1
+D10,0.2,0.075261,run,1
+D10,0.15,0.148867,walk,16
+D10,0.15,0.148867,run,3
+D10,0.15,0.148867,lie down,2
+D10,0.1,0.250327,walk,22
+D10,0.1,0.250327,run,6
+D10,0.1,0.250327,lie down,3
+D11a,0.2,0.051834,walk,6
+D11a,0.2,0.051834,run,6
+D11a,0.2,0.051834,lie down,2
+D11a,0.15,0.111270,run,12
+D11a,0.15,0.111270,walk,9
+D11a,0.15,0.111270,lie down,2
+D11a,0.15,0.111270,stand up,1
+D11a,0.1,0.174677,run,19
+D11a,0.1,0.174677,walk,10
+D11a,0.1,0.174677,lie down,3
+D11a,0.1,0.174677,stand up,2
+D11b,0.2,0.048495,walk,7
+D11b,0.2,0.048495,lie down,3
+D11b,0.2,0.048495,sit down,1
+D11b,0.15,0.083365,walk,8
+D11b,0.15,0.083365,lie down,7
+D11b,0.15,0.083365,run,4
+D11b,0.15,0.083365,sit down,1
+D11b,0.1,0.124667,walk,11
+D11b,0.1,0.124667,lie down,8
+D11b,0.1,0.124667,run,6
+D11b,0.1,0.124667,stand up,3
+D11b,0.1,0.124667,sit down,1

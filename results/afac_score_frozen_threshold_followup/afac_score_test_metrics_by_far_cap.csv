@@ -1,0 +1,5 @@
+far_cap,role,frozen_threshold,val_recall_at_threshold,val_FAR_at_threshold,test_TP,test_FN,test_FP,test_TN,test_recall,test_FAR,test_precision,test_F1,test_AUROC,F20_met,R90F10_met
+0.18,primary,0.170908,0.772727,0.157080,31,14,83,372,0.688889,0.182418,0.271930,0.389937,0.843907,False,False
+0.2,comparison,0.147881,0.818182,0.194690,36,9,95,360,0.800000,0.208791,0.274809,0.409091,0.843907,False,False
+0.15,diagnostic,0.181992,0.704545,0.143805,30,15,80,375,0.666667,0.175824,0.272727,0.387097,0.843907,False,False
+0.1,r90f10_diagnostic,0.234373,0.386364,0.090708,15,30,51,404,0.333333,0.112088,0.227273,0.270270,0.843907,False,False

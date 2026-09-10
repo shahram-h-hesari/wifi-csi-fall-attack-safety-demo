@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-20T000000Z_dashboard-verifier_AUT-DEV-FIELD",
+  "task_id": "AUT-DEV-FIELD",
+  "automation": "dashboard-verifier",
+  "actor": { "kind": "user", "name": "user-requested schema + verifier enhancement, executed by Claude sonnet", "session_hint": "wifi-csi working session 2026-07-20" },
+  "status_claimed": "done",
+  "summary": "Added optional deviations:[] field to the receipt schema (automation/receipts/README.md), documented as optional (omit or [] when scope matched exactly). Enforced it in scripts/automation/update_dashboard.py: build_status() now emits a deviations_by_receipt dict (receipt_id -> deviations list) into status.json for ANY receipt carrying a non-empty deviations list, independent of status_claimed. _print_deltas() diffs prev status.json's deviations_by_receipt against the new one and prints '[delta] new deviations recorded since last refresh:' with description/reason for any receipt_id not seen before -- same prev-vs-new diff pattern already used for task-state deltas. Verified via --check (idempotency PASS) and --verify (no crash, integrity CLEAN) against the live receipts directory (none currently carry deviations, so delta output stays silent) plus an isolated unit-level smoke test of _print_deltas with a synthetic deviations entry, confirming the delta line fires correctly and using an ASCII-safe '--' separator (an em dash did not render on this Windows console).",
+  "files_created": [],
+  "files_modified": [
+    { "path": "automation/receipts/README.md", "change": "add optional deviations:[] field to schema block + explanatory note" },
+    { "path": "scripts/automation/update_dashboard.py", "change": "add deviations_by_receipt to build_status() output; surface new entries in _print_deltas()" }
+  ],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/update_dashboard.py --check", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/update_dashboard.py --verify", "exit_code": 0 },
+    { "cmd": "python -c isolated smoke test of _print_deltas() with a synthetic deviations_by_receipt entry", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "DEV-FIELD-idempotency", "result": "pass", "evidence_path": "" },
+    { "id": "DEV-FIELD-verify-no-crash", "result": "pass", "evidence_path": "" },
+    { "id": "DEV-FIELD-delta-fires-on-new-entry", "result": "pass", "evidence_path": "" }
+  ],
+  "deviations": [],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "316bae3", "expected_dirty": ["automation/receipts/README.md", "scripts/automation/update_dashboard.py", "automation/receipts/2026-07-20T000000Z_dashboard-verifier_AUT-DEV-FIELD.json", "RESEARCH_DASHBOARD.md", "automation/status.json"] },
+  "requires_user_approval": false,
+  "blocked_on": null,
+  "supersedes": null,
+  "next_action": "None required -- tooling change only, self-contained. Next real deviation will be the first to exercise the new delta line for real."
+}

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-20T200500Z_val-pilot-gate_AUT-VPG-SCANNER",
+  "task_id": "AUT-VPG-SCANNER",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "skill", "name": "val-pilot-gate design step 4 -- SCANNER hash re-affirmation", "session_hint": "wifi-csi working session 2026-07-20, immediately after AUT-VPG-DASHBOARD" },
+  "status_claimed": "done",
+  "summary": "Supersedes 2026-07-20T190000Z_val-pilot-gate_AUT-VPG-SCANNER.json. Ladder mechanics, not new science: building AUT-VPG-DASHBOARD (design §10 step 4) extended the same two files this claim covers -- scripts/automation/val_pilot_scan.py gained _find_axis_metadata_path(), _display_path(), write_receipts(), and a --write-receipts CLI flag; scripts/automation/test_val_pilot_scan.py gained 3 new receipt-writer tests -- which correctly and automatically flipped this claim's hash-verification to CLAIMED-UNVERIFIED (identical mechanism to the NEXT-EXP-REVIEW precedent on 07-17: an accepted claim un-verifies the instant a file it hash-pinned changes, exactly as designed). This receipt re-affirms the two files' current hashes and confirms the step-3 properties this claim asserts (read-only by default, refuses test/legacy paths) are UNCHANGED and still hold: scan()'s core logic was not modified, only extended; the two original tests (test_assert_not_test_refuses_forbidden_split_tokens_but_allows_val, test_scan_writes_nothing_and_reports_missing_metadata_as_no_go) still pass unmodified, alongside the 3 new ones. No re-verification of substance was needed beyond re-running the full test file and re-hashing.",
+  "files_created": [
+    { "path": "scripts/automation/val_pilot_scan.py", "sha256": "122b8db6e6633b7041f0becd6a59a46bd454f9c58cb818115cd11ab0ca4554f7" },
+    { "path": "scripts/automation/test_val_pilot_scan.py", "sha256": "ce5e2d216ab06f6ed92bb79485736a2d680b5ff5ac799fbe554b47e5d2c68668" }
+  ],
+  "files_modified": [],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe -m pytest scripts/automation/test_val_pilot_scan.py -v -> 5 passed", "exit_code": 0 }
+  ],
+  "artifacts": [],
+  "acceptance_tests": [
+    { "id": "VPG-scanner-read-only-no-writes", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" },
+    { "id": "VPG-scanner-refuses-test-paths", "result": "pass", "evidence_path": "scripts/automation/test_val_pilot_scan.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "316bae30b19984c7f6fb691a452fc4f6ed0d7b02", "expected_dirty": ["scripts/automation/val_pilot_scan.py", "scripts/automation/test_val_pilot_scan.py", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-20T190000Z_val-pilot-gate_AUT-VPG-SCANNER",
+  "next_action": "Re-run update_dashboard.py --verify to confirm AUT-VPG-SCANNER hash-verifies again; approve via update_dashboard.py --approve AUT-VPG-SCANNER if desired. If this same-file-touched-by-a-later-step pattern recurs for step 5 (guard integration), re-affirm again rather than treating it as a defect -- it is the ladder doing its job."
+}

@@ -1,0 +1,46 @@
+method,operating_point,tau,kind,class,count,class_total,class_rate
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,run,38,121,0.314
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,walk,27,147,0.1837
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,lie down,10,66,0.1515
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,stand up,10,31,0.3226
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,pickup,8,50,0.16
+D8b_AFAC,frozen_far020,0.147881,false_alarm_source,sit down,2,40,0.05
+D8b_AFAC,frozen_far020,0.147881,missed_fall_destination,walk,5,45,0.1111
+D8b_AFAC,frozen_far020,0.147881,missed_fall_destination,lie down,2,45,0.0444
+D8b_AFAC,frozen_far020,0.147881,missed_fall_destination,run,2,45,0.0444
+D10,frozen_far020,0.075261,false_alarm_source,run,45,121,0.3719
+D10,frozen_far020,0.075261,false_alarm_source,walk,23,147,0.1565
+D10,frozen_far020,0.075261,false_alarm_source,stand up,10,31,0.3226
+D10,frozen_far020,0.075261,false_alarm_source,lie down,6,66,0.0909
+D10,frozen_far020,0.075261,false_alarm_source,pickup,6,50,0.12
+D10,frozen_far020,0.075261,false_alarm_source,sit down,3,40,0.075
+D10,frozen_far020,0.075261,missed_fall_destination,walk,9,45,0.2
+D10,frozen_far020,0.075261,missed_fall_destination,lie down,1,45,0.0222
+D10,frozen_far020,0.075261,missed_fall_destination,run,1,45,0.0222
+D11a,frozen_far020,0.051834,false_alarm_source,run,48,121,0.3967
+D11a,frozen_far020,0.051834,false_alarm_source,walk,24,147,0.1633
+D11a,frozen_far020,0.051834,false_alarm_source,stand up,11,31,0.3548
+D11a,frozen_far020,0.051834,false_alarm_source,lie down,8,66,0.1212
+D11a,frozen_far020,0.051834,false_alarm_source,pickup,8,50,0.16
+D11a,frozen_far020,0.051834,false_alarm_source,sit down,3,40,0.075
+D11a,frozen_far020,0.051834,missed_fall_destination,run,6,45,0.1333
+D11a,frozen_far020,0.051834,missed_fall_destination,walk,6,45,0.1333
+D11a,frozen_far020,0.051834,missed_fall_destination,lie down,2,45,0.0444
+D11b,frozen_far020,0.048495,false_alarm_source,run,44,121,0.3636
+D11b,frozen_far020,0.048495,false_alarm_source,walk,22,147,0.1497
+D11b,frozen_far020,0.048495,false_alarm_source,stand up,12,31,0.3871
+D11b,frozen_far020,0.048495,false_alarm_source,lie down,8,66,0.1212
+D11b,frozen_far020,0.048495,false_alarm_source,pickup,7,50,0.14
+D11b,frozen_far020,0.048495,false_alarm_source,sit down,5,40,0.125
+D11b,frozen_far020,0.048495,missed_fall_destination,walk,7,45,0.1556
+D11b,frozen_far020,0.048495,missed_fall_destination,lie down,3,45,0.0667
+D11b,frozen_far020,0.048495,missed_fall_destination,sit down,1,45,0.0222
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,run,36,121,0.2975
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,walk,26,147,0.1769
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,stand up,10,31,0.3226
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,lie down,9,66,0.1364
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,pickup,8,50,0.16
+D8b_AFAC,posthoc_F20_reference,0.153246,false_alarm_source,sit down,2,40,0.05
+D8b_AFAC,posthoc_F20_reference,0.153246,missed_fall_destination,walk,5,45,0.1111
+D8b_AFAC,posthoc_F20_reference,0.153246,missed_fall_destination,lie down,2,45,0.0444
+D8b_AFAC,posthoc_F20_reference,0.153246,missed_fall_destination,run,2,45,0.0444

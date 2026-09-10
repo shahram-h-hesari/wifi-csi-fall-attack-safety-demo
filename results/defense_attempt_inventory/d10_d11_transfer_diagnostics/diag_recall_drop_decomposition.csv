@@ -1,0 +1,5 @@
+method,frozen_tau_far020,val_fall_survival_at_tau,test_fall_survival_at_tau,val_nonfall_survival_at_tau,test_nonfall_survival_at_tau
+D8b_AFAC,0.147881,0.8182,0.8,0.1947,0.2088
+D10,0.075261,0.8864,0.7556,0.1903,0.2044
+D11a,0.051834,0.9091,0.6889,0.1903,0.2242
+D11b,0.048495,0.8864,0.7556,0.1881,0.2154

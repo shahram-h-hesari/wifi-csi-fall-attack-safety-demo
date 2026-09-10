@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-17T070000Z_val-pilot-gate_AUT-VPG-PILOT-REGEN",
+  "task_id": "AUT-VPG-PILOT-REGEN",
+  "automation": "val-pilot-gate",
+  "actor": { "kind": "user", "name": "user-authorized provenance-completion run (decision delegated to and recorded by Claude fable; executed same session)", "session_hint": "wifi-csi working session 2026-07-17" },
+  "status_claimed": "done",
+  "summary": "User-authorized regeneration of ST1b6_lowFA's eps=0.015 VALIDATION export to complete the val-pilot provenance chain (the scanner had found all 5 historical eps=0.015 axes provenance-NO-GO for missing metadata/checkpoint binding). Scope decision: ST1b6_lowFA ONLY (one bounded pilot; GR1_macroF1 held as fallback). Run: export_probability_predictions.py --split val --epsilon 0.015 --pgd-steps 10 (canonical eps0015 protocol params: alpha=eps/6, lenet, seed 42) --checkpoint .../seed42_basat_stage1_beta6p0_v2lowFA_best.pt, output to a NEW dir (val_sweep/eps0015_pilot_regen/), original 2026-07-05 sweep dir untouched. DETERMINISM ACCEPTANCE CRITERION MET PERFECTLY: all three regenerated CSVs (clean/fgsm/pgd, 496 val windows each) are BYTE-IDENTICAL to the 2026-07-05 originals (max |d fall_probability| = 0.0), proving (a) the attack params match the original sweep exactly and (b) the on-disk checkpoint is byte-wise the same weights that produced the audited R90F10-feasible numbers -- therefore the new provenance legitimately binds to the EXISTING audited metrics with no re-analysis. Metadata JSON written (ST1b6_lowFA_eps0015_metadata.json: checkpoint path + sha256 f8035c1c6389ea59..., run_name, seed, split=val, epsilon, pgd params, source script, git head, determinism evidence). Scanner re-run on the pilot dir: ST1b6_lowFA now provenance VERIFIED (complete) -- the FIRST complete hash-bound validation pilot in the system. Metrics-only verdict NEEDS-REVIEW (correct, conservative: clean_recall_degradation_pp not yet computed/defined for this axis; STRONG-GO requires it; the gate never guesses upward). Val metrics on record: AUROC 0.9607, recall@FAR<=10 0.9545 at FAR 0.0951 (clears R90F10 on validation), recall@FAR<=20 0.9773. BONUS EVIDENCE CORRECTION: FGSM eps=0.015 VALIDATION probability exports exist (both the 2026-07-05 sweep and this regeneration) and are now hash-bound for ST1b6 -- the earlier 'no admissible FGSM evidence' note referred to the excluded mixed-split epsilon_sweep export; a validation-only FGSM feasibility audit is now possible with ZERO new runs. NO test data touched (split_usage val only; guard silent on --split val). One scanner path bug fixed in passing (relative_to failure on relative --sweep-dir args).",
+  "files_created": [
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/ST1b6_lowFA_eps0015_clean_probabilities_val_epsilon_0_015.csv", "sha256": "" },
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/ST1b6_lowFA_eps0015_fgsm_probabilities_val_epsilon_0_015.csv", "sha256": "" },
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/ST1b6_lowFA_eps0015_pgd_probabilities_val_epsilon_0_015.csv", "sha256": "" },
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/ST1b6_lowFA_eps0015_metadata.json", "sha256": "" }
+  ],
+  "files_modified": [
+    { "path": "scripts/automation/val_pilot_scan.py", "change": "path-resolution fix for relative --sweep-dir args" }
+  ],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe scripts/export_probability_predictions.py --checkpoint checkpoints/safety_guided_defense/boundary_aware_selective_at/seed42/beta6p0/seed42_basat_stage1_beta6p0_v2lowFA_best.pt --model lenet --epsilon 0.015 --pgd-steps 10 --run-name ST1b6_lowFA_eps0015 --out-dir results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen --split val --seed 42", "exit_code": 0 },
+    { "cmd": "byte-comparison of all 3 regenerated CSVs vs 2026-07-05 originals -> identical", "exit_code": 0 },
+    { "cmd": "python scripts/automation/val_pilot_scan.py --sweep-dir .../eps0015_pilot_regen -> ST1b6_lowFA VERIFIED (complete)", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen", "kind": "predictions", "split": "val", "evidence_level": "validation-only" }
+  ],
+  "acceptance_tests": [
+    { "id": "VPG-regen-determinism-byte-identical", "result": "pass", "evidence_path": "results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/ST1b6_lowFA_eps0015_metadata.json" },
+    { "id": "VPG-pilot-provenance-verified", "result": "pass", "evidence_path": "scanner output: provenance VERIFIED (complete)" }
+  ],
+  "split_usage": { "splits_touched": ["val"], "test_read": false, "authorization_token": null },
+  "git": { "head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d", "expected_dirty": ["results/defense_attempt_inventory/pgd_epsilon_frontier/val_sweep/eps0015_pilot_regen/**", "scripts/automation/val_pilot_scan.py", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "next_action": "Two human/fable decisions now unlocked: (1) define + compute clean_recall_degradation_pp for ST1b6_lowFA so the gate can issue a real STRONG-GO/REVIEW-GO verdict (definitional question: degradation relative to which baseline?); (2) optionally authorize the zero-new-runs FGSM eps=0.015 validation feasibility audit on the existing (now hash-bound) FGSM val CSVs -- closes the 'PGD and FGSM' evidence gap for the stretch framing. After a real verdict: protocol-freeze design (AUT-PF) is the sole path to the one-shot R90F10 test read.",
+  "supersedes": null
+}

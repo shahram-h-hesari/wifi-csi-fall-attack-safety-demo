@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "receipt_id": "2026-07-17T010000Z_candidate-review_NEXT-EXP-REVIEW",
+  "task_id": "NEXT-EXP-REVIEW",
+  "automation": "candidate-review",
+  "actor": { "kind": "skill", "name": "candidate-review", "session_hint": "roadmap-2026-07-16-v3 day 2, re-run via AUT-CR-SKILL" },
+  "status_claimed": "done",
+  "summary": "Re-derivation of automation/reviews/next_experiment_review.yaml via next_experiment_brainstorm_checker.py, triggered because 2026-07-16's frontier.yaml promise/stretch reframe changed one of the checker's 9 authoritative source files, which necessarily changes source_fingerprint (a hash over each source's own sha256, per the checker's documented determinism contract). This receipt supersedes 2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW.json, which was hash-pinned to the pre-reframe file and cannot itself be re-approved. No candidate content changed: same 8 candidates, same GO/REVIEW/NO-GO derivation logic (unmodified since the original claim, whose 39/39 tests and structural validator still govern this run -- checker script sha256 unchanged from the original claim), same verdicts (0 GO / 6 REVIEW / 2 NO-GO), same rank order (#1 candidate_afac_low_far_calibration_v1 REVIEW ... #8 candidate_future_fall_risk_data_acquisition_v1 NO-GO), same per-candidate reasons and material-difference determinations. Only review_id, generated_at, source_fingerprint, and the frontier.yaml sha256 entry inside authoritative_sources changed, because frontier.yaml's own content changed upstream -- not because this run recomputed anything differently. Re-ran the validator (scripts/automation/validate_next_experiment_review.py) against the new file: PASS, zero errors, confirming byte-identical rebuild, correct fingerprint, and all structural invariants (contiguous unique ranks, dataset-blocked->NO-GO, no command/queue-linkage content, candidate registry hash unchanged, experiment_queue.yaml still empty) still hold. No candidate registry, literature registry, goals/datasets registry, artifact manifest, experiment_queue.yaml, protocol-freeze file, thesis file, result file, or checkpoint was modified. No experiment, training, validation, model evaluation, export, threshold selection, or test read occurred.",
+  "files_modified": [
+    { "path": "automation/reviews/next_experiment_review.yaml", "sha256": "6f953823746bdfade9787ae264921178c02ec08a68b72958a965ac9301c667b4", "change": "re-derived: review_id/generated_at/source_fingerprint + frontier.yaml source hash updated; candidate_count, verdicts, ranking, per-candidate reasons unchanged" }
+  ],
+  "commands_run": [
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/next_experiment_brainstorm_checker.py -> wrote automation/reviews/next_experiment_review.yaml (changed=True); GO=0 REVIEW=6 NO-GO=2 unresolved_refs=0; fingerprint=abdf29bda2815561e315b6f369747adc0d23876e1602d069a87ef1afee58bb51", "exit_code": 0 },
+    { "cmd": ".venv/Scripts/python.exe scripts/automation/validate_next_experiment_review.py -> PASS, no errors", "exit_code": 0 }
+  ],
+  "artifacts": [
+    { "path": "automation/reviews/next_experiment_review.yaml", "kind": "report", "split": "none", "evidence_level": "n/a" }
+  ],
+  "acceptance_tests": [
+    { "id": "NER-real-review-validates", "result": "pass", "evidence_path": "automation/reviews/next_experiment_review.yaml" },
+    { "id": "NER-deterministic-ranking-idempotency", "result": "pass", "evidence_path": "scripts/automation/validate_next_experiment_review.py" },
+    { "id": "NER-validator-structural-scans", "result": "pass", "evidence_path": "scripts/automation/validate_next_experiment_review.py" }
+  ],
+  "split_usage": { "splits_touched": [], "test_read": false, "authorization_token": null },
+  "git": { "head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d", "expected_dirty": ["automation/reviews/next_experiment_review.yaml", "automation/receipts/**"] },
+  "requires_user_approval": true,
+  "blocked_on": null,
+  "supersedes": "2026-07-11T053149Z_next-experiment-brainstorm-checker_NEXT-EXP-REVIEW",
+  "next_action": "Approve via update_dashboard.py --approve NEXT-EXP-REVIEW; this claim's file hash matches the current on-disk review, so verification should pass hash-verified."
+}

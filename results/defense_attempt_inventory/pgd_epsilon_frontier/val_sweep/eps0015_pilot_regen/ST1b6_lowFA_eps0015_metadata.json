@@ -1,0 +1,18 @@
+{
+  "metadata_version": 1,
+  "run_name": "ST1b6_lowFA_eps0015",
+  "model": "lenet",
+  "checkpoint": "checkpoints/safety_guided_defense/boundary_aware_selective_at/seed42/beta6p0/seed42_basat_stage1_beta6p0_v2lowFA_best.pt",
+  "checkpoint_sha256": "f8035c1c6389ea59db3d1b79c7114b432fb25a5713cf10fc8efc3bbee6ee1873",
+  "seed": 42,
+  "split": "val",
+  "epsilon": 0.015,
+  "attack": "pgd (plus fgsm + clean companions)",
+  "pgd_steps": 10,
+  "pgd_alpha_rule": "epsilon/6",
+  "source_script": "scripts/export_probability_predictions.py",
+  "git_head": "a2b6b06f3ff03e7c0b20d2e42ec4ad266326018d",
+  "exported_utc": "2026-07-17",
+  "determinism_evidence": "All three regenerated CSVs (clean/fgsm/pgd) are BYTE-IDENTICAL to the 2026-07-05 originals in ../eps0015/ (max |d fall_probability| = 0.0 over 496 windows each). The audited eps015 feasibility metrics therefore belong to exactly these weights.",
+  "purpose": "Provenance completion for the val-pilot gate (design section 2): binds the audited ST1b6_lowFA eps=0.015 validation evidence to this checkpoint hash. Validation split only; no test data touched."
+}

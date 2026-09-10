@@ -1,0 +1,25 @@
+# Commands run for AFAC-score frozen-threshold follow-up — STAGE 1 + STAGE 2 (2026-07-04)
+# Python: .venv (Python 3.10.11, torch 2.12.0+cpu), repo commit 1bcf6b8, branch feature/safety-proxy-guided-defense
+# No training. No thesis edits. No commit made in this repo as part of Stage 1 or Stage 2.
+# Stage 1 was archived + committed in the Overleaf-linked thesis repo BEFORE Stage 2 ran
+# (commit 65418ef2112ad6c465c0a01a4377e395c1079717), preserving the freeze point.
+
+# 1. Validation-split score export (inference only; clean/FGSM/PGD at eps=0.030, PGD-10 alpha=eps/6 defaults)
+.venv/Scripts/python.exe scripts/export_probability_predictions.py \
+  --checkpoint checkpoints/safety_guided_defense/variantH_dual_tail_budget/adaptive_lagrangian_far_constrained/optionB/seed42/seed42_optionB_maxscore_best.pt \
+  --model lenet --epsilon 0.03 --pgd-steps 10 --run-name optionB_maxscore \
+  --out-dir results/afac_score_frozen_threshold_followup/val_eval --split val
+
+# 2. Pre-execution self-check: confirm no test-file references in the Stage 1 selection script
+grep -in 'test_eval\|split.*test\|test.*csv' scripts/analysis/afac_score_stage1_validation_selection.py
+# (expected: no matches)
+
+# 3. Stage 1 validation-only threshold selection, frontier, and bootstrap stability
+.venv/Scripts/python.exe scripts/analysis/afac_score_stage1_validation_selection.py
+
+# 4. Stage 2: single-shot application of the four FROZEN Stage 1 thresholds to the EXISTING
+#    Gate-5 held-out test scores (no test-score regeneration, no threshold selection logic).
+#    Reads:
+#      results/safety_guided_defense/variantH_dual_tail_budget/adaptive_lagrangian_far_constrained/optionB/seed42/test_eval/optionB_maxscore_pgd_probabilities_test_epsilon_0_03.csv
+#      results/safety_guided_defense/variantH_dual_tail_budget/adaptive_lagrangian_far_constrained/optionB/seed42/test_eval/optionB_maxscore_clean_probabilities_test_epsilon_0_03.csv
+.venv/Scripts/python.exe scripts/analysis/afac_score_stage2_test_application.py

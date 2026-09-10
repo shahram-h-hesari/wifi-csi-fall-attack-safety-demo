@@ -1,0 +1,9 @@
+method_id,evidence_type,threshold,test_TP,test_FN,test_FP,test_TN,test_recall,test_FAR,test_AUROC,F20_met,R90F10_met
+D8b (reference),test post-hoc FAR sweep (NOT frozen-threshold protocol),0.153246,36,9,91,364,0.8,0.2,0.8439,True,False
+"D10 (locked, FAR cap 0.20)","held-out test, frozen validation-selected threshold",,34,11,93,362,0.7556,0.2044,,False,False
+"D11a (locked, FAR cap 0.20)","held-out test, frozen validation-selected threshold",,31,14,102,353,0.6889,0.2242,,False,False
+"D11b (locked, FAR cap 0.20)","held-out test, frozen validation-selected threshold",,34,11,98,357,0.7556,0.2154,,False,False
+"AFAC-score (primary, FAR cap 0.18)","held-out test, frozen validation-selected threshold",0.170908,31,14,83,372,0.688889,0.182418,0.843907,False,False
+"AFAC-score (comparison, FAR cap 0.2)","held-out test, frozen validation-selected threshold",0.147881,36,9,95,360,0.800000,0.208791,0.843907,False,False
+"AFAC-score (diagnostic, FAR cap 0.15)","held-out test, frozen validation-selected threshold",0.181992,30,15,80,375,0.666667,0.175824,0.843907,False,False
+"AFAC-score (r90f10_diagnostic, FAR cap 0.1)","held-out test, frozen validation-selected threshold",0.234373,15,30,51,404,0.333333,0.112088,0.843907,False,False

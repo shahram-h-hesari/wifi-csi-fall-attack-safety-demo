@@ -1,0 +1,5 @@
+method,frozen_tau_far020,n_FN,FN_dist_min,FN_dist_median,FN_dist_max,n_FN_within_0p02_of_tau,n_FN_beyond_0p10_of_tau,n_FP,n_excess_FP_vs_91,excess_FP_dist_above_tau_max_of_marginal,tau_needed_for_TP36,tau_move_needed_for_TP36,FP_at_tau_for_TP36,FP_overage_at_TP36
+D8b_AFAC,0.147881,9,0.000443,0.052141,0.139783,2,1,95,4,0.005084,0.153246,0.005365,91,0
+D10,0.075261,11,0.000227,0.031096,0.070302,2,0,93,2,0.002591,0.05724,-0.018021,102,11
+D11a,0.051834,14,0.000938,0.020939,0.048541,6,0,102,11,0.01154,0.03935,-0.012484,112,21
+D11b,0.048495,11,0.001659,0.010657,0.045651,6,0,98,7,0.008437,0.046125,-0.00237,100,9
